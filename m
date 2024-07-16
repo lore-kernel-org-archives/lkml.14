@@ -1,432 +1,277 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020090.outbound.protection.outlook.com [52.101.193.90])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1081B199EAD;
-	Tue, 16 Jul 2024 18:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA61B1B94F;
+	Tue, 16 Jul 2024 18:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721155769; cv=fail; b=TlQzDmdtYJDUdLChv9oHenUAhQrsZsnO8+jNj2K5PyjMy5j4ucQGsWcL0j0uCFUV4FPPDw59CpZGqZkJBUPJsoRxtiu4uoF50AVp98uQ05Dtxc4kZmvsoz0za2PE6/BwoA2EfRJl3fyAdAblAOEwGTLMzMNnMll8Eozp/OqEw5Y=
+	t=1721155818; cv=fail; b=SXbbTxwOV4PQJWWCV0q5ABAyDPpLhcVc8vXbdeNRxLFvI8hGTlPy1RZVcAvUJoUJf2CocF4EDVIFN+7+ru7xIpvWQ8LKaJy42W8MG0A5uhMbzK+pp7NBBiwhQV2BLo/BIH6xbrx0nEQ5eSPN9pHstew6mfCQl64La6FgMesvrcU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721155769; c=relaxed/simple;
-	bh=sPNmcGu4e+TvWuaAFydKe1ruAH/O7TB29J/Hqdy6kt0=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fL7261BzB8lg7ANGg0P/Y5D55cGzvqri+H7Q5d+lS+3UsLh7ZJQwXXDSzStCKcHY6fEQVxxlZBca13nwUx9+Uzi9cHmyT5Fsemt/cMHvyWLvMHi8kbRoPan9yEUR37vj1rc/q8OhPPZoHhuL9aJc8pHlbXuNxaVTJWskj2nlMQ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=jV081UU8; arc=fail smtp.client-ip=52.101.193.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1721155818; c=relaxed/simple;
+	bh=ukRlywhm4de//G1Al8T3Tioc9Rw74+VDhexxrgPDrgE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lbQVIQvcN8uHoZV8fTUyfcBQiVd/gH6gGAGVFCHCzsEWXNnj4feRbUf81nS1lLMP7Wq/HH8n/3CMEzdtdJWHn1mg3wmh4Xz7WmSqUt6R46PGti/imibbOwBOH1ZxKk8Jqbtla3qw26pSGmA0zsI1gjRqyh1do9sn0gkGtqUG/1o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OVPfOtsB; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="jV081UU8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OVPfOtsB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721155817; x=1752691817;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ukRlywhm4de//G1Al8T3Tioc9Rw74+VDhexxrgPDrgE=;
+  b=OVPfOtsBitSIPeC2QFgFSo5W+nhZEk9NHGJHyNz7r6PSRvHIs6cXO1B8
+   N3RlWG2osHG8Mopp24T2fdcgplRCEGJnsFii4cGfvos6X4tCr4S0ci/Aj
+   voA6qfN+ikuBqCAMYL+7yK7G7YdsErbFNgcJ0niyGGN7JLFGht5bR65Zf
+   JXAaTtAdhvo5lYVHQrYIr3Qe6jmoPP8j7FOPBB+2wetFQtHwZKyLgUtwm
+   GBN9173xeDzsrLQPmRY5UDyAoHnzxYGdkxgLqru/Uox2NE/SEw9TqbXx2
+   EcecUHHMS85zeU4oN7iH2FcnTYfRE8FtebT7KmzxVsX7VXLGBTYalc9se
+   A==;
+X-CSE-ConnectionGUID: hHLjiEOuTCet0AfsC3fRlg==
+X-CSE-MsgGUID: 6aDPdGTQQBaXGK9M35OO7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18430517"
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="18430517"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 11:50:16 -0700
+X-CSE-ConnectionGUID: QhpB61ZfSyGOIO1BD9glCg==
+X-CSE-MsgGUID: WQ9dY8nLRjKIra8/B7W/rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="49851341"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Jul 2024 11:50:15 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 16 Jul 2024 11:50:15 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 16 Jul 2024 11:50:15 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.44) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 16 Jul 2024 11:50:15 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OziS1cTAznMrC24l/WLUw//aGE3Jl9TM2SS0sFZqCyb6wfAs6FY8s/4QLYTcQshTz0qmi8E9S3SEKddANish7bIeHzkKznXWA3nz/tpdaff5+pNHilexRgquG0Fxc1j/gCoy4x4vEUwjYqqgfi+GiSD10tuX2lNFq/lEt2yoUKsQpUooKppeghW0RZNq2Jvx0Pte/tBo9/EKHlKONPxGxYCqTBIbGKJVoRhBMZGY/kFEU9Mf/HxX8nLAiVBJxAENZw9YNt6pVIAjbJFxYOupPKPQFLSINERBBUxw+JzL/bWZZxVhY4Liu9KvYS+XeIIp9xSArLjGax4cH6yOTsgvAA==
+ b=bXGHbjMiLOwydeqJ3WD/lsGVBxUYj0CMW6vc0cWyiYD1IVmHJnpTHC0i/iqOkgWrTPU+I1aZBL4+cN7tNfCIOVoOLxC8Q8eWK3YciUmr5DTuXoKqNp+q7kzgNykCM0HeREobyZ7jSGtXDqdUpP4IyEBh5dd9AbG1uZMmaLEQHTpzva03PwSXipMZRordg8Yq22OTrpEkHYl8apCESJWN7mxovjFGkU016e2Mvt4E9icTlhuDy8Z+WrWUvcVYe8yFet/FCbUtQ1BA6NccdThkPvGeRKpRyGudSyDay8K6w1RclnUc3dTot3heykDdJqS+lfM1y7DzTD823kLoS7Wyww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=li41hY1m3kIhNwzYVlu3Rde3qeKnHBpoS1iUINTiIAE=;
- b=Juz5r0eQFLrw5xvHiKIfB110rcj4Vhm8vBinkoXs7H8C8aFRs6bCliPl2YDUoLCpjQQsyN1p7/YbS+5v7hyWi1vfK+bYsH6J2QCtosuy130n0MDBHU9lVict+8SHB/wYzb8ASF8GxM2smdJsKvS3hCN+1Zm8Nyt+nLFeD1W1WoiMgCmVBDh++LCHePi2A2GBll69U0nr7rYZrSf381n44futqwW0LjMn7RFA4z+iidGmcXCdskUE3pMxn5OlaRfAAQG1IaBP/DRTJg5OpDBUFhmLRAZyfIT86qWshYKvhvMkrY+aY81WAKVB+/vkBdn9wjO8s+td6wLZwMv/A9hAmw==
+ bh=ukRlywhm4de//G1Al8T3Tioc9Rw74+VDhexxrgPDrgE=;
+ b=Yfqj97jsMmo722TPhKX3Er0nfrMQ2XoGt+4+FbziyZHgfFezMBvtc3gelSvqTDMzTNCwbhaUKng8tTwkP3XaLqND8h6sCJr00j4pXODIVVqC4j35zUXfozDpzcMUPAgUBj2ZpgrTBub8wMZVSa4DZ+lCwUc179GjKEodTSeajf3zjlQ3IHpReODDWCvtRBKBmklwC7ZKS9v/LUGY2MRst0cNZWy/nfivwlL69SSbD5l/wvITbz5OLcth+R4g0izk0MsK8pg0kxFoI4siuO0M52bKNdKWw7rMb6i1sEL9KVV9IxXF/e7UzPUAsq75PqHbatjczL1kIeFZVAhtxSOjpQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=li41hY1m3kIhNwzYVlu3Rde3qeKnHBpoS1iUINTiIAE=;
- b=jV081UU8dKSVfKgTg7hNhINpYj146mmDiq4/D9eIvnzjzwrSIeXn/dwGGyKDHFfVeyi2bKoWyOhSBG48nZQ9j8QD2dAlm8YKbEfrorgvxn1cKphgoTj/X0weD9E+3rsQuj2z3+XG5PGVlT8V4p5hwZ1LruFX+EJm9TTRWNg7upw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from MN2PR01MB5471.prod.exchangelabs.com (2603:10b6:208:11b::13) by
- BY3PR01MB6691.prod.exchangelabs.com (2603:10b6:a03:354::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7762.29; Tue, 16 Jul 2024 18:49:22 +0000
-Received: from MN2PR01MB5471.prod.exchangelabs.com
- ([fe80::dba1:7502:f7ff:3f80]) by MN2PR01MB5471.prod.exchangelabs.com
- ([fe80::dba1:7502:f7ff:3f80%7]) with mapi id 15.20.7762.020; Tue, 16 Jul 2024
- 18:49:16 +0000
-From: Yang Shi <yang@os.amperecomputing.com>
-To: gregkh@linuxfoundation.org,
-	akpm@linux-foundation.org,
-	cl@linux.com,
-	david@redhat.com,
-	oliver.sang@intel.com,
-	paulmck@kernel.org,
-	peterx@redhat.com,
-	riel@surriel.com,
-	vivek.kasireddy@intel.com,
-	willy@infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [v6.9-stable PATCH] mm: page_ref: remove folio_try_get_rcu()
-Date: Tue, 16 Jul 2024 11:49:01 -0700
-Message-ID: <20240716184901.1454546-1-yang@os.amperecomputing.com>
-X-Mailer: git-send-email 2.41.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH0PR03CA0069.namprd03.prod.outlook.com
- (2603:10b6:610:cc::14) To MN2PR01MB5471.prod.exchangelabs.com
- (2603:10b6:208:11b::13)
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by SJ2PR11MB7428.namprd11.prod.outlook.com (2603:10b6:a03:4cf::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.14; Tue, 16 Jul
+ 2024 18:50:12 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9%4]) with mapi id 15.20.7762.027; Tue, 16 Jul 2024
+ 18:50:12 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "fweimer@redhat.com" <fweimer@redhat.com>, "broonie@kernel.org"
+	<broonie@kernel.org>, "sroettger@google.com" <sroettger@google.com>
+CC: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"ross.burton@arm.com" <ross.burton@arm.com>, "suzuki.poulose@arm.com"
+	<suzuki.poulose@arm.com>, "Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"Schimpe, Christina" <christina.schimpe@intel.com>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "corbet@lwn.net" <corbet@lwn.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "kees@kernel.org"
+	<kees@kernel.org>, "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>, "debug@rivosinc.com"
+	<debug@rivosinc.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"shuah@kernel.org" <shuah@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>,
+	"maz@kernel.org" <maz@kernel.org>, "oleg@redhat.com" <oleg@redhat.com>,
+	"thiago.bauermann@linaro.org" <thiago.bauermann@linaro.org>, "Pandey, Sunil
+ K" <sunil.k.pandey@intel.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"ebiederm@xmission.com" <ebiederm@xmission.com>, "brauner@kernel.org"
+	<brauner@kernel.org>, "will@kernel.org" <will@kernel.org>,
+	"hjl.tools@gmail.com" <hjl.tools@gmail.com>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "ardb@kernel.org"
+	<ardb@kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v9 05/39] arm64/gcs: Document the ABI for Guarded Control
+ Stacks
+Thread-Topic: [PATCH v9 05/39] arm64/gcs: Document the ABI for Guarded Control
+ Stacks
+Thread-Index: AQHaxxDwOzLoaxD3VkqS4FsXYkxulLHv3AWygACDWgCACXR3gA==
+Date: Tue, 16 Jul 2024 18:50:12 +0000
+Message-ID: <2fb80876e286b4db8f9ef36bcce04bbf02af0de2.camel@intel.com>
+References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+	 <20240625-arm64-gcs-v9-5-0f634469b8f0@kernel.org>
+	 <87a5iph6u2.fsf@oldenburg.str.redhat.com>
+	 <Zo7SdDT_cBp6uXgT@finisterre.sirena.org.uk>
+In-Reply-To: <Zo7SdDT_cBp6uXgT@finisterre.sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|SJ2PR11MB7428:EE_
+x-ms-office365-filtering-correlation-id: 426bfd04-def7-423c-c54b-08dca5c81f86
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?Z3dqSER4K0c1bWVxRCswd2dEdjlaOEJFRGtUNG04d2xtazBLbytuQTR4SFhj?=
+ =?utf-8?B?Y0NLeVRGTy8wZEFNL1hSN1RRN0gzdC96eFgxTHBJTGNPSU52YUgwUHdhMSs4?=
+ =?utf-8?B?Y0VJTmI2RXBQdU1Zd2VwdlhZM3p3Z3dyT2pseHFTVFB2QnVBMFEveWZNU1Jz?=
+ =?utf-8?B?RkF6cXliLzRoN1NFdnNSVUtwY3pKcUF2SVZscVhZZUFWYlU3U2t1TmZBVjY2?=
+ =?utf-8?B?N3N1TlJSUTZDVmRoK0xlUGo2a29VQTI2Q2RySVVsckl3MGhSU0Myc0ZpZ3lX?=
+ =?utf-8?B?ejNkbW9NeHZONWVnWUZlR2plSVVMYjU2WG56RS9ESUxxNEJhNlJWdVRZWVZS?=
+ =?utf-8?B?M3A4YWtKVDRTcGRhTnFSa0VxZFRGZU40K1J0d3R0QjVvQlVuQnBMa3ZaY0pM?=
+ =?utf-8?B?YkdCbnBLU09ZN2gySmFGN3hrUnIvbjFxQnppamNDZkE1ZmFxZGo4MGg2dk81?=
+ =?utf-8?B?U1VRRkFnZWN1SjY0VjBCTUJQWjVUMHlLZ0Y1bjZEZndLN3Bzd0RRZWFTN01m?=
+ =?utf-8?B?dllKL0syeEpqUWF2aFpLdGlRNU5BYWJHNklENWRKdTl4bUVvZEszQzA0SEl5?=
+ =?utf-8?B?cXNURkxlamI4Z3lBRjFxSjhWeHdiQzl3Z2g3S0dHR01Fa2VZVHZwWFd4VHFa?=
+ =?utf-8?B?N3JsWkVtaXVOZWJtcDZCUHZSMW1BTkhVaUZEcko1TWhRTjVKOTB0SjUwSjdC?=
+ =?utf-8?B?d1BybGExcFJmWjhySWtpTkhyMWZrWWEra3JEbzBmNTJ2RUNXcndkMk94cmQy?=
+ =?utf-8?B?SnNlaU5sV3hoSlZ4K2NXeVpUQm9KLzVZOTE5Tm1pdGxtcVBHQjFvV2NGTHMy?=
+ =?utf-8?B?YmRmQzBnL1BJNTBkT3UzUWZ5dHBJckNNeWMwY2Vxakx5ZE91Y3lJc0ZLNSs1?=
+ =?utf-8?B?RjZkQ0RUYWRuc2JEaHZCKzVDR3d0SExUbWRPalV2MEFCTHZNRjNIeE1DVWx6?=
+ =?utf-8?B?Q1UzWTM4MDV5emNYcE1LZzJkcktDbDJqSkVlbVMxOWxVNllhZC8yK1R1eTN4?=
+ =?utf-8?B?bFhUb29RNWZjOXFLRlpRcUQwdlpwYzYxVTJBOERKNmZwUFZEeGhDL1NuRzdE?=
+ =?utf-8?B?dzJxVTNMTnphbTNEdk1zcmJqbEtFM3I5cEFaSCtTNzNNZmozajQ5TW1ibU1C?=
+ =?utf-8?B?THppeGpIbVgyMndrd0hLY2ZEU3hsUUJ2TDZTKyt0cUloY0xUakVmb3VZSzJ4?=
+ =?utf-8?B?bTl6ODR3dDBtM1hKMTFnT3hwSlEvVG9xMytHWExxZ28wV29uZjNySXkwbllQ?=
+ =?utf-8?B?bWhuVEFRNHllbVNwc0tuTG1JL20reUJqM1pvZWloU2dGT2FLTGlVaVUwaU5N?=
+ =?utf-8?B?dnBOYnQ3N2JrM0grUTMrbytlL3lnRHlxblYxUlNSRnlMOTVMRVF0MlpXS20r?=
+ =?utf-8?B?NmlqdTJDcEZxY1pHa2JyRXF4bG1vbFZlU3RxWUg1NmVOSWsxYjdwSmFhdXcw?=
+ =?utf-8?B?NThjQVFudU1TRTd4OWl3WDJPb2NwWXZYN2dycnM0NmlLaVRlbE5GMGhkK3VN?=
+ =?utf-8?B?bTExOEpFOWtZK3pIVjN3dDAraVdRNG4rT0FsdE81YXlnQ1lMRDNHV1NkcDJa?=
+ =?utf-8?B?cGs1bzRzdnRkRmozdngyckZDYVlFUTJ4dTc0OWdGbU5XaVFOMEVzQVJmRW1x?=
+ =?utf-8?B?aUVRNW1jR2toWlV5MjlqYnlxREFPWWdEMjdYSC9rTnR5LzVLVmFwUEZIY29Y?=
+ =?utf-8?B?QlFvZFpDUldJYnZWMkZMYlhFb0tnZXJWTDVWRktRKzdzZDNkQ21PVnZoam1n?=
+ =?utf-8?B?OGxScXZ3TWg1ckY3c253amZnVStNMDdYclFDdHJSRXNJTGFBam0rei9VOFMw?=
+ =?utf-8?Q?LC/GxPBr3iEWaY8yMUVaEkkW0C+Kgj9Qj5D3c=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?d0NBSHI5T2hZbnp3U3BKcjQ5bU1SR3dtU2dHTGNkV2JJSXdmL0x6QWU3bVo1?=
+ =?utf-8?B?ZVN4Mm1WeDl5dmlZSXZxamVvdnFaOGN5RVM0UXZUa0h1a05sZG5YeG9FZFZ0?=
+ =?utf-8?B?NDdtUDFHK0xjaFZhYVVjTmNLSktEeFpTTkVXcXlkQ3Uzek5NNHdoNDZHSVNt?=
+ =?utf-8?B?UkdHL3BoSGozRFgvb2JxZ1l5ZTcrTVNrNS91ZzlXd2hid0R2NGlldWJmMlc1?=
+ =?utf-8?B?QnJSRUtpb1pMRFpFWFZhYVdma1RPZTdwV0Uza2tjUnNUM3ZIc2NGY2pTR2dT?=
+ =?utf-8?B?ZmJiSGRiMGx1SEdVVlU5NVNRc1JVTkJtZDNsK3QxVk9Delg4aFhXL0MxMCt0?=
+ =?utf-8?B?TFlOeVBaQ3FGQXJsN2owZ0ErbWlSeUwzdUFUUHVvM0xkWkFiNlllcTZhKzAw?=
+ =?utf-8?B?UW5DQU5PRTE5clhUTXhMUCtLMGNyTmZOdU1SQWd4RWVlLzFObDd3TjZRMzg5?=
+ =?utf-8?B?SE1sZWkxOTFLS3JURUl2YXNVUnRoMjc3NkZsWklDS3BoM0NwRXIvUlFpUHEz?=
+ =?utf-8?B?R1Z3eUJva04yTnZwUVgrU0cwYTRpYmhtUXJaUkpQM052cG45Qnd4Ly90bE4w?=
+ =?utf-8?B?Wk1WRVhpRlhqdmlndmo1NlpSTjdQTEgvNVd4UlJ1UVZyaWVjdnFxTVNrZW90?=
+ =?utf-8?B?TFVOdXVvWDFUYTc3RUdWS3ZjV1BtUG5SY3BFek91SFVuQnNXcUs2RUUzNnpI?=
+ =?utf-8?B?VGo5Wm9SciswK2QwY1hVSzBjemlvaTBuQVVnQlFSRndDSTF0dksrcktPZWhv?=
+ =?utf-8?B?TkpVczEyS1hLeFdxZzBFbkl6K00zSWhqNnlSTlAzalUrd0NTMkFRTDJoTjc3?=
+ =?utf-8?B?TmNqQ1lBWXorV2I2cUFxMFdwWFhaejQyKzdjVnhjSUJseFdqWG1MSE12RDRv?=
+ =?utf-8?B?ZEJpOXRUR3ZLWjVCU3lncGxvR29NcGtWRVMvd1BNYWxQRFc1akhkK25mMFBI?=
+ =?utf-8?B?N3dFaEFxTEVlanVjMkdYOXhLK0srU3FtWUdya0pUQWMvSGE4OWVhVDhlT0gx?=
+ =?utf-8?B?NXNNdzFvQklmY09Iei96ZTBJRXlHakxROHo1eUdDMTZCT1ROamI2THRqZWNZ?=
+ =?utf-8?B?ZVZuMm5VL1dPTEozUTIwOWlTYWNrbWMrenEvTmlPaU5MdjhMMHEvb2RQNVBM?=
+ =?utf-8?B?NmdnbytZSmxGaVdGOEVGMlNvdk9nRXI2Vy83QXJ0elBNY0YwT2xIYXBZdXVC?=
+ =?utf-8?B?ajZyMnl2eURTMGErbkd4QUFnamJXRStwRGJoSC92cmx0Yis5Y3lKRlNXaHJR?=
+ =?utf-8?B?Rk1nZ1gzTzdEbHNHNlppWStmSXFUQmhDWjluNkpNSzVTQjhsQjNWS213OGd0?=
+ =?utf-8?B?dkM1TFhiZ3JJL1J0cnNZc3RtVFprb0ZnYmY0bnBUTGhJL2lhK2pTSXJ0cE5V?=
+ =?utf-8?B?NmNpcXFodU9MeWxTOTE0c1p2dXhXWkFWRmFTM3NlZU15bTZid0luWmxDckZE?=
+ =?utf-8?B?MUpRdTVuVm91N204TGVYTVNGYjFEeGpYWEFmcHpRSCtaelhwM0JRT2EzVFcx?=
+ =?utf-8?B?TlJibmg2R3piTnRhZlJxQjY3RkdRNmZENzk2MDF0NDNXNFM1RE9ZZWdKZ2lC?=
+ =?utf-8?B?eXZRMDNOU29YWlRQdWZ2VTY1bmZ1ZUVVeXM1RHMxM2R3MjZxdURpbDdSbVBL?=
+ =?utf-8?B?MVcrWDBkQWUwT0RrZHJNY3MrRStFNkRUcXdIZ3BlZmRJQVdVOVVWcGw0QVdF?=
+ =?utf-8?B?K2Z5UmwzcUc2Sytocit2RU9rMWxvMEMzdS9weHQ4Sk1LVkpSNnFBaXN3Wm5K?=
+ =?utf-8?B?OXF3Yk1CYmZQRWgxWDNrdi9Bb3ZJSHZYdk1rSlBEYjlRcHh4bElkRG1QblF0?=
+ =?utf-8?B?OFhvZDVXVU1Jc3JiWUZJZmJ3SWdGWFVqTFlQakg5NVRva216T3BpejlIejc0?=
+ =?utf-8?B?cGMzTDRDRkFGQXhCZEhXSGQ1VFdYWUNEdHdOazRqTWpoS3gyTEU0T1d3VUd6?=
+ =?utf-8?B?NVpuTEY0OWFiSC9ZclRKZHBwNnd3cTBKN1JBR29GTU1NNFRnU2xMMU9uYnMx?=
+ =?utf-8?B?VklHVlU5a3U1UFIvRnVLNkdzS3FLZnJMVHIxZDhGeWs2QjArOFZ6L3E2bnV1?=
+ =?utf-8?B?Nk56ZHJNYm5tWDM4YnN5SUU3TWgyc212UVBMVlhwR0JYWmc5a1dMNit6Y2Fj?=
+ =?utf-8?B?L0t5NUdJMWxhemVreXBVaTBBUVZaQWN4LytRTzc0bkxTMWhNZ2pCcFdjZ3Bm?=
+ =?utf-8?B?ckE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EF534A61ACB4C947A05EAAAA9A2D7304@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR01MB5471:EE_|BY3PR01MB6691:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b01c947-37f4-446e-3ccd-08dca5c7fe7c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vckAC/F+YmCrWSrUXOIHzyFOvrP6T/otv3Yri5naTC/1y1cSock7gCCo6/Mo?=
- =?us-ascii?Q?hnjAkQxUgFf7wkxvHmBxdU080Ug9rW7NMDzd7YHO+eL0/aBVFaOjaFlYiHfE?=
- =?us-ascii?Q?muGI47eR0asiAzRHAP0E314CXMkEfkGzAX2IHWTaXzrefYmOzeel/a/F32Pv?=
- =?us-ascii?Q?9fAk9MFdhoFpdkWT8LfnADK+EZgk4SpXWjNbue6XYku8MlYpdtCRcZKWlm8X?=
- =?us-ascii?Q?Q8eoUbzoQF6Z00UYLRFlArAD7NFfDNl+RrSN6m/Dxrv6ShmvI3KfX7zwZ6O8?=
- =?us-ascii?Q?D7jHpD+dT0gzOddcjsI66V0blT/TWSZ9svQ3CyLVY9diooo6wznJ5HK1U8Sn?=
- =?us-ascii?Q?AR3pqtihhOg+V50vdBxW16haDb2WiRBqi/8/o08kU0/b8wO1gxehXA+UuJU4?=
- =?us-ascii?Q?4wAdzy+whRXtjDMbSwAQ/yZW47qDndljHzwpNtTAiUPRkKRzfT8V2GdC2Pj8?=
- =?us-ascii?Q?trQERzdzEXfUzdFXuN1QXLAUQjooy8GPjcQHYfAdNBMN0ZDYgXp1S3JrCZ8U?=
- =?us-ascii?Q?aFsRzymCiIorwSu/KrQIyY7WyqvgKghX1mpKqvRZbIVEmUrjapf/I/yJNgi6?=
- =?us-ascii?Q?4Jg1mQ8NcXvrXKX97LGZwka1ewwLjxuAzJhG6XlnscAvZCzk12+j+PXX2Hyl?=
- =?us-ascii?Q?R6OFo7P2pGfZTBhOh9gW9o7l1W03HI+JC/0BwamRwXfr2s2CimxyfWJL1cjY?=
- =?us-ascii?Q?HvAk3JB0sEt3lhgkQg+N+bgzP37UiSlSa3YT9/5MkrEhtczekFXVax5u/0cK?=
- =?us-ascii?Q?LH+hdCB9SwTdVWdXDXjsdU4N9A5ZhED5NIGuC756h/JHY13wTIyyevsHEXlN?=
- =?us-ascii?Q?RBsyroCqQHhbb67VEqjJA0uc/e+se6npwIKuLNwFgppavkQuji0qDqM0CUzM?=
- =?us-ascii?Q?qiqSHLKF2sK2Ks2w4CBouDV4WgRcPiY0/LGoHGm1re3vOS33XA4Gzw3i+oYG?=
- =?us-ascii?Q?N1Sgv1g4Bjg5ed4J8INiNnDbmRCb5tDxYwcHvltdasanS0B+gbLR8hir+mFg?=
- =?us-ascii?Q?l7c6SPCqshWE8lDL30S8VUcWQwV9OeX/KlFZSgSIR+cJ8m2OVMtFIr9WU+LK?=
- =?us-ascii?Q?DQf5u/QLZ55zpFepVa+D0usZcucFLhQQorphxZorURcqfFQAf6WY6HTPo8SM?=
- =?us-ascii?Q?W8/AxCTNEguY4a1q3GNUXuoc+CVjCcdhc3r8swMF/PFBj6p2YCtvqWmeQXh3?=
- =?us-ascii?Q?7mqmJsOIYUguX+SjkwBgffaJSNYV2mjSblQnL9nSiCWe/wCM5lZ0DoOH3Tva?=
- =?us-ascii?Q?tqPkbjBdTAivU+JaWOLc4wNM+4p98IZ2SVGncC5cv5mZs1xMUB1Up2C8hmwo?=
- =?us-ascii?Q?MslCijt3Uj+VVANAHwtIkTOLntGr0uLsfTXgR88HkWCD/ibJxbbffC+HY6ZU?=
- =?us-ascii?Q?5saiLqovyjJ9KRtLRNtvGAAS7Msu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR01MB5471.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?x4Ux321u4Q5iCouLRaFVBQCI4jsXuEslbcwwXnhPFqcC3zhz/HmXJPJ2KRJZ?=
- =?us-ascii?Q?M3drWXDiKg4w4ZKqyP/bqFjyc/dwOgHu0NapgdZBSh4ybilWdcqSfAXH9xQv?=
- =?us-ascii?Q?Ua/g/PCF5kbBRwHB9kBNANKk16w6iXMfab++Sh0fZGSTUqxL3dwO+71ClHzd?=
- =?us-ascii?Q?HMUXcvMKPi+cQOKdMktBGKg1l3iefbxRkwzk3vQ/JwKFhQUMuS8uR/iKGreV?=
- =?us-ascii?Q?HNZSjskGZuZBZBZferi5DisMv/6WI4Wr6p0+2XEFYkS4fGQnX7cYhmocIpj+?=
- =?us-ascii?Q?QBJtqzvAVCMiQXBrSI0YcpQBvELR0m/c4IjXLravuML5PIgUT2UN1mVjHf+T?=
- =?us-ascii?Q?R9TZfmPXQb31L7dy46Ddmf92XVnxxsdARhuSg4CUT22a01Vx6u9Ip3Aq4A6O?=
- =?us-ascii?Q?dLCoOo80mNesZeSe+oYJUXDNkZcbJ9Zsue52rUz8TsPkpBZ6z6m9KgQOjccB?=
- =?us-ascii?Q?BfrHHETO/e5QaMQBBRBG+WSc1Aza+UyuSUuZHXaIOmG5q0TLYznSX+RwYpJP?=
- =?us-ascii?Q?pmcCNTmVfJbit5Jbd5jgvIUBgWva6CyY7rlxmWG8o3t+8FRlgq2EIjCVFJjB?=
- =?us-ascii?Q?Q0qm9SzPdw4WsXIpdJtSACTqMgYvYC/ReVTEXiAkXmCy2+G/CTHRuapmofm2?=
- =?us-ascii?Q?L2jqwNlayXNQTRgp3jDRxo/Ma1GviAA06ittQdyZYPdPgYGTekhjrtpk2fN9?=
- =?us-ascii?Q?50Ej2A8+Bji6cRpjEnVLP3nixI6G68RyRN58FJzUGBQhoxIRDqGzslpzdEe/?=
- =?us-ascii?Q?golJSiGtN/3OrRuO2Go5vc6SgvkQMt+iXyK4KerE3+fybn/q/js3UKbhqhH+?=
- =?us-ascii?Q?eRvkTRix5yU792BmZutKbYVotTpfbHkS4RSwSy0tyzBm3Up4K0YtgGNnD9hG?=
- =?us-ascii?Q?Vby3vDEEpBdeQ7lfNWHNx+9dd8LhshAgK6Qg9wNdzkgvmJ6K3h8RRBL4KHy8?=
- =?us-ascii?Q?CgqUl+Oqpav9wufRz9YsmASmSKKJ3DnhLyRKyCzoqZcx1aGYC/aiW2QB9Jv2?=
- =?us-ascii?Q?/3iSld4XGwAJSE10CwMFhw9O8eNDcrPFIoVM6VbOtYWvnIZWcwEeSCYbu2Rw?=
- =?us-ascii?Q?HCVIyZckxFSA9ymGG9M3NyqXe9jGyWPNUacJEH2bkRA+RX6PMTT4gLH9aFk4?=
- =?us-ascii?Q?Y2ErLGjoH36I8/PkYpLoV7vrVbI1OH3ysWuYohdZZ0cKCIhsHutH44iXzpxA?=
- =?us-ascii?Q?nCaIyJGaMabmm7Blc6tqYfbZNS0jdc3ux7OILG634TEDabZ38+fYxPPMl6YY?=
- =?us-ascii?Q?+6f6ZIszBjojqzPamLROEeTw+poc8xhj1RTLj6TrrZcBm3vPogcD3amEa6rY?=
- =?us-ascii?Q?XxOVgQb2Dj2WfEi9uSxRBS44aQddAMzaU3N9dYdRGY6hxH4p/YxzN7BKQ/iZ?=
- =?us-ascii?Q?OMaMQTZQ+LnN73rJlw5uNTPrekV+JFnJosKjxMoadORXjbzQH8VN+9w7VAm8?=
- =?us-ascii?Q?spEdGi/t/boNxLVGnF8BBHSswOueJSFEpAy+52595K/L+JOMCb+Ke1Wlku9v?=
- =?us-ascii?Q?FJREHFx+mPYhyE9FZBHQZSds7b0dhM5h2KE+gltFa+VQ3y9IzBTHWPFrqrNj?=
- =?us-ascii?Q?Hg0ivE7ARvnWL7hL5aMF9FOor+MBE/lWSfqSUW8Zh6h1RcDcPUsP7Pfoj56y?=
- =?us-ascii?Q?h7bFyqJgd49ZHmGfqtz3JCc=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b01c947-37f4-446e-3ccd-08dca5c7fe7c
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR01MB5471.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 18:49:16.8537
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 426bfd04-def7-423c-c54b-08dca5c81f86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2024 18:50:12.0380
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uZ6+YUvuqfRP5T7IkZebkEBdNwl7q/nER1MosTMrliOR1fJnl1IjWxyZOhomwRt0b6y8kuF1nFOBNE/SATwBZLvLkCkjxEzTRboy3tMtvlk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR01MB6691
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SS8hqLx3uUx7KYmjsv3/IXQJszqS1mDGQoG3KCYy/bRdtgJ35zokMWgIEsPWaqJ4NdjREvTeRdGE3ihEyR0177PevH+w2yxDxJtzgcb8D0c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7428
+X-OriginatorOrg: intel.com
 
-commit fa2690af573dfefb47ba6eef888797a64b6b5f3c upstream
-
-The below bug was reported on a non-SMP kernel:
-
-[  275.267158][ T4335] ------------[ cut here ]------------
-[  275.267949][ T4335] kernel BUG at include/linux/page_ref.h:275!
-[  275.268526][ T4335] invalid opcode: 0000 [#1] KASAN PTI
-[  275.269001][ T4335] CPU: 0 PID: 4335 Comm: trinity-c3 Not tainted 6.7.0-rc4-00061-gefa7df3e3bb5 #1
-[  275.269787][ T4335] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[  275.270679][ T4335] RIP: 0010:try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))
-[  275.272813][ T4335] RSP: 0018:ffffc90005dcf650 EFLAGS: 00010202
-[  275.273346][ T4335] RAX: 0000000000000246 RBX: ffffea00066e0000 RCX: 0000000000000000
-[  275.274032][ T4335] RDX: fffff94000cdc007 RSI: 0000000000000004 RDI: ffffea00066e0034
-[  275.274719][ T4335] RBP: ffffea00066e0000 R08: 0000000000000000 R09: fffff94000cdc006
-[  275.275404][ T4335] R10: ffffea00066e0037 R11: 0000000000000000 R12: 0000000000000136
-[  275.276106][ T4335] R13: ffffea00066e0034 R14: dffffc0000000000 R15: ffffea00066e0008
-[  275.276790][ T4335] FS:  00007fa2f9b61740(0000) GS:ffffffff89d0d000(0000) knlGS:0000000000000000
-[  275.277570][ T4335] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  275.278143][ T4335] CR2: 00007fa2f6c00000 CR3: 0000000134b04000 CR4: 00000000000406f0
-[  275.278833][ T4335] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  275.279521][ T4335] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  275.280201][ T4335] Call Trace:
-[  275.280499][ T4335]  <TASK>
-[ 275.280751][ T4335] ? die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434 arch/x86/kernel/dumpstack.c:447)
-[ 275.281087][ T4335] ? do_trap (arch/x86/kernel/traps.c:112 arch/x86/kernel/traps.c:153)
-[ 275.281463][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))
-[ 275.281884][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))
-[ 275.282300][ T4335] ? do_error_trap (arch/x86/kernel/traps.c:174)
-[ 275.282711][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))
-[ 275.283129][ T4335] ? handle_invalid_op (arch/x86/kernel/traps.c:212)
-[ 275.283561][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))
-[ 275.283990][ T4335] ? exc_invalid_op (arch/x86/kernel/traps.c:264)
-[ 275.284415][ T4335] ? asm_exc_invalid_op (arch/x86/include/asm/idtentry.h:568)
-[ 275.284859][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))
-[ 275.285278][ T4335] try_grab_folio (mm/gup.c:148)
-[ 275.285684][ T4335] __get_user_pages (mm/gup.c:1297 (discriminator 1))
-[ 275.286111][ T4335] ? __pfx___get_user_pages (mm/gup.c:1188)
-[ 275.286579][ T4335] ? __pfx_validate_chain (kernel/locking/lockdep.c:3825)
-[ 275.287034][ T4335] ? mark_lock (kernel/locking/lockdep.c:4656 (discriminator 1))
-[ 275.287416][ T4335] __gup_longterm_locked (mm/gup.c:1509 mm/gup.c:2209)
-[ 275.288192][ T4335] ? __pfx___gup_longterm_locked (mm/gup.c:2204)
-[ 275.288697][ T4335] ? __pfx_lock_acquire (kernel/locking/lockdep.c:5722)
-[ 275.289135][ T4335] ? __pfx___might_resched (kernel/sched/core.c:10106)
-[ 275.289595][ T4335] pin_user_pages_remote (mm/gup.c:3350)
-[ 275.290041][ T4335] ? __pfx_pin_user_pages_remote (mm/gup.c:3350)
-[ 275.290545][ T4335] ? find_held_lock (kernel/locking/lockdep.c:5244 (discriminator 1))
-[ 275.290961][ T4335] ? mm_access (kernel/fork.c:1573)
-[ 275.291353][ T4335] process_vm_rw_single_vec+0x142/0x360
-[ 275.291900][ T4335] ? __pfx_process_vm_rw_single_vec+0x10/0x10
-[ 275.292471][ T4335] ? mm_access (kernel/fork.c:1573)
-[ 275.292859][ T4335] process_vm_rw_core+0x272/0x4e0
-[ 275.293384][ T4335] ? hlock_class (arch/x86/include/asm/bitops.h:227 arch/x86/include/asm/bitops.h:239 include/asm-generic/bitops/instrumented-non-atomic.h:142 kernel/locking/lockdep.c:228)
-[ 275.293780][ T4335] ? __pfx_process_vm_rw_core+0x10/0x10
-[ 275.294350][ T4335] process_vm_rw (mm/process_vm_access.c:284)
-[ 275.294748][ T4335] ? __pfx_process_vm_rw (mm/process_vm_access.c:259)
-[ 275.295197][ T4335] ? __task_pid_nr_ns (include/linux/rcupdate.h:306 (discriminator 1) include/linux/rcupdate.h:780 (discriminator 1) kernel/pid.c:504 (discriminator 1))
-[ 275.295634][ T4335] __x64_sys_process_vm_readv (mm/process_vm_access.c:291)
-[ 275.296139][ T4335] ? syscall_enter_from_user_mode (kernel/entry/common.c:94 kernel/entry/common.c:112)
-[ 275.296642][ T4335] do_syscall_64 (arch/x86/entry/common.c:51 (discriminator 1) arch/x86/entry/common.c:82 (discriminator 1))
-[ 275.297032][ T4335] ? __task_pid_nr_ns (include/linux/rcupdate.h:306 (discriminator 1) include/linux/rcupdate.h:780 (discriminator 1) kernel/pid.c:504 (discriminator 1))
-[ 275.297470][ T4335] ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4300 kernel/locking/lockdep.c:4359)
-[ 275.297988][ T4335] ? do_syscall_64 (arch/x86/include/asm/cpufeature.h:171 arch/x86/entry/common.c:97)
-[ 275.298389][ T4335] ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4300 kernel/locking/lockdep.c:4359)
-[ 275.298906][ T4335] ? do_syscall_64 (arch/x86/include/asm/cpufeature.h:171 arch/x86/entry/common.c:97)
-[ 275.299304][ T4335] ? do_syscall_64 (arch/x86/include/asm/cpufeature.h:171 arch/x86/entry/common.c:97)
-[ 275.299703][ T4335] ? do_syscall_64 (arch/x86/include/asm/cpufeature.h:171 arch/x86/entry/common.c:97)
-[ 275.300115][ T4335] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129)
-
-This BUG is the VM_BUG_ON(!in_atomic() && !irqs_disabled()) assertion in
-folio_ref_try_add_rcu() for non-SMP kernel.
-
-The process_vm_readv() calls GUP to pin the THP. An optimization for
-pinning THP instroduced by commit 57edfcfd3419 ("mm/gup: accelerate thp
-gup even for "pages != NULL"") calls try_grab_folio() to pin the THP,
-but try_grab_folio() is supposed to be called in atomic context for
-non-SMP kernel, for example, irq disabled or preemption disabled, due to
-the optimization introduced by commit e286781d5f2e ("mm: speculative
-page references").
-
-The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
-boundaries") is not actually the root cause although it was bisected to.
-It just makes the problem exposed more likely.
-
-The follow up discussion suggested the optimization for non-SMP kernel
-may be out-dated and not worth it anymore [1].  So removing the
-optimization to silence the BUG.
-
-However calling try_grab_folio() in GUP slow path actually is
-unnecessary, so the following patch will clean this up.
-
-[1] https://lore.kernel.org/linux-mm/821cf1d6-92b9-4ac4-bacc-d8f2364ac14f@paulmck-laptop/
-
-Link: https://lkml.kernel.org/r/20240625205350.1777481-1-yang@os.amperecomputing.com
-Fixes: 57edfcfd3419 ("mm/gup: accelerate thp gup even for "pages != NULL"")
-Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Tested-by: Oliver Sang <oliver.sang@intel.com>
-Acked-by: Peter Xu <peterx@redhat.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Vivek Kasireddy <vivek.kasireddy@intel.com>
-Cc: <stable@vger.kernel.org>	[6.6+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
- fs/netfs/buffered_write.c |  4 ++--
- fs/smb/client/file.c      |  4 ++--
- include/linux/page_ref.h  | 49 ++-------------------------------------
- mm/filemap.c              | 10 ++++----
- mm/gup.c                  |  2 +-
- 5 files changed, 12 insertions(+), 57 deletions(-)
-
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index d2ce0849bb53..e6066ddbb3ac 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -811,7 +811,7 @@ static void netfs_extend_writeback(struct address_space *mapping,
- 				break;
- 			}
- 
--			if (!folio_try_get_rcu(folio)) {
-+			if (!folio_try_get(folio)) {
- 				xas_reset(xas);
- 				continue;
- 			}
-@@ -1028,7 +1028,7 @@ static ssize_t netfs_writepages_begin(struct address_space *mapping,
- 		if (!folio)
- 			break;
- 
--		if (!folio_try_get_rcu(folio)) {
-+		if (!folio_try_get(folio)) {
- 			xas_reset(xas);
- 			continue;
- 		}
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index 9be37d0fe724..4784fece4d99 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -2753,7 +2753,7 @@ static void cifs_extend_writeback(struct address_space *mapping,
- 				break;
- 			}
- 
--			if (!folio_try_get_rcu(folio)) {
-+			if (!folio_try_get(folio)) {
- 				xas_reset(xas);
- 				continue;
- 			}
-@@ -2989,7 +2989,7 @@ static ssize_t cifs_writepages_begin(struct address_space *mapping,
- 		if (!folio)
- 			break;
- 
--		if (!folio_try_get_rcu(folio)) {
-+		if (!folio_try_get(folio)) {
- 			xas_reset(xas);
- 			continue;
- 		}
-diff --git a/include/linux/page_ref.h b/include/linux/page_ref.h
-index d7c2d33baa7f..fdd2a75adb03 100644
---- a/include/linux/page_ref.h
-+++ b/include/linux/page_ref.h
-@@ -263,54 +263,9 @@ static inline bool folio_try_get(struct folio *folio)
- 	return folio_ref_add_unless(folio, 1, 0);
- }
- 
--static inline bool folio_ref_try_add_rcu(struct folio *folio, int count)
--{
--#ifdef CONFIG_TINY_RCU
--	/*
--	 * The caller guarantees the folio will not be freed from interrupt
--	 * context, so (on !SMP) we only need preemption to be disabled
--	 * and TINY_RCU does that for us.
--	 */
--# ifdef CONFIG_PREEMPT_COUNT
--	VM_BUG_ON(!in_atomic() && !irqs_disabled());
--# endif
--	VM_BUG_ON_FOLIO(folio_ref_count(folio) == 0, folio);
--	folio_ref_add(folio, count);
--#else
--	if (unlikely(!folio_ref_add_unless(folio, count, 0))) {
--		/* Either the folio has been freed, or will be freed. */
--		return false;
--	}
--#endif
--	return true;
--}
--
--/**
-- * folio_try_get_rcu - Attempt to increase the refcount on a folio.
-- * @folio: The folio.
-- *
-- * This is a version of folio_try_get() optimised for non-SMP kernels.
-- * If you are still holding the rcu_read_lock() after looking up the
-- * page and know that the page cannot have its refcount decreased to
-- * zero in interrupt context, you can use this instead of folio_try_get().
-- *
-- * Example users include get_user_pages_fast() (as pages are not unmapped
-- * from interrupt context) and the page cache lookups (as pages are not
-- * truncated from interrupt context).  We also know that pages are not
-- * frozen in interrupt context for the purposes of splitting or migration.
-- *
-- * You can also use this function if you're holding a lock that prevents
-- * pages being frozen & removed; eg the i_pages lock for the page cache
-- * or the mmap_lock or page table lock for page tables.  In this case,
-- * it will always succeed, and you could have used a plain folio_get(),
-- * but it's sometimes more convenient to have a common function called
-- * from both locked and RCU-protected contexts.
-- *
-- * Return: True if the reference count was successfully incremented.
-- */
--static inline bool folio_try_get_rcu(struct folio *folio)
-+static inline bool folio_ref_try_add(struct folio *folio, int count)
- {
--	return folio_ref_try_add_rcu(folio, 1);
-+	return folio_ref_add_unless(folio, count, 0);
- }
- 
- static inline int page_ref_freeze(struct page *page, int count)
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 30de18c4fd28..367ea201468d 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1823,7 +1823,7 @@ void *filemap_get_entry(struct address_space *mapping, pgoff_t index)
- 	if (!folio || xa_is_value(folio))
- 		goto out;
- 
--	if (!folio_try_get_rcu(folio))
-+	if (!folio_try_get(folio))
- 		goto repeat;
- 
- 	if (unlikely(folio != xas_reload(&xas))) {
-@@ -1977,7 +1977,7 @@ static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
- 	if (!folio || xa_is_value(folio))
- 		return folio;
- 
--	if (!folio_try_get_rcu(folio))
-+	if (!folio_try_get(folio))
- 		goto reset;
- 
- 	if (unlikely(folio != xas_reload(xas))) {
-@@ -2157,7 +2157,7 @@ unsigned filemap_get_folios_contig(struct address_space *mapping,
- 		if (xa_is_value(folio))
- 			goto update_start;
- 
--		if (!folio_try_get_rcu(folio))
-+		if (!folio_try_get(folio))
- 			goto retry;
- 
- 		if (unlikely(folio != xas_reload(&xas)))
-@@ -2289,7 +2289,7 @@ static void filemap_get_read_batch(struct address_space *mapping,
- 			break;
- 		if (xa_is_sibling(folio))
- 			break;
--		if (!folio_try_get_rcu(folio))
-+		if (!folio_try_get(folio))
- 			goto retry;
- 
- 		if (unlikely(folio != xas_reload(&xas)))
-@@ -3448,7 +3448,7 @@ static struct folio *next_uptodate_folio(struct xa_state *xas,
- 			continue;
- 		if (folio_test_locked(folio))
- 			continue;
--		if (!folio_try_get_rcu(folio))
-+		if (!folio_try_get(folio))
- 			continue;
- 		/* Has the page moved or been split? */
- 		if (unlikely(folio != xas_reload(xas)))
-diff --git a/mm/gup.c b/mm/gup.c
-index 1611e73b1121..ec8570d25a6c 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -76,7 +76,7 @@ static inline struct folio *try_get_folio(struct page *page, int refs)
- 	folio = page_folio(page);
- 	if (WARN_ON_ONCE(folio_ref_count(folio) < 0))
- 		return NULL;
--	if (unlikely(!folio_ref_try_add_rcu(folio, refs)))
-+	if (unlikely(!folio_ref_try_add(folio, refs)))
- 		return NULL;
- 
- 	/*
--- 
-2.41.0
-
+K1N0ZXBoZW4sIHdobyBoYWQgYmVlbiBhc2tpbmcgYWJvdXQgUklQIGludGVncml0eSBhd2hpbGUg
+YmFjay4NCg0KVGhyZWFkIGNvbnRleHQgZm9yIFN0ZXBoZW46DQpodHRwczovL2xvcmUua2VybmVs
+Lm9yZy9sa21sL1pvN1NkRFRfY0JwNnVYZ1RAZmluaXN0ZXJyZS5zaXJlbmEub3JnLnVrLyN0DQoN
+Ck9uIFdlZCwgMjAyNC0wNy0xMCBhdCAxOToyNyArMDEwMCwgTWFyayBCcm93biB3cm90ZToNCj4g
+T24gV2VkLCBKdWwgMTAsIDIwMjQgYXQgMTI6MzY6MjFQTSArMDIwMCwgRmxvcmlhbiBXZWltZXIg
+d3JvdGU6DQo+ID4gKiBNYXJrIEJyb3duOg0KPiANCj4gPiA+ICsqIFdoZW4gR0NTIGlzIGVuYWJs
+ZWQgZm9yIHRoZSBpbnRlcnJ1cHRlZCB0aHJlYWQgYSBzaWduYWwgaGFuZGxpbmcNCj4gPiA+IHNw
+ZWNpZmljDQo+ID4gPiArwqAgR0NTIGNhcCB0b2tlbiB3aWxsIGJlIHdyaXR0ZW4gdG8gdGhlIEdD
+UywgdGhpcyBpcyBhbiBhcmNoaXRlY3R1cmFsIEdDUw0KPiA+ID4gY2FwDQo+ID4gPiArwqAgdG9r
+ZW4gd2l0aCBiaXQgNjMgc2V0IGFuZCB0aGUgdG9rZW4gdHlwZSAoYml0cyAwLi4xMSkgYWxsIGNs
+ZWFyLsKgIFRoZQ0KPiA+ID4gK8KgIEdDU1BSX0VMMCByZXBvcnRlZCBpbiB0aGUgc2lnbmFsIGZy
+YW1lIHdpbGwgcG9pbnQgdG8gdGhpcyBjYXAgdG9rZW4uDQo+IA0KPiA+IEhvdyBkb2VzIHRoaXMg
+bWFya2VyIGludGVyZmVyZSB3aXRoIFRvcCBCeXRlIElnbm9yZSAoVEJJOyBJIGhvcGUgSSBnb3QN
+Cj4gPiB0aGUgbmFtZSByaWdodCk/wqAgVGhlIHNwZWNpZmljYXRpb24gY3VycmVudGx5IGRvZXMg
+bm90IHNheSB0aGF0IG9ubHkNCj4gPiBhZGRyZXNzZXMgcHVzaGVkIHRvIHRoZSBzaGFkb3cgc3Rh
+Y2sgd2l0aCB0aGUgdG9wIGJ5dGUgY2xlYXJlZCwgd2hpY2gNCj4gPiBwb3RlbnRpYWxseSBtYWtl
+cyB0aGUgbWFya3VwIGFtYmlndW91cy7CoCBPbiB4ODYtNjQsIHRoZSBzYW1lIGlzc3VlIG1heQ0K
+PiANCj4gSW5kZWVkLi4uwqAgR2l2ZW4gdGhhdCB3ZSB1c2UgdGhlIGFkZHJlc3Mgb24gdGhlIEdD
+UyBhcyBwYXJ0IG9mIHRoZSB0b2tlbg0KPiBvbiBmaXJzdCBwYXNzIEkgdGhpbmsgd2UgY291bGQg
+Z2V0IGF3YXkgd2l0aCBqdXN0IHVzaW5nIHRoZSBhZGRyZXNzIGFuZA0KPiBub3Qgc2V0dGluZyB0
+aGUgdG9wIGJpdCwgd2UnZCBoYXZlIGFuIGludmFsaWQgY2FwIHBvaW50aW5nIGludG8gYSBHQ1MN
+Cj4gcGFnZSB3aGljaCBzaG91bGRuJ3Qgb3RoZXJ3aXNlIGJlIG9uIHRoZSBHQ1MuwqAgSSdsbCBn
+aXZlIHRoYXQgc29tZSBtb3JlDQo+IHRob3VnaHQuDQo+IA0KPiA+IGV4aXN0IHdpdGggTEFNLsKg
+IEkgaGF2ZSBub3QgdGVzdGVkIHlldCB3aGF0IGhhcHBlbnMgdGhlcmUuwqAgT24gQUFyY2g2NA0K
+PiA+IGFuZCBSSVNDLVYsIGl0IG1heSBiZSBtb3JlIG5hdHVyYWwgdG8gdXNlIHRoZSBMU0IgaW5z
+dGVhZCBvZiB0aGUgTFNCIGZvcg0KPiA+IHRoZSBtYXJrIGJpdCBiZWNhdXNlIG9mIGl0cyBpbnN0
+cnVjdGlvbiBhbGlnbm1lbnQuDQo+IA0KPiBUaGUgTFNCIGlzIGFscmVhZHkgdGFrZW4gYnkgdGhl
+IGFyY2hpdGVjdHVyZSBvbiBhYXJjaDY0LCB0aGUgYm90dG9tIGJpdHMNCj4gb2YgdGhlIHZhbHVl
+IGFyZSB1c2VkIGZvciB0aGUgdG9rZW4gdHlwZSBmaWVsZCB3aXRoIG5vIHZhbHVlcy9iaXRzDQo+
+IHJlc2VydmVkIGZvciBzb2Z0d2FyZSB1c2UuDQo+IA0KPiA+IFdlIGFsc28gaGF2ZSBhIGdhcCBv
+biB4ODYtNjQgZm9yIGJhY2t0cmFjZSBnZW5lcmF0aW9uIGJlY2F1c2UgdGhlDQo+ID4gaW50ZXJy
+dXB0ZWQgaW5zdHJ1Y3Rpb24gYWRkcmVzcyBkb2VzIG5vdCBlbmQgdXAgb24gdGhlIHNoYWRvdyBz
+dGFjay4NCj4gPiBUaGlzIGFkZHJlc3MgaXMgcG90ZW50aWFsbHkgcXVpdGUgaW50ZXJlc3Rpbmcg
+Zm9yIGJhY2t0cmFjZSBnZW5lcmF0aW9uLg0KPiA+IEkgYXNzdW1lIGl0J3MgY3VycmVudGx5IG1p
+c3NpbmcgYmVjYXVzZSB0aGUga2VybmVsIGRvZXMgbm90IHJlc3VtZQ0KPiA+IGV4ZWN1dGlvbiB1
+c2luZyBhIHJlZ3VsYXIgcmV0dXJuIGluc3RydWN0aW9uLsKgIEl0IHdvdWxkIGJlIHJlYWxseSB1
+c2VmdWwNCj4gPiBpZiBpdCBjb3VsZCBiZSBwdXNoZWQgdG8gdGhlIHNoYWRvdyBzdGFjaywgb3Ig
+cmVjb3ZlcmFibGUgZnJvbSB0aGUNCj4gPiBzaGFkb3cgc3RhY2sgaW4gc29tZSBvdGhlciB3YXkg
+KGUuZy4sIHRoZSBhZGRyZXNzIG9mIHRoZSBzaWduYWwgY29udGV4dA0KPiA+IGNvdWxkIGJlIHB1
+c2hlZCBpbnN0ZWFkKS7CoCBUaGF0IHdvdWxkIG5lZWQgc29tZSBmb3JtIG9mIG1hcmtlciBhcyB3
+ZWxsLg0KPiANCj4gUmlnaHQsIHdlJ2QgaGF2ZSB0byBtYW51YWxseSBjb25zdW1lIGFueSBleHRy
+YSBhZGRyZXNzIHdlIHB1dCBvbiB0aGUNCj4gR0NTLsKgIEknbSBub3Qgc2VlaW5nIGFueSBnYWdl
+dGlzYXRpb24gaXNzdWVzIHdpdGggd3JpdGluZyBhbiBleHRyYSB2YWx1ZQ0KPiB0aGVyZSB0aGF0
+IGlzbid0IGEgdmFsaWQgc3RhY2sgY2FwIGF0IHRoZSBtaW51dGUgYnV0IEknbGwgbmVlZCB0byB0
+aGluaw0KPiBpdCB0aHJvdWdoIHByb3Blcmx5IC0gZG9uJ3Qga25vdyBpZiBhbnlvbmUgZWxzZSBo
+YXMgdGhvdWdodHMgaGVyZT8NCg0KU2hhZG93IHN0YWNrIGhhcyBvbmUgbWFpbiB1c2FnZSAoc2Vj
+dXJpdHkpIGFuZCBhbm90aGVyIGxlc3MgcHJvdmVuLCBidXQNCmludGVyZXN0aW5nIHVzYWdlIGZv
+ciBiYWNrdHJhY2luZy7CoEknbSB3YXJ5IG9mIGFkZGluZyB0aGluZ3MgdG8gdGhlIHNoYWRvdyBz
+dGFjaw0KYXMgdGhleSBjb21lIHVwIGluIGFuIGFkLWhvYyBmYXNoaW9uLCBlc3BlY2lhbGx5IGZv
+ciB0aGUgZnV6emllciB1c2FnZS7CoERvIHlvdQ0KaGF2ZSBhIGhhbmRsZSBvbiBldmVyeXRoaW5n
+IHRoZSB0cmFjaW5nIHVzYWdlIHdvdWxkIG5lZWQ/DQoNCkJ1dCBiZXNpZGVzIHRoYXQgSSd2ZSB3
+b25kZXJlZCBpZiB0aGVyZSBjb3VsZCBiZSBhIHNlY3VyaXR5IGJlbmVmaXQgdG8gYWRkaW5nDQpz
+b21lIGZpZWxkcyBvZiB0aGUgc2lnZnJhbWUgKFJJUCBiZWluZyB0aGUgcHJpbWUgb25lKSB0byB0
+aGUgc2hhZG93IHN0YWNrLCBvciBhDQpjcnlwdG9ncmFwaGljIGhhc2ggb2YgdGhlIHNpZ2ZyYW1l
+Lg0KDQoNCg==
