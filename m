@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8094FD51A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAD8E57E
 	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 05:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721193886; cv=none; b=cOjXFp6oW2icCy0GidWMHaarSnpqaqXZfgkIxXbQyEcxW/1N5En4cBEuA8uYaKDDpB4QD0Kmd+97Esbqv2VVdc2QwNxeh3pQzTztm3wopXvso2puEukvb/vrqO+8HED6zkjZuQ9WA9zWaOeht7Bsv+J01o+tPjabdLecZvtSiZE=
+	t=1721193886; cv=none; b=Gf3thak+1So3RU4jygky/13Jinp+LOQGvBHKdTMhZmNtDFdTU4/y7CISSpU8zOezkgo7Y2kRnYnPCv353wN4Ux6LG54gviw20IVZJX0jkqWpf4lSpICaGZbrJxATVIahGOfRg4XMjIhXk8EbLCKKKZebgOZZVWgdHxPBOK1mIX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721193886; c=relaxed/simple;
-	bh=2NcjMrvwfe1/v2FtKU3wRpvD6ZLIx8HGvtlmvTktZss=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y2O2xt3v7CvXSzUaUrDkq9v6+d5Y/YZKTVl3IlqNk/TNKQ0mbDVWSM2592mTb5pPAIxcpUjX62j0CKY3vcW4k+tE3qxmWbVRJ46JAJi48CI+Wx1zKVeOF8u++pabdQv1wVpFGor8fGMdSxFjjIhTl5sKD7f6jBcoxRI9ojPPeew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oL9SnksI; arc=none smtp.client-ip=10.30.226.201
+	bh=Vp7p44aMYOx+W/3oDa9KRPvAbAMMO3I7LRS7pOl1nxQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tztuY2bT9gL6DHCQ01gAh0KHYlicrgQm39mxDCzQk8txa6E2/CLxZ7pAbGhavt8OocL41OGLSimx+D7NfUsjYbDlzogXRrbiGttHqQt8proOzIuz1RBYOTI/5OhEwBN5k6IOSlvO6l8n293huRYwDHs6hMvukifUdxBWOP7pqJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cT+EVE30; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oL9SnksI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 445D3C4AF0F;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cT+EVE30"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 10677C32782;
 	Wed, 17 Jul 2024 05:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721193886;
-	bh=2NcjMrvwfe1/v2FtKU3wRpvD6ZLIx8HGvtlmvTktZss=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oL9SnksIU07HqB0yz//l1Ae8jsfWsTtmwIEpMjP9LbvGlcAHYuAyxoAj5VQ6PoW7H
-	 TMtmZ/5aLBp0J/z4HA8Q/VcrzzJ96UbSvPygbQ6sloEJAfwkpAHg9EL/1R0eh7OK5q
-	 cedeUdh5QTS23yJInAG8s8vhUgE2L3k+MO6wKEFZyaACUW9TnD0C5kY5VVrWB4PebF
-	 8miR9ssO/N80D5b50Q9Dulc+8tXbJj73RtYBZHMWbfWQG//Msz0Yc5LDpPMxlc1nUD
-	 QVffz2qFspHOcEUAHP4Vn7SFIuJez8w9U8Qcdu8+ZPf8481B0i8kQhoyGXcNgtTQpE
-	 c5c9GvYtQrudA==
+	bh=Vp7p44aMYOx+W/3oDa9KRPvAbAMMO3I7LRS7pOl1nxQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=cT+EVE30qqDOPx77JlU6a1Rc6BS16f7s8CdRdhMoTqSNwhvY7VCV4u3JSxrT6wqdt
+	 CfPSe/EcjaFA6c9jU7sA8YFLz1toAnOM3jxfKxuQXnXZuMm9Mu0pXPQ8OW638zusZ2
+	 8xt4QwwvjwFYiRNCiUUoO7JCOeKKvc7U3uVt7gBVRw4LAn0XQ5fr9njx8nfuyXiMA5
+	 1duOE+R/RqxmePhI/I5zKlDVSEc/xar5fhCaW6Kk7Dm/OItA7LbK7QowStJ0CwwLd/
+	 DLR+hr3jz0KjbOSWLai8q+xeodfSN3lRvyBhx/jcrxfO/6TsLKYA3FjYu1P4+C8YPa
+	 KlpoH69Hlbh+w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DA0C3DA4B;
-	Wed, 17 Jul 2024 05:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE29C3DA4B;
+	Wed, 17 Jul 2024 05:24:45 +0000 (UTC)
 From: Hsiao Chien Sung via B4 Relay <devnull+shawn.sung.mediatek.com@kernel.org>
-Date: Wed, 17 Jul 2024 13:24:44 +0800
-Subject: [PATCH v4 4/5] drm/mediatek: Support "Pre-multiplied" blending in
- Mixer
+Subject: [PATCH v4 0/5] Support alpha blending in MTK display driver
+Date: Wed, 17 Jul 2024 13:24:40 +0800
+Message-Id: <20240717-alpha-blending-v4-0-4b1c806c0749@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240717-alpha-blending-v4-4-4b1c806c0749@mediatek.com>
-References: <20240717-alpha-blending-v4-0-4b1c806c0749@mediatek.com>
-In-Reply-To: <20240717-alpha-blending-v4-0-4b1c806c0749@mediatek.com>
+X-B4-Tracking: v=1; b=H4sIAJhVl2YC/33OQQ6CMBAF0KuYrq0ZBmjBlfcwLkoZoBELabHRG
+ O5uhYWJIS7/JP/9eTFPzpBnx92LOQrGm8HGkO13THfKtsRNHTNDwAxkAlz1Y6d41ZOtjW05CIl
+ lnksoRMpiqVKeeOWU1V2s2Xvfx+PoqDGPZeV8ibkzfhrccxkNyee6+gJhlXlIOHCJQgJI1Arhd
+ KPaqImuBz3c2AcJ+C1uPBYwCnVW5ZCTKAtQG0L6X0ijgEWpk0I2pRbNjzDP8xsk0D81PwEAAA=
+ =
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
  Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
  Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
@@ -51,13 +52,13 @@ To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
 Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>, 
- Hsiao Chien Sung <shawn.sung@mediatek.com>
+ CK Hu <ck.hu@mediatek.com>, Hsiao Chien Sung <shawn.sung@mediatek.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721193884; l=2294;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721193884; l=1512;
  i=shawn.sung@mediatek.com; s=20240710; h=from:subject:message-id;
- bh=DojSZu5PuBzMfoL3foGMBjfvPTLtxxAtfP7xNgOj/lE=;
- b=veMbyMxGW1pG/bwLlWCL/J7zOro6Lxh+WYADC8HkzM+jy+2dPQFP48yTp06NIWcN2alaKOP2y
- gzMwVmdLzrYAnLAxZOI6ycJMbMMChepi3e4sVm3YG7J6YBZJNGEwqwD
+ bh=Vp7p44aMYOx+W/3oDa9KRPvAbAMMO3I7LRS7pOl1nxQ=;
+ b=+A8fttIjotYhj8wUeKovyfjjqKhR+tv2ri5BcloeuhTVq31xjLyG3wh3H8ppI9q8gkU+M8u50
+ U6OUuROaJmgAEsuPzXOHDTTy2Z54rv7ObsgnLk9nciTQ6u+5Db778DJ
 X-Developer-Key: i=shawn.sung@mediatek.com; a=ed25519;
  pk=VRlGZ3diQkQtpDd8fCL9/mx+TpZStm08pg8UPaG1NGc=
 X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240710 with
@@ -65,59 +66,43 @@ X-Endpoint-Received: by B4 Relay for shawn.sung@mediatek.com/20240710 with
 X-Original-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 Reply-To: shawn.sung@mediatek.com
 
-From: Hsiao Chien Sung <shawn.sung@mediatek.com>
+Support "Pre-multiplied" and "None" blend mode on MediaTek's chips by
+adding correct blend mode property when the planes init.
+Before this patch, only the "Coverage" mode (default) is supported.
 
-Support "Pre-multiplied" alpha blending mode in Mixer.
-Before this patch, only the coverage mode is supported.
-
-To replace the default setting that is set in mtk_ethdr_config(),
-we change mtk_ddp_write_mask() to mtk_ddp_write(), and this change will
-also reset the NON_PREMULTI_SOURCE bit that was assigned in
-mtk_ethdr_config(). Therefore, we must still set NON_PREMULTI_SOURCE bit
-if the blend mode is not DRM_MODE_BLEND_PREMULTI.
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.corp-partner.google.com>
 ---
- drivers/gpu/drm/mediatek/mtk_ethdr.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Changes in v4:
+- Add more information to the commit message
+- Link to v3: https://lore.kernel.org/r/20240710-alpha-blending-v3-0-289c187f9c6f@mediatek.com
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-index 80ccdad3741b..d1d9cf8b10e1 100644
---- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
-+++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
-@@ -36,6 +36,7 @@
- #define MIX_SRC_L0_EN				BIT(0)
- #define MIX_L_SRC_CON(n)		(0x28 + 0x18 * (n))
- #define NON_PREMULTI_SOURCE			(2 << 12)
-+#define PREMULTI_SOURCE				(3 << 12)
- #define MIX_L_SRC_SIZE(n)		(0x30 + 0x18 * (n))
- #define MIX_L_SRC_OFFSET(n)		(0x34 + 0x18 * (n))
- #define MIX_FUNC_DCM0			0x120
-@@ -176,6 +177,11 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
- 		alpha_con |= state->base.alpha & MIXER_ALPHA;
- 	}
- 
-+	if (state->base.pixel_blend_mode == DRM_MODE_BLEND_PREMULTI)
-+		alpha_con |= PREMULTI_SOURCE;
-+	else
-+		alpha_con |= NON_PREMULTI_SOURCE;
-+
- 	if ((state->base.fb && !state->base.fb->format->has_alpha) ||
- 	    state->base.pixel_blend_mode == DRM_MODE_BLEND_PIXEL_NONE) {
- 		/*
-@@ -193,8 +199,7 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
- 	mtk_ddp_write(cmdq_pkt, pending->height << 16 | align_width, &mixer->cmdq_base,
- 		      mixer->regs, MIX_L_SRC_SIZE(idx));
- 	mtk_ddp_write(cmdq_pkt, offset, &mixer->cmdq_base, mixer->regs, MIX_L_SRC_OFFSET(idx));
--	mtk_ddp_write_mask(cmdq_pkt, alpha_con, &mixer->cmdq_base, mixer->regs, MIX_L_SRC_CON(idx),
--			   0x1ff);
-+	mtk_ddp_write(cmdq_pkt, alpha_con, &mixer->cmdq_base, mixer->regs, MIX_L_SRC_CON(idx));
- 	mtk_ddp_write_mask(cmdq_pkt, BIT(idx), &mixer->cmdq_base, mixer->regs, MIX_SRC_CON,
- 			   BIT(idx));
- }
+Changes in v3:
+- Remove the Change-Id
+- Link to v2: https://lore.kernel.org/r/20240710-alpha-blending-v2-0-d4b505e6980a@mediatek.com
 
+Changes in v2:
+- Remove unnecessary codes
+- Add more information to the commit message
+- Link to v1: https://lore.kernel.org/r/20240620-blend-v1-0-72670072ca20@mediatek.com
+
+---
+Hsiao Chien Sung (5):
+      drm/mediatek: Support "None" blending in OVL
+      drm/mediatek: Support "None" blending in Mixer
+      drm/mediatek: Support "Pre-multiplied" blending in OVL
+      drm/mediatek: Support "Pre-multiplied" blending in Mixer
+      drm/mediatek: Support alpha blending in display driver
+
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 36 +++++++++++++++++++++++++--------
+ drivers/gpu/drm/mediatek/mtk_ethdr.c    | 13 +++++++++---
+ drivers/gpu/drm/mediatek/mtk_plane.c    | 11 ++++++++++
+ 3 files changed, 49 insertions(+), 11 deletions(-)
+---
+base-commit: 8ad49a92cff4bab13eb2f2725243f5f31eff3f3b
+change-id: 20240710-alpha-blending-067295570863
+
+Best regards,
 -- 
-2.43.0
+Hsiao Chien Sung <shawn.sung@mediatek.com>
 
 
