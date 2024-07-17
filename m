@@ -1,150 +1,135 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2271A5B05E
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679F1180A67;
+	Wed, 17 Jul 2024 16:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721233547; cv=none; b=FXRo16KA9PmRIu+e9GXgboQca9S3y/3grWDo1eNPZLgpUJdEXxP4GnhdlclXdy4Xg/9epfy+4l7cM7kbByEuIJxYauG2OhksFAT/TYWqttbb1pHE28+EGLtIlZxq2HmaAvwnI2uTqlo4qYJoWxeDcnC++Qg1ZiBEB7xPHa8E154=
+	t=1721233597; cv=none; b=opi1s3bfS+CJuZSZP7TAYYaV2JMo0y4SHAnM92/EaIOhukksDncdbygRN04X4njNGOYPT/xSnbaqdp+kT0lInb74gL+TnmAFmWlqn4fiHddPk+4f7chLehDRj3e64jbSHUh6sIeUXhNIPS09xrKmHTKWbAialsP09IficUKHxKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721233547; c=relaxed/simple;
-	bh=sycsrk1qbMInFpBFCo/eo6DF97u2tJbXnRgyrP9bYAA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K8yt3wIQJNqGFQuQGEdQR3RgS6j8CgATowxIWfvbnyBeO5a0yzllaAxCOkqgCtFTuXq8c/M47OOqTbsvX5qxkDvRQ+8jePd+e5Y6bhH+gpYaSwipym5VlDhssU+20CHzF0bmEwbGb8cVvLj4MTSCH9FJtPf/x1G7t89TETR9uO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PWKGcvS4; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1721233597; c=relaxed/simple;
+	bh=I2eGsjFhX70XBcnNVF+/czALV8y44WdUsYs50JL3l4g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L9M55mhj8FWeOBTMnXKq+fkixNNujuHf67e3AOx2xruyDRstKWU1PFLNJMmJ3M1nod8JkRdet+0t/yige0OJ3Z3zXRU5M3h4iGnOstfHlpyIjpo1WjGmhfXFDbIESbZf4mIQ4W5k4zRy5obtDRkrGd9NAks8Q335Qg29xdNtCgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQE8MiJg; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWKGcvS4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Byyt/G4FG3dBwo6FphWn68cOZO3ZKBoSOM3VbH/6tpY=; b=PWKGcvS49m+WMKTbZJI5Ia86yB
-	gkchnI3oTzqqnYqVsY7PH0pISabJa7YpcaKH8awbAPB6izyilci+ZFqlr2ckehK2ay/I18iNBBepy
-	0jXNXfrSU9Nuoe1Y9bG4fMMqMt1x4TCMhldNcDXXv8X71QEXS/xhJAT03ezBe8TwgjCakRpFrXYRL
-	nUpHhwK051T+3hBwK5ULNemOY45MDrBuUcyxysKx3uev/PXot1wxHWc5cDnWB0KgcHaHrZN7lEmyN
-	7HX3wS1jiEmwUhKao2XA3FX/IMb89Qb1chAhi3G9nLTLFgFAXaYdam9Kll/CHfeQNg0TR/U45rYWM
-	+aS2qGxA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sU7TG-00000002MPc-09oU;
-	Wed, 17 Jul 2024 16:25:38 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1FC48300362; Wed, 17 Jul 2024 18:25:37 +0200 (CEST)
-Date: Wed, 17 Jul 2024 18:25:36 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Kees Cook <kees@kernel.org>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] refcount: Report UAF for refcount_sub_and_test(0) when
- counter==0
-Message-ID: <20240717162536.GH26750@noisy.programming.kicks-ass.net>
-References: <20240717130023.5675-1-petr.pavlu@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQE8MiJg"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-70360eeb7d2so230513a34.1;
+        Wed, 17 Jul 2024 09:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721233594; x=1721838394; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=PRqnKCtfj6g6rjCE6KHBQ+SuSmEcX2d5CkGn30mc4Dk=;
+        b=FQE8MiJgIYbYHaHMx1LiIeMVkX2JCEaGOXC/FIcgKhBPBhk9vFh9KNBfXaF/wlMgq1
+         JpzBgvp2lnFQX+yKEo4UxoPaRhi6dv1da/NfH7Q3+2WzcG56jASK0Elw7JRWbZCZ227v
+         NqayGT56/GoP72UctBkSa5cp30pgomkaIMu49NLwGb6N8Al2l7L6lAb5YQFclv24kiXa
+         bGKtJ5AuN15DoDtuYqxWgR9Pn4gxx5rtcb/tUfffwfuSbmI+rwPVDSoyqn6YaxIac4e2
+         NBYTi/83AVsQv+0oQwGU0e9NRqb3BAOezaRP9aSh+ycPqCs+dVWyF8jLgJH4cbUm+WiQ
+         Txmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721233594; x=1721838394;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PRqnKCtfj6g6rjCE6KHBQ+SuSmEcX2d5CkGn30mc4Dk=;
+        b=d+P8Rqglp69F8ziJFshw2AHZyeGpuIZpNdEgDP76IqoXAClQvArUi0QavRKNTp3G7g
+         wqg4TEhZBbYy6Vx2wNrSyjlxBoxZJK+PNiYKIazjQcHnxDClol4q0KqSiGGM77rh4hzc
+         c2WM3S0s9H2tQCE4OAdVqGimfd1AQfzx8UmXdIzAgoVlgHKKlSQvHQkovucQSSe32yZI
+         8CR7HzoquTU+vefdzpvq+3MZr2PDen+bj6rWj9gRMsGehdKq3ciRPgBjazTeMwCTD1N+
+         Xd730Bf/4mj4M5Q6wijGnDEjN63sG8a6G8vhs8UXbdAOqgQq4MuMAQDw76NEl0u2Bn+m
+         k+nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGaGtRXSmQLzsyjJMVZC/xruwMMLK01IA9nM8lVAs20Yuc4nGahXoB8iMp1mFlWw0+VRp88cXxTJN11hszBTaxxJiTBtj0URa71gCBoDKujbu6hBFLfXs8+Ja8ZptL9er5VuKcV07zXho=
+X-Gm-Message-State: AOJu0Yxks0xY8VisdkWjMub+Jd/Aob5gep9epc8VbrdB3+n7yZMIn0l/
+	x7Fjhag5SF8WhNss5nZ8jrTklTxb0QOzTZb85JaiCXt9q+TxVJkQ
+X-Google-Smtp-Source: AGHT+IFs6Nd6U9feGVZuPjVusY5QIze7IvbR0Hq0eU5ifsPkAZeyAweB11hHaqOBU2XL++f7dwwGVQ==
+X-Received: by 2002:a05:6870:353:b0:24e:8987:6f34 with SMTP id 586e51a60fabf-260d8fe84b7mr1671024fac.3.1721233594046;
+        Wed, 17 Jul 2024 09:26:34 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7eb9dee7sm8620113b3a.16.2024.07.17.09.26.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 09:26:32 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <6e8245d5-8c39-491e-9fd0-1be88be7b00a@roeck-us.net>
+Date: Wed, 17 Jul 2024 09:26:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717130023.5675-1-petr.pavlu@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] hwmon/misc: amd-sbi: Move core sbrmi from hwmon to
+ misc
+To: Akshay Gupta <akshay.gupta@amd.com>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, arnd@arndb.de, naveenkrishna.chatradhi@amd.com
+References: <20240717081027.2079549-1-akshay.gupta@amd.com>
+ <20240717081027.2079549-2-akshay.gupta@amd.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240717081027.2079549-2-akshay.gupta@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 17, 2024 at 03:00:23PM +0200, Petr Pavlu wrote:
-> When a reference counter is at zero and refcount_sub_and_test() is invoked
-> to subtract zero, the function accepts this request without any warning and
-> returns true. This behavior does not seem ideal because the counter being
-> already at zero indicates a use-after-free. Furthermore, returning true by
-> refcount_sub_and_test() in this case potentially results in a double-free
-> done by its caller.
+On 7/17/24 01:10, Akshay Gupta wrote:
+> This is done to support other functionality provided by the SBRMI, which
+> does not fit in the hwmon subsystem.
 > 
-> Modify the underlying function __refcount_sub_and_test() to warn about this
-> case as a use-after-free and have it return false to avoid the potential
-> double-free.
+> - Move the SBRMI core functionality and I2C device probing part to misc.
+> - Move hwmon device sensor to misc as only power is reported through
+>    hwmon sensor.
 > 
-> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
-> ---
-> 
-> Motivation for this patch is an earlier kretprobe problem described at:
-> https://lore.kernel.org/linux-trace-kernel/92cff289-facb-4e42-b761-6fd2515d6018@suse.com/
 
-Well that's good fun.... :/
+I fail to see the logic here. Why would the supported sensor types
+be a reason or an argument for moving the hwmon code out of hwmon ?
 
-The patch seems sane enough to me, I don't think add() has a similar
-issue, adding 0 is still daft, but as is I don't think it will actually
-misbehave. Notably add_not_zero(0) will fail when 0 and succeed (with
-no effect) when !0.
+Guenter
 
-Still, adding or subtracting 0 is pretty stupid, so perhaps we should
-more explicitly warn on that?
-
-Anyway, for this patch:
-
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
->  drivers/misc/lkdtm/refcount.c | 16 ++++++++++++++++
->  include/linux/refcount.h      |  4 ++--
->  2 files changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/lkdtm/refcount.c b/drivers/misc/lkdtm/refcount.c
-> index 5cd488f54cfa..8f744bee6fbd 100644
-> --- a/drivers/misc/lkdtm/refcount.c
-> +++ b/drivers/misc/lkdtm/refcount.c
-> @@ -182,6 +182,21 @@ static void lkdtm_REFCOUNT_SUB_AND_TEST_NEGATIVE(void)
->  	check_negative(&neg, 3);
->  }
->  
-> +/*
-> + * A refcount_sub_and_test() by zero when the counter is at zero should act like
-> + * refcount_sub_and_test() above when going negative.
-> + */
-> +static void lkdtm_REFCOUNT_SUB_AND_TEST_ZERO(void)
-> +{
-> +	refcount_t neg = REFCOUNT_INIT(0);
-> +
-> +	pr_info("attempting bad refcount_sub_and_test() at zero\n");
-> +	if (refcount_sub_and_test(0, &neg))
-> +		pr_warn("Weird: refcount_sub_and_test() reported zero\n");
-> +
-> +	check_negative(&neg, 0);
-> +}
-> +
->  static void check_from_zero(refcount_t *ref)
->  {
->  	switch (refcount_read(ref)) {
-> @@ -400,6 +415,7 @@ static struct crashtype crashtypes[] = {
->  	CRASHTYPE(REFCOUNT_DEC_NEGATIVE),
->  	CRASHTYPE(REFCOUNT_DEC_AND_TEST_NEGATIVE),
->  	CRASHTYPE(REFCOUNT_SUB_AND_TEST_NEGATIVE),
-> +	CRASHTYPE(REFCOUNT_SUB_AND_TEST_ZERO),
->  	CRASHTYPE(REFCOUNT_INC_ZERO),
->  	CRASHTYPE(REFCOUNT_ADD_ZERO),
->  	CRASHTYPE(REFCOUNT_INC_SATURATED),
-> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-> index 59b3b752394d..35f039ecb272 100644
-> --- a/include/linux/refcount.h
-> +++ b/include/linux/refcount.h
-> @@ -266,12 +266,12 @@ bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
->  	if (oldp)
->  		*oldp = old;
->  
-> -	if (old == i) {
-> +	if (old > 0 && old == i) {
->  		smp_acquire__after_ctrl_dep();
->  		return true;
->  	}
->  
-> -	if (unlikely(old < 0 || old - i < 0))
-> +	if (unlikely(old <= 0 || old - i < 0))
->  		refcount_warn_saturate(r, REFCOUNT_SUB_UAF);
->  
->  	return false;
-> 
-> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
-> -- 
-> 2.35.3
-> 
