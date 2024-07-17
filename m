@@ -1,98 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052F714A8F;
-	Wed, 17 Jul 2024 06:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A9D1BF53
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721197382; cv=none; b=ocCNPipGcAyrfqeBbcp/tRsdXryKpG9V8ahPRmdC82CoUUcn/lv7pBadbd6OlNCSfS7k6mjkmrUxI9lDLpwKgCFeaUm8WP2GeZ+t9Ho6g3Fgf4Gkf7tArrI8hSsuha8u4ejJoFkzoWIW06rLvFkE18TXjhluMmDcWk3Oo3Lz5N0=
+	t=1721197387; cv=none; b=gMCpxqhsP+bB9ts9+C4l76OZDvxI8UVYzYDTjtoZwFBxOjRZZRpfjmZ6zcchvZSReOG2Q83ol9mASVTF/QIi6pTA4ulyO1sQiadYfjIzYGTXvCzIrgwT8ZCRKstQjNYDinOkKQWEOrbsSURwfchOi9qmM3IA29Kmh3f6EGqJ8AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721197382; c=relaxed/simple;
-	bh=wE03A0Zwu1xnxWFNkSN/D+C35LB9BhEsjDtPFTlUifM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/pkQ2PFw+nPOBQJT015qTPz90YYM/vmZIaPt5AkKXZAXKcaJEzDlZ2fyYrVy5EXfHP7BsNQ9g/J5mgKAUbQ5dBamR/bcDsiPhLFJ4D0YIR4LtGwdMS7a9qL1SdKN1W7oWmTacEYWlLBQBGD/F844w8DCzeQe+S5+HDHIyDoTTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwQ4loqR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721197387; c=relaxed/simple;
+	bh=bde5DyyiE12OaoL1Ez5kRf1Jyic7KdWN1Z4jecTYxiw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PWIUJKqRp3kLAUtNK8n4bmCTRzGgB+v4DoFituVgSyJ9mYMl5vfOJ18DxsKZ77Ta2jnrJti48usvhFcJzIikPqsHWE0hXaQdlYkd2JczPDYAOvpYeS/pDTYCuP2zxyhnW1uH1t7Me6w6cWv/CLITomAF8E7p1BMq6JBEzuGsfsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=z8QF1et9; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwQ4loqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 964D0C32782;
-	Wed, 17 Jul 2024 06:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721197381;
-	bh=wE03A0Zwu1xnxWFNkSN/D+C35LB9BhEsjDtPFTlUifM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SwQ4loqRovk4AIyvlTDFzFYNJemGN2Txum8WP7nZ0rYHMrbJHdPKCM0iJ27jSDbSs
-	 OA3R//h/LyCef7W452F9jt6eBuIZCNBN8Oz20MGxpb7trGsNJ6dm3zku+p8j2ighJ2
-	 AjLzOM3rrnjmnYughmgHG8R7VqEAJBtRzxRO7eYJsCRSHilIN1cfV4JM2YUwZHQSb1
-	 YuFNWBzs+rulm4zxCqvr3fN3wsCP5yvgBTinHswRU9D+Ez4sVXnXJkVf+c+pDA42Zl
-	 GnLIZo8dYpjwKso8phzSKDFgEr1ZH0sTmzhhmETTHuolTNPYXYrXVwy20sJ+mK3OPu
-	 IS3Pmzn7D8CnQ==
-Date: Wed, 17 Jul 2024 09:22:50 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Konstantin Taranov <kotaranov@microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Cc: Konstantin Taranov <kotaranov@linux.microsoft.com>,
-	Wei Hu <weh@microsoft.com>,
-	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
-	Long Li <longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH rdma-next 1/1] RDMA/mana_ib: indicate that
- inline data is not supported
-Message-ID: <20240717062250.GE5630@unreal>
-References: <1721126889-22770-1-git-send-email-kotaranov@linux.microsoft.com>
- <20240716111441.GB5630@unreal>
- <PAXPR83MB0559406ED7CCDAFC0CAEC63DB4A22@PAXPR83MB0559.EURPRD83.prod.outlook.com>
- <20240716142223.GC5630@unreal>
- <PAXPR83MB05595BBC92EB695753EB8563B4A22@PAXPR83MB0559.EURPRD83.prod.outlook.com>
- <20240716170608.GD5630@unreal>
- <PAXPR83MB0559D97004241D37765A151DB4A22@PAXPR83MB0559.EURPRD83.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="z8QF1et9"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-426526d30aaso45401685e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721197384; x=1721802184; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0QjpPjoLwI+58peQzByots6FWlw3e8eiNriVwaJAk3o=;
+        b=z8QF1et9TcQeCmN7iu6Mx+4JDIhCFTbyXwoTW/WlV4PeyL8mygeMgxKkbqvShnttHk
+         89j8FIpxMw29KoQeA6d3OgOgrCNV63QmzHwtzjUh8dVe1O1KX/8l3ZD6HB3Et2mp/qDk
+         zOWx/5ksllZrdQvIcpWAH+TtiGm6vRdI/cTEAIbfIRv7/QgTHcoUgHLqyVPlxLil9Rlg
+         HHPHoRSWiW1AsuDj14pVPIZ5cB8n7ySiZQhT5RZ5E7HlnLhB3wIPsPCUCHQT69ZiAnPa
+         5FjOkn+Cr+KSGvfRcio3CDMnLgY0uGozbkaI8FfnFPwB1Zw3KRZdPDu8Jicute4Ui3iu
+         p91w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721197384; x=1721802184;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0QjpPjoLwI+58peQzByots6FWlw3e8eiNriVwaJAk3o=;
+        b=INvdFnTst/h9INjuftt/qE6gepftsM8RLngA4cHDqd7qQIAH0LV1+37o4XYEnNPZ5E
+         mTRhwS8MSb6XHDz48LzxIPnopGZIIxa0hZiuzFk0ZKVh+VmkXEeDFHLc9wrrY7cbB5bn
+         8N8MJrxL9Y4WaWoP+kmHBsKmx0x6T8n/IvklNKqIWF4YEJBSOa5cgyQ7YPjH90hHs6k7
+         PSXJZS9grXtpsn649jwXqfkGU9njUxWo5JimlAd0uwfrD6nt82vmbBw1kmTjELxRmvFX
+         o9mcVgVm+varm1qh8sn+Wb8wLtG6qlA3EcVdDiX8HcHDfSQbwESFDHMPO0Vtiw6Aa33J
+         hvQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmdv//2iAP1oGjOGX1B9D5diGj8y6DDqlHIIGDgS9t8C7yMZy+4vxV5pRj8W8eYgTQQss45+malrMVy8WRn4f8S8jKOq87ARL281u5
+X-Gm-Message-State: AOJu0Yz05cU+gl5OMcn96EN9Ol42AE2FeFXO1mCW61230GyVMGkdL/iq
+	1/f+rX5XdTbCPGEGSqvM+89d2xTcwXsMEg47hftClgOS2NACT06INzz/xt2+bhI=
+X-Google-Smtp-Source: AGHT+IFPLb6pDwn4ZT2PDYb1qbrSJD7FUpoL0IeRpIU13kaHx3oluVLPGx9Y3b3221ag/XCVCbja3g==
+X-Received: by 2002:a05:600c:3592:b0:426:5dca:50a with SMTP id 5b1f17b1804b1-427c2ce6539mr4895335e9.21.1721197383614;
+        Tue, 16 Jul 2024 23:23:03 -0700 (PDT)
+Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db03e41sm10773043f8f.98.2024.07.16.23.23.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 23:23:03 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v3 03/11] riscv: Implement cmpxchg8/16() using Zabha
+Date: Wed, 17 Jul 2024 08:19:49 +0200
+Message-Id: <20240717061957.140712-4-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240717061957.140712-1-alexghiti@rivosinc.com>
+References: <20240717061957.140712-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR83MB0559D97004241D37765A151DB4A22@PAXPR83MB0559.EURPRD83.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 16, 2024 at 05:25:22PM +0000, Konstantin Taranov wrote:
-> > 
-> > Yes, you are. If user asked for specific functionality (max_inline_data != 0) and
-> > your device doesn't support it, you should return an error.
-> > 
-> > pvrdma, mlx4 and rvt are not good examples, they should return an error as
-> > well, but because of being legacy code, we won't change them.
-> > 
-> > Thanks
-> > 
-> 
-> I see. So I guess we can return a larger value, but not smaller. Right?
-> I will send v2 that fails QP creation then.
-> 
-> In this case, may I submit a patch to rdma-core that queries device caps before
-> trying to create a qp in rdma_client.c and rdma_server.c? As that code violates
-> what you described.
+This adds runtime support for Zabha in cmpxchg8/16() operations.
 
-Let's ask Jason, why is that? Do we allow to ignore max_inline_data?
+Note that in the absence of Zacas support in the toolchain, CAS
+instructions from Zabha won't be used.
 
-librdmacm/examples/rdma_client.c
-  63         memset(&attr, 0, sizeof attr);
-  64         attr.cap.max_send_wr = attr.cap.max_recv_wr = 1;
-  65         attr.cap.max_send_sge = attr.cap.max_recv_sge = 1;
-  66         attr.cap.max_inline_data = 16;
-  67         attr.qp_context = id;
-  68         attr.sq_sig_all = 1;
-  69         ret = rdma_create_ep(&id, res, NULL, &attr);
-  70         // Check to see if we got inline data allowed or not
-  71         if (attr.cap.max_inline_data >= 16)
-  72                 send_flags = IBV_SEND_INLINE;
-  73         else
-  74                 printf("rdma_client: device doesn't support IBV_SEND_INLINE, "
-  75                        "using sge sends\n");
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/Kconfig               | 17 ++++++++++++++++
+ arch/riscv/Makefile              |  3 +++
+ arch/riscv/include/asm/cmpxchg.h | 33 ++++++++++++++++++++++++++++++--
+ arch/riscv/include/asm/hwcap.h   |  1 +
+ arch/riscv/kernel/cpufeature.c   |  1 +
+ 5 files changed, 53 insertions(+), 2 deletions(-)
 
-> 
-> Thanks
-> 
->  
-> 
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 1caaedec88c7..d3b0f92f92da 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -596,6 +596,23 @@ config RISCV_ISA_V_PREEMPTIVE
+ 	  preemption. Enabling this config will result in higher memory
+ 	  consumption due to the allocation of per-task's kernel Vector context.
+ 
++config TOOLCHAIN_HAS_ZABHA
++	bool
++	default y
++	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zabha)
++	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zabha)
++	depends on AS_HAS_OPTION_ARCH
++
++config RISCV_ISA_ZABHA
++	bool "Zabha extension support for atomic byte/halfword operations"
++	depends on TOOLCHAIN_HAS_ZABHA
++	default y
++	help
++	  Enable the use of the Zabha ISA-extension to implement kernel
++	  byte/halfword atomic memory operations when it is detected at boot.
++
++	  If you don't know what to do here, say Y.
++
+ config TOOLCHAIN_HAS_ZACAS
+ 	bool
+ 	default y
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index 9fd13d7a9cc6..78dcaaeebf4e 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -88,6 +88,9 @@ riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE) := $(riscv-march-y)_zihintpause
+ # Check if the toolchain supports Zacas
+ riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZACAS) := $(riscv-march-y)_zacas
+ 
++# Check if the toolchain supports Zabha
++riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZABHA) := $(riscv-march-y)_zabha
++
+ # Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
+ # matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
+ KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index 5d38153e2f13..c86722a101d0 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -105,8 +105,30 @@
+  * indicated by comparing RETURN with OLD.
+  */
+ 
+-#define __arch_cmpxchg_masked(sc_sfx, prepend, append, r, p, o, n)	\
++#define __arch_cmpxchg_masked(sc_sfx, cas_sfx, prepend, append, r, p, o, n)	\
+ ({									\
++	__label__ no_zabha_zacas, end;					\
++									\
++	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA) &&			\
++	    IS_ENABLED(CONFIG_RISCV_ISA_ZACAS)) {			\
++		asm goto(ALTERNATIVE("j %[no_zabha_zacas]", "nop", 0,	\
++				     RISCV_ISA_EXT_ZABHA, 1)		\
++			 : : : : no_zabha_zacas);			\
++		asm goto(ALTERNATIVE("j %[no_zabha_zacas]", "nop", 0,	\
++				     RISCV_ISA_EXT_ZACAS, 1)		\
++			 : : : : no_zabha_zacas);			\
++									\
++		__asm__ __volatile__ (					\
++			prepend						\
++			"	amocas" cas_sfx " %0, %z2, %1\n"	\
++			append						\
++			: "+&r" (r), "+A" (*(p))			\
++			: "rJ" (n)					\
++			: "memory");					\
++		goto end;						\
++	}								\
++									\
++no_zabha_zacas:;							\
+ 	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
+ 	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
+ 	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
+@@ -133,6 +155,8 @@
+ 		: "memory");						\
+ 									\
+ 	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
++									\
++end:;									\
+ })
+ 
+ #define __arch_cmpxchg(lr_sfx, sc_cas_sfx, prepend, append, r, p, co, o, n)	\
+@@ -180,8 +204,13 @@ end:;									\
+ 									\
+ 	switch (sizeof(*__ptr)) {					\
+ 	case 1:								\
++		__arch_cmpxchg_masked(sc_sfx, ".b" sc_sfx,		\
++					prepend, append,		\
++					__ret, __ptr, __old, __new);    \
++		break;							\
+ 	case 2:								\
+-		__arch_cmpxchg_masked(sc_sfx, prepend, append,		\
++		__arch_cmpxchg_masked(sc_sfx, ".h" sc_sfx,		\
++					prepend, append,		\
+ 					__ret, __ptr, __old, __new);	\
+ 		break;							\
+ 	case 4:								\
+diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+index e17d0078a651..f71ddd2ca163 100644
+--- a/arch/riscv/include/asm/hwcap.h
++++ b/arch/riscv/include/asm/hwcap.h
+@@ -81,6 +81,7 @@
+ #define RISCV_ISA_EXT_ZTSO		72
+ #define RISCV_ISA_EXT_ZACAS		73
+ #define RISCV_ISA_EXT_XANDESPMU		74
++#define RISCV_ISA_EXT_ZABHA		75
+ 
+ #define RISCV_ISA_EXT_XLINUXENVCFG	127
+ 
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 5ef48cb20ee1..c125d82c894b 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -257,6 +257,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_DATA(zihintpause, RISCV_ISA_EXT_ZIHINTPAUSE),
+ 	__RISCV_ISA_EXT_DATA(zihpm, RISCV_ISA_EXT_ZIHPM),
+ 	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
++	__RISCV_ISA_EXT_DATA(zabha, RISCV_ISA_EXT_ZABHA),
+ 	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
+ 	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
+ 	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
+-- 
+2.39.2
+
