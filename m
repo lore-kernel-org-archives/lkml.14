@@ -1,143 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C8D182B9;
-	Wed, 17 Jul 2024 06:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BAD125DE
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721197467; cv=none; b=XM/08XFiwdiJraRXyiuBlkEevmlK+Ka/a/gfxJU6FuZTfQgkIopZtKFpwnPm7u/m2OzcMrPMZlyvV6v+ooRBilhH9yBw/NWB5ehKJ66E+0WIvtni77sZfIqXInVFshFt13junjlxMxmEUPYpiLNzgbGtOZpMC9GZI5Ep3NQa+a8=
+	t=1721197510; cv=none; b=o9Dq/L5fbo+5XYtSi510AqGIbV9j4/pPCP2OkJcCJi5kqKJNQ10F8Opv89eW6sh9SxU1dCIfnolzFxqjIDs7xVUNgcyK3cPRr7RNA/1dAJXCrV6/MtZAeAWqtWY8A9LsABs1SYdV031uab/Fgdj5oxj8KKNXBaaUVNs+qb5QXkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721197467; c=relaxed/simple;
-	bh=RdbzDXJzGn73GVJApCxOgvtdvQRZ69jsEk+ZWOuXZ0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u0qNdIZjGvmho2WPLMExIcfwLs6uMQOicG3oWJ799EjEBQ0Taozepql2rqbA/CAwTSCle1VsJup++0GOAhtM/zFLZeXc7fXr8MfoIm9PuvNQx6gcRL37mWWB0PbuUnfWElNjVpUojULx3os9/d0tqoVY/paRA6FxnyIxa8kwbw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=c7h37oqy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721197510; c=relaxed/simple;
+	bh=3zBJRLkrzJHSNuZAH1F+78p9BTEz4I4epc4BJVRS110=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y28/YP4h+v4r9kjKFofVfe8bVslGdWSnsFkaHrRoli8C9Gd37hrEkJZ3OzOUaTq0CaNduTAUCUuXhm8CRJX49c34dyjnWrfOyDpxs6TAGqE0yamiq0FkLPTu/eBQKuxzLpliGrquC4LETsO1751buHU7fU4QrfnU3wu4+Qq0VDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Z8u7SVU+; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="c7h37oqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3101AC32782;
-	Wed, 17 Jul 2024 06:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1721197466;
-	bh=RdbzDXJzGn73GVJApCxOgvtdvQRZ69jsEk+ZWOuXZ0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c7h37oqyeaqjsB5VzBL/uK+JriHqGPmA7682SWLa2sA1cOGRBAJmH+eZ0zfZ2iHiW
-	 TcFtJ5A4wRIs4v4+wrFPBGYjRGUhXGgkIbs2yHeIX4TJtfD7MiPa+53jj5nXuruO7s
-	 Ec+U/Os1B5XfRslgdjFKTAVRFVm3dR+FjFo2YQDI=
-Date: Wed, 17 Jul 2024 08:24:23 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: stable@vger.kernel.org, Paulo Alcantara <pc@manguebit.com>,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 00/96] 6.1.100-rc1 review
-Message-ID: <2024071701-boned-drove-1269@gregkh>
-References: <20240716152746.516194097@linuxfoundation.org>
- <aaccd8cc-2bfe-4b2e-b690-be50540f9965@gmail.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Z8u7SVU+"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42660b8dd27so43722035e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721197506; x=1721802306; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xQbGd0qu6ssbesu7Zjwn0myIi2A+oWSgEr0KZDNP1pQ=;
+        b=Z8u7SVU+9/ifkGY9+pBpuJd2k664kK38R+eCRwtf6S/rd+EPbFXqEBedrvmhJp5qra
+         n5o05/9r3FuV64FAW4Byt/h4o1BlK5gM1mk0aC/OkNwbVJxiSdBP7bQwF690a/TegAOQ
+         KVkuBRVPSat0xrc0f/4uRpsggwcfpvhetqds7GtGu90gzexZMOfpT2Fs5GchfFb2Z6RE
+         CnwBqMGYmCPizMz5PR6VZGsIcrmsWri38usivn2PRriBnRPhEhmYSP7b0b0Ttz2PkOdR
+         Iy6NGVm2E4Claushy76Q6NvyR9LtDR9gzIkuZmJ0t/2O3giWlcxJ/INUbh+tYMq1yVS7
+         s1zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721197506; x=1721802306;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xQbGd0qu6ssbesu7Zjwn0myIi2A+oWSgEr0KZDNP1pQ=;
+        b=Ad7j4d0nkiUci096JJZgcXTOq/LuSBKIiCYjyX+ae8Aqt9HVKGQ8lIV8/cLiRv9XEt
+         yOYtcLapleYlZijWx+75aFiiIP05qSfCAqrIvosscjXB3xIPqjAYXt2CIj8Jt7CJAG9N
+         TKeYgRviD7bPWg+CuzxeUzWfmS/wI3yXsLKc403eKAJmwzYWshpFwZxqmM/1DQ9Nzg0g
+         PIukAaX1NRjkW86EvCKBpxMfY1Vw1NnZfxfXxcw+bVIhwuq2CHLP4jycQou9wTP4aSKF
+         JZaJV54yUOTkwAP/s9eOREAQHteSl1bSA3ememAy1fEGncxtt9ltC5xsQCsFH4iKnpXW
+         9LGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYCJC0Pyg0IT73WSTf2gXej4g019KSJj85A3CNweYHh3UkNEK4sL6tCFwcyoArvNwAG/vRs6cD9rw0U+8ZmWtu498UouiWsyZk/Duy
+X-Gm-Message-State: AOJu0YxOUChmUS3HxCaGAl89QjmRDHh9ZbXeiyUZlzjcw94wmg1b9Pwg
+	x7QVLgeqiqzgpKddCBoFOISZWnwlutGpS7wfZJj18yVP9Bz+GiXOfhYZ+YX09ow=
+X-Google-Smtp-Source: AGHT+IEFDv6V5tFWhauDPHJiZCgq6FMlgRvbm1hC+8pd4MPLkSbI6qpbIzPF0VaZZ69mfVtEYemITg==
+X-Received: by 2002:a05:600c:4eca:b0:426:549c:294c with SMTP id 5b1f17b1804b1-427c2d06e43mr5639015e9.35.1721197506505;
+        Tue, 16 Jul 2024 23:25:06 -0700 (PDT)
+Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef4617sm155918965e9.41.2024.07.16.23.25.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 23:25:06 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v3 05/11] riscv: Implement arch_cmpxchg128() using Zacas
+Date: Wed, 17 Jul 2024 08:19:51 +0200
+Message-Id: <20240717061957.140712-6-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240717061957.140712-1-alexghiti@rivosinc.com>
+References: <20240717061957.140712-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aaccd8cc-2bfe-4b2e-b690-be50540f9965@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 16, 2024 at 11:42:39AM -0700, Florian Fainelli wrote:
-> On 7/16/24 08:31, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 6.1.100 release.
-> > There are 96 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 18 Jul 2024 15:27:21 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.100-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Commit acbfb53f772f96fdffb3fba2fa16eed4ad7ba0d2 ("cifs: avoid dup prefix
-> path in dfs_get_automount_devname()") causes the following build failure on
-> bmips_stb_defconfig:
-> 
-> In file included from ./include/linux/build_bug.h:5,
->                  from ./include/linux/container_of.h:5,
->                  from ./include/linux/list.h:5,
->                  from ./include/linux/module.h:12,
->                  from fs/smb/client/cifsfs.c:13:
-> fs/smb/client/cifsproto.h: In function 'dfs_get_automount_devname':
-> fs/smb/client/cifsproto.h:74:22: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->   if (unlikely(!server->origin_fullpath))
->                       ^~
-> ./include/linux/compiler.h:78:42: note: in definition of macro 'unlikely'
->  # define unlikely(x) __builtin_expect(!!(x), 0)
->                                           ^
-> In file included from fs/smb/client/cifsfs.c:35:
-> fs/smb/client/cifsproto.h:78:14: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->         server->origin_fullpath,
->               ^~
-> fs/smb/client/cifsproto.h:79:21: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->         strlen(server->origin_fullpath),
->                      ^~
-> fs/smb/client/cifsproto.h:88:21: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->   len = strlen(server->origin_fullpath);
->                      ^~
-> fs/smb/client/cifsproto.h:93:18: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->   memcpy(s, server->origin_fullpath, len);
->                   ^~
-> In file included from ./include/linux/build_bug.h:5,
->                  from ./include/linux/container_of.h:5,
->                  from ./include/linux/list.h:5,
->                  from ./include/linux/wait.h:7,
->                  from ./include/linux/wait_bit.h:8,
->                  from ./include/linux/fs.h:6,
->                  from fs/smb/client/cifs_debug.c:8:
-> fs/smb/client/cifsproto.h: In function 'dfs_get_automount_devname':
-> fs/smb/client/cifsproto.h:74:22: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->   if (unlikely(!server->origin_fullpath))
->                       ^~
-> ./include/linux/compiler.h:78:42: note: in definition of macro 'unlikely'
->  # define unlikely(x) __builtin_expect(!!(x), 0)
->                                           ^
-> In file included from fs/smb/client/cifs_debug.c:16:
-> fs/smb/client/cifsproto.h:78:14: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->         server->origin_fullpath,
->               ^~
-> fs/smb/client/cifsproto.h:79:21: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->         strlen(server->origin_fullpath),
->                      ^~
-> fs/smb/client/cifsproto.h:88:21: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->   len = strlen(server->origin_fullpath);
->                      ^~
-> fs/smb/client/cifsproto.h:93:18: error: 'struct TCP_Server_Info' has no
-> member named 'origin_fullpath'
->   memcpy(s, server->origin_fullpath, len);
->                   ^~
-> host-make[6]: *** [scripts/Makefile.build:250: fs/smb/client/cifsfs.o] Error
-> 1
-> host-make[6]: *** Waiting for unfinished jobs....
+Now that Zacas is supported in the kernel, let's use the double word
+atomic version of amocas to improve the SLUB allocator.
 
-Ugh, this was because I had to add a fixup patch for a different patch
-here.  I'll go drop both of them for now, thanks.
+Note that we have to select fixed registers, otherwise gcc fails to pick
+even registers and then produces a reserved encoding which fails to
+assemble.
 
-greg k-h
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/Kconfig               |  1 +
+ arch/riscv/include/asm/cmpxchg.h | 39 ++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index d3b0f92f92da..0bbaec0444d0 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -104,6 +104,7 @@ config RISCV
+ 	select GENERIC_VDSO_TIME_NS if HAVE_GENERIC_VDSO
+ 	select HARDIRQS_SW_RESEND
+ 	select HAS_IOPORT if MMU
++	select HAVE_ALIGNED_STRUCT_PAGE
+ 	select HAVE_ARCH_AUDITSYSCALL
+ 	select HAVE_ARCH_HUGE_VMALLOC if HAVE_ARCH_HUGE_VMAP
+ 	select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index 97b24da38897..608d98522557 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -289,4 +289,43 @@ end:;									\
+ 	arch_cmpxchg_release((ptr), (o), (n));				\
+ })
+ 
++#ifdef CONFIG_RISCV_ISA_ZACAS
++
++#define system_has_cmpxchg128()						\
++			riscv_has_extension_unlikely(RISCV_ISA_EXT_ZACAS)
++
++union __u128_halves {
++	u128 full;
++	struct {
++		u64 low, high;
++	};
++};
++
++#define __arch_cmpxchg128(p, o, n, cas_sfx)					\
++({										\
++	__typeof__(*(p)) __o = (o);						\
++	union __u128_halves __hn = { .full = (n) };				\
++	union __u128_halves __ho = { .full = (__o) };				\
++	register unsigned long x6 asm ("x6") = __hn.low;			\
++	register unsigned long x7 asm ("x7") = __hn.high;			\
++	register unsigned long x28 asm ("x28") = __ho.low;			\
++	register unsigned long x29 asm ("x29") = __ho.high;			\
++										\
++	__asm__ __volatile__ (							\
++		"	amocas.q" cas_sfx " %0, %z3, %2"			\
++		: "+&r" (x28), "+&r" (x29), "+A" (*(p))				\
++		: "rJ" (x6), "rJ" (x7)						\
++		: "memory");							\
++										\
++	((u128)x29 << 64) | x28;						\
++})
++
++#define arch_cmpxchg128(ptr, o, n)						\
++	__arch_cmpxchg128((ptr), (o), (n), ".aqrl")
++
++#define arch_cmpxchg128_local(ptr, o, n)					\
++	__arch_cmpxchg128((ptr), (o), (n), "")
++
++#endif /* CONFIG_RISCV_ISA_ZACAS */
++
+ #endif /* _ASM_RISCV_CMPXCHG_H */
+-- 
+2.39.2
+
