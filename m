@@ -1,101 +1,95 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227E01878;
-	Wed, 17 Jul 2024 23:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09824D9FB;
+	Wed, 17 Jul 2024 23:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721260477; cv=none; b=n8+jaObEyH/pqNlLCvlnfQj34lDxhM9/mydv0ZnepGyryxwMlP/O5rpp1HWjZOgP3+HlFi2jvZVruWIqDO6HX287FA2/Fe1VMqg5qUQq6HYinXImg2b6Suo9KDkY0iJ0hNAUyQ2trysWpGDlP32nunVIVtfYRvKCBbWasACwxUc=
+	t=1721260696; cv=none; b=q9WcNoTaoAqch5D+Zw/0S352LuWafE3cAf7C1cknXhpJ3jAmQZk5MCibsXWRMXafEY65bPUwV6fPHRaIODiJRFISAVsviplZg9T9DRUGg0S9MdKphN6sgIAmAScctUb4I+lzO1I+O7JjtS3lecRFf2g7FGCgq3cDDQ9cVHGLpko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721260477; c=relaxed/simple;
-	bh=orzb0peVMTNR3GhKTlFAbKIAm9YwEI8zJBlUYCC3WuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=QVHZtxJavMq8ixu9Z7Plv222fXGJK62E5PRn1qxGVr4uOla/2REj7fqWMBwm2b+bygpwMqC6/VKYlETfS5EeNEJjSm06TzwY/T6kIGvQSpTC1Sm442284wArNOcmW4U6qsvSMu+k5ytT5KQoYuh0JZTai7UEl3xw20pyJ5RXGOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NkqhUNbp; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1721260696; c=relaxed/simple;
+	bh=5Wb2eZKJTz/jMDi0+hRmInc57d4u3ci6Qfq5xiAAwcs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Yxwpp42e8fB+G87JHST1gITiBZsIbBq7RwzQgJK4Fr7fpluSP32V3QqccVD/VcoJTKpdYCD9mimZ/th+PpiDgKhCF6MAaXLU9z/4PuCS9P78dGtIq0mO14zYAyeL5e4M/NAcpNfN44AvHP6V8NLnw/gwS4EW+hFiShvcIwOlw58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjE8lgFR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NkqhUNbp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1721260469;
-	bh=XKKG24LUHfwl+S6Lasz6G9yozksEgNION8fi9ihfAwU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NkqhUNbpWVtWzkOx0BkPMwI5r1NPtY4WVHsIvOW3PJAZLrS0YVrgAWd+QEDjL+ccT
-	 qwZFdXdossa0xfkPir2aALQ4l9BD3wnFq8x1A/QyzUS0PCCycE7UO0Nx7l3JLiPEh9
-	 5eSSdgN6bXwUBI1BwcqhWWQIwf9f+hQ1yo6+1ZgsyCkjq19y3UP5GyoZuMluemRNx9
-	 EQerT9EJpRpFK+Q7+EJeTqHV1iji3w87mut8vgKwhu4XE8HGRdYgzmsqTCuV1AQVqg
-	 2f4BfA9VeCnPr8JjQtYhuEbTQ54QLrzkxwEmi38DSaxPcyZIpfur4HvmVV0XTflWp5
-	 lHW90Dajc/vvw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WPXps0QZXz4w2Q;
-	Thu, 18 Jul 2024 09:54:29 +1000 (AEST)
-Date: Thu, 18 Jul 2024 09:54:28 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Michael Ellerman <mpe@ellerman.id.au>, Daniel Borkmann
- <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, Andrii
- Nakryiko <andrii@kernel.org>
-Cc: bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, PowerPC
- <linuxppc-dev@lists.ozlabs.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the powerpc tree
-Message-ID: <20240718095428.56145ce1@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjE8lgFR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F02C2BD10;
+	Wed, 17 Jul 2024 23:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721260696;
+	bh=5Wb2eZKJTz/jMDi0+hRmInc57d4u3ci6Qfq5xiAAwcs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UjE8lgFRopw7Cn/Zf4QpeH3IVOgETO8Nw0pYO+kX/kLpBo1fRObZB7tYHh6JLxUuy
+	 +uVrGxf9jL/dGUSo/m3jBP7MN8+HEgJgwQaMH71ekUAM/svfFEl89IX51aME/ryUE+
+	 9AwGPXhNVNOduPy3MoY6AuaVnzMwxdEKQPSdtB48Bo6qyxMyUUtorIJaBHTKWw9Sfb
+	 MEvRDvQ14u3KzsovByPSB8NRbNnh8S+AEagsYIEB4bkQ/FPYjf/uwTNJSdI0Dhz7jW
+	 wySijyUhaUthdeyPGe0P+Bj9A3ZHRTM9CtQhnnG1eud/YOLQuTrEc0bykG8KcUT6qQ
+	 G5hh4hreyCh8g==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: damon@lists.linux.dev,
+	linux-damon@amazon.com,
+	linux-damon-trial@amazon.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Shared calendar for the schedule (was Re: DAMON Beer/Coffee/Tea chat reminder and extending for office hour)
+Date: Wed, 17 Jul 2024 16:58:12 -0700
+Message-Id: <20240717235812.53087-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240519163329.150340-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//jK+5O_.IB6DwYZQ1hxVMBz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_//jK+5O_.IB6DwYZQ1hxVMBz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 19 May 2024 09:33:29 -0700 SeongJae Park <sj@kernel.org> wrote:
 
-Hi all,
+> Hello,
+> 
+> 
+> On Wed, 10 Aug 2022 22:51:02 +0000 SeongJae Park <sj@kernel.org> wrote:
+> 
+> > Hello,
+> > 
+> > 
+> > In short, I'd like to start an open, regular, and informal virtual bi-weekly
+> > meeting series for DAMON community.
+> > 
+> > Important links and dates
+> > -------------------------
+> > 
+> > Location: https://meet.google.com/ndx-evoc-gbu
+> > Agenda: https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing
+> 
+> 
+> Recently I got some feedback about DAMON Beer/Coffee/Tea chat.  They told me
+[...]
+> Firstly, I will regularly provide reminder of the series, probably 1-2 days
+> before every instance.
 
-The following commit is also in the bpf tree as a different commit
-(but the same patch):
+I usually send the reminders based on Pacific Time.  Some folks told me it is
+easy to make time zone difference calculation mistakes.  Last meeting, there
+was a further suggestion to have a shared calendar for the schedules that
+handles the time zone difference.  So I made a Google Calendar and added the
+open group chat schedules.  It should be avaialble with below link:
 
-  358492fc426f ("MAINTAINERS: Update email address of Naveen")
+https://calendar.google.com/calendar/u/0?cid=ZDIwOTA4YTMxNjc2MDQ3NTIyMmUzYTM5ZmQyM2U4NDA0ZGIwZjBiYmJlZGQxNDM0MmY4ZTRjOTE0NjdhZDRiY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t
 
-This is commit
+Please feel free to add it to your calendar to get alarms without complex time
+zone difference calculation.  If it doesn't work or you have other suggestions,
+please let me know.
 
-  afcc8e1ef7bb ("MAINTAINERS: Update email address of Naveen")
+I will continue sending the reminders, though.  That's for new comers and
+people who don't want to add something to their calendar.  So if you're ok with
+current reminders-based system, you have nothing to do.
 
-in the bpf tree.
 
-Note also that commit
+Thanks,
+SJ
 
-  e8061392ee09 ("MAINTAINERS: Update powerpc BPF JIT maintainers")
-
-from the powerpc tree is almost identical to commit
-
-  c638b130e83e ("MAINTAINERS: Update powerpc BPF JIT maintainers")
-
-from the bpf tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//jK+5O_.IB6DwYZQ1hxVMBz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaYWbQACgkQAVBC80lX
-0Gyo2Qf/aP4pe+3KIej3vnuuDJZ0ucpzlphiDpk9T51qRvpQEn51tdj2M82xGRrv
-01wigo+s4fb0t/BLDRgnJN2YjN0Y5U3IlBt+yWa1Y2JD9AHl4Ak0hX8uCGuPYJCL
-oD9szYrpnGCEYVnQj5KMbHCCmiD5rDSPZMwgBBlOLcARliXg9QD8YdtAv7lyUgZH
-Mjp1mpirRDOiAqnA2TsuCNPuUyJody3IwTEaijJpqYI0EaoXbbCFqM+o68avIGNv
-ge3MSdP5rRSwFd05C9j4IMEoBJ0GeNEN9tPtUw99MZUM+TevGnTykbneJZcLD6cT
-JeNw7oSC0VYsz8V+SIKPWNeR9ixRYg==
-=3S5l
------END PGP SIGNATURE-----
-
---Sig_//jK+5O_.IB6DwYZQ1hxVMBz--
+[...]
