@@ -1,261 +1,309 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67A71802A1;
-	Wed, 17 Jul 2024 12:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D161802D9;
+	Wed, 17 Jul 2024 12:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721220885; cv=none; b=qef6AseMLGpMOJD6rhiUbK5MouQHnHQ0RJ9OPDRq0M3IjzN6mQJzEv1dC/YNDnCIsHfKD3LUB5CWLc8BazGdmwbryUpG+MdDjKNPm1hhPB8rlzWpAxW+zH2WWdHd37Eh9+EY1U4kessKW7JQBjFLFAx/60OnjTT0gMh4OrY817k=
+	t=1721220885; cv=none; b=Iyxs91TsiDTuG1azXo+w3hGY0FySvOEc1/YQDy9mCgxeO/1YCQWCrsSeMaeYDpDmiNSITyw7soMRfaBiiSuCK+eNMOG6TRsCa1Ffjl2tfLX3V8LtRPh+xpkwadwKxEzKBCgao2msYpiVMcbhM/qVvOHQ8Sw+MnkU/pNqs/5zHVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721220885; c=relaxed/simple;
-	bh=7Ql1Q5GbrWX7vTjfNeTTR77OQiwm0b8qXBEy7Whd88M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YvG/Bx7K/XlLTG6TF3WhnqbBlC46xX5MCujV8zgyhR5om3Iy1PyAsKLk/eTa3LvF6RMLx7vd4PEkkP8+ytQM9BKoQ16VhsPSIgDj0zDeERAO5y3SYDBR8PGHu3yMHnwCao3Cgabov5qzD+cX4Rwd5lJmKLK/QGfOivvH4QvWp30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lj9DIml5; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	bh=nnLLfbV9bwYftssLu+xiTYTnLCBIkXFWNZcnmK8diPE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZwTbAJ0/Z3Vhz7VSqnKpOA5rMrliz5nalzzhOwUhpSoML3y3CECx++SlK8vJCK0o7bX7oIvOeHAVEJKQrOTo1DV1aSqguW0/AYNSAJjjAJDVYUe0RjZXCOfxsHBYjEiqoXvauKNrRvdfSrxG5895W+APpYJyht2S6JCiQWzwbAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFJEEjiF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lj9DIml5"
-X-UUID: b5b59bec443b11ef87684b57767b52b1-20240717
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=BCBU9VRPG1ZySWp9/a3bXUm7Fg+jSLOWVX2yqJ76+4s=;
-	b=lj9DIml5Vr7MKRIdZviFnTj/PHo06FqQAHk6twFO7pEWIabMrPPASasKhEn7ZxLgsuTqXGP9t87UmjuIc7dl4B+MPBJY3vTYy/Zk3vghsQZK73ope6m5TONs02MsTQ5xEKXBK8/n2MNFCV9TObMaoUa7+VbGztePHJ8CuIttqtU=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:33e7519e-1cfb-4408-b705-4f6b5602d883,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:9daa74d5-0d68-4615-a20f-01d7bd41f0bb,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: b5b59bec443b11ef87684b57767b52b1-20240717
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
-	(envelope-from <yelian.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1772796099; Wed, 17 Jul 2024 20:54:31 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 17 Jul 2024 20:54:31 +0800
-Received: from mszsdhlt06.gcn.mediatek.inc (10.16.6.206) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 17 Jul 2024 20:54:30 +0800
-From: 20220614094956 created <yelian.wang@mediatek.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Yelian Wang
-	<yelian.wang@mediatek.com>
-CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<yaya.chang@mediatek.com>, <teddy.chen@mediatek.com>,
-	<hidenorik@chromium.org>
-Subject: [PATCH 2/3] uapi: linux: add MT8188 AIE
-Date: Wed, 17 Jul 2024 20:41:56 +0800
-Message-ID: <20240717125426.32660-3-yelian.wang@mediatek.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240717125426.32660-1-yelian.wang@mediatek.com>
-References: <20240717125426.32660-1-yelian.wang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFJEEjiF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70C34C4AF12;
+	Wed, 17 Jul 2024 12:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721220884;
+	bh=nnLLfbV9bwYftssLu+xiTYTnLCBIkXFWNZcnmK8diPE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qFJEEjiFB9PLxkGvActSwDja52iQ32LqLf9iMA5pR8YpE/pGPtekwG/17YorYqb8F
+	 hJvdqt3vie1x/pRr/MU9YKmFgBQBGTCUe7Oyl2VMY2hFqPRhj+PIVsvqMR5vs2kQCm
+	 W3V0oW5141aXkXyR6+bC35FQqk54wa2Sd0J86pbji831Okc3K89jCAgJDN53YfSt/t
+	 hC2NBDx1P85GXKrgNVUzQRdeB99VSGgJ+yeCf8Zr/CSoIYalZP/sTgV5Sk51DGA2R5
+	 Ti2empTA9I96Wki+x0wIoao/r+uyHvvdhCaF7+6ueedpIqXuQ0+usFkok9ndR89lmJ
+	 C42JZSkj+xCOg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sU4B7-00D8zo-GU;
+	Wed, 17 Jul 2024 13:54:41 +0100
+Date: Wed, 17 Jul 2024 13:54:40 +0100
+Message-ID: <86msmg2n73.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	anna-maria@linutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	festevam@gmail.com,
+	bhelgaas@google.com,
+	rdunlap@infradead.org,
+	vidyas@nvidia.com,
+	ilpo.jarvinen@linux.intel.com,
+	apatel@ventanamicro.com,
+	kevin.tian@intel.com,
+	nipun.gupta@amd.com,
+	den@valinux.co.jp,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	alex.williamson@redhat.com,
+	will@kernel.org,
+	lorenzo.pieralisi@arm.com,
+	jgg@mellanox.com,
+	ammarfaizi2@gnuweeb.org,
+	robin.murphy@arm.com,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	kristo@kernel.org,
+	vkoul@kernel.org,
+	okaya@kernel.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	mark.rutland@arm.com,
+	shameerali.kolothum.thodi@huawei.com,
+	yuzenghui@huawei.com
+Subject: Re: [patch V4 00/21] genirq, irqchip: Convert ARM MSI handling to per device MSI domains
+In-Reply-To: <Zpdxe4ce-XwDEods@hovoldconsulting.com>
+References: <20240623142137.448898081@linutronix.de>
+	<ZpUFl4uMCT8YwkUE@hovoldconsulting.com>
+	<878qy26cd6.wl-maz@kernel.org>
+	<ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
+	<86r0bt39zm.wl-maz@kernel.org>
+	<ZpaJaM1G721FdLFn@hovoldconsulting.com>
+	<86plrd2o5o.wl-maz@kernel.org>
+	<Zpdxe4ce-XwDEods@hovoldconsulting.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--10.265400-8.000000
-X-TMASE-MatchedRID: 0bZ5yU6lNNMxFdXyW/P+XYSvKOGqLLPKK2i9pofGVSu7qpOHKudqcxFu
-	Pg3ykf5hKnoLoDc7CX3kllaluas5jiDLycb1BK8Fe7MO8jvmPSy4vBuE2X0Hlf002DXYmoa1pNH
-	VMPxrKWFLtBtfUVMvKnt9ZDLJDtKvAaUyBbEosi2EJ5wBUYI5/bmnDa2zGPi0FLXUWU5hGiGxEI
-	pMo/Df4FwVxV30BJh4M9BZPSxx0vrtzSKzUmDUVws9VkfCh3uArokbkfZgmrra+IH8mvgPVNnfc
-	bZ2aRWZ+5kqzEMlCiwAr9cazk30r6q07IAfK9og4bl1FkKDELfaoFJAcCHymIKwF4K/wIz9Bw3b
-	/YoI+hXi8zVgXoAltsIJ+4gwXrEtwrbXMGDYqV/1Kzk40dEY9eNcWUlJqczYCj5S0KdXMaZdbPI
-	Q/0m+mj869KSQrWm5
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--10.265400-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: F4A570C8CF16CE4FDC5F6B378D67CEE007A804143A97840645E6428DA0E66E8F2000:8
-X-MTK: N
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Yelian Wang <yelian.wang@mediatek.com>
+On Wed, 17 Jul 2024 08:23:39 +0100,
+Johan Hovold <johan@kernel.org> wrote:
+> 
+> On Tue, Jul 16, 2024 at 07:21:39PM +0100, Marc Zyngier wrote:
+> > On Tue, 16 Jul 2024 15:53:28 +0100,
+> > Johan Hovold <johan@kernel.org> wrote:
+> > > On Tue, Jul 16, 2024 at 11:30:05AM +0100, Marc Zyngier wrote:
+> > > > On Mon, 15 Jul 2024 15:10:01 +0100,
+> > > > Johan Hovold <johan@kernel.org> wrote:
+> > > > > On Mon, Jul 15, 2024 at 01:58:13PM +0100, Marc Zyngier wrote:
+> > > > > > On Mon, 15 Jul 2024 12:18:47 +0100,
+> > > > > > Johan Hovold <johan@kernel.org> wrote:
+> 
+> > > > > > > This series only showed up in linux-next last Friday and broke interrupt
+> > > > > > > handling on Qualcomm platforms like sc8280xp (e.g. Lenovo ThinkPad X13s)
+> > > > > > > and x1e80100 that use the GIC ITS for PCIe MSIs.
+> > > > > > > 
+> > > > > > > I've applied the series (21 commits from linux-next) on top of 6.10 and
+> > > > > > > can confirm that the breakage is caused by commits:
+> > > > > > > 
+> > > > > > > 	3d1c927c08fc ("irqchip/gic-v3-its: Switch platform MSI to MSI parent")
+> > > > > > > 	233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
+> > > > > > > 
+> > > > > > > Applying the series up until the change before 3d1c927c08fc unbreaks the
+> > > > > > > wifi on one machine:
+> > > > > > > 
+> > > > > > > 	ath11k_pci 0006:01:00.0: failed to enable msi: -22
+> > > > > > > 	ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -22
+> > > 
+> > > Correction, this doesn't fix the wifi, but I'm not seeing these errors
+> > > with the commit before cc23d1dfc959 as the ath11k driver doesn't get
+> 
+> [ This was supposed to say 3d1c927c08fc, which is the mainline hash,
+> sorry. ]
+> 
+> > > this far (or doesn't probe at all).
+> > 
+> > I think we need to track one thing at a time. The wifi and nvme
+> > problems seem subtly different... Which is the exact commit that
+> > breaks nvme on your machine?
+> 
+> Yeah, forget about 3d1c927c08fc for now, which may have been a red
+> herring since we're also appear to be dealing with some sort of race and
+> (some) symptoms keep changing from boot to boot. The only thing that for
+> certain is that the series breaks MSI and that the NVMe breaks with
+> commit 233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for
+> PCI/MSI[-X]").
+> 
+> > > > So is this issue actually tied to the async probing? Does it always
+> > > > work if you disable it?
+> > > 
+> > > There seem to multiple issues here.
+> > > 
+> > > With the full series applied and normal async (i.e. parallel) probing of
+> > > the PCIe controllers I sometimes see allocation failing with -ENOSPC
+> > > (e.g. the above ath11k errors). This seems to indicate broken locking
+> > > somewhere.
+> > 
+> > Your log doesn't support this theory. At least not from an ITS
+> > perspective, as it keeps dishing out INTIDs (and it is very hard to
+> > run out of IRQs with the ITS).
+> 
+> The log I shared was with synchronous probing which takes parallel
+> allocation out of the equation (and gives more readable logs) so that is
+> expected. See below for a log with normal async probing that may give
+> some more insight into the race as well (i.e. when ath11k allocation
+> fails with -ENOSPC.)
 
-Add AIE control related definitions
+Huh, this log is actually pointing at something very ugly. Not a race,
+but some horrible ID confusion. See below.
 
-Signed-off-by: Yelian Wang <yelian.wang@mediatek.com>
----
- include/uapi/linux/mtk_aie_v4l2_controls.h | 130 +++++++++++++++++++++
- include/uapi/linux/videodev2.h             |   6 +
- 2 files changed, 136 insertions(+)
- create mode 100644 include/uapi/linux/mtk_aie_v4l2_controls.h
+> 
+> > > With synchronous probing, allocation always seems to succeed but the
+> > > ath11k (and modem) drivers time out as no interrupts are received.
+> > > 
+> > > The NVMe driver sometimes falls back to INTx signalling and can access
+> > > the drive, but often end up with an MSIX (?!) allocation and then fails
+> > > to probe:
+> > > 
+> > > 	[  132.084740] nvme nvme0: I/O tag 17 (1011) QID 0 timeout, completion polled
+> > 
+> > So one of my test boxes (ThunderX) fails this exact way, while another
+> > (Synquacer) is pretty happy. Still trying to understand the difference
+> > in behaviour.
+> > 
+> > How do you enforce synchronous probing?
+> 
+> I believe there is a kernel parameter for this (e.g.
+> module.async_probe), but I just disable async probing for the Qualcomm
+> PCIe driver I'm using:
 
-diff --git a/include/uapi/linux/mtk_aie_v4l2_controls.h b/include/uapi/linux/mtk_aie_v4l2_controls.h
-new file mode 100644
-index 000000000000..f4be180c8ddf
---- /dev/null
-+++ b/include/uapi/linux/mtk_aie_v4l2_controls.h
-@@ -0,0 +1,130 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * AIE Controls Header
-+ *
-+ * Copyright (c) 2020 MediaTek Inc.
-+ * Author: Fish Wu <fish.wu@mediatek.com>
-+ */
-+
-+#ifndef __MTK_AIE_V4L2_CONTROLS_H__
-+#define __MTK_AIE_V4L2_CONTROLS_H__
-+
-+#include <linux/types.h>
-+
-+/*
-+ * The base for the mediatek FD driver controls.
-+ * We reserve 16 controls for this driver.
-+ */
-+#define V4L2_CID_USER_MTK_FD_BASE (V4L2_CID_USER_BASE + 0x1fd0)
-+
-+#define V4L2_CID_MTK_AIE_INIT (V4L2_CID_USER_MTK_FD_BASE + 1)
-+#define V4L2_CID_MTK_AIE_PARAM (V4L2_CID_USER_MTK_FD_BASE + 2)
-+
-+#define V4L2_FLD_MAX_FRAME 15
-+
-+/**
-+ * struct v4l2_ctrl_aie_init - aie init parameters.
-+ *
-+ * @max_img_width: maximum width of the source image.
-+ * @max_img_height: maximum height of the source image.
-+ * @pyramid_width: maximum width of the base pyramid.
-+ * @pyramid_height: maximum height of the base pyramid.
-+ * @feature_threshold: feature threshold for hareware.
-+ */
-+struct v4l2_ctrl_aie_init {
-+	__u32 max_img_width;
-+	__u32 max_img_height;
-+	__u32 pyramid_width;
-+	__u32 pyramid_height;
-+	__s32 feature_threshold;
-+};
-+
-+/**
-+ * struct v4l2_aie_roi - aie roi parameters.
-+ *
-+ * @x1: x1 of the roi coordinate.
-+ * @y1: y1 of the roi coordinate.
-+ * @x2: x2 of the roi coordinate.
-+ * @y2: y2 of the roi coordinate.
-+ */
-+struct v4l2_aie_roi {
-+	__u32 x1;
-+	__u32 y1;
-+	__u32 x2;
-+	__u32 y2;
-+};
-+
-+/**
-+ * struct v4l2_aie_padding - aie padding parameters.
-+ *
-+ * @left: the size of padding left.
-+ * @right: the size of padding right.
-+ * @down: the size of padding below.
-+ * @up: the size of padding above.
-+ */
-+struct v4l2_aie_padding {
-+	__u32 left;
-+	__u32 right;
-+	__u32 down;
-+	__u32 up;
-+};
-+
-+/**
-+ * struct v4l2_fld_crop_rip_rop - aie fld parameters.
-+ *
-+ * @fld_in_crop_x1: x1 of the crop coordinate.
-+ * @fld_in_crop_y1: y1 of the crop coordinate.
-+ * @fld_in_crop_x2: x2 of the crop coordinate.
-+ * @fld_in_crop_y2: y2 of the crop coordinate.
-+ * @fld_in_rip: fld in rip.
-+ * @fld_in_rop: fld in rop.
-+ */
-+struct v4l2_fld_crop_rip_rop {
-+	__u32 fld_in_crop_x1;
-+	__u32 fld_in_crop_y1;
-+	__u32 fld_in_crop_x2;
-+	__u32 fld_in_crop_y2;
-+	__u32 fld_in_rip;
-+	__u32 fld_in_rop;
-+};
-+
-+/**
-+ * struct v4l2_fld_crop_rip_rop - aie fld parameters.
-+ *
-+ * @fd_mode: select a mode for current fd.
-+ * @src_img_fmt: source image format.
-+ * @src_img_width: the width of the source image.
-+ * @src_img_height: the height of the source image.
-+ * @src_img_stride: the stride of the source image.
-+ * @pyramid_base_width: the width of the base pyramid.
-+ * @pyramid_base_height: the width of the base pyramid.
-+ * @number_of_pyramid: number of pyramid.
-+ * @rotate_degree: the rotate degree of the image.
-+ * @en_roi: enable roi.
-+ * @src_roi: roi params.
-+ * @en_padding: enable padding.
-+ * @src_padding: padding params.
-+ * @freq_level: frequency level.
-+ * @fld_face_num: the number of faces in fld.
-+ * @fld_input: fld input params.
-+ */
-+struct v4l2_ctrl_aie_param {
-+	__u32 fd_mode;
-+	__u32 src_img_fmt;
-+	__u32 src_img_width;
-+	__u32 src_img_height;
-+	__u32 src_img_stride;
-+	__u32 pyramid_base_width;
-+	__u32 pyramid_base_height;
-+	__u32 number_of_pyramid;
-+	__u32 rotate_degree;
-+	__s32 en_roi;
-+	struct v4l2_aie_roi src_roi;
-+	__s32 en_padding;
-+	struct v4l2_aie_padding src_padding;
-+	__u32 freq_level;
-+	__u32 fld_face_num;
-+	struct v4l2_fld_crop_rip_rop fld_input[V4L2_FLD_MAX_FRAME];
-+};
-+
-+#endif /* __MTK_AIE_V4L2_CONTROLS_H__ */
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 4e91362da6da..a5d54b683b7d 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -858,6 +858,9 @@ struct v4l2_pix_format {
- /* Vendor specific - used for RaspberryPi PiSP */
- #define V4L2_META_FMT_RPI_BE_CFG	v4l2_fourcc('R', 'P', 'B', 'C') /* PiSP BE configuration */
- 
-+/* Vendor-specific definition: used for the MediaTek camera subsystem's face detection results */
-+#define V4L2_META_FMT_MTFD_RESULT v4l2_fourcc('M', 'T', 'f', 'd')
-+
- #ifdef __KERNEL__
- /*
-  * Line-based metadata formats. Remember to update v4l_fill_fmtdesc() when
-@@ -1953,6 +1956,9 @@ enum v4l2_ctrl_type {
- 	V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY = 0x281,
- 	V4L2_CTRL_TYPE_AV1_FRAME	    = 0x282,
- 	V4L2_CTRL_TYPE_AV1_FILM_GRAIN	    = 0x283,
-+
-+	V4L2_CTRL_TYPE_AIE_INIT		= 0x0290,
-+	V4L2_CTRL_TYPE_AIE_PARAM	= 0x0291,
- };
- 
- /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+I had tried this module parameter, but it didn't change anything on my
+end.
+
+> 
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1684,7 +1684,7 @@ static struct platform_driver qcom_pcie_driver = {
+>                 .name = "qcom-pcie",
+>                 .of_match_table = qcom_pcie_match,
+>                 .pm = &qcom_pcie_pm_ops,
+> -               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +               //.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>         },
+>  };
+
+I'll have a look whether the TX1 PCIe driver uses this. It's
+positively ancient, so I wouldn't bet that it has been touched
+significantly in the past 5 years.
+
+[...]
+
+> [    8.692011] Reusing ITT for devID 0
+> [    8.693668] Reusing ITT for devID 0
+
+This is really odd. It indicates that you have several devices sharing
+the same DeviceID, which I seriously doubt it is the case in a
+laptop. Do you have any non-transparent bridge here? lspci would help.
+
+> [    8.693871] pcieport 0006:00:00.0: PME: Signaling with IRQ 228
+> [    8.694116] pcieport 0006:00:00.0: AER: enabled with IRQ 228
+> [    8.696453] pci 0004:00:00.0: PCI bridge to [bus 01-ff]
+> [    8.703760] IRQ206 -> 0-7 CPU2
+> [    8.710986] pci 0004:00:00.0:   bridge window [mem 0x34300000-0x343fffff]
+> [    8.711136] Reusing ITT for devID 0
+
+Where is the bus number gone?
+
+> [    8.717093] IRQ207 -> 0-7 CPU3
+> [    8.723889] Reusing ITT for devID 0
+> [    8.729600] IRQ208 -> 0-7 CPU4
+> [    8.736507] pcieport 0004:00:00.0: PME: Signaling with IRQ 229
+> [    8.744261] IRQ209 -> 0-7 CPU5
+> [    8.750757] pcieport 0004:00:00.0: AER: enabled with IRQ 229
+> [    8.758038] IRQ210 -> 0-7 CPU6
+> [    9.071793] IRQ211 -> 0-7 CPU7
+> [    9.071807] IRQ212 -> 0-7 CPU0
+> [    9.071819] IRQ213 -> 0-7 CPU1
+> [    9.071831] IRQ214 -> 0-7 CPU2
+> [    9.071842] IRQ215 -> 0-7 CPU3
+> [    9.071852] IRQ216 -> 0-7 CPU4
+> [    9.071863] IRQ217 -> 0-7 CPU5
+> [    9.071875] IRQ218 -> 0-7 CPU6
+> [    9.071886] IRQ219 -> 0-7 CPU7
+> [    9.071897] IRQ220 -> 0-7 CPU0
+> [    9.071907] IRQ221 -> 0-7 CPU1
+> [    9.071920] IRQ222 -> 0-7 CPU2
+> [    9.071930] IRQ223 -> 0-7 CPU3
+> [    9.071941] IRQ224 -> 0-7 CPU4
+> [    9.071952] IRQ225 -> 0-7 CPU5
+> [    9.071962] IRQ226 -> 0-7 CPU6
+> [    9.071973] IRQ227 -> 0-7 CPU7
+> [    9.073568] Reusing ITT for devID 0
+> [    9.073607] ID:0 pID:8192 vID:196
+> [    9.073618] IRQ196 -> 0-7 CPU0
+> [    9.073717] IRQ196 -> 0-7 CPU0
+> [    9.073737] pcieport 0002:00:00.0: PME: Signaling with IRQ 196
+> [    9.086532] pcieport 0002:00:00.0: AER: enabled with IRQ 196
+> [    9.102057] mhi-pci-generic 0004:01:00.0: MHI PCI device found: foxconn-sdx55
+> [    9.109830] mhi-pci-generic 0004:01:00.0: BAR 0 [mem 0x34300000-0x34300fff 64bit]: assigned
+> [    9.119027] mhi-pci-generic 0004:01:00.0: enabling device (0000 -> 0002)
+> [    9.127271] ITS: alloc 8224:8
+> [    9.141500] ITT 8 entries, 3 bits
+> [    9.144502] ID:0 pID:8224 vID:198
+> [    9.144597] ID:1 pID:8225 vID:199
+> [    9.144605] ID:2 pID:8226 vID:200
+> [    9.144612] ID:3 pID:8227 vID:201
+> [    9.144619] ID:4 pID:8228 vID:202
+> [    9.144689] IRQ198 -> 0-7 CPU1
+> [    9.144888] IRQ199 -> 0-7 CPU2
+> [    9.144901] IRQ200 -> 0-7 CPU3
+> [    9.144914] IRQ201 -> 0-7 CPU4
+> [    9.144927] IRQ202 -> 0-7 CPU5
+> [    9.151264] IRQ198 -> 0-7 CPU1
+> [    9.151479] IRQ199 -> 0-7 CPU2
+> [    9.151673] IRQ200 -> 0-7 CPU3
+> [    9.151849] IRQ201 -> 0-7 CPU4
+> [    9.152056] IRQ202 -> 0-7 CPU5
+> [    9.159972] mhi mhi0: Requested to power ON
+> [    9.165275] mhi mhi0: Power on setup success
+> [    9.279951] ath11k_pci 0006:01:00.0: BAR 0 [mem 0x30400000-0x305fffff 64bit]: assigned
+> [    9.288208] ath11k_pci 0006:01:00.0: enabling device (0000 -> 0002)
+> [    9.301708] nvme nvme0: pci function 0002:01:00.0
+> [    9.307052] Reusing ITT for devID 100
+> [    9.315457] nvme 0002:01:00.0: enabling device (0000 -> 0002)
+
+This is device 0002:01:00.0...
+
+> [    9.326554] Reusing ITT for devID 100
+
+... seen as device 0000:01:00.0. WTF???
+
+> [    9.336332] ath11k_pci 0006:01:00.0: ath11k_pci_alloc_msi - requesting one vector failed: -28
+
+I'm starting to suspect that the new code doesn't carry all the
+required bits for the DevID, and that we end-up trying to allocated
+interrupts from the pool allocated to another device, which can never
+be a good thing, and would explain why everything dies a painful
+death.
+
+Can you run the same trace with the whole thing reverted? I think
+we're on something here.
+
+Thanks,
+
+	M.
+
 -- 
-2.34.1
-
+Without deviation from the norm, progress is not possible.
