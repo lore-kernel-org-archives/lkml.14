@@ -1,42 +1,49 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC99180A67;
-	Wed, 17 Jul 2024 16:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2271A5B05E
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721233521; cv=none; b=r7wtl7whIqfqaGCoTqpKzvvgsERqApywkvC4XUhw6FrHLbJTrDcdBNxwx0oJFcZElmGAcKdt1vyINPR0h/JazhV+hInQoGsGwcXma3922op1mRBhp8OgGPUHFx2VxBzjaomcAvz2hmkUnyVBCMhhdfEprTicSzHVqZOmpw/nMtM=
+	t=1721233547; cv=none; b=FXRo16KA9PmRIu+e9GXgboQca9S3y/3grWDo1eNPZLgpUJdEXxP4GnhdlclXdy4Xg/9epfy+4l7cM7kbByEuIJxYauG2OhksFAT/TYWqttbb1pHE28+EGLtIlZxq2HmaAvwnI2uTqlo4qYJoWxeDcnC++Qg1ZiBEB7xPHa8E154=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721233521; c=relaxed/simple;
-	bh=gsTjsJKiSv9mO94ijtFAZFseVqYNxVDnZ1NCnfwYttA=;
+	s=arc-20240116; t=1721233547; c=relaxed/simple;
+	bh=sycsrk1qbMInFpBFCo/eo6DF97u2tJbXnRgyrP9bYAA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omX9BfJ5lScG0VOswBxUfRWZH0yJf3dqgCjpjZ5cVWUuY9ZSkLzBRErdN+pl1bigj41ZMyz5KLAZCI8yB+d6K3pvLA5haTCJXafqrKo1dtRaDr9af51JWmVg1zCJ4onPViiK92A1VsUlbMAdj6eFel0H5/xTz3m2923d87Cv4U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 431D92800B3CC;
-	Wed, 17 Jul 2024 18:17:45 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 2E3BF21097A; Wed, 17 Jul 2024 18:17:45 +0200 (CEST)
-Date: Wed, 17 Jul 2024 18:17:45 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-	davem@davemloft.net, herbert@gondor.apana.org.au,
-	dhowells@redhat.com, zohar@linux.ibm.com, jarkko@kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	patrick@puiterwijk.org
-Subject: Re: [PATCH v12 02/10] crypto: Add support for ECDSA signature
- verification
-Message-ID: <ZpfuqeSVC47jqme2@wunner.de>
-References: <20210316210740.1592994-1-stefanb@linux.ibm.com>
- <20210316210740.1592994-3-stefanb@linux.ibm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8yt3wIQJNqGFQuQGEdQR3RgS6j8CgATowxIWfvbnyBeO5a0yzllaAxCOkqgCtFTuXq8c/M47OOqTbsvX5qxkDvRQ+8jePd+e5Y6bhH+gpYaSwipym5VlDhssU+20CHzF0bmEwbGb8cVvLj4MTSCH9FJtPf/x1G7t89TETR9uO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PWKGcvS4; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWKGcvS4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Byyt/G4FG3dBwo6FphWn68cOZO3ZKBoSOM3VbH/6tpY=; b=PWKGcvS49m+WMKTbZJI5Ia86yB
+	gkchnI3oTzqqnYqVsY7PH0pISabJa7YpcaKH8awbAPB6izyilci+ZFqlr2ckehK2ay/I18iNBBepy
+	0jXNXfrSU9Nuoe1Y9bG4fMMqMt1x4TCMhldNcDXXv8X71QEXS/xhJAT03ezBe8TwgjCakRpFrXYRL
+	nUpHhwK051T+3hBwK5ULNemOY45MDrBuUcyxysKx3uev/PXot1wxHWc5cDnWB0KgcHaHrZN7lEmyN
+	7HX3wS1jiEmwUhKao2XA3FX/IMb89Qb1chAhi3G9nLTLFgFAXaYdam9Kll/CHfeQNg0TR/U45rYWM
+	+aS2qGxA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sU7TG-00000002MPc-09oU;
+	Wed, 17 Jul 2024 16:25:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1FC48300362; Wed, 17 Jul 2024 18:25:37 +0200 (CEST)
+Date: Wed, 17 Jul 2024 18:25:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Kees Cook <kees@kernel.org>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] refcount: Report UAF for refcount_sub_and_test(0) when
+ counter==0
+Message-ID: <20240717162536.GH26750@noisy.programming.kicks-ass.net>
+References: <20240717130023.5675-1-petr.pavlu@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,90 +52,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210316210740.1592994-3-stefanb@linux.ibm.com>
+In-Reply-To: <20240717130023.5675-1-petr.pavlu@suse.com>
 
-Hi Stefan,
+On Wed, Jul 17, 2024 at 03:00:23PM +0200, Petr Pavlu wrote:
+> When a reference counter is at zero and refcount_sub_and_test() is invoked
+> to subtract zero, the function accepts this request without any warning and
+> returns true. This behavior does not seem ideal because the counter being
+> already at zero indicates a use-after-free. Furthermore, returning true by
+> refcount_sub_and_test() in this case potentially results in a double-free
+> done by its caller.
+> 
+> Modify the underlying function __refcount_sub_and_test() to warn about this
+> case as a use-after-free and have it return false to avoid the potential
+> double-free.
+> 
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+> ---
+> 
+> Motivation for this patch is an earlier kretprobe problem described at:
+> https://lore.kernel.org/linux-trace-kernel/92cff289-facb-4e42-b761-6fd2515d6018@suse.com/
 
-On Tue, Mar 16, 2021 at 05:07:32PM -0400, Stefan Berger wrote:
+Well that's good fun.... :/
+
+The patch seems sane enough to me, I don't think add() has a similar
+issue, adding 0 is still daft, but as is I don't think it will actually
+misbehave. Notably add_not_zero(0) will fail when 0 and succeed (with
+no effect) when !0.
+
+Still, adding or subtracting 0 is pretty stupid, so perhaps we should
+more explicitly warn on that?
+
+Anyway, for this patch:
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+>  drivers/misc/lkdtm/refcount.c | 16 ++++++++++++++++
+>  include/linux/refcount.h      |  4 ++--
+>  2 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/refcount.c b/drivers/misc/lkdtm/refcount.c
+> index 5cd488f54cfa..8f744bee6fbd 100644
+> --- a/drivers/misc/lkdtm/refcount.c
+> +++ b/drivers/misc/lkdtm/refcount.c
+> @@ -182,6 +182,21 @@ static void lkdtm_REFCOUNT_SUB_AND_TEST_NEGATIVE(void)
+>  	check_negative(&neg, 3);
+>  }
+>  
 > +/*
-> + * Get the r and s components of a signature from the X509 certificate.
+> + * A refcount_sub_and_test() by zero when the counter is at zero should act like
+> + * refcount_sub_and_test() above when going negative.
 > + */
-> +static int ecdsa_get_signature_rs(u64 *dest, size_t hdrlen, unsigned char tag,
-> +				  const void *value, size_t vlen, unsigned int ndigits)
+> +static void lkdtm_REFCOUNT_SUB_AND_TEST_ZERO(void)
 > +{
-> +	size_t keylen = ndigits * sizeof(u64);
-> +	ssize_t diff = vlen - keylen;
-> +	const char *d = value;
-> +	u8 rs[ECC_MAX_BYTES];
+> +	refcount_t neg = REFCOUNT_INIT(0);
 > +
-> +	if (!value || !vlen)
-> +		return -EINVAL;
+> +	pr_info("attempting bad refcount_sub_and_test() at zero\n");
+> +	if (refcount_sub_and_test(0, &neg))
+> +		pr_warn("Weird: refcount_sub_and_test() reported zero\n");
 > +
-> +	/* diff = 0: 'value' has exacly the right size
-> +	 * diff > 0: 'value' has too many bytes; one leading zero is allowed that
-> +	 *           makes the value a positive integer; error on more
-> +	 * diff < 0: 'value' is missing leading zeros, which we add
-> +	 */
-> +	if (diff > 0) {
-> +		/* skip over leading zeros that make 'value' a positive int */
-> +		if (*d == 0) {
-> +			vlen -= 1;
-> +			diff--;
-> +			d++;
-> +		}
-> +		if (diff)
-> +			return -EINVAL;
-> +	}
-> +	if (-diff >= keylen)
-> +		return -EINVAL;
-
-I'm in the process of creating a crypto_template for decoding an x962
-signature as requested by Herbert:
-
-https://lore.kernel.org/all/ZoHXyGwRzVvYkcTP@gondor.apana.org.au/
-
-I intend to move the above code to the template and to do so I'm
-trying to understand what it's doing.
-
-There's an oddity in the above-quoted function.  The check ...
-
-+	if (-diff >= keylen)
-+		return -EINVAL;
-
-... seems superfluous. diff is assigned the following value at the
-top of the function:
-
-+	ssize_t diff = vlen - keylen;
-
-This means that:  -diff == keylen - vlen.
-
-Now, if vlen is zero, -diff would equal keylen and then the
-"-diff >= keylen" check would be true.  However at the top of
-the function, there's already a !vlen check.  No need to check
-the same thing again!
-
-Next, I'm asking myself if -diff can ever be greater than keylen.
-I don't think it can.  For that to be true, vlen would have to be
-negative.  But vlen is of unsigned type size_t!
-
-I just wanted to double-check with you whether ...
-
-+	if (-diff >= keylen)
-+		return -EINVAL;
-
-... is indeed superfluous as I suspect or whether I'm missing
-something.  I'm guessing that the check might be some kind of
-safety net to avoid an out-of-bounds access in the memset()
-and memcpy() calls that follow further down in the function,
-in case sig->curve->g.ndigits was neglected to be set by the
-programmer.  But there doesn't seem to be any real need for
-the check, so I'm leaning towards not carrying it over to the
-x962 template.
-
-The check was already present in v1 of your ecdsa patch set:
-
-https://lore.kernel.org/all/20210126170359.363969-2-stefanb@linux.vnet.ibm.com/
-
-Thanks,
-
-Lukas
+> +	check_negative(&neg, 0);
+> +}
+> +
+>  static void check_from_zero(refcount_t *ref)
+>  {
+>  	switch (refcount_read(ref)) {
+> @@ -400,6 +415,7 @@ static struct crashtype crashtypes[] = {
+>  	CRASHTYPE(REFCOUNT_DEC_NEGATIVE),
+>  	CRASHTYPE(REFCOUNT_DEC_AND_TEST_NEGATIVE),
+>  	CRASHTYPE(REFCOUNT_SUB_AND_TEST_NEGATIVE),
+> +	CRASHTYPE(REFCOUNT_SUB_AND_TEST_ZERO),
+>  	CRASHTYPE(REFCOUNT_INC_ZERO),
+>  	CRASHTYPE(REFCOUNT_ADD_ZERO),
+>  	CRASHTYPE(REFCOUNT_INC_SATURATED),
+> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+> index 59b3b752394d..35f039ecb272 100644
+> --- a/include/linux/refcount.h
+> +++ b/include/linux/refcount.h
+> @@ -266,12 +266,12 @@ bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
+>  	if (oldp)
+>  		*oldp = old;
+>  
+> -	if (old == i) {
+> +	if (old > 0 && old == i) {
+>  		smp_acquire__after_ctrl_dep();
+>  		return true;
+>  	}
+>  
+> -	if (unlikely(old < 0 || old - i < 0))
+> +	if (unlikely(old <= 0 || old - i < 0))
+>  		refcount_warn_saturate(r, REFCOUNT_SUB_UAF);
+>  
+>  	return false;
+> 
+> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
+> -- 
+> 2.35.3
+> 
