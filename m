@@ -1,60 +1,65 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6B33FB83
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F16217F39A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721214666; cv=none; b=Q6EUpAAch1bkxudAJNcXEcoNUHh7j2jWBxkMJsGq0LMItnT9KEnTbhHpOsTYz1mC6Hp8dTVFk3SOx1RoK5seMG0PkhjES+P+4/m5FByR9zTRZfh7n9jr8DSzLiuHSoFqcuzNe/xuJ4C7qgYAIOaDHgsv9PAAg/ulXW1taIl3r1M=
+	t=1721214855; cv=none; b=H2NVjlHMIXHBEL21GrbtS2LQ13zYMIYFxgE76WmTkGnA1uArMl35hAicvnqSyWfQwGJ/3XhHqtZLrjf0lk2pAFlY7TryeoXCbZqni1EqeAaa2Scyf5mSPfQIMoEQLo4JkCwxL0bgJVsF6DgJC1hPySYni9vb+88Ujtqqyg5Lt80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721214666; c=relaxed/simple;
-	bh=hhutUiK+ldZmbrgZE8Dzx0T70pv9+3yHYglk4hnsQuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UOtUQJh2vyRwlUjbfKpbzbGOkPc/fQB0x0oiPf6zoX5kfCRyiQXm7bfg9yQFSYvjnaUgYcIj0iJYZqa0oV5Mktk3XSf/b+pHEx731kiivuXgQ1UzBGNH7ceVgCBZVU9Xj0Ja+cedg0J3X1Qm9DmeoeoAuqb4dNVaXKNCp9IgBjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sn/9Q3tV; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721214855; c=relaxed/simple;
+	bh=sQzUg2Q/1MYsGWnhU/zaTOxAtlBYe1TRtcDNO8bXWyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Tap4OtVNZltXfcak9eM7v2sPCyMhaH83VPTkKDRN/Wgs4KoaNZVCfBVQikKHFvXs99Amg/ZAcn2IMQaOTy2PqYxYqkmhBfUC1194fLTulGLZ94FrW0Zo5DJvlgixxhNaXjhtLiDCWQBrMh/jV6XsdNjuKWWEgwUikRkcayOG1QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SE3AWkhA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sn/9Q3tV"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58b447c519eso8709727a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 04:11:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721214663; x=1721819463; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3OdeLjPoqRmUlYr25okuYc8K1yPtbJFc4x5bOz0ESpo=;
-        b=sn/9Q3tV2y8D5NljrD1M4k5h51yxGuYK2ztENjPHvWgCCLDaWxsmclqb3sfwIj4Nvn
-         cKDiOWg/A7CxC2n0ALQ0tySOE+uLARTZNWFTwuFqOo05aCMzgV+kaMUMlv7BRuqxWaw/
-         k5B0sJUXSPiDXu/RR2lCxjN+6IWRa9JSqP45rrNsHQrNsHWs7yqmRWkABHjfIlQpS7OZ
-         2A02PrQFIxjIzzub+h1eHcTHG6D5+p5JmH7aE3Sb+R0YeqtfcIrcIpMBDQbISd3jXr9f
-         GTU+0RBfdj6Tr68hu9sxARmTbbtL2hqMMyBM9EoVpQyAAjvrsYVcThZATmfY5O+zu//0
-         JLGA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SE3AWkhA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721214852;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RAGmeywEZ/JgSZ6hAqPsmz089vwWWyWA+lKvknqNmtE=;
+	b=SE3AWkhA+4UZaCJekQMUNxUI9cKBoZAZXU1LGG3dxjhyaSgB06lZJDVczgpoPTNGwYLf1r
+	s+8nBGvPnKI2f6rg6xfsnAfOVIYhOEP0yOX4kPdcXT6zDidvGMhkUih5aKUN9cWP2p/UoY
+	go16Wgh0r/ACUqZjOL6XvY1btn+ijxM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-509-Hr2A37V8PEiCuaLj-8afZw-1; Wed, 17 Jul 2024 07:14:11 -0400
+X-MC-Unique: Hr2A37V8PEiCuaLj-8afZw-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-36831873b39so372761f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 04:14:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721214663; x=1721819463;
+        d=1e100.net; s=20230601; t=1721214850; x=1721819650;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3OdeLjPoqRmUlYr25okuYc8K1yPtbJFc4x5bOz0ESpo=;
-        b=NKhmy1Yh5FRNRgUVpP+gvGJ1VW0oQqnfeHq37FFRsGa3N8Df+Y5iB67aFLFf0ISEE5
-         YSQRQeMESPX9+7xtZWbW4LdSVPS3Z4XqvMmsr7w3pEyJ94OfUL6kmesn3rWNnuAW7tuv
-         /JCQIUGZrkAy3SFjsb+/v24W0wxyM15RWIoplViDfC0DTAvESnxIVGacJEAixRKyJDoe
-         CGlwNidUwxc3E+LkrKBWct3R2fyadMHfeTz3qq+akrpSh+65s0MYSye/faBrnEXj9sKY
-         DGfmZ3MhL0uHPqR5xtWAoNwSZLLLgQ+Nk82TAcDjktiJSB8xBxDB6tuGDL1SKTKq+zcM
-         Ps9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUhsrsB9mPZtyKCFauc3UZ55VXUMSvl0I5hM8CE+Ox2D5TdTJowwpkl7BuH6PMqOyOPHUFco3z8ylZLkrP4fSyEiJnKkkiqgnjcpKwd
-X-Gm-Message-State: AOJu0YzY4I/rYE5Kn7wuwN7pHAI/z8lvLdfGHwhViJOOdBZX2p3pSfle
-	4aC2JFgOTm4QW+LuQUNN2HoBom1RvE/+TW4TTHnebK14di9k5N28X0DUrj2/4aYThW/7HVaghx6
-	8HV4=
-X-Google-Smtp-Source: AGHT+IF/SD5/dNu9jj11HFGPBp5Nm6wXSVMHns1m4v4DrAtWWsNwrOpe57aeSit2bIQ3BRxkaPO4Ow==
-X-Received: by 2002:a05:6402:268c:b0:58d:836e:5d83 with SMTP id 4fb4d7f45d1cf-5a05bfaae65mr1337759a12.22.1721214663479;
-        Wed, 17 Jul 2024 04:11:03 -0700 (PDT)
-Received: from [192.168.0.3] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b268a28e8sm6733080a12.63.2024.07.17.04.11.02
+        bh=RAGmeywEZ/JgSZ6hAqPsmz089vwWWyWA+lKvknqNmtE=;
+        b=RZ4nzyq/lnwuiqOiJWvGsDD5pOwnTjGkQLdOfUZmVZMJ8u+y4lTKfmS1Ke2MUnJgt+
+         ygcWRMm9JzlFyBvAI9NWheuPlbmKcS+O4lW1LQn1GyBNR7Ow5iJj7h0XJkZ/BDCcyrhq
+         HrsjhZEd0qg4Hwy29YKuqEIl3STnT8j+dtlVyzk9UjwJqmPHxMWNg+eRHDABXYmz6qQX
+         dj7iPr41sH9vzwF2GQZ06dOyldcakbcUo9gjrMfo/RVG6FGRCxJzm3g4KBqCE40lU+d8
+         38Q0gibO5M0wbKWxR1uEPEu3Dkq07OW3uAoNJdZ2AnHhSDaXMaLo23HWFHL2S5ezWR41
+         M6vA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDH6tBilCI+Y5ZAyZV7JQWhGcmY7qLE33Afi1BovDEkGx068rIwkmKxmt6WqovfIZVMG4UST11jhYJ1EPud5/SoIwQGlcpBy3T4z/o
+X-Gm-Message-State: AOJu0YxZ6Mri2HjzWKcBL9jCIMBW3kUjH4HPYZftl0fzHWM8p6tB8O+g
+	dM4HRJtAVPLWN5uHsnst7vH2QWogSghaze6f2d82KHkd2x+4t1Jsiop+v4GOGnULJrBzG10ZBFb
+	RJPgieA1rE+/mMA+9c0QJreuiaR2BrwXwVvkJtIr2KSfNLK4vebnKYzShCCwAVQ==
+X-Received: by 2002:a5d:5f8c:0:b0:367:943e:f436 with SMTP id ffacd0b85a97d-36831652b7cmr1395262f8f.30.1721214850132;
+        Wed, 17 Jul 2024 04:14:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkv5VJxD9qI1kB5PB9WhCMM3ozFKBNBC+x5bcWuyaH6WTwCYKMg89QMw7W+wtEnk2KMCsWzg==
+X-Received: by 2002:a5d:5f8c:0:b0:367:943e:f436 with SMTP id ffacd0b85a97d-36831652b7cmr1395208f8f.30.1721214849630;
+        Wed, 17 Jul 2024 04:14:09 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbec3sm11450684f8f.85.2024.07.17.04.14.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 04:11:03 -0700 (PDT)
-Message-ID: <ce14800d-7411-47c5-ad46-6baa6fb678f4@linaro.org>
-Date: Wed, 17 Jul 2024 12:11:02 +0100
+        Wed, 17 Jul 2024 04:14:09 -0700 (PDT)
+Message-ID: <f559a33a-6d2e-476d-87f6-cb1887e99b62@redhat.com>
+Date: Wed, 17 Jul 2024 13:14:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,41 +67,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: qcom: camcc-sc8280xp: Remove always-on GDSC
- hard-coding
-To: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: dmitry.baryshkov@linaro.org, stable@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240715-linux-next-24-07-13-sc8280xp-camcc-fixes-v1-1-fadb5d9445c1@linaro.org>
- <f0d4b7a3-2b61-3d42-a430-34b30eeaa644@quicinc.com>
- <86068581-0ce7-47b5-b1c6-fda4f7d1037f@linaro.org>
- <02679111-1a35-b931-fecd-01c952553652@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <02679111-1a35-b931-fecd-01c952553652@quicinc.com>
+Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jani Nikula <jani.nikula@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20240702122639.248110-1-jfalempe@redhat.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <20240702122639.248110-1-jfalempe@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 17/07/2024 12:08, Satya Priya Kakitapalli (Temp) wrote:
->> How would it break ?
->>
->> We park the clock to XO it never gets turned off this way.
->>
+
+On 02/07/2024 14:26, Jocelyn Falempe wrote:
+> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+> callback.
+> This patch adds a new struct kmsg_dump_detail, that will hold the
+> reason and description, and pass it to the dump() callback.
 > 
-> Parking the parent at XO doesn't ensure the branch clock is always on, 
-> it can be disabled by consumers or CCF if modelled.
+> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+> function and a macro for backward compatibility.
 > 
-> If the CCF disables this clock in late init, then the clock stays in 
-> disabled state until it is enabled again explicitly. Hence it is 
-> recommended to not model such always-on clocks.
+> I've written this for drm_panic, but it can be useful for other
+> kmsg_dumper.
+> It allows to see the panic reason, like "sysrq triggered crash"
+> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+> 
+> v2:
+>   * Use a struct kmsg_dump_detail to hold the reason and description
+>     pointer, for more flexibility if we want to add other parameters.
+>     (Kees Cook)
+>   * Fix powerpc/nvram_64 build, as I didn't update the forward
+>     declaration of oops_to_nvram()
+> 
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> ---
+>   arch/powerpc/kernel/nvram_64.c             |  8 ++++----
+>   arch/powerpc/platforms/powernv/opal-kmsg.c |  4 ++--
+>   arch/um/kernel/kmsg_dump.c                 |  2 +-
+>   drivers/gpu/drm/drm_panic.c                |  4 ++--
+>   drivers/hv/hv_common.c                     |  4 ++--
+>   drivers/mtd/mtdoops.c                      |  2 +-
+>   fs/pstore/platform.c                       | 10 +++++-----
+>   include/linux/kmsg_dump.h                  | 22 +++++++++++++++++++---
+>   kernel/panic.c                             |  2 +-
+>   kernel/printk/printk.c                     | 11 ++++++++---
+>   10 files changed, 45 insertions(+), 24 deletions(-)
+> 
 
-What is the use-case to keep that clock always-on unless/util someone 
-wants camss ?
+[...]
 
-I've tested this patch on sc8280xp and it works just fine.
+I pushed it to drm-misc-next, with the whitespace change in kmsg_dump.h
 
----
-bod
+Thanks all for your reviews and comments.
+
+Best regards,
+
+-- 
+
+Jocelyn
+
