@@ -1,120 +1,80 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AA5181D1C
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 18:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8F01822CD;
+	Wed, 17 Jul 2024 18:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721242686; cv=none; b=sM8P91VyoLQlBdf2HUzaUAa0+48wnM/Nj3zdqhxpL2uphY6a/Q+9aLh7oyC8ZqSdHPmKSvrkL4WqfjfXFUJH+3Bf9YXQRN4q/uquwsAQyujQJZTxPjdJQyXWokusWKOJfXcyO/iG/qcx5UExYBr1rZoBNkKAVSxzGVbyeW39MIQ=
+	t=1721242716; cv=none; b=K/KAzd4x/r5cZhgI6SKEYw6s+ThZjsg8At9+pd+8q3mGevrMMWQJ1Aeb1YCHAMtp7zOQi5KZQPhdYD/uF6n5P7AvLjjPCI8sL45EEDhDJP7M/SsHcjXxKDA7vYE1rHLrWCJw2ivRvki8MRRqliDs2J4IsBJZsUa7G+bKHcSWK4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721242686; c=relaxed/simple;
-	bh=GvwL2MamBexf2IAXlg3pCGVub/YfPtuX77A7VLpFOHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oeDUsUhkN4SGEBGxuPSGSebHIl8blf6PHQEHwi54UmsVIzTBCZ3HORTsp+NmFkvaEBi1Nng6j2COq8WQttjPVrz8oBBsHX0Z2fOn3BAND+5wRh2d4TUmpljGLORO5iMpfe7GHWyt/0neFE5ezjK+Im6wwRKZZ4KXgTF1MtcBiYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VA0ziMBO; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VA0ziMBO"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-78aeee1068aso3845254a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1721242684; x=1721847484; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DQIyDiaE+ClPiBp80hO5ErTtgh10GYm8LU2b4tKKZso=;
-        b=VA0ziMBO/DyGTT0mmDUpu75ZUYhNOEBjV3fN/MAB/zybsgxKit0cUGWDkBVNS982Fw
-         Cq3IDPEbhs+rQUvj9KK1AmwSOzWU9WOczXFjGdso2uK1fhg0KhNExkx2nLiBgmeBcPp+
-         lE6PE3iXz87+PKfWqnDporxAKcZw7InSlbPz0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721242684; x=1721847484;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DQIyDiaE+ClPiBp80hO5ErTtgh10GYm8LU2b4tKKZso=;
-        b=UQe9/aMUazXBx4+iEbxnma/SiI+ZJw2lfBn9HmMwvZ4CAnyTvEFOKBa9fFp7KroZe7
-         A8EfEgwqN0th3Bbrh2ik+OLhir95xExx4JeeBjsCRur204UjYA4d3GvveHi0y9nhU/Jj
-         EFyOq4kKwIveSeS0NXQfexA1ElmXlarB1WK+pH3Ro1CSY6R2ZGKHU2k6aGfOsHpOMyjJ
-         WPqKg/j51X2ouXbv/i2H+kBY3A5AfWFwqHKveLNiiQMrXKNNF7OnyUA6mtoKtGSOISVq
-         ZtOrarxw+BrLg4ef9UOPO2yp/xbQP80In5YaYZRQlhYVoah6lH8gJhvB5Ck2R9h/0Ywl
-         I4DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbd/TFRGwzApqX/piNst0zwVY+QbZtNQJ7Cv/A77g1B+/Uq2wfrz90qC41Ub48p92juMcYBx0SSGkEK7FIgKvnhgHHOsNdS2hUMXBs
-X-Gm-Message-State: AOJu0Yx0JDjuXH1R6D+9jDYp79U8/OVutAj7REEQ/gyhlqYxm8mRIs4D
-	zDSxA2ZDA0hDGdx1nLNvu7rteIMvOrgEiPxKp3VDnMAgqhKOevlu/2W2bW55EA==
-X-Google-Smtp-Source: AGHT+IHPkzahbBHA98FUgdZB5mHOIUyDg27+QzN4gYapMulyWLYICptq571PRhkgkdgfkKsYtpeFMw==
-X-Received: by 2002:a17:90a:bd8e:b0:2c8:946f:5fe7 with SMTP id 98e67ed59e1d1-2cb52691c53mr2038292a91.17.1721242684091;
-        Wed, 17 Jul 2024 11:58:04 -0700 (PDT)
-Received: from khazhy-linux.svl.corp.google.com ([2620:15c:2a3:200:ba92:94ff:8264:6b34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb60145f70sm290192a91.32.2024.07.17.11.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 11:58:03 -0700 (PDT)
-From: Khazhismel Kumykov <khazhy@chromium.org>
-X-Google-Original-From: Khazhismel Kumykov <khazhy@google.com>
-To: Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>
-Cc: dm-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Khazhismel Kumykov <khazhy@google.com>
-Subject: [RFC PATCH] dm ioctl: fix erroneous EINVAL when signaled
-Date: Wed, 17 Jul 2024 11:56:40 -0700
-Message-ID: <20240717185640.1026114-1-khazhy@google.com>
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
+	s=arc-20240116; t=1721242716; c=relaxed/simple;
+	bh=Eb5E0pYKJE9+uwiSuxE809tvfnZmZGYmfsvdHhErOzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BA4IVF0BKIk2dl68diBek7yIYCVpGw+bj2PhxOhh5UXfi1u4xOlGAY8N/vOPFFpqX3WX1V9tyvXdI6CDx+HSofTo9bbEh8Uzl6ShuY2W93LTJAZ5KmH3E7NsmK/F9AmbgWB2vavw4rvoYQWBxddK1NOkvZTzYnTXpzDMkXXkHWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4ADF92800B6CC;
+	Wed, 17 Jul 2024 20:58:30 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 3589931D14; Wed, 17 Jul 2024 20:58:30 +0200 (CEST)
+Date: Wed, 17 Jul 2024 20:58:30 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>,
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Kerem Karabay <kekrby@gmail.com>,
+	Orlando Chamberlain <orlandoch.dev@gmail.com>,
+	"sharpenedblade@proton.me" <sharpenedblade@proton.me>
+Subject: Re: [PATCH v3 0/2] efi/x86: Call set_os() protocol on dual GPU Macs
+Message-ID: <ZpgUVjjj3naBGtfO@wunner.de>
+References: <20240701140940.2340297-4-ardb+git@google.com>
+ <MA0P287MB0217C0F7E0B9F6FE8CA47BE8B8D32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
+ <MA0P287MB0217E3B4810704C504F13F2CB8A32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MA0P287MB0217E3B4810704C504F13F2CB8A32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
 
-do_resume when loading a new map first calls dm_suspend, which could
-silently fail. When we proceeded to dm_swap_table, we would bail out
-with EINVAL. Instead, restore new_map and return ERESTARTSYS when
-signaled.
+On Wed, Jul 17, 2024 at 04:35:15PM +0000, Aditya Garg wrote:
+> For the Macs having a single GPU, in case a person uses an eGPU,
+> they still need this apple-set-os quirk for hybrid graphics.
 
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
----
- drivers/md/dm-ioctl.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+I don't quite follow.  You mean the integrated graphics are
+disabled by EFI firmware if an eGPU is attached?
 
+This sounds like a bug on Apple's part:  The panel can be switched
+between integrated graphics and discrete graphics, but an external
+display can't be switched between eGPU and iGPU.  Is the person
+affected using the latest EFI firmware update from Apple?
 
-RFC as I am rather unfamiliar with the locking semantics here - whether
-we do need to re-grab hash_lock to write to an hc we previously grabbed,
-and whether the device becoming unhashed while we're in this function is
-really something that needs to be checked. However, this patch does fix
-the issue we were seeing - we'd get EINVAL when thread in ioctl was
-signaled.
+We need more information before we can devise a way to solve the
+issue:
 
+- Exact model name
+  (I'd be surprised if this affected pre-Haswell models)
+- Full dmesg output with command line option "dump_apple_properties"
+  (EFI drivers provide various properties for Thunderbolt-attached
+  devices and graphics cards, those could be queried to recognize
+  the situation causing the issue)
+- Full lspci output with and without eGPU attached
 
-diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
-index c2c07bfa6471..b81650c6d096 100644
---- a/drivers/md/dm-ioctl.c
-+++ b/drivers/md/dm-ioctl.c
-@@ -1181,8 +1181,22 @@ static int do_resume(struct dm_ioctl *param)
- 			suspend_flags &= ~DM_SUSPEND_LOCKFS_FLAG;
- 		if (param->flags & DM_NOFLUSH_FLAG)
- 			suspend_flags |= DM_SUSPEND_NOFLUSH_FLAG;
--		if (!dm_suspended_md(md))
--			dm_suspend(md, suspend_flags);
-+		if (!dm_suspended_md(md)) {
-+			r = dm_suspend(md, suspend_flags);
-+			if (r == -EINTR)
-+				r = -ERESTARTSYS;
-+			if (r) {
-+				down_write(&_hash_lock);
-+				hc = dm_get_mdptr(md);
-+				if (!hc)
-+					r = -ENXIO;
-+				else
-+					hc->new_map = new_map;
-+				up_write(&_hash_lock);
-+				dm_put(md);
-+				return r;
-+			}
-+		}
- 
- 		old_size = dm_get_size(md);
- 		old_map = dm_swap_table(md, new_map);
--- 
-2.45.2.993.g49e7a77208-goog
+Perhaps you can open a bug at bugzilla.kernel.org and attach the
+files there.
 
+Thanks,
+
+Lukas
