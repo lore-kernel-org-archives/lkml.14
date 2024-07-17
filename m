@@ -1,267 +1,353 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984271922EA
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 20:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721246904; cv=fail; b=nfEAkGKr+X07aItPLI8USbClC8JSjAEHkSOtlOT21c8e4ue4oEmLSDgsHm7LYyChIs48YSKd+P8jH07b+bCBgZArwEp1DrRkJ2BO/l0yNZvpH1PzCKpwGheq8YczZmrG6svr/LmOSjwbvbnm/10dQNnqUEZeskoKJSsr/LsOR+0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721246904; c=relaxed/simple;
-	bh=4d5Bi2/mxwjUMUMToxq4hNoi26qoD+1HKN1IkSX8w8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GZXkIbO3gH6KNyGNl9mu1+elFRbV8+cELMqn3UwoK6gfW1B2PY8spkHAWHjbYJOm2giITWCdtAo0QKoJKKc6REDDaLPkoJXE1KJgUOmqBnYMaNAcoAmkUmA3YBQFd1KN5/kUUlINMjFnFDFpCskRUXJZ7C1PI+NF0xnSGdFA6fo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KfwXfwWK; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=IxHpVFHs; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932DA186E2C;
+	Wed, 17 Jul 2024 20:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721246990; cv=none; b=KK83gTTgphg+S1DL9emZl67FTNzeWggyyz1K/BGuI9m9ZU7Tq3zO0NXVgRA3Vvt1O68HWsM7Iev4HKsK7OuVGFzU0TyS4i5L7MqGlXhh1CSIRGyoWIiVe8iSbIUZ0DH9EqBhVWs8HhCp3YuuVCfsPw9IS25PKxhbR1DIGXxv4jk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721246990; c=relaxed/simple;
+	bh=r1SCuP6BDc/XMk8VavdRDAynRmnTpz01AY1AmzWiYAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=Ur9//e+xy3EDpYD9Nf/l0Zo1wvnErsSnZi+NRZnwVHgsTx9Hon9wVsHFwUSOEGyk3rIEBUmaQocb3VnvCT+77VLB7Zv0pXUfR3OXS1PO/TT21nDAPYoStgUmmxQon5NlW9VkAm5dn+PEDCmF7z8WSd7IEnhLpwes+OznagH4oqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JTtUg9Kh; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KfwXfwWK";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="IxHpVFHs"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HK52fc002035;
-	Wed, 17 Jul 2024 20:07:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:content-transfer-encoding:content-type:mime-version; s=
-	corp-2023-11-20; bh=o9g1Ew5lheBoqkL3ar2Yr4AYVb1OEZDZlsoHSIlKuKo=; b=
-	KfwXfwWK+pHabxvJSmP1m446MA9Uv9zQ/fSAjXiei/yMHV3gCdBi4w+CRNsuSMFE
-	3Nly+PtR4Yu66njyfdXmzrHU9+hoRWQqM4xMRApfhaW4erme4YIHU5yZuoELr1Xw
-	9Z47gmpCChxnZogR5Q+wJr8rnvFdSE/n0ApWwM/hSMWX8KmxPo73bKl8IwRhYoev
-	m66mv6Df9823Db59uPHxm6EUjmj4dDapfdZjB5sbk0CdmoDciJqxlT/nRFS1AZvo
-	Te9lAW4BqKrb1bDOiF6ZE1Z/7MxZG+19nEcLgGoFYcjhpxi32Rcay9z3njMugqfY
-	yX+DC+wo+l56IA67FDPpuw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40emp5r08e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Jul 2024 20:07:55 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46HJ4sqD003630;
-	Wed, 17 Jul 2024 20:07:54 GMT
-Received: from outbound.mail.protection.outlook.com (mail-mw2nam10lp2049.outbound.protection.outlook.com [104.47.55.49])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 40dweyhkte-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Jul 2024 20:07:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kuQVEvJOocmNHgpCTBF+mr6TJtFT8m9DVPrDaXQn3Jl6/kLPizO6L9VXoqjP8UNCDHxUo75FmcQRs9ks5bagWZ3xTj9gKRsXtSff7nVAHAcrSH7SYW5UQqBKmq7rdcgRUTOEWyjYXe03uqZKCYUuSizOR9JZEluq87EXRreC+E3l0fEj5PQoMukXh7fIp0WSzew2LZSCy8dQ/fEL3cz+RRm8Mcvfip1FI1h8NKQX4QSHlbGFd6nyGM7wQmZutUjmDLm2p3bhlKhdBDJgcKNHCTzKWmncW+eTbSf9nX44/IU9fYbE5ggErqlOTIhE4DUtZZS/4BPvL2ZiCCW6GTe/Ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o9g1Ew5lheBoqkL3ar2Yr4AYVb1OEZDZlsoHSIlKuKo=;
- b=YiFop29XNZQmS1WKdLJhHysivVL+jnzN95bGzIqe6cxKKYDRg9yeh/qs23cwqQjSfQeZ3+jtAn0WAMWyx21QJjVXbVO9UibmBT9bq8BxNa4u16ufbb36B83X0EcfW2jbFMMZHrv9LbQOlJ3MvYMCg9RtXwe2BmKry6TsCj0DkTT2PrD/YTRKLc+TciDTX2ebLZDoKiLaf3jTfPp0isY6HzNUbg5TCk8O9IND4p05jbbe6lhcWeZD2xkKy2eE06mICYhdQsARRV9Ps8tCJrATxqNuv6FCoy+FB5+JoFuWS9QXhAYd+Nvq5Sq6m0wPzLDvkJfboACfIhZO3/V7/mFsGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o9g1Ew5lheBoqkL3ar2Yr4AYVb1OEZDZlsoHSIlKuKo=;
- b=IxHpVFHsjYUCzZMf/KEuS1kTiOgDD5cpPhUrla+5/fjzl2lAT/FKbUzlhpBly2stLUc1LXDy5k5Ox+QRdzQquL2/X4le0MuvkCBARCYAEqiU2qcdwlskTYWHmOMkV6RLkZxhKRJmd0Srsfbm+ml062SJIKyAl14+hCCka5Rye0M=
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
- by PH7PR10MB7694.namprd10.prod.outlook.com (2603:10b6:510:2e5::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.15; Wed, 17 Jul
- 2024 20:07:50 +0000
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490%3]) with mapi id 15.20.7784.016; Wed, 17 Jul 2024
- 20:07:50 +0000
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>, sidhartha.kumar@oracle.com,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Bert Karwatzki <spasswolf@web.de>, Jiri Olsa <olsajiri@gmail.com>,
-        linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
-        Jeff Xu <jeffxu@chromium.org>,
-        "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-        LEROY Christophe <christophe.leroy2@cs-soprasteria.com>,
-        linuxppc-dev@lists.ozlabs.org, Dave Hansen <dave.hansen@intel.com>
-Subject: [PATCH v5 17/21] mm/mmap: Relocate arch_unmap() to vms_complete_munmap_vmas()
-Date: Wed, 17 Jul 2024 16:07:05 -0400
-Message-ID: <20240717200709.1552558-18-Liam.Howlett@oracle.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240717200709.1552558-1-Liam.Howlett@oracle.com>
-References: <20240717200709.1552558-1-Liam.Howlett@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: YT1P288CA0019.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01::32)
- To DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JTtUg9Kh"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HIuo20030111;
+	Wed, 17 Jul 2024 20:09:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:content-type:mime-version; s=pp1;
+	 bh=QQ41U8jnHPCkwR4DJ4KHNgwfTMebv+HYRLpS8QIG1Xw=; b=JTtUg9KhnsKV
+	Pm//RLTexHoL63rIXQ5B/OVNYgO0RsP2UbOG1Fi9UBQOIANuyQWTbR1IGIu+nBDA
+	tLg8z416CQS/hnnNtAYvUUWdat7MthDlk9HT+bBpuhyRtgAJ0MEp0rRSu2aIzLgY
+	KqfhDq92rPav5iDP0d0DYB9FqOCys6RBa8xHSYqsFTzoZXLDtB+EOebSkAYUkuxB
+	gkxrWcUoOM9491N06g48RFjJF4EAqGHkDsJlCe5/y3dU5QjFxzzZ0OGEjwQhwHjC
+	earMAYF23PCfrBq3peTZjvPXC4ZX5AsK5UYHFX8t2MXJKJ2YezdAYD0rQeRxyEbj
+	0YzjwVtRsg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40e6h3j60j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 20:09:44 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46HHK0dT028853;
+	Wed, 17 Jul 2024 20:09:43 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40dwkmx2a3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 20:09:43 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46HK9bXX28770714
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Jul 2024 20:09:39 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C9EAA20043;
+	Wed, 17 Jul 2024 20:09:37 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 45EBF20040;
+	Wed, 17 Jul 2024 20:09:37 +0000 (GMT)
+Received: from localhost (unknown [9.171.52.231])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 17 Jul 2024 20:09:37 +0000 (GMT)
+Date: Wed, 17 Jul 2024 22:09:35 +0200
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 patches for the 6.11 merge window
+Message-ID: <your-ad-here.call-01721246975-ext-7833@work.hours>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FDClh2zFGJ2yuRYszmF1al-kSz6DGezZ
+X-Proofpoint-ORIG-GUID: FDClh2zFGJ2yuRYszmF1al-kSz6DGezZ
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|PH7PR10MB7694:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac801e0b-9773-40a2-03ab-08dca69c224d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?ecPflbMCTYZKw2oRdZ3ftVm9mNoGwBIbEDu15UQPwGiygFvCdqa7gBhe7lFK?=
- =?us-ascii?Q?yRV8nwxROkAPcN7SHmepf4/5pAueLSyBG+tHn2Ph9BA8lKJWBNMy9OWXFTgy?=
- =?us-ascii?Q?yLqaQRTZFEbEaHRHakKj+lDoaQZg9u8BG3rKBb/1ZcgBligr0WyRvXZ5VROz?=
- =?us-ascii?Q?Hj8QpdVyNbEAREWwHS4ASrWXjlyC4JUnwSP1vzw0yDUKD+VQG8iLQetipaMz?=
- =?us-ascii?Q?dpd5ozTr8hLelgtM4oqRmcZ5VhQeT1+cfQEpOlOhi9pT3Zy61xTyHr2xD4jS?=
- =?us-ascii?Q?kHqx9ERFLmqEAuPW3iy+m8DPCVURlTYXnZtY0V4pnaBTTMmrwkQKxmkjKHi4?=
- =?us-ascii?Q?dmgRtr2ojZPwVdWEqaaMcfbFj5JIl97agN61EvoMge+pqL81q6E6WR6x+yqE?=
- =?us-ascii?Q?wkDwtm1cWgOVPO9+QPp/0Fd5/tLELGfA1enii4Tk/ESNTH0mILiCYf7xVEbT?=
- =?us-ascii?Q?4X4wNiVKZdIp2u7YffXvLYOaVAJtCOH5d4FGpv2CNbQQSu79SP0LOjGtUeuY?=
- =?us-ascii?Q?kEgPSJK6td99dtj2WkRgV/rxmx2yaL4WmVUraBtNrcwYfVZ1CrvN9CIvy/2w?=
- =?us-ascii?Q?WDL/WX/zmsvs1PEQKpktc/mY4CfHT/3+JVv8p8jyJyj6x2XsqfeR/bkur5EX?=
- =?us-ascii?Q?FeJoM9htwb/6dEVmId6yWE2HaWpjGD5vtNV8HFiPkbw9gYNVgV4SjcT595/P?=
- =?us-ascii?Q?R6uevxtGMsUM1OOJ9puU22aEJHkV1J7LC2lNA3TMABrg6SA62IpWVIv0lxT7?=
- =?us-ascii?Q?qdBfaQUd0dfu484pfgdseZKE8Wzk8hjrB3w/YwWqnMmTIBLGz89B6VEz+j0h?=
- =?us-ascii?Q?HxqhBv9m6yxZr1IVumeQWUS/6mjqOthyA+uzhTmhxJTVV/qPiTV8l2hjKymm?=
- =?us-ascii?Q?uZu3gcK5YQ6YU5bVzd66CCliHCTxusUEjpg/9bXMdnN9TEXttMh1VVoEmc5G?=
- =?us-ascii?Q?3FiwaMngxEe6HoYyKlNENGgCbLk1aLKNudRmyseXjVdKpQcC+I25/RvE5Qv0?=
- =?us-ascii?Q?9h8OIvLe0GHkn978+b+iOcfZrX8V1HOuypyvArixNC/fBHvoTPhKDzD+dc9F?=
- =?us-ascii?Q?93+KTbzAc8cbP6krKUAZFhPr9UdBzvc9LvoBsFNlxi0OqhYSLxJo4pTaD2Bx?=
- =?us-ascii?Q?wTtUbbb41XNcsN9vRoYzE0iZuL6+xBXLJUIDoqBo84Gb5RvgsR7ESJqr+qO6?=
- =?us-ascii?Q?27GJOvzcdfZ2LJ+NcrxEeb9qDpPqhgpyukr3fMjSjZ7zAAEIxmgXXbAD6FsG?=
- =?us-ascii?Q?AFw6LVaY71CgBmZh9uv/WMEOj3wkW04q1UQOcHMbi3a8InlcYzSWNgUg9ViQ?=
- =?us-ascii?Q?zGioXmzpPB+7UitCofjnuKl3SM6abE+m5dJME8doSaoaaA=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?Vz81dko8udaUoR4OXplzF9zohaOWy3ObSdsINyJE2om/HCUPo1ZlIKC+hJcZ?=
- =?us-ascii?Q?x638J7GFqW/4rDH+18vmGTfzBrJWAVmffQPnbEvFmdvDfaBVNtitzE5PxyLS?=
- =?us-ascii?Q?ZD5uNSkr6APGn2/ucHDl+6PnrG5Zxw3UzxqcJ0rQTF+9lRX4sG73+ovGdkcx?=
- =?us-ascii?Q?NGHRZqb+U3qUBg+M8OP3Itgwrimxvu5xUEaJgj6ZlPrkjqWKBb43U2DneX+G?=
- =?us-ascii?Q?I9i3koYsQxLGMwosWY12AjSTMZO8sqU3wE3wELSFY5fe4WKZyvVGBgPO6MWJ?=
- =?us-ascii?Q?/OBmGglVE4PNuKTzQuNZ7iuY0GfGQc5puuHXA1aX9HvVBFJ3HuLfCeVo8i7z?=
- =?us-ascii?Q?29xQF8B+zK7vKyYmACeVCqnG1qWyznYBQx9Ol39rGaLuw2dJXhIwTLiEZxm0?=
- =?us-ascii?Q?1Gl8v8XGDzlfDF65rHmFQQXD8Z/0scUw6G4XpJsvoitSICPqzyo8KV3BYhIY?=
- =?us-ascii?Q?fnlHKwY/g0en7SCZ4ZI6/sIVbBOh3itRQSMX5dNK+o/iJBpzznR41kYubCFk?=
- =?us-ascii?Q?/c6e9QFLmHSk7TIBjQFgvR8ZHubQ/sFqNOK7FQ9YFtf6rLF91w6CJKZQcKtb?=
- =?us-ascii?Q?0/k8uJ6nZ8rOGjMYwehSs6mhCqqE7QUU76/cpMBzN72PTq84Ax8E9W9I4Xdp?=
- =?us-ascii?Q?1kIkPvk6Rx4Owi28pvSwHTo4tpY+X/7LY8sVyl/LQM5j180XlTaIQXTPDM1G?=
- =?us-ascii?Q?+c+5kB68Fj15dz9BDS5gKRfzl1zAspGmJkaU+0WgwUS8p7/lQFI//A0WuQtH?=
- =?us-ascii?Q?Xsv4VtWuZm0k2hO5+BKCE28nboS9gIAyoF9uone/GQnzud2aSj+qy2zhKDaP?=
- =?us-ascii?Q?grNcjqbUkchGj5eCzdJr0iMggYL0Kdw0/Min/2MHVnem0bWiebKII93sTwdD?=
- =?us-ascii?Q?OIfWEK9Mp9bPmY1pAZoGJHDR4RXCSMLrIPY6LHJPsROphIWeyQ+ulp/MwLHA?=
- =?us-ascii?Q?SpCEnFUnQCt3kibgTZEQIowR0KN8sVZTkJ7mr3llJQgPZweV+aHZJh7s7mbI?=
- =?us-ascii?Q?rL+1BXHZfvkiQnvzpGaMJh7rK5aUmqzbf1elXFsUkOgSkZ2uil4kF18/3UTn?=
- =?us-ascii?Q?jjg+c1CLhRJqShShz/J8EZvzixRQhDgyo/g4ElNOM9sZjap65pGM0aHVzXVU?=
- =?us-ascii?Q?G5fTcNdH5bAiCgZJdWchOSW3hYdyE6+yHSH9nW90pE3qa2aILn4soh76dQn8?=
- =?us-ascii?Q?JhzhG4kHNMiGc+l/MIOGjX0Q/xj5tyVEkqyDB0HHXk4A/Nn5RNDh/kxx/cOE?=
- =?us-ascii?Q?dXNX1neYMItY8rX7KvS6CxHrc37TIXAwlhme19thGZRZvra7rfyhyYr54+rz?=
- =?us-ascii?Q?ADv6ltd/0n2D7ffkAr5gASS0KOUGZqKxZ5sCDqhf7+NAeeiDXn2WP+g4OrL7?=
- =?us-ascii?Q?YQtxBQ5vvhN9h3bhKitgEYNYacPalKYZA7VBP5EnxVbH/4Xnj5RoQ0wxfa0k?=
- =?us-ascii?Q?Sy9pBy6flT/nnIi7VSdI83bF8n5b3NkHGp1kuUNNHSIkdMaPBfYA9zXCB/jB?=
- =?us-ascii?Q?xlNeUdGxKbT61VWfqv2YoDMFRRiFiQrzKaFWDcrHwtHxfw+cK9l1FCe9q7Vx?=
- =?us-ascii?Q?J9xp5vNE+EaO9Kc1ZM39+WZgWDS/kLEOk5JQN343XzAmcfeb383Ws+3cu4Qc?=
- =?us-ascii?Q?yg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	JINxM18Nx2rfJymBGPl4HW0gdRoQ//rXIWPzQMRJL5Syl20whj1NsH1puLGPKm0FUcmGsoZeBaH80FdGnncYKY7QxWW2Fhf2wvjf3LRBQWxUA+ErRWHD9QRC9gyH7hSGdmOwDnqMp/VuxAcb93rIWYF8dilOEqA/oH3S2x46vL/PhlAgHvuc+UTZ4l5g55lSQw0LXsb47sQK8wPOg4hGdLXdZDgyzTT1CAUNCffI5kYepAtBgoaq3Or5BFXdA5rfMkm69q0Cj/Sl+djCXcZeZJK43j4O/XKAdZPNvW8Y7hkiXYDAkopVmwN3g5mSXwoa2RNPc+c2QnYo2djPDWhxL85rj18rI+25CUIrbawsdXCRx5+Hfo2UkVW+wMfwXKgv8d/XdhFlNWYbN5h8aoVEoaBSYI63hXAJmLxUX7UMjiBEUebL0yPmwU5p2LmLcaglQkeUBpEq1edjfixT3PyFNr3QNbaDhIZNhtWp5WTeBSm53jSf81b1ytohKg8FyP/RMCoFElWe4b2hZKi7/c6NRnDpAfM8UIlbTgw9q5HD59FBGMJv5Z+vqjCaF3pI4vaSBz5KRRC56BRjT+BPRO7RtjqIL4dsD1UBcy4svr0Ekic=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac801e0b-9773-40a2-03ab-08dca69c224d
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2024 20:07:50.1756
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FRCLXHTvzE+xdt41KmnG/n0IIk68yCxhXwU/NTIN16wTRo4Ths0YwTZZf9fBAxtM1cmRv3wzJDBLWf5ggXvAuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7694
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-17_15,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2407170152
-X-Proofpoint-GUID: FuZlo-JsEgFiXD7dNhTSTk0QHtpVuOdR
-X-Proofpoint-ORIG-GUID: FuZlo-JsEgFiXD7dNhTSTk0QHtpVuOdR
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 phishscore=0
+ adultscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407170151
 
-From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+Hello Linus,
 
-The arch_unmap call was previously moved above the rbtree modifications
-in commit 5a28fc94c914 ("x86/mpx, mm/core: Fix recursive munmap()
-corruption").  The move was motivated by an issue with calling
-arch_unmap() after the rbtree was modified.
-
-Since the above commit, mpx was dropped from the kernel in 45fc24e89b7c
-("x86/mpx: remove MPX from arch/x86"), so the motivation for calling
-arch_unmap() prior to modifying the vma tree no longer exists
-(regardless of rbtree or maple tree implementations).
-
-Signed-off-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
-Cc: LEROY Christophe <christophe.leroy2@cs-soprasteria.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Dave Hansen <dave.hansen@intel.com>
+Please pull s390 changes for 6.11. There is a conflict with the mm tree
+(not yet pulled as of now) which contains the KMSAN implementation for
+s390. Please apply the following fix-up if possible to avoid build breakage:
+https://lore.kernel.org/all/20240627150405.27663-1-iii@linux.ibm.com
 ---
- mm/mmap.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ arch/s390/include/asm/kmsan.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 9f870e715a47..117e8240f697 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -2680,6 +2680,7 @@ static void vms_complete_munmap_vmas(struct vma_munmap_struct *vms,
- 	mm = vms->mm;
- 	mm->map_count -= vms->vma_count;
- 	mm->locked_vm -= vms->locked_vm;
-+	arch_unmap(mm, vms->start, vms->end); /* write lock needed */
- 	if (vms->unlock)
- 		mmap_write_downgrade(mm);
+diff --git a/arch/s390/include/asm/kmsan.h b/arch/s390/include/asm/kmsan.h
+index 27db65fbf3f6..f73e181d09ae 100644
+--- a/arch/s390/include/asm/kmsan.h
++++ b/arch/s390/include/asm/kmsan.h
+@@ -12,8 +12,8 @@
  
-@@ -2907,7 +2908,7 @@ do_vmi_align_munmap(struct vma_iterator *vmi, struct vm_area_struct *vma,
-  *
-  * This function takes a @mas that is either pointing to the previous VMA or set
-  * to MA_START and sets it up to remove the mapping(s).  The @len will be
-- * aligned and any arch_unmap work will be preformed.
-+ * aligned prior to munmap.
-  *
-  * Return: 0 on success and drops the lock if so directed, error and leaves the
-  * lock held otherwise.
-@@ -2927,16 +2928,12 @@ int do_vmi_munmap(struct vma_iterator *vmi, struct mm_struct *mm,
- 		return -EINVAL;
- 
- 	/*
--	 * Check if memory is sealed before arch_unmap.
- 	 * Prevent unmapping a sealed VMA.
- 	 * can_modify_mm assumes we have acquired the lock on MM.
- 	 */
- 	if (unlikely(!can_modify_mm(mm, start, end)))
- 		return -EPERM;
- 
--	 /* arch_unmap() might do unmaps itself.  */
--	arch_unmap(mm, start, end);
--
- 	/* Find the first overlapping VMA */
- 	vma = vma_find(vmi, end);
- 	if (!vma) {
-@@ -2997,9 +2994,6 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
- 	if (unlikely(!can_modify_mm(mm, addr, end)))
- 		return -EPERM;
- 
--	 /* arch_unmap() might do unmaps itself.  */
--	arch_unmap(mm, addr, end);
--
- 	/* Find the first overlapping VMA */
- 	vma = vma_find(&vmi, end);
- 	init_vma_munmap(&vms, &vmi, vma, addr, end, uf, /* unlock = */ false);
-@@ -3377,14 +3371,12 @@ int do_vma_munmap(struct vma_iterator *vmi, struct vm_area_struct *vma,
- 	struct mm_struct *mm = vma->vm_mm;
- 
- 	/*
--	 * Check if memory is sealed before arch_unmap.
- 	 * Prevent unmapping a sealed VMA.
- 	 * can_modify_mm assumes we have acquired the lock on MM.
- 	 */
- 	if (unlikely(!can_modify_mm(mm, start, end)))
- 		return -EPERM;
- 
--	arch_unmap(mm, start, end);
- 	return do_vmi_align_munmap(vmi, vma, mm, start, end, uf, unlock);
+ static inline bool is_lowcore_addr(void *addr)
+ {
+-       return addr >= (void *)&S390_lowcore &&
+-              addr < (void *)(&S390_lowcore + 1);
++       return addr >= (void *)get_lowcore() &&
++              addr < (void *)(get_lowcore() + 1);
  }
  
+ static inline void *arch_kmsan_get_meta_or_null(void *addr, bool is_origin)
+@@ -25,7 +25,7 @@ static inline void *arch_kmsan_get_meta_or_null(void *addr, bool is_origin)
+                 * order to get a distinct struct page.
+                 */
+                addr += (void *)lowcore_ptr[raw_smp_processor_id()] -
+-                       (void *)&S390_lowcore;
++                       (void *)get_lowcore();
+                if (KMSAN_WARN_ON(is_lowcore_addr(addr)))
+                        return NULL;
+                return kmsan_get_metadata(addr, is_origin);
 -- 
-2.43.0
 
+Thank you,
+Vasily
+
+The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
+
+  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.11-1
+
+for you to fetch changes up to df39038cd89525d465c2c8827eb64116873f141a:
+
+  s390/mm: Fix VM_FAULT_HWPOISON handling in do_exception() (2024-07-17 14:30:30 +0200)
+
+----------------------------------------------------------------
+s390 updates for 6.11 merge window
+
+- Remove restrictions on PAI NNPA and crypto counters, enabling
+  concurrent per-task and system-wide sampling and counting events
+
+- Switch to GENERIC_CPU_DEVICES by setting up the CPU present mask in
+  the architecture code and letting the generic code handle CPU bring-up
+
+- Add support for the diag204 busy indication facility to prevent
+  undesirable blocking during hypervisor logical CPU utilization
+  queries. Implement results caching
+
+- Improve the handling of Store Data SCLP events by suppressing
+  unnecessary warning, preventing buffer release in I/O during failures,
+  and adding timeout handling for Store Data requests to address potential
+  firmware issues
+
+- Provide optimized __arch_hweight*() implementations
+
+- Remove the unnecessary CPU KOBJ_CHANGE uevents generated during topology
+  updates, as they are unused and also not present on other architectures
+
+- Cleanup atomic_ops, optimize __atomic_set() for small values and
+  __atomic_cmpxchg_bool() for compilers supporting flag output constraint
+
+- Couple of cleanups for KVM:
+  - Move and improve KVM struct definitions for DAT tables from gaccess.c
+    to a new header
+  - Pass the asce as parameter to sie64a()
+
+- Make the crdte() and cspg() page table handling wrappers return a
+  boolean to indicate success, like the other existing "compare and swap"
+  wrappers
+
+- Add documentation for HWCAP flags
+
+- Switch to obtaining total RAM pages from memblock instead of
+  totalram_pages() during mm init, to ensure correct calculation of zero
+  page size, when defer_init is enabled
+
+- Refactor lowcore access and switch to using the get_lowcore() function
+  instead of the S390_lowcore macro
+
+- Cleanups for PG_arch_1 and folio handling in UV and hugetlb code
+
+- Add missing MODULE_DESCRIPTION() macros
+
+- Fix VM_FAULT_HWPOISON handling in do_exception()
+
+----------------------------------------------------------------
+Alexander Gordeev (1):
+      s390/sclp: Define commands for storage (un)assignment
+
+Claudio Imbrenda (3):
+      s390/pgtable: Make crdte() and cspg() return a value
+      s390/entry: Pass the asce as parameter to sie64a()
+      s390/kvm: Move bitfields for dat tables
+
+David Hildenbrand (10):
+      s390/uv: Don't call folio_wait_writeback() without a folio reference
+      s390/uv: gmap_make_secure() cleanups for further changes
+      s390/uv: Split large folios in gmap_make_secure()
+      s390/uv: Convert PG_arch_1 users to only work on small folios
+      s390/uv: Update PG_arch_1 comment
+      s390/uv: Make uv_convert_from_secure() a static function
+      s390/uv: Convert uv_destroy_owned_page() to uv_destroy_(folio|pte)()
+      s390/uv: Convert uv_convert_owned_from_secure() to uv_convert_from_secure_(folio|pte)()
+      s390/uv: Implement HAVE_ARCH_MAKE_FOLIO_ACCESSIBLE
+      s390/hugetlb: Convert PG_arch_1 code to work on folio->flags
+
+Gerald Schaefer (1):
+      s390/mm: Fix VM_FAULT_HWPOISON handling in do_exception()
+
+Heiko Carstens (5):
+      s390: Provide optimized __arch_hweight*() implementations
+      s390/hwcaps: Add documentation for HWCAP flags
+      s390/atomic_ops: Use symbolic names
+      s390/atomic_ops: Improve __atomic_set() for small values
+      s390/atomic_ops: Make use of flag output constraint
+
+Jeff Johnson (5):
+      s390/crc32: Add missing MODULE_DESCRIPTION() macro
+      s390/lib: Add missing MODULE_DESCRIPTION() macros
+      s390/mm: Add missing MODULE_DESCRIPTION() macro
+      s390/dcssblk: Add missing MODULE_DESCRIPTION() macro
+      s390/3270: Add missing MODULE_DESCRIPTION() macros
+
+Mete Durlu (8):
+      s390/topology: Remove CPU KOBJ_CHANGE uevents
+      s390/sclp: Diag204 busy indication facility detection
+      s390/diag: Return errno's from diag204
+      s390/diag: Diag204 add busy return errno
+      s390/diag: Add busy-indication-facility requirements
+      s390/hypfs_diag: Diag204 busy loop
+      s390/sthyi: Move diag operations
+      s390/sthyi: Use cached data when diag is busy
+
+Peter Oberparleiter (3):
+      s390/sclp: Suppress unnecessary Store Data warning
+      s390/sclp: Prevent release of buffer in I/O
+      s390/sclp: Add timeout to Store Data requests
+
+Sven Schnelle (11):
+      s390: Add get_lowcore() function
+      s390: Replace S390_lowcore by get_lowcore()
+      s390/drivers: Replace S390_lowcore by get_lowcore()
+      s390/boot: Replace S390_lowcore by get_lowcore()
+      s390/nmi: Remove duplicate get_lowcore() calls
+      s390/smp: Remove duplicate get_lowcore() calls
+      s390/vtime: Remove duplicate get_lowcore() calls
+      s390/idle: Remove duplicate get_lowcore() calls
+      s390/mm: Remove duplicate get_lowcore() calls
+      s390: Remove S390_lowcore
+      s390/smp: Switch to GENERIC_CPU_DEVICES
+
+Thomas Richter (6):
+      s390/pai_crypto: Enable concurrent system-wide counting/sampling event
+      s390/pai_crypto: Enable per-task counting event
+      s390/pai_crypto: Enable per-task and system-wide sampling event
+      s390/pai_ext: Enable concurrent system-wide counting/sampling
+      s390/pai_ext: Enable per-task counting event
+      s390/pai_ext: Enable per-task and system-wide sampling event
+
+Wei Yang (1):
+      s390/mm: Get total ram pages from memblock
+
+ arch/s390/Kconfig                     |   3 +-
+ arch/s390/boot/ipl_parm.c             |   4 +-
+ arch/s390/boot/ipl_report.c           |   2 +-
+ arch/s390/boot/pgm_check_info.c       |  18 +--
+ arch/s390/boot/physmem_info.c         |   8 +-
+ arch/s390/boot/startup.c              |  12 +-
+ arch/s390/boot/vmem.c                 |  12 +-
+ arch/s390/crypto/crc32-vx.c           |   1 +
+ arch/s390/hypfs/hypfs_dbfs.c          |   4 +-
+ arch/s390/hypfs/hypfs_diag.c          |  17 ++-
+ arch/s390/include/asm/arch_hweight.h  |  76 +++++++++++++
+ arch/s390/include/asm/atomic_ops.h    |  84 ++++++++++----
+ arch/s390/include/asm/bitops.h        |   3 +-
+ arch/s390/include/asm/current.h       |   2 +-
+ arch/s390/include/asm/dat-bits.h      | 170 ++++++++++++++++++++++++++++
+ arch/s390/include/asm/diag.h          |   8 ++
+ arch/s390/include/asm/elf.h           |   8 ++
+ arch/s390/include/asm/facility.h      |   4 +-
+ arch/s390/include/asm/hardirq.h       |   6 +-
+ arch/s390/include/asm/kvm_host.h      |   7 +-
+ arch/s390/include/asm/lowcore.h       |   5 +-
+ arch/s390/include/asm/mmu_context.h   |   8 +-
+ arch/s390/include/asm/page.h          |   5 +
+ arch/s390/include/asm/pai.h           |  17 ++-
+ arch/s390/include/asm/percpu.h        |   2 +-
+ arch/s390/include/asm/pgtable.h       |  33 +++++-
+ arch/s390/include/asm/preempt.h       |  30 ++---
+ arch/s390/include/asm/processor.h     |   8 +-
+ arch/s390/include/asm/sclp.h          |   1 +
+ arch/s390/include/asm/setup.h         |  34 +++---
+ arch/s390/include/asm/smp.h           |   4 +-
+ arch/s390/include/asm/softirq_stack.h |   2 +-
+ arch/s390/include/asm/spinlock.h      |   2 +-
+ arch/s390/include/asm/stacktrace.h    |   1 +
+ arch/s390/include/asm/timex.h         |  10 +-
+ arch/s390/include/asm/uv.h            |  12 +-
+ arch/s390/include/asm/vtime.h         |  16 ++-
+ arch/s390/kernel/asm-offsets.c        |   1 +
+ arch/s390/kernel/diag.c               |  12 +-
+ arch/s390/kernel/dumpstack.c          |   8 +-
+ arch/s390/kernel/early.c              |  36 +++---
+ arch/s390/kernel/entry.S              |   8 +-
+ arch/s390/kernel/idle.c               |  11 +-
+ arch/s390/kernel/irq.c                |  18 +--
+ arch/s390/kernel/machine_kexec.c      |   4 +-
+ arch/s390/kernel/nmi.c                |  31 ++---
+ arch/s390/kernel/perf_cpum_sf.c       |   2 +-
+ arch/s390/kernel/perf_pai_crypto.c    | 189 +++++++++++++++++++------------
+ arch/s390/kernel/perf_pai_ext.c       | 146 ++++++++++++++++--------
+ arch/s390/kernel/process.c            |   6 +-
+ arch/s390/kernel/setup.c              |  24 ++--
+ arch/s390/kernel/smp.c                |  88 +++++++--------
+ arch/s390/kernel/sthyi.c              |  95 +++++++++++-----
+ arch/s390/kernel/syscall.c            |   4 +-
+ arch/s390/kernel/time.c               |  22 ++--
+ arch/s390/kernel/topology.c           |   8 +-
+ arch/s390/kernel/traps.c              |  28 ++---
+ arch/s390/kernel/uv.c                 | 207 +++++++++++++++++++++++-----------
+ arch/s390/kernel/vtime.c              |  82 +++++++-------
+ arch/s390/kvm/gaccess.c               | 163 +-------------------------
+ arch/s390/kvm/kvm-s390.c              |   5 +-
+ arch/s390/kvm/vsie.c                  |   2 +-
+ arch/s390/lib/spinlock.c              |   4 +-
+ arch/s390/lib/test_kprobes.c          |   1 +
+ arch/s390/lib/test_modules.c          |   1 +
+ arch/s390/lib/test_unwind.c           |   3 +-
+ arch/s390/lib/uaccess.c               |   4 +-
+ arch/s390/mm/cmm.c                    |   1 +
+ arch/s390/mm/dump_pagetables.c        |   2 +-
+ arch/s390/mm/fault.c                  |  33 +++---
+ arch/s390/mm/gmap.c                   |  16 +--
+ arch/s390/mm/hugetlbpage.c            |   8 +-
+ arch/s390/mm/init.c                   |   3 +-
+ arch/s390/mm/pageattr.c               |   2 +-
+ arch/s390/mm/pgalloc.c                |   4 +-
+ arch/s390/pci/pci.c                   |   2 +-
+ drivers/s390/block/dcssblk.c          |   1 +
+ drivers/s390/char/con3270.c           |   1 +
+ drivers/s390/char/fs3270.c            |   1 +
+ drivers/s390/char/raw3270.c           |   1 +
+ drivers/s390/char/sclp_cmd.c          |   7 +-
+ drivers/s390/char/sclp_config.c       |   2 +-
+ drivers/s390/char/sclp_early.c        |   5 +-
+ drivers/s390/char/sclp_early_core.c   |  12 +-
+ drivers/s390/char/sclp_sd.c           |  26 ++++-
+ drivers/s390/cio/qdio_main.c          |   2 +-
+ drivers/s390/cio/qdio_thinint.c       |   2 +-
+ drivers/s390/cio/trace.h              |   2 +-
+ 88 files changed, 1207 insertions(+), 778 deletions(-)
+ create mode 100644 arch/s390/include/asm/arch_hweight.h
+ create mode 100644 arch/s390/include/asm/dat-bits.h
