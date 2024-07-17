@@ -1,147 +1,115 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF80D1E889;
-	Wed, 17 Jul 2024 22:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8323E2BCF7;
+	Wed, 17 Jul 2024 22:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721253875; cv=none; b=iQMS5jbeRy8PaDITRkz07BxhsjWIQJaW3+bKM9/37ZQ44fnHPb7FD26w9dpHsjIIIEwU0lRq+9gBN2CZnV8Wu4nIo6FHD1so1hziRRKJ9grVH+VD+UiXPsYY9KDwLZNl2xWZTihDLaXYgjOGDvyE+QnVr/usfafOjEQLKhE3/dw=
+	t=1721254276; cv=none; b=eB5lPIVsi/GOdWWCbdiCinWNU81yxOosoCppkoz/W/jhOTd0hWYYV4kTL/Wo328ODKRWtmATWJQjlp7pgjNunGKk/y2L5A4mSAEHtDs+IVg7cUF8aBWgIjagE0nnyIzO4Y31ghsyaNFpM5jBNTkIl0rioLE+J++FDA+8KGr0sbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721253875; c=relaxed/simple;
-	bh=9heysHdPAAfYUYBjINGkFrzzC1PF5xW0W3PpAOMDtLE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lz5XfHWM7WO93ZWis6z+HD5ttFS+dljmuzkfFc6fgRkAxtXNC24aXYo1meVkd06GlTaH5FEv6h9YnfmE0PtM8EW0K11YnHhHM+DsGSCSHxvzpPg3L0jjbZo60fSEF+3DBrOg0h1AwUyuPrG5xGztkPORpbdUQT6ZYvm3TdLFG40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lqYFp49M; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721254276; c=relaxed/simple;
+	bh=fKhM1tyNRfbmKB/nD4xsxgWIOHKRVRmfo3oa/afGcfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qHsdV0j4OfkCsWvC8DfdLWAk10ZlGs6+pfuzc5w4u5NARLDAcHTYvkksATUso1r8fD6ARIU4RM2pU/fuL0QDMH02qy51b6dmnopwfxr1zObqmnGaGoVybanATfaL1QeimPAD1vKRm6T98QAWAOcAeNkshuSULCpN9XDUtZ01peE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYZ2OIRd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqYFp49M"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fc566ac769so1593635ad.1;
-        Wed, 17 Jul 2024 15:04:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721253869; x=1721858669; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qJJzJBG1sBuJIYP4ytCZjApGrGsyKC+uV6BQ0w5NiXc=;
-        b=lqYFp49MHJg5E2sth7z7Iom7KehcqUB4+ZRyv891fjjAQgAQ8+cOLY8lY4tbN/MaX4
-         raH+z5LHxVvHJQ/P/kKFbDgqYf1wbQVgf2gjWWqyAmd9IDfBN/So1fLelF5p4vxFcwwz
-         TN1OQKpRrKwZNxZEJWMlitR4yy55eTmuu/mbrQZsF1Ud/mWpv+uiunfPW4sMNwSLrnAH
-         fKUTZ9xA89lykZ/rBoe5q7/Rj5VRAS5MTd9/KZSg57X+oLJheMM33Lz0QLwbWXJn/4Jl
-         yQB/XY/mloFO3ikIBIWy86RWHMF3Z9b5TlBzOUW3WoBOPPVZRLNSfZmJlTcuj6GCnivv
-         guGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721253869; x=1721858669;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qJJzJBG1sBuJIYP4ytCZjApGrGsyKC+uV6BQ0w5NiXc=;
-        b=gOPH53z6iBHzzkj5FbF0vA0Zv84I+4kHQZfAVEXrkC9m5g+CFHLX76cgumQBEhi1dC
-         UN9xU0Qp87eS+HfKWdCTpFADnWpC7hKljyVOj9+mNKT1F3etqojwofJVDTNrYT8qDJdR
-         +Mg7/pa3N7mmfzQeGROdKhTmkym80XqX1RDv+hQe4+myTOpkBHZKmodmzqtt2GrqqIBY
-         NLx8P3xClwVXsadhLIleU5Pm6BzJtEe7K16Ff0BROUka+P6z82E9t7+CyjrdLmZn2ZWq
-         hVdfmkR7jfNTNU+GEuo0j+S6NFtKF8VJptlu2v9AOdH+muYYdShrCV1O/2JurRnbLJPq
-         MtEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXAwg+DjEHVEHSee1FhrBXD3XRbJUbHv5cmPTTYDVln5uht/tF8IPjjoKs9VBIBxAfNe5YJDp1GZUk/NkIq9gHjt5igaVAiLV4f8YSqoxl0QDZjqEHWFRimOysTviiESvxYvfhEK+9MLnxLoK8=
-X-Gm-Message-State: AOJu0Yyw7Xaeiglf8hG2MQFi/rRxRSCvL8bEXQG0aPzeu2SNAY/RNsuW
-	olrrMPKRQPVWew3UfOy+mVf3bE1Iv21GdohZmoMR0TLhdcv1p9Lh
-X-Google-Smtp-Source: AGHT+IHqspYkdBpihSMxxP5jlP95b1at34yApAcv8ktjXwpCOTl1ZgFvFv7Gni1yTtamzHb29RKzQw==
-X-Received: by 2002:a17:903:22cc:b0:1fb:3e9f:ff6f with SMTP id d9443c01a7336-1fc4e688ef7mr26234275ad.40.1721253869200;
-        Wed, 17 Jul 2024 15:04:29 -0700 (PDT)
-Received: from localhost.localdomain (pc-66-166-104-200.cm.vtr.net. [200.104.166.66])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc3a251sm79778585ad.198.2024.07.17.15.04.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 15:04:28 -0700 (PDT)
-From: Camila Alvarez <cam.alvarez.i@gmail.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>,
-	syzbot+4093905737cf289b6b38@syzkaller.appspotmail.com
-Cc: Brian Foster <bfoster@redhat.com>,
-	linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Camila Alvarez <cam.alvarez.i@gmail.com>,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] bcachefs: WARNING in bch2_fs_journal_stop
-Date: Wed, 17 Jul 2024 18:02:39 -0400
-Message-Id: <20240717220237.1246673-1-cam.alvarez.i@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYZ2OIRd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0659CC2BD10;
+	Wed, 17 Jul 2024 22:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721254276;
+	bh=fKhM1tyNRfbmKB/nD4xsxgWIOHKRVRmfo3oa/afGcfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sYZ2OIRdO+cd71ru2Pl62zWKakK7gTtrPSbyI1E2Cn7pLf1KQQeJZs4Jf1iubAvUq
+	 flrhASNVB//X+1AXITe9g3ZYb6a1IzsCH2v+hTFdPZ4F6R1CRp0Og0YV0tWmBpnWKT
+	 WwEcWADArRQ4nmNxkAC3ppbRqy+L5xtzH9eQRm5j8NEswWGgj3LMSYneOJ57ReGrzy
+	 mQtLMczX+YwvIulN703WmxmDS5dRpcGWdq1lu5ySjCR+XsBSkxHm9xEky53OhleSXA
+	 3hZYdQZ6zMZ1qbW1eeB2yiWnKlCjhVXczC7AkhpCHgOwOt3Dm0SDt+5BoXLUt6uM2R
+	 FzuIaWwObiFpw==
+Date: Wed, 17 Jul 2024 15:11:15 -0700
+From: Kees Cook <kees@kernel.org>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: David Gow <davidgow@google.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>, Jonathan Corbet <corbet@lwn.net>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Documentation: KUnit: Update filename best practices
+Message-ID: <202407171510.88EECF3857@keescook>
+References: <20240717210047.work.412-kees@kernel.org>
+ <a5005f1e-5bbc-49f2-bd1f-4c4878b98d26@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5005f1e-5bbc-49f2-bd1f-4c4878b98d26@nvidia.com>
 
-last_seq and last_empty_seq suffered from an off by one error when the
-journal has no entries.
+On Wed, Jul 17, 2024 at 02:16:30PM -0700, John Hubbard wrote:
+> On 7/17/24 2:00 PM, Kees Cook wrote:
+> > Based on feedback from Linus[1], change the suggested file naming for
+> > KUnit tests.
+> > 
+> > Link: https://lore.kernel.org/lkml/CAHk-=wgim6pNiGTBMhP8Kd3tsB7_JTAuvNJ=XYd3wPvvk=OHog@mail.gmail.com/ [1]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > Cc: David Gow <davidgow@google.com>
+> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> > Cc: Rae Moar <rmoar@google.com>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: linux-kselftest@vger.kernel.org
+> > Cc: kunit-dev@googlegroups.com
+> > Cc: linux-doc@vger.kernel.org
+> > ---
+> >   Documentation/dev-tools/kunit/style.rst | 21 +++++++++++++--------
+> >   1 file changed, 13 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/Documentation/dev-tools/kunit/style.rst b/Documentation/dev-tools/kunit/style.rst
+> > index b6d0d7359f00..761dee3f89ca 100644
+> > --- a/Documentation/dev-tools/kunit/style.rst
+> > +++ b/Documentation/dev-tools/kunit/style.rst
+> > @@ -188,15 +188,20 @@ For example, a Kconfig entry might look like:
+> >   Test File and Module Names
+> >   ==========================
+> > -KUnit tests can often be compiled as a module. These modules should be named
+> > -after the test suite, followed by ``_test``. If this is likely to conflict with
+> > -non-KUnit tests, the suffix ``_kunit`` can also be used.
+> > -
+> > -The easiest way of achieving this is to name the file containing the test suite
+> > -``<suite>_test.c`` (or, as above, ``<suite>_kunit.c``). This file should be
+> > -placed next to the code under test.
+> > +Whether a KUnit test is compiled as a separate module or via an
+> > +``#include`` in a core kernel source file, the files should be named
+> > +after the test suite, followed by ``_test``, and live in a ``tests``
+> 
+> I read the previous discussion in the other thread and thought about it.
+> And ran some kunit tests on baremetal. Delightful! I love this approach.
+> 
+> However! It is rather distinct and not just any old test module. Kunit
+> has clear conventions and behavior.
+> 
+> As such, I have quickly become convinced that distinct naming is
+> required here. So I'd like to suggest going with the the suffix:
+> 
+>     _kunit
+> 
+> ...unconditionally. After all, sometimes you'll end up with that
+> anyway, so clearly, the _test suffix isn't strictly required.
+> 
+> And given that we are putting these in tests/ , a _test suffix is
+> redundant.
+> 
+> Yes?
 
-The indexes were fixed and an assertion is added to check that the
-last_empty_seq is always kept under the next valid seq number.
+I would agree. David, what do you think? I realize drm already does
+tests/*_test.c, but it does seem like better information density to use
+the tests/*_kunit.c pattern by default?
 
-Reported-by: syzbot+4093905737cf289b6b38@syzkaller.appspotmail.com
-Signed-off-by: Camila Alvarez <cam.alvarez.i@gmail.com>
----
- fs/bcachefs/journal.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/fs/bcachefs/journal.c b/fs/bcachefs/journal.c
-index 10b19791ec98..7bbbf4b149e9 100644
---- a/fs/bcachefs/journal.c
-+++ b/fs/bcachefs/journal.c
-@@ -1201,7 +1201,7 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
- 	struct journal_replay *i, **_i;
- 	struct genradix_iter iter;
- 	bool had_entries = false;
--	u64 last_seq = cur_seq, nr, seq;
-+        u64 last_written_seq = cur_seq - 1, last_seq = cur_seq - 1, nr, seq;
- 
- 	genradix_for_each_reverse(&c->journal_entries, iter, _i) {
- 		i = *_i;
-@@ -1209,11 +1209,11 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
- 		if (journal_replay_ignore(i))
- 			continue;
- 
--		last_seq = le64_to_cpu(i->j.last_seq);
-+		last_written_seq = le64_to_cpu(i->j.last_seq);
- 		break;
- 	}
- 
--	nr = cur_seq - last_seq;
-+	nr = cur_seq - last_written_seq;
- 
- 	if (nr + 1 > j->pin.size) {
- 		free_fifo(&j->pin);
-@@ -1224,14 +1224,14 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
- 		}
- 	}
- 
--	j->replay_journal_seq	= last_seq;
-+	j->replay_journal_seq	= last_written_seq;
- 	j->replay_journal_seq_end = cur_seq;
--	j->last_seq_ondisk	= last_seq;
--	j->flushed_seq_ondisk	= cur_seq - 1;
--	j->seq_ondisk		= cur_seq - 1;
--	j->pin.front		= last_seq;
-+	j->last_seq_ondisk	= last_written_seq;
-+	j->flushed_seq_ondisk	= last_seq;
-+	j->seq_ondisk		= last_seq;
-+	j->pin.front		= last_written_seq;
- 	j->pin.back		= cur_seq;
--	atomic64_set(&j->seq, cur_seq - 1);
-+	atomic64_set(&j->seq, last_seq);
- 
- 	fifo_for_each_entry_ptr(p, &j->pin, seq)
- 		journal_pin_list_init(p, 1);
-@@ -1261,7 +1261,10 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
- 	}
- 
- 	if (!had_entries)
--		j->last_empty_seq = cur_seq;
-+		j->last_empty_seq = last_seq;
-+
-+	WARN(j->last_empty_seq >= cur_seq, "journal startup error: last empty seq %llu is higher or equal than the next seq number to be used (%llu)",
-+	      j->last_empty_seq, cur_seq);
- 
- 	spin_lock(&j->lock);
- 
 -- 
-2.34.1
-
+Kees Cook
