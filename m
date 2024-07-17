@@ -1,177 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A9717C66;
-	Wed, 17 Jul 2024 06:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BE014A96
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721197517; cv=none; b=a7b9DIGeFQ8h9PztsXULh8ROguEp8NsbOjpSQD6k1IKeQYEBmH30x4d/UJh4/e3J3ZpkiaP4iYVoQpTogli1AVY4mP0JJFeY2LYbXMsP+4mRpguoWyfefPaVCLIP6Dpw9Kfae3rQ+WwNsaEtJi1gp+ghWz8pGgIZ1QsVkl9qQgE=
+	t=1721197571; cv=none; b=MvhZrvGqA/SKto+EKYSZKvMPHNOwPY6XI0qaNRvI7OOwD7q5QvqVGjEurY9JY4YPfVg6kgtRx06trOQ4lXipSw7u9TcTUNw4RNguP1Eh/gza3EprmUrNs3uVLpBUHkPiN7beYUp9WHkmcX9J30AbssvH22v5GpKIxNqgA9gZo0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721197517; c=relaxed/simple;
-	bh=eu9NsqAnralX2IavkGqf6l5znlIUTAKCUEe9e3UaoSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pjPqBQrmPH/+jOsvpdnNL9rW2E8H5+5rRcRrvvKJPqW2zOPxXTMR5VAvrK+iqr57p210NJKkm410GWlrtHbChfEBhwt4gwG/+/HuUBl13oiQVclkiYLefdqkPsa3jcf29Kj5nse4nTaNnpdhl7NfqdmO2HKCSxty4Ukk73mRPeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y13qOaEQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721197571; c=relaxed/simple;
+	bh=B1CnHSwQzyKmmdw+P7nNrDoltmKChpydt1ud39gLqxQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gbCvhvqOp+pSBjaiIDht1YCuRC/AH9p/89+xAdWEeBrOg11EPbEB2JZUQOB8x/hYqk8IC/5XOuts4Hb1I1fXUbuchLhlRziP492I0Gdyn+lY65PPppVr11E5UN3oOdUFgiln1H7mp/nwn50zqhs49WFp58DqiKExldIUNE0rask=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=FQgOsYRw; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y13qOaEQ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46GHev6H025096;
-	Wed, 17 Jul 2024 06:24:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qztvSWpQ0tlCk0IZsqrQ7t3x2QYlFLXOXSLk30UIYM4=; b=Y13qOaEQ+5XH0udd
-	A3WPZtUEQ0+ts+e3YzPewXFhBEuZ0/6I4q6xJAftDbzkc+jQZvQublXIqm4SKbCG
-	R+crtXZoB/S3wxjjw/8+6+96YziEmy9eBwnY9znZATX8XNKzEHjpteHIaHTMSOof
-	gH1AN0SWsn2eY7oHEUSCbE8o5Yhutr7+PnOg8kkAPNn/UD4BdCSDEqJrfZkvXqF6
-	GUy3s9hpAMQea+Xo7ajJrQ9EsuZxXu9RClvjgk+71A0h902yfjklIb4TkXge412S
-	eqlimT3DJE5HILj2rN9SQFcbB3UULlSh/4rz5SjxKc2DbM9t1yEmhP5yesK3YV4s
-	sdfOjg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfphavw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 06:24:43 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46H6Of3O006632
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 06:24:41 GMT
-Received: from [10.218.19.46] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 16 Jul
- 2024 23:24:36 -0700
-Message-ID: <0b84b689-8ab8-bcdf-f058-da2ead73786c@quicinc.com>
-Date: Wed, 17 Jul 2024 11:54:33 +0530
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="FQgOsYRw"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-367ab50a07aso4010931f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721197568; x=1721802368; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3zMQJJ1+QlmFm418V6AGBGbWQY3rNoVY0h/UyfCjPDE=;
+        b=FQgOsYRwvLW0Cu4ZvNaG5VIIAj9nXfg+4Vxz5MVKLHJGXYneZ5jZ09G6DFlGlwZQQO
+         Y96ai4rvo3iqFPOamN2ubA4HbLsuGEFv1KylQ8xJo9WnOYi4zVCev7mqAgDEY9Y9vOi1
+         T6WDpjCbV1gNEWZhwtkF6CGhEZQZbp9menI/4ieaykkk4UicX2bLv1Qb1YF5eoWj/tE2
+         ZAa0ORNJ8b1GQpO/LOGZo3fTBHUPBsARKvjViKzZ+UquwosuFf9OQABeBIn/xOAyGicB
+         vlvdDITzLP3subtegbjYr+e4wl91Pu/Tvd0cldkhG8jMzhMwh1uyg6Djq/YcNukH+boM
+         UI9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721197568; x=1721802368;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3zMQJJ1+QlmFm418V6AGBGbWQY3rNoVY0h/UyfCjPDE=;
+        b=q0L5HsuXZbCugxoV5BeBwkRPhj7x9JgwhC8TiyiEv23vQOVLEcdHNTahcSXlgIfYZx
+         IttWR26CzuI+xdWr2K83MJQgdzSpzBCLUlQA+LxcZ3D0UGeTUXuFA0/UF1EMWGKq/M1k
+         hbVBeg+/aVS/eCjzfb4f5pA+rQqkJO5sUBHfX6MftABi/Tba/H7HHBeXmZQ6Ku1+ffGc
+         BBqCft3kFp0Dwc2xIg/G/of97bx1jhMcCuD83Aomrh5goWSPx6qxP6CxvTRAh0MIFioR
+         QGo0peLY+rvTW1APV2RiUNw9o/k40EuC4GiHa6BqPwGQ1466CmtIcCJuqntZwL78HYI9
+         +bpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0etaCO83mubZONJ4nnNj3D6UB+8nPzNULUixySgRrjnhwvDRyFmtOjfWBR1CVszVzdOeCInYZ5dbss6WvwGMlRydBsRVwyFvgsbJm
+X-Gm-Message-State: AOJu0Yz375VAVMg8cx5sENhg+JIkwkfQkpfKb/Zsopplpdfl2EJsHN4Q
+	2bxFXTI1HDi7ppiicNqPaKFYN9QYZ28is+B81IlllcPnjHKGKm9gdthfCJQD3uY=
+X-Google-Smtp-Source: AGHT+IE6uNjEd3rgzo2cnMZIenDe0Lf33upNb/sgH/fJlHpS9fKERnXLFFmQs0acmED+vAQAC04L2Q==
+X-Received: by 2002:adf:e681:0:b0:368:3079:4277 with SMTP id ffacd0b85a97d-3683165b50amr545623f8f.28.1721197567667;
+        Tue, 16 Jul 2024 23:26:07 -0700 (PDT)
+Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-368111d3e7dsm10358022f8f.87.2024.07.16.23.26.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 23:26:07 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v3 06/11] riscv: Implement xchg8/16() using Zabha
+Date: Wed, 17 Jul 2024 08:19:52 +0200
+Message-Id: <20240717061957.140712-7-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240717061957.140712-1-alexghiti@rivosinc.com>
+References: <20240717061957.140712-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v2 5/6] clk: qcom: Add camera clock controller driver for
- SM8150
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Abhishek Sahu <absahu@codeaurora.org>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>,
-        "Imran
- Shaik" <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>
-References: <20240702-camcc-support-sm8150-v2-0-4baf54ec7333@quicinc.com>
- <20240702-camcc-support-sm8150-v2-5-4baf54ec7333@quicinc.com>
- <xbe7kmaxhfwy26qzxrmwgiijaaiap4kdkruaxjs6ymihaw5taf@hvj57wyncfea>
- <cc1957af-17bc-cd71-e6da-013e3a740014@quicinc.com>
- <CAA8EJpqmJZJfd2famarx-FKFb1_+-nZM3N+FwK_hiOurG8n9=A@mail.gmail.com>
- <e235f19f-26b5-2cf7-ebb7-36e4dabe9b9b@quicinc.com>
- <CAA8EJpob5Qov78JfNN5BE+c1WyvnuBcQLYENHL0c1GTS+PPfSQ@mail.gmail.com>
- <503c8ba7-585d-4222-8e81-7f4c52f5f513@linaro.org>
-From: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>
-In-Reply-To: <503c8ba7-585d-4222-8e81-7f4c52f5f513@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: TBawKkM9EiYE2AYGiOK4qwzdIS0sBxMt
-X-Proofpoint-GUID: TBawKkM9EiYE2AYGiOK4qwzdIS0sBxMt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_03,2024-07-16_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407170046
 
+This adds runtime support for Zabha in xchg8/16() operations.
 
-On 7/15/2024 8:31 PM, Bryan O'Donoghue wrote:
-> On 15/07/2024 11:38, Dmitry Baryshkov wrote:
->>>> Does it apply to SM8150? For example, on SM8250 RCG2s are not parked.
->>>
->>> Yes, it applies to SM8150.
->> Should the same logic be applied to other chipsets supported upstream?
->> If this is the case, which chipsets?
->
-> If you are representing the "top" GDSC inside of the CCF instead of 
-> doing this
->
-> +    /* Keep the critical clock always-on */
-> +    qcom_branch_set_clk_en(regmap, 0xc1e4); /* cam_cc_gdsc_clk */
->
-> then the clock should be parked else you'll find the GDSC doesn't come 
-> out of reset.
->
-> and... as I look at it now we have a logical conflict in 
-> drivers/clk/qcom/camcc-sc8280xp.c
->
-> static struct clk_branch camcc_gdsc_clk = {
->         .halt_reg = 0xc1e4,
->         .halt_check = BRANCH_HALT,
->         .clkr = {
->                 .enable_reg = 0xc1e4,
->                 .enable_mask = BIT(0),
->                 .hw.init = &(struct clk_init_data){
->                         .name = "camcc_gdsc_clk",
->                         .parent_hws = (const struct clk_hw*[]){
->                                 &camcc_xo_clk_src.clkr.hw,
->                         },
->                         .num_parents = 1,
->                         .flags = CLK_SET_RATE_PARENT,
->                         .ops = &clk_branch2_ops,
->                 },
->         },
-> };
->
-> Patch sent.
->
-> https://lore.kernel.org/linux-arm-msm/20240715-linux-next-24-07-13-sc8280xp-camcc-fixes-v1-1-fadb5d9445c1@linaro.org/T/#u 
->
->
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/cmpxchg.h | 32 +++++++++++++++++++++++++++++---
+ 1 file changed, 29 insertions(+), 3 deletions(-)
 
-If the clock is modelled, it can get disabled during the late init call, 
-when the CCF disables the unused clocks. But, it is a PoR ON  clock and 
-expectation from design team is to keep it always-on for GDSC functionality.
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index 608d98522557..091e6612ddb3 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -11,8 +11,27 @@
+ #include <asm/fence.h>
+ #include <asm/alternative.h>
+ 
+-#define __arch_xchg_masked(sc_sfx, prepend, append, r, p, n)		\
++#define __arch_xchg_masked(sc_sfx, swap_sfx, prepend, sc_append,	\
++			   swap_append, r, p, n)			\
+ ({									\
++	__label__ no_zabha, end;					\
++									\
++	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA)) {			\
++		asm goto(ALTERNATIVE("j %[no_zabha]", "nop", 0,		\
++				     RISCV_ISA_EXT_ZABHA, 1)		\
++			 : : : : no_zabha);				\
++									\
++		__asm__ __volatile__ (					\
++			prepend						\
++			"	amoswap" swap_sfx " %0, %z2, %1\n"	\
++			swap_append					\
++			: "=&r" (r), "+A" (*(p))			\
++			: "rJ" (n)					\
++			: "memory");					\
++		goto end;						\
++	}								\
++									\
++no_zabha:;								\
+ 	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
+ 	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
+ 	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
+@@ -28,12 +47,14 @@
+ 	       "	or   %1, %1, %z3\n"				\
+ 	       "	sc.w" sc_sfx " %1, %1, %2\n"			\
+ 	       "	bnez %1, 0b\n"					\
+-	       append							\
++	       sc_append						\
+ 	       : "=&r" (__retx), "=&r" (__rc), "+A" (*(__ptr32b))	\
+ 	       : "rJ" (__newx), "rJ" (~__mask)				\
+ 	       : "memory");						\
+ 									\
+ 	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
++									\
++end:;									\
+ })
+ 
+ #define __arch_xchg(sfx, prepend, append, r, p, n)			\
+@@ -56,8 +77,13 @@
+ 									\
+ 	switch (sizeof(*__ptr)) {					\
+ 	case 1:								\
++		__arch_xchg_masked(sc_sfx, ".b" swap_sfx,		\
++				   prepend, sc_append, swap_append,	\
++				   __ret, __ptr, __new);		\
++		break;							\
+ 	case 2:								\
+-		__arch_xchg_masked(sc_sfx, prepend, sc_append,		\
++		__arch_xchg_masked(sc_sfx, ".h" swap_sfx,		\
++				   prepend, sc_append, swap_append,	\
+ 				   __ret, __ptr, __new);		\
+ 		break;							\
+ 	case 4:								\
+-- 
+2.39.2
 
-So, we should not model this, instead just keep it always on from probe.
-
-
-> In the round I think we should avoid these horrific hard-coded 
-> always-on writes where possible.
->
-
-We have been suggested to make such clocks always ON from probe on 
-previous upstream discussions. This is also recently acknowledged by 
-maintainers, please see [1] and [2].
-
-
-[1] 
-https://lore.kernel.org/linux-clk/6286a410-6faa-4996-8a9e-dc334dd9421f@linaro.org/
-
-
-[2] 
-https://lore.kernel.org/linux-clk/664cca91-8615-d3f6-7525-15b9b6725cce@quicinc.com/
-
-
-> Personally I think parking is better than always-on specifically 
-> because you define the clock and "see" it in the clock tree.
->
-> ---
-> bod
