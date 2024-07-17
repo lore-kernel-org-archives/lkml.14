@@ -1,135 +1,96 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BE718C186
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F0E1822F4
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721235798; cv=none; b=EDv8nmmAsbNKt6vifEXZKvmDw31v3qenGRdtpIu8Kp9y5Hm4YuFT4hIJqRXTgaGhph4JWa7U81j2a8LoLq4b2iyzqZpvhVuqYE4JJ4QhpPTvTclFn06zTYNWpJY1eyp32eqj4RpOl63tCfEoCsozPzlGxxclepFnDMpEbtmW2gg=
+	t=1721236036; cv=none; b=QmVQARTxrdZoCufvbmmNULnfP74XdqqXbNS4t43M5l4uc7ZeqKtwMcbECBxqNkxboo3+iwI6l9/NlI/m3n39l179Zbqowfb84aC2xUXV7Prkwbsttvwa5xRyqVjoAaQTCaEvJRgunAyQxowVN5kukfMGjGxdKgfy09xLP7H5tlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721235798; c=relaxed/simple;
-	bh=uAkb7bsPpIEfUDX92An98wRmTRLXcVOO6v8qfe1TC4E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vrioh+QgKxq6hEQkUkGJRo43gG8x6nXZz//LDLSdu/971nHv+Ralzo4+sLHdmAmUqzQ07nZzw5OlPhjAsB7TOuIzrpODf4cQIiAdzAXWrrc7Dm8csAXVksO19VIs7V4IImmTtCG4QNPadzLD18KgyZHWtfQD9vnMfkK5zCOy0X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AJvsSw2+; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721236036; c=relaxed/simple;
+	bh=91+n6KFfNKvkNioNwUD7kJZ9YWFITtscuS5gveXlq8k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cEG9BCblXNdvpEcxl1OrAkrMNRX1lD9pnGICgku7cm2mp29rE9kwhoMMK2o3LW5Bn7UjdpwWXVKZUMpFWdXhCqz8POGPWTreuRhWUs3FtHfZp6TW7W0s7YcugA+59dDPyLI5JHNJ/nniXslQVsPkLBsvaBCazgbGpSkF7Cd/s6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=UeoNRMKq; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AJvsSw2+"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-44aa1464dc1so36953301cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 10:03:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721235796; x=1721840596; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uAkb7bsPpIEfUDX92An98wRmTRLXcVOO6v8qfe1TC4E=;
-        b=AJvsSw2+u0xo9ydv4ATID7bJYdqXr54troYI0p6fRDDedL0GWQtt05VWkVikKdoEi8
-         K8//4MjUSEZAfnAG/h310v6mr/kWgcyqcoixvwyY40SgS9tBBGV+a6GSUcZdVRRQSpGu
-         yVJRZ6i09ua0Umxh281kf5EZ67P1/4RHdtsinJYzHgptrNzpDgE5zEPlmcAKOpZrQ8Y+
-         mnqNxEIVTjFH92nXaiCKBNj1jutKra0DT5d79ZN1FxIaPdw7/Y3EbsXF1SzgibpCBGvf
-         SHcQSVAcy7EpHOUJW4FyHHXhpB1RHO55EPmIFzb+KbvjMlCs92zU4e55dR0kbSznSy3e
-         h/rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721235796; x=1721840596;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uAkb7bsPpIEfUDX92An98wRmTRLXcVOO6v8qfe1TC4E=;
-        b=JffNhCWvAM6xtigr7XZC9mtHzHlFyH37pGbJvJW2xPNYPmazbqkLebsVNUTM5gEACN
-         gi8zQTTb0XsHlQWlHPSoVCmOExgaZ4xKcBqm1oLfy9CNggihcnhbWV/hnrc/My/Jz+Qz
-         JY+RetLB2Qmkmlohhxxl6LnwTrLFA3fjrLlfsw/ML+Qv50CY8EMmVZdH6xnPyP91ck8p
-         UCalo5aBd6G1jljRtozLCWfT2wMl1EWvpLOpkifmAHm/dlZapgeEDCiN3crpulGJTp/G
-         KBBQAXQBS+E80sctRAwFI+VNu80f2SIg+tr7SHxmg/okAyPeWLwWWoBmew4/DvBRIWTo
-         jrYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUldT8hFr8u4cKcaZgs5eIggUkiS01SGSmV193D1vmGfT377QeSx+2qxsoQOQqckOAKinRvxH11DItuhTB61GooIoN1AsYoRaWjAHOp
-X-Gm-Message-State: AOJu0Yws9tVMpLm2yplYREVRpTe4f+3FeZJrRI37GjhUhFdn+h+8PAct
-	wfZAUNfp9x0241MAyd0q3lHBXmGgu2m19ZLh9HnEEWEZsfnlE3ThQCkPJqFGoNS4J+CvgNRbjBU
-	u8RLZj/PYQjGgPWuKWl8LlkpdfyxiYedeYgTY
-X-Google-Smtp-Source: AGHT+IFfsy10J2p52OrOHb+61BgwDzhSsBfkue55vvpbHqhrGaHypD0E0E/901HU8CJhmSoEoOrzrqwJIsvOeI8Yse4=
-X-Received: by 2002:ac8:7dc6:0:b0:447:f105:e6dc with SMTP id
- d75a77b69052e-44f8619126cmr32111321cf.4.1721235795958; Wed, 17 Jul 2024
- 10:03:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="UeoNRMKq"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HEiRIO007627;
+	Wed, 17 Jul 2024 09:37:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=/w9N6bVR/w5B2kQBXvbQ7jF
+	J9MedEFmdeT9HpE1bW38=; b=UeoNRMKqz3Zd1MEsUFSPuzQK/kGX2s+Bw7DCr9k
+	8jldBSnr3XlSBnYs/Vt9W4KDyAwwsydntc1ZsfOOXcNjEZ9oe2oty27FQdUcVDet
+	mTsBJT/jx+Rl/USdPe4S80cO7OtdnBHQb/dVt7pPjvM4sB/JOlrdowZRj5KtAYEi
+	f0bjL4Db0XpuUTwmCRysaOUzSmFmcFRrAeJgfoKQwEWT+R0X71jG+vsMdwapPFAO
+	1Pbjc0dVB07A5Beo1oDceLhZaARvqL5ndSbrCZKJ9pts823PRzpWYWP5sKrGFpqX
+	efIaaWurK25xAnYW0wJtpINOh/ATi18d1qaZQP/SDQAgNZA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 40efygrgmh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 09:37:45 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 17 Jul 2024 09:37:44 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 17 Jul 2024 09:37:44 -0700
+Received: from localhost.localdomain (unknown [10.28.36.156])
+	by maili.marvell.com (Postfix) with ESMTP id 7395B3F7085;
+	Wed, 17 Jul 2024 09:37:42 -0700 (PDT)
+From: Vamsi Attunuru <vattunuru@marvell.com>
+To: <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+CC: <linux-kernel@vger.kernel.org>, <nathan@kernel.org>,
+        <quic_jjohnson@quicinc.com>, <vattunuru@marvell.com>
+Subject: [PATCH] misc: Kconfig: exclude mrvl-cn10k-dpi compilation for 32-bit systems
+Date: Wed, 17 Jul 2024 09:37:39 -0700
+Message-ID: <20240717163739.181236-1-vattunuru@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZjJf27yn-vkdB32X@google.com> <CAO7JXPgbtFJO6fMdGv3jf=DfiCNzcfi4Hgfn3hfotWH=FuD3zQ@mail.gmail.com>
- <CAO7JXPhMfibNsX6Nx902PRo7_A2b4Rnc3UP=bpKYeOuQnHvtrw@mail.gmail.com>
- <66912820.050a0220.15d64.10f5@mx.google.com> <19ecf8c8-d5ac-4cfb-a650-cf072ced81ce@efficios.com>
- <20240712122408.3f434cc5@rorschach.local.home> <ZpFdYFNfWcnq5yJM@google.com>
- <20240712131232.6d77947b@rorschach.local.home> <ZpcFxd_oyInfggXJ@google.com>
- <CAEXW_YS+8VKjUZ8cnkZxCfEcjcW=z52uGYzrfYj+peLfgHL75Q@mail.gmail.com>
- <ZpfR49IcXNLS9qbu@google.com> <20240717103647.735563af@rorschach.local.home>
- <20240717105233.07b4ec00@rorschach.local.home> <20240717112000.63136c12@rorschach.local.home>
-In-Reply-To: <20240717112000.63136c12@rorschach.local.home>
-From: Suleiman Souhlal <suleiman@google.com>
-Date: Thu, 18 Jul 2024 02:03:02 +0900
-Message-ID: <CABCjUKAgH7ryZed=FP0GP84GTjeMRyQbjhP2pSsJ3Ksp63D7fA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/5] Paravirt Scheduling (Dynamic vcpu priority management)
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sean Christopherson <seanjc@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Ben Segall <bsegall@google.com>, 
-	Borislav Petkov <bp@alien8.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Mel Gorman <mgorman@suse.de>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, himadrics@inria.fr, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, graf@amazon.com, 
-	drjunior.org@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: wswJ8QPeTFUeH0orTXx_KveJJC2kfioO
+X-Proofpoint-ORIG-GUID: wswJ8QPeTFUeH0orTXx_KveJJC2kfioO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-17_13,2024-07-17_02,2024-05-17_01
 
-On Thu, Jul 18, 2024 at 12:20=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Wed, 17 Jul 2024 10:52:33 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > We could possibly add a new sched class that has a dynamic priority.
->
-> It wouldn't need to be a new sched class. This could work with just a
-> task_struct flag.
->
-> It would only need to be checked in pick_next_task() and
-> try_to_wake_up(). It would require that the shared memory has to be
-> allocated by the host kernel and always present (unlike rseq). But this
-> coming from a virtio device driver, that shouldn't be a problem.
->
-> If this flag is set on current, then the first thing that
-> pick_next_task() should do is to see if it needs to change current's
-> priority and policy (via a callback to the driver). And then it can
-> decide what task to pick, as if current was boosted, it could very well
-> be the next task again.
->
-> In try_to_wake_up(), if the task waking up has this flag set, it could
-> boost it via an option set by the virtio device. This would allow it to
-> preempt the current process if necessary and get on the CPU. Then the
-> guest would be require to lower its priority if it the boost was not
-> needed.
->
-> Hmm, this could work.
+Upon adding CONFIG_ARCH_THUNDER & CONFIG_COMPILE_TEST dependency,
+compilation errors arise on 32-bit ARM with writeq() & readq() calls
+which are used for accessing 64-bit values.
 
-For what it's worth, I proposed something somewhat conceptually similar bef=
-ore:
-https://lore.kernel.org/kvm/CABCjUKBXCFO4-cXAUdbYEKMz4VyvZ5hD-1yP9H7S7eL8Xs=
-qO-g@mail.gmail.com/T/
+Since DPI hardware only works with 64-bit register accesses, using
+CONFIG_64BIT dependency to skip compilation on 32-bit systems.
 
-Guests VCPUs would report their preempt_count to the host and the host
-would use that to try not to preempt a VCPU that was in a critical
-section (with some simple safeguards in case the guest was not well
-behaved).
-(It worked by adding a "may_preempt" notifier that would get called in
-schedule(), whose return value would determine whether we'd try to
-schedule away from current or not.)
+Fixes: a5e43e2d202d ("misc: Kconfig: add a new dependency for MARVELL_CN10K_DPI")
+Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/misc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It was VM specific, but the same idea could be made to work for
-generic userspace tasks.
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index f3bb75384627..41c3d2821a78 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -588,7 +588,7 @@ config NSM
+ config MARVELL_CN10K_DPI
+ 	tristate "Octeon CN10K DPI driver"
+ 	depends on PCI
+-	depends on ARCH_THUNDER || COMPILE_TEST
++	depends on ARCH_THUNDER || (COMPILE_TEST && 64BIT)
+ 	help
+ 	  Enables Octeon CN10K DMA packet interface (DPI) driver which
+ 	  intializes DPI hardware's physical function (PF) device's
+-- 
+2.25.1
 
--- Suleiman
