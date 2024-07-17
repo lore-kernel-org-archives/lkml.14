@@ -1,113 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E16F17E8E2;
-	Wed, 17 Jul 2024 17:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C246817FAC1;
+	Wed, 17 Jul 2024 17:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721236613; cv=none; b=i/Sr0nwVTxbjwhPX/eJoRzqSloKAVgDs+lpEkARw0kkIUDq+8HLYpbozUdS+o1BfM7IA5ADr0eqkOIuex+kIdU3UEWs5cbbeJZh/2x/XF5Vj9mLI6b/0qbt9lwwyIOpu5EGnLkCbnBx2eDh9B7g7ADjL5NdqpdVcIIF+OgidFV0=
+	t=1721236686; cv=none; b=exIPH0+v/lXm28kyiSqZMWUUJxZhT9XfBbLWX831LqoYzd0JitylHoxPy7JAFFwrWJUQzqjQ6Z/7Ry6y5/Xpu5uc3mU5pKr8U1AZI2tCHZESjF5Wr5IwC3Q+IgunlCILzRTl/UUQaTUPVMrrrJDuu6+P80T0PadU98K07Hwm/o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721236613; c=relaxed/simple;
-	bh=yBRi4wphUoMe/4Zy6VzuKVwA0LEFrw39GK4vniN0oPI=;
+	s=arc-20240116; t=1721236686; c=relaxed/simple;
+	bh=85xHJDWXASmD2vs3L0MTseBCXAa4JFynGkAoFVSNVFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bF4xSXNfRB08Fj9d3esyuorYyC3GuqNYB6MHkQ+iGM5aurvfMZd31YQSgJyRuRqfNrJrTAlu2nu9HreZ7o+N81rh4mEKTKJWsPlKlYtU3+2FA+RgwaFibhneNAsdanSfw5UZh7VUQQK4w+m8Yh3Mq1u5CWzsF/vARQeZ5vpbsjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THGtgR5V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THGtgR5V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25625C2BD10;
-	Wed, 17 Jul 2024 17:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721236613;
-	bh=yBRi4wphUoMe/4Zy6VzuKVwA0LEFrw39GK4vniN0oPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=THGtgR5Vlyrids+YPWcn3NUkai8KXh6dmNQet1PcEEn/3Aj7VIMCMsVb0ELsT53WR
-	 KhxXdkDEuf2rAwT3skCTBPCj/Rlj3DMmiPodOtyOacWmkqjVw8PI51q6OAfgqu4y6i
-	 CIPDJSg2uW8ABw/XwsQ2RKDS8qmVsMXmH91TD6ROHhQiqwRjdzMNLctiiRFAykULTz
-	 /k0g5UgWEDtt8XfLrsQi/eiLIr+R95V76NtI2HCx7kZAhvGAx/4quyvulJvuc86VJn
-	 KwSnj0pl/wa+psNh8M78DNjG/hsNk8P2963m3gWolN1ko/tlMSxEFrWr9HuReZRILu
-	 q/FjeneGOUa9A==
-Date: Wed, 17 Jul 2024 10:16:52 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Balasubrmanian, Vignesh" <vigbalas@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	"Balasubrmanian, Vignesh" <Vignesh.Balasubrmanian@amd.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-toolchains@vger.kernel.org" <linux-toolchains@vger.kernel.org>,
-	"mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-	"npiggin@gmail.com" <npiggin@gmail.com>,
-	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-	"ebiederm@xmission.com" <ebiederm@xmission.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"Petkov, Borislav" <Borislav.Petkov@amd.com>,
-	"George, Jini Susan" <JiniSusan.George@amd.com>,
-	"matz@suse.de" <matz@suse.de>,
-	"binutils@sourceware.org" <binutils@sourceware.org>,
-	"jhb@FreeBSD.org" <jhb@freebsd.org>,
-	"felix.willgerodt@intel.com" <felix.willgerodt@intel.com>,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 1/1] x86/elf: Add a new .note section containing
- xfeatures buffer layout info to x86 core files
-Message-ID: <202407171010.DC51195@keescook>
-References: <20240712094630.29757-1-vigbalas@amd.com>
- <20240712094630.29757-2-vigbalas@amd.com>
- <87plrhshdl.ffs@tglx>
- <a4943b94-3407-42a0-9273-f7948ae8c35b@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kbgyo1HiO8RK6qUrNNHotx9pNyQ1hESVMng5t3r1HI3UscwFQHiqWI+hCYmElcfvHbEHBa+N2PMjtre8k7U/xi8QhuC7uZxTK+xXaWSgXdNkz9EQOavqusFMqyu7VX29eMRHsOzQiatsR+eZE77Lo6EuOpCX/uVIswdPjjzpwr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Wed, 17 Jul 2024 19:18:10 +0200
+From: Guilherme Amadio <amadio@gentoo.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] perf build: libtraceevent, libtracefs feature
+ check with pkg-config
+Message-ID: <Zpf80mCx03GKOXzE@gentoo.org>
+References: <CAM9d7ciLGP_w9YYOb-2U2ESg8kQx_knQXuB6_2JZVZ2ktL+bzg@mail.gmail.com>
+ <20240712194511.3973899-1-amadio@gentoo.org>
+ <CAM9d7cgG5WvyEu1ECNht1z=bZ7MSsrPyBjokcY95SXmxgnzwsA@mail.gmail.com>
+ <20240717123147.17169873@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a4943b94-3407-42a0-9273-f7948ae8c35b@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240717123147.17169873@rorschach.local.home>
 
-On Wed, Jul 17, 2024 at 03:02:23PM +0530, Balasubrmanian, Vignesh wrote:
+On Wed, Jul 17, 2024 at 12:31:47PM -0400, Steven Rostedt wrote:
+> On Wed, 17 Jul 2024 09:27:58 -0700
+> Namhyung Kim <namhyung@kernel.org> wrote:
 > 
-> On 7/13/2024 4:12 PM, Thomas Gleixner wrote:
-> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> > Hello,
 > > 
+> > On Fri, Jul 12, 2024 at 12:45 PM Guilherme Amadio <amadio@gentoo.org> wrote:
+> > >
+> > > Hi Namhyung, Arnaldo,
+> > >
+> > > Here is version 3 of the patchset. I see the change to send output to devnull
+> > > has already been applied, so I am submitting the remaining work only.
+> > >
+> > > The difference with previous changes is that in v3 rather than add tests with
+> > > pkg-config to check if dependencies are actually installed, we just set the
+> > > flags and send any warning to devnull. The change that remains in this patchset
+> > > is the fix for the other tools, which were inadvertently broken when the include
+> > > for libtracefs changed from #include <tracefs/tracefs.h> to #include <tracefs.h>
+> > > since the flags for the feature check are not set in the other tools Makefiles,
+> > > it currently only works for perf. I recommend to either take at least patch 2/5
+> > > that moves setting the flags to tools/build/Makefile.feature or to revert the two
+> > > patches that have been applied. You can easily test the fix with the commands below:
+> > >
+> > > make -B -C tools/verification/rv VF=1
+> > > make -B -C tools/tracing/latency VF=1
+> > > make -B -C tools/tracing/rtla VF=1
+> > >
+> > > from the root of the repository. Only after the feature check flags are moved to
+> > > Makefile.feature that it also fixes the other tools. Apologies for the breakage
+> > > there.  
 > > 
-> > On Fri, Jul 12 2024 at 15:16, Vignesh Balasubramanian wrote:
-> > > diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-> > > index 1fb83d477..cad37090b 100644
-> > > --- a/arch/x86/include/asm/elf.h
-> > > +++ b/arch/x86/include/asm/elf.h
-> > > @@ -13,6 +13,15 @@
-> > >   #include <asm/auxvec.h>
-> > >   #include <asm/fsgsbase.h>
-> > > 
-> > > +struct xfeat_component {
-> > > +     u32 type;
-> > > +     u32 size;
-> > > +     u32 offset;
-> > > +     u32 flags;
-> > > +} __packed;
-> > > +
-> > > +_Static_assert(sizeof(struct xfeat_component)%4 == 0, "xfeat_component is not aligned");
-> > This struct is only used in xstate.c and asm/elf.h is not a UAPI
-> > header. So what's the point of declaring it in the header instead of
-> > xtsate.c?
+> > Steve, are you ok with having this patchset in the perf-tools tree?
 > > 
-> > If this needs to provided for user space consumption, then it want's to
-> > be in a UAPI header, no?
-> Our initial idea is to pass the "struct xfeat_component" through "glibc".
-> is "include/uapi/linux/elf.h" proper header to add this ?
+> 
+> I don't know as this is the first I've seen it. If you could have this
+> resend with me Cc'd and/or Cc linux-trace-devel@vger.kernel.org then I
+> can review and possibly ack it.
 
-I'd rather not put arch-specific things in the main UAPI elf.h file
-unless there is a good reason.
+I will resend with the extra CC suggestions shortly and a cover letter
+explaining everything.
 
-> I couldn't see any proper header inside "arch/x86/include/uapi/asm/".
-
-Other architectures have arch/*/include/uapi/asm/elf.h, so it may be
-time to add one for x86 too. For this to be UAPI, I would want to see
-more explicit namespacing, e.g. struct x86_xfeat_component, etc.
-
--Kees
-
--- 
-Kees Cook
+Best regards,
+-Guilherme
