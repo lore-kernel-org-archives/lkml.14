@@ -1,256 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5788E315BA
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCDE9461
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721208648; cv=none; b=ptXVibF06fTFjhyfiZzQB8i5f67vMy/hLpldZ97H7tyjoLfrtWBcVpoOASradflogSmfZPrUkWR1Hyevt9nweRn6iG0spWJCFebi9nfnE4X23fwI73MKDenifv+20RegD3JG6dL9YGZ8qDyZ316pkH5YC53hlTQZJWsUf2zXqCs=
+	t=1721208666; cv=none; b=WKtLrPHNDbLbmKZ0Tx8MbctxwDcfRJeqjSKt1PfdrOIrcvh9kD+abEJgoOWbJ8poOzO3+eP8S8/dE0bWoGxcO4fsB0TwES7vYTidY6x8XaLo/ykHywcv/AVZGhpoFb2ickpqJL1ORqMC6/80cl4cn3YAHhKdR5H5eKm8Pxm6UAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721208648; c=relaxed/simple;
-	bh=+j1oKxXC2+mctg/T18SUJCQoGsIT+7q3eTg13N64o6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LUHhprFkjB3YBVSL6s8VVwbooHdHES4dMvQrRq/pv8DRnjZAd6lRSwJiYGPejK1abjiwnkN5N9OLi/ApTNmAtklYcvuFPHpn3a5DO8PRL6Bo3mBqDMnUn16kZt8X8nB4m/xgkDkaDK0pExKTEzVeW0NHk6IsxznePyUhhiJMFxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WbEOlw8Z; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WbEOlw8Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721208645;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=hHn4PM15X6BfGZ4IGsolrdvu6NyZm1/S/3s13S/ihyc=;
-	b=WbEOlw8Z3fMwvsPtfRTAoT+C7n4lq+nWb2k1ppxczsBQxRjE9Ok4tfRspNkngM+e5oGpj1
-	SSzMXNBr97PYalhNR5MpnXClCDzmRZXdft68kmI4dRYOkKpC6m+gT1kSqlUtWC2siJj+uF
-	/kp2+zMhZWcM1mnhiqTfEdV36ceFB/g=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-250-nXlfFVAVPBCTb8gVdwVdig-1; Wed, 17 Jul 2024 05:30:42 -0400
-X-MC-Unique: nXlfFVAVPBCTb8gVdwVdig-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-36835daf8b7so313677f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 02:30:41 -0700 (PDT)
+	s=arc-20240116; t=1721208666; c=relaxed/simple;
+	bh=ogNnNgO0+GrLUD5WRf5Wbn+gekguxVpPFYVZDXgYLTk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tZhDoWzTdKD7R30f/xw+R2DYIySzCc2RQfyzmtDUlP7qEwB5QL5L1nK/ogxSJ7Jgyw1PoToLSDQpEVigR1R8Fy8IHF0ObcbroQqZSVnVRlu+FfeyzY+6Czs7IH8BPbDsn3eg3k0uFevAZ2C3fhinIvT1+d80VKNmZZJXDRI4nVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-38437330bb9so11089895ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 02:31:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721208641; x=1721813441;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1721208663; x=1721813463;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hHn4PM15X6BfGZ4IGsolrdvu6NyZm1/S/3s13S/ihyc=;
-        b=tIQpvLAGzuesSLn3OpoQVGj14SMg5YGIf089+Y401/R5XsbNw9MHQJ1D0B/NbCVUja
-         KqFFB8t2st9YYvbmoFb6YqqVt++kkg1+W1DqIAn/L7sJqDybdlgW0Xmb5tFmcgLZEAmk
-         y89SgaZ3QXMos/EkqS4bWZmy+jlj2E2ns4rtN5KK5F1BQQeZp5OeuhKUPnrfbmFO2bFO
-         EbTiwLDKoOWwpVGhwsna9VH7ZxdUDtofYyZwUpmRha9oBK6fcQSWJ0d9nl+bEpTU0qNF
-         N0J56Y6fMP5Kis9qwBF1YB4Wfpo8Bfx2rmL1JnaC3wZS9O4yxfdfF2KUHZBWxKPtPl2m
-         K6sw==
-X-Forwarded-Encrypted: i=1; AJvYcCXlJv87sqMOA8FUOrpaNUAIzYcjitO0SVuuD6Jt4M39kDui1cffpNnJVXjkPbIZR6zVIlRDCImPEeUsGIe2zYo3KXOmaE1jt3q3UkqH
-X-Gm-Message-State: AOJu0YwfLMOLu5mvSbWzyfhGViZreo9Iyp9IIwv/C6mNadzNDLH0qzFq
-	LGV4LEQe6OBCX1UbfBV9hxziQPvb9ihzyRdmsO9ZC/OfL0e62MqDrfdaJB2jwkazhAWtrfen8Ug
-	RqfFQmO+SEMyxEMZZJGM6Q4djCLvhPzeFCQjlSbSmbqwstR35R+Ezoxv0ujio4A==
-X-Received: by 2002:a05:6000:184a:b0:367:f054:620a with SMTP id ffacd0b85a97d-3683164e06bmr1272078f8f.30.1721208640794;
-        Wed, 17 Jul 2024 02:30:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHgi0vY4A7VA4fVejzyPOXOYvLRx878qRE1TDykdArGWkaZv/7uQtCouTKFxTNvVX6I2b0+jg==
-X-Received: by 2002:a05:6000:184a:b0:367:f054:620a with SMTP id ffacd0b85a97d-3683164e06bmr1272042f8f.30.1721208640135;
-        Wed, 17 Jul 2024 02:30:40 -0700 (PDT)
-Received: from redhat.com ([2a02:14f:1f6:360d:da73:bbf7:ba86:37fb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbec3sm11246395f8f.85.2024.07.17.02.30.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 02:30:38 -0700 (PDT)
-Date: Wed, 17 Jul 2024 05:30:34 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	aha310510@gmail.com, arefev@swemel.ru, arseny.krasnov@kaspersky.com,
-	davem@davemloft.net, dtatulea@nvidia.com, eperezma@redhat.com,
-	glider@google.com, iii@linux.ibm.com, jasowang@redhat.com,
-	jiri@nvidia.com, jiri@resnulli.us, kuba@kernel.org,
-	lingshan.zhu@intel.com, mst@redhat.com, ndabilpuram@marvell.com,
-	pgootzen@nvidia.com, pizhenwei@bytedance.com,
-	quic_jjohnson@quicinc.com, schalla@marvell.com, stefanha@redhat.com,
-	sthotton@marvell.com,
-	syzbot+6c21aeb59d0e82eb2782@syzkaller.appspotmail.com,
-	vattunuru@marvell.com, will@kernel.org, xuanzhuo@linux.alibaba.com,
-	yskelg@gmail.com
-Subject: [GIT PULL] virtio: features, fixes, cleanups
-Message-ID: <20240717053034-mutt-send-email-mst@kernel.org>
+        bh=egGL+kFdfG6SMmdJoiOJUagZhwUcoIBVT2MsQhZh308=;
+        b=Cfu+zVLPdqDk/hW8EO59rfG4yO/bn7ZcwBOroDCPsX6WhYx/O0TIhRmDfeBYl82MGI
+         fIdPgmV2GMj99/PeDc7nO0OX7zZDqyRHiqJYcM+crUhHDe3ycgD2IRO+C7AcPJ8HRigT
+         95C+lz+MCzJqO4lCdeGgwiYU07V9pv73EmVS8gEbRxwOmzPSuWpMQL8gQkf4RC4rQxFj
+         +tjFn1k9YXuggv+mTZct2T+JiJzLJf/XT7mYr5be043Mx0S7bFjJWmGabnQSNfdFjVGC
+         nR30EfjGDKt2WdR5ToZeMqAJP8QKQjU1cLH2kGKYoVxPwi7Gn4yzOhQbM+GAWQ1eMQeZ
+         ay8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWbDfL+StDVhiKOtx6FAOlcjXAkxhNZkQGU84Y3yvvyGWJXBQ7B+bne9idiWdcCvIoJDekCuH+mAw/XMzEmwTc14srVd53PiZ03E003
+X-Gm-Message-State: AOJu0YzQ1U4Q8i1YMKKCQyYfv8rPi3SIFyLHd1yXBIvSbXOxZbX7RT+F
+	uVoRrmaTzAJlrr0I4y6Vd7VcBlbc3gb4mc+nSgzg5Uze5fCBaTLpXVRqSw5DxnngTXyRvqpvWT6
+	BB6qC67vEXOghJVqn0T4yGnhYZ6OGSZibHXflMzIq3ZO41uH7EPIw5wU=
+X-Google-Smtp-Source: AGHT+IHcvDHKAnx32u0HTApFSP/vf6dakN1uAkgY0LTox0GOxxn/ZZOR9o9feOXEN1ZTJox4TBAiw6dWn8LCj/A35ubk1jahWfho
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mutt-Fcc: =sent
+X-Received: by 2002:a92:ca46:0:b0:375:9cb9:9d04 with SMTP id
+ e9e14a558f8ab-395574243f5mr1017815ab.3.1721208663718; Wed, 17 Jul 2024
+ 02:31:03 -0700 (PDT)
+Date: Wed, 17 Jul 2024 02:31:03 -0700
+In-Reply-To: <087fb68c-7c33-4bbb-8b9d-281ea1dc1129@paragon-software.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fc6bc5061d6e1ee3@google.com>
+Subject: Re: [syzbot] [ntfs3?] possible deadlock in attr_data_get_block
+From: syzbot <syzbot+36bb70085ef6edc2ebb9@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is relatively small.
-I had to drop a buggy commit in the middle so some hashes
-changed from what was in linux-next.
-Deferred admin vq scalability fix to after rc2 as a minor issue was
-found with it recently, but the infrastructure for it
-is there now.
+Hello,
 
-The following changes since commit e9d22f7a6655941fc8b2b942ed354ec780936b3e:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+SYZFAIL: write(/proc/sys/fs/binfmt_misc/register) failed
 
-  Merge tag 'linux_kselftest-fixes-6.10-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest (2024-07-02 13:53:24 -0700)
+2024/07/17 09:30:00 parsed 1 programs
+2024/07/17 09:30:00 [FATAL] failed to run ["./syz-executor" "setup" "fault" "binfmt_misc" "usb" "802154" "swap"]: exit status 67
+mkdir(/syzcgroup) failed: 17
+mount(binfmt_misc) failed: 16
+write(/proc/sys/fs/binfmt_misc/register) failed: 17
+SYZFAIL: write(/proc/sys/fs/binfmt_misc/register) failed
+ (errno 17: File exists)
 
-are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+Tested on:
 
-for you to fetch changes up to 6c85d6b653caeba2ef982925703cbb4f2b3b3163:
+commit:         d57431c6 fs/ntfs3: Do copy_to_user out of run_lock
+git tree:       https://github.com/Paragon-Software-Group/linux-ntfs3.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=168672e9980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=47d282ddffae809f
+dashboard link: https://syzkaller.appspot.com/bug?extid=36bb70085ef6edc2ebb9
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-  virtio: rename virtio_find_vqs_info() to virtio_find_vqs() (2024-07-17 05:20:58 -0400)
-
-----------------------------------------------------------------
-virtio: features, fixes, cleanups
-
-Several new features here:
-
-- Virtio find vqs API has been reworked
-  (required to fix the scalability issue we have with
-   adminq, which I hope to merge later in the cycle)
-
-- vDPA driver for Marvell OCTEON
-
-- virtio fs performance improvement
-
-- mlx5 migration speedups
-
-Fixes, cleanups all over the place.
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-----------------------------------------------------------------
-Denis Arefev (1):
-      net: missing check virtio
-
-Dragos Tatulea (24):
-      vdpa/mlx5: Clarify meaning thorough function rename
-      vdpa/mlx5: Make setup/teardown_vq_resources() symmetrical
-      vdpa/mlx5: Drop redundant code
-      vdpa/mlx5: Drop redundant check in teardown_virtqueues()
-      vdpa/mlx5: Iterate over active VQs during suspend/resume
-      vdpa/mlx5: Remove duplicate suspend code
-      vdpa/mlx5: Initialize and reset device with one queue pair
-      vdpa/mlx5: Clear and reinitialize software VQ data on reset
-      vdpa/mlx5: Rename init_mvqs
-      vdpa/mlx5: Add support for modifying the virtio_version VQ field
-      vdpa/mlx5: Add support for modifying the VQ features field
-      vdpa/mlx5: Set an initial size on the VQ
-      vdpa/mlx5: Start off rqt_size with max VQPs
-      vdpa/mlx5: Set mkey modified flags on all VQs
-      vdpa/mlx5: Allow creation of blank VQs
-      vdpa/mlx5: Accept Init -> Ready VQ transition in resume_vq()
-      vdpa/mlx5: Add error code for suspend/resume VQ
-      vdpa/mlx5: Consolidate all VQ modify to Ready to use resume_vq()
-      vdpa/mlx5: Forward error in suspend/resume device
-      vdpa/mlx5: Use suspend/resume during VQP change
-      vdpa/mlx5: Pre-create hardware VQs at vdpa .dev_add time
-      vdpa/mlx5: Re-create HW VQs under certain conditions
-      vdpa/mlx5: Don't reset VQs more than necessary
-      vdpa/mlx5: Don't enable non-active VQs in .set_vq_ready()
-
-Jeff Johnson (3):
-      vringh: add MODULE_DESCRIPTION()
-      virtio: add missing MODULE_DESCRIPTION() macros
-      vDPA: add missing MODULE_DESCRIPTION() macros
-
-Jiri Pirko (19):
-      caif_virtio: use virtio_find_single_vq() for single virtqueue finding
-      virtio: make virtio_find_vqs() call virtio_find_vqs_ctx()
-      virtio: make virtio_find_single_vq() call virtio_find_vqs()
-      virtio: introduce virtio_queue_info struct and find_vqs_info() config op
-      virtio_pci: convert vp_*find_vqs() ops to find_vqs_info()
-      virtio: convert find_vqs() op implementations to find_vqs_info()
-      virtio: call virtio_find_vqs_info() from virtio_find_single_vq() directly
-      virtio: remove the original find_vqs() op
-      virtio: rename find_vqs_info() op to find_vqs()
-      virtio_blk: convert to use virtio_find_vqs_info()
-      virtio_console: convert to use virtio_find_vqs_info()
-      virtio_crypto: convert to use virtio_find_vqs_info()
-      virtio_net: convert to use virtio_find_vqs_info()
-      scsi: virtio_scsi: convert to use virtio_find_vqs_info()
-      virtiofs: convert to use virtio_find_vqs_info()
-      virtio_balloon: convert to use virtio_find_vqs_info()
-      virtio: convert the rest virtio_find_vqs() users to virtio_find_vqs_info()
-      virtio: remove unused virtio_find_vqs() and virtio_find_vqs_ctx() helpers
-      virtio: rename virtio_find_vqs_info() to virtio_find_vqs()
-
-Michael S. Tsirkin (2):
-      vhost/vsock: always initialize seqpacket_allow
-      vhost: move smp_rmb() into vhost_get_avail_idx()
-
-Peter-Jan Gootzen (2):
-      virtio-fs: let -ENOMEM bubble up or burst gently
-      virtio-fs: improved request latencies when Virtio queue is full
-
-Srujana Challa (1):
-      virtio: vdpa: vDPA driver for Marvell OCTEON DPU devices
-
-Xuan Zhuo (1):
-      virtio_ring: fix KMSAN error for premapped mode
-
-Yunseong Kim (1):
-      tools/virtio: creating pipe assertion in vringh_test
-
-Zhu Lingshan (1):
-      MAINTAINERS: Change lingshan's email to kernel.org
-
-zhenwei pi (1):
-      virtio_balloon: separate vm events into a function
-
- MAINTAINERS                                   |   7 +-
- arch/um/drivers/virt-pci.c                    |   8 +-
- arch/um/drivers/virtio_uml.c                  |  12 +-
- drivers/block/virtio_blk.c                    |  20 +-
- drivers/bluetooth/virtio_bt.c                 |  13 +-
- drivers/char/virtio_console.c                 |  43 +-
- drivers/crypto/virtio/virtio_crypto_core.c    |  31 +-
- drivers/firmware/arm_scmi/virtio.c            |  11 +-
- drivers/gpio/gpio-virtio.c                    |  10 +-
- drivers/gpu/drm/virtio/virtgpu_kms.c          |   9 +-
- drivers/iommu/virtio-iommu.c                  |  11 +-
- drivers/net/caif/caif_virtio.c                |   8 +-
- drivers/net/virtio_net.c                      |  34 +-
- drivers/net/wireless/virtual/mac80211_hwsim.c |  12 +-
- drivers/platform/mellanox/mlxbf-tmfifo.c      |  10 +-
- drivers/remoteproc/remoteproc_virtio.c        |  12 +-
- drivers/rpmsg/virtio_rpmsg_bus.c              |   8 +-
- drivers/s390/virtio/virtio_ccw.c              |  13 +-
- drivers/scsi/virtio_scsi.c                    |  32 +-
- drivers/vdpa/Kconfig                          |  11 +
- drivers/vdpa/Makefile                         |   1 +
- drivers/vdpa/ifcvf/ifcvf_main.c               |   1 +
- drivers/vdpa/mlx5/net/mlx5_vnet.c             | 429 ++++++++-----
- drivers/vdpa/mlx5/net/mlx5_vnet.h             |   1 +
- drivers/vdpa/octeon_ep/Makefile               |   4 +
- drivers/vdpa/octeon_ep/octep_vdpa.h           |  94 +++
- drivers/vdpa/octeon_ep/octep_vdpa_hw.c        | 517 ++++++++++++++++
- drivers/vdpa/octeon_ep/octep_vdpa_main.c      | 857 ++++++++++++++++++++++++++
- drivers/vdpa/vdpa.c                           |   1 +
- drivers/vhost/vhost.c                         | 105 ++--
- drivers/vhost/vringh.c                        |   1 +
- drivers/vhost/vsock.c                         |   4 +-
- drivers/virtio/virtio.c                       |   1 +
- drivers/virtio/virtio_balloon.c               |  75 ++-
- drivers/virtio/virtio_input.c                 |   9 +-
- drivers/virtio/virtio_mmio.c                  |  12 +-
- drivers/virtio/virtio_pci_common.c            |  48 +-
- drivers/virtio/virtio_pci_common.h            |   3 +-
- drivers/virtio/virtio_pci_modern.c            |   5 +-
- drivers/virtio/virtio_ring.c                  |   5 +-
- drivers/virtio/virtio_vdpa.c                  |  13 +-
- fs/fuse/virtio_fs.c                           |  62 +-
- include/linux/mlx5/mlx5_ifc_vdpa.h            |   2 +
- include/linux/virtio_config.h                 |  64 +-
- include/linux/virtio_net.h                    |  11 +
- net/vmw_vsock/virtio_transport.c              |  16 +-
- sound/virtio/virtio_card.c                    |  23 +-
- tools/virtio/vringh_test.c                    |   9 +-
- 48 files changed, 2145 insertions(+), 543 deletions(-)
- create mode 100644 drivers/vdpa/octeon_ep/Makefile
- create mode 100644 drivers/vdpa/octeon_ep/octep_vdpa.h
- create mode 100644 drivers/vdpa/octeon_ep/octep_vdpa_hw.c
- create mode 100644 drivers/vdpa/octeon_ep/octep_vdpa_main.c
-
+Note: no patches were applied.
