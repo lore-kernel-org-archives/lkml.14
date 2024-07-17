@@ -1,128 +1,242 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2AE3A8D8
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC1C10953
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721205306; cv=none; b=WP568hMNvau8g4SY1B4LCtPkpnHeTI63CAJ7CVgDQ4M50Ut13dlDdCg2BXFeFVgonG/XBIrbRF/l91saI/h/1WfN5lzLY5zKiyZDw39Tu0PrmD9g0VlNU4iKeEsXoMMIY90VsHx7HIgQ4H0Db/G2aiM6coJ/DLZxFWFR5YE0GyU=
+	t=1721205382; cv=none; b=iWCXFaP5YQzW273MUOwIqGEt91ZLXGDTG7hFVTzD5JhM8BjlEXt9SZoy91FzHywdyD9ao9ZcKx28DPMnnyH76QF369iOnhc7qFhLPZmNj1lCIlveyFwS3jBMJRik3ySm1zeT66YrUFIFFwxfHcgbf/Y2xoQ3h8cnI9jfGAnRl2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721205306; c=relaxed/simple;
-	bh=7yWT9wGZeLIqjFls1Qiq/gphKhA3MEBdNOj7oVHIg3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4fI+beABKxT+alT5ioCSkpTbKGoMj6mtDTrzPJNaGCmSz2s0F3IUiif+jsi1ZBhhx4LfgELuSizIBtw6PdAX9s768/hV04khTrNTVm1iAHLPqIcfBAgBc2e6sOSu+G5nWqH5kNYm0CVg9W4/TRVIiQRmK3HGEpNa85EccJocEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bigItTj5; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721205382; c=relaxed/simple;
+	bh=rU8hrnUMFC5mTjGXwT69mTGZCmwGdQmcdTJONifb6RA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P7fbuyrV0uPGPPwjUASrxttFlRfzjCWSfaHPQloVS+JTI32loIilNVdfUFfqZO3SH/azahSbxRyyQR4uc9eG1ChHJStTk76sG2q2yUxFk6E+8+Ikdrix6BGM5qUleWSDauNTH1NXkJOYN6HBvfYOKUYwn+kbLiKYbBq43NUfSRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=boTGgg0K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aSgdXuRK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=boTGgg0K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aSgdXuRK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bigItTj5"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fc566ac769so19395ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 01:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721205304; x=1721810104; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mNkMLlzIh0FRUMrqsEmjaMD7DKmMc/WtpJCzEXhD76s=;
-        b=bigItTj51EMhBldwnwgIA/LvPmUqdzn3f2dkoW026ssQPtOp4obtCgW0tIilMgcsQN
-         6TOpZHPyyI2PyyE1nBXBoj7ZmiJLdUFprO3J1d8MDgaNTITKyF8r4d14GP02IAmTzEWu
-         7wGjkm8z5RLX9UWhclvPYvdwB8MqFeMlKl6d3GmvbY3WGsbHs0J1KNjS9/KIys2B3kTW
-         NPjxrSOtIvPW3mfgZP5kjovYjPg2dpIN5A0x7uBWf6G5nTSdWJm/013uO8mv8Af4qTVc
-         36CmRXVNDpKoIwa1J2JrtofnT7PAEdO1xnqHv2UPBGMFWYnfDUB3/4iGDO30C8rxyCad
-         DwBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721205304; x=1721810104;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mNkMLlzIh0FRUMrqsEmjaMD7DKmMc/WtpJCzEXhD76s=;
-        b=Y5VQJKFa8DPJG0CIiJlpW47ub2idrUE4kcKva+Hb8Jdc+DoxPoebN0R9e5AqSYRFbh
-         HzV5HLFIcHD+k6XUa3KnPIh52nuhxFml+Rp8rFSfUm5obixGlXj1PoNXQvENtIQXu6y1
-         rzs4SiBLrzFPd8vZk7MxBEa6c9EY68IqrM/Xhzz5bHNerikToXtputqO2G8/EibgVMu/
-         kXKsDxxKZoDKc+iZsjP84TSaIzzUO1O6NVjhJw9Vt//u6LuSBDmtJHGnXnXMk1gF/MzP
-         stWeSsFoJtLBY2SaANlgN3EuYtke+PLV98NsM0G4Jr1paQXnCNBkbG20u3qzRm3x5lI9
-         raUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAtXVyYZx7E//xQBeu0SFjbYJfOYBunwPURUsE2y0ilvTqcmMglNP4FVHB0WUUFgYcvT50OMwErQtScwS+ef3P+W1Iyz8G8A2iFNpQ
-X-Gm-Message-State: AOJu0Yyx3/KxDE5pSccq5PskxPYaKxcemgCkjsc4n4e2eOsYMOzgLzin
-	esC0QIR4bqzGc/l359Zj7VRdlzGjCv7/g7TS3Etyb3vC9pAADtTbbHUKW78AHA==
-X-Google-Smtp-Source: AGHT+IGl2IJMzGLyoVjbWN3voJb+DI9d1XbG0jgZwcz3Yoiew4Ex5l2yrPzMBWFdANacOw+Nwc0rgw==
-X-Received: by 2002:a17:902:ce8f:b0:1fb:cf82:11b4 with SMTP id d9443c01a7336-1fc4e13590amr8333135ad.6.1721205304162;
-        Wed, 17 Jul 2024 01:35:04 -0700 (PDT)
-Received: from thinkpad ([220.158.156.207])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bbc25d2sm70270675ad.100.2024.07.17.01.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 01:35:02 -0700 (PDT)
-Date: Wed, 17 Jul 2024 14:04:58 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: fancer.lancer@gmail.com, vkoul@kernel.org, quic_shazhuss@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
-	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] dmaengine: dw-edma: Add change to remove
- watermark interrupt enablement
-Message-ID: <20240717083458.GC2574@thinkpad>
-References: <1720187733-5380-1-git-send-email-quic_msarkar@quicinc.com>
- <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="boTGgg0K";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aSgdXuRK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="boTGgg0K";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aSgdXuRK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9829221B85;
+	Wed, 17 Jul 2024 08:36:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721205378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
+	b=boTGgg0KSt6MO5Fa6epB7oYdSqc5p5DEanPLyaVB8xtpPnXnpllmronLtStuWEuyS7CbpD
+	kz6xYCAhms+JRk1dgXenuRW6a0geeGiIyPn8reV9rgmz/m71DqDXJiUDbguflafDVVovi+
+	RzwcH0YJvYCasQIX4LYEJ657P9BbGKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721205378;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
+	b=aSgdXuRKdDmVT4ll2RhzQWpJ6yLKzDewOOGjdw19mqhhGpH5CNh60/1Z0VupI16+1Syy8h
+	5k66ejFhhBmPaSBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=boTGgg0K;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=aSgdXuRK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721205378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
+	b=boTGgg0KSt6MO5Fa6epB7oYdSqc5p5DEanPLyaVB8xtpPnXnpllmronLtStuWEuyS7CbpD
+	kz6xYCAhms+JRk1dgXenuRW6a0geeGiIyPn8reV9rgmz/m71DqDXJiUDbguflafDVVovi+
+	RzwcH0YJvYCasQIX4LYEJ657P9BbGKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721205378;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
+	b=aSgdXuRKdDmVT4ll2RhzQWpJ6yLKzDewOOGjdw19mqhhGpH5CNh60/1Z0VupI16+1Syy8h
+	5k66ejFhhBmPaSBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 512691368F;
+	Wed, 17 Jul 2024 08:36:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CMyOEoKCl2acFQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 17 Jul 2024 08:36:18 +0000
+Date: Wed, 17 Jul 2024 10:36:51 +0200
+Message-ID: <87zfqgxvmk.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: wangdicheng <wangdich9700@163.com>
+Cc: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linux-arm-kernel@lists.infradead.org,
+	wangdicheng <wangdicheng@kylinos.cn>
+Subject: Re: [PATCH] ALSA: usb-audio: Fix microphone sound on HD webcam.
+In-Reply-To: <20240717075149.6915-1-wangdich9700@163.com>
+References: <20240717075149.6915-1-wangdich9700@163.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1720187733-5380-3-git-send-email-quic_msarkar@quicinc.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[163.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[163.com,gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,perex.cz,suse.com,vger.kernel.org,alsa-project.org,lists.infradead.org,kylinos.cn];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 9829221B85
 
-On Fri, Jul 05, 2024 at 07:25:33PM +0530, Mrinmay Sarkar wrote:
-
-Subject should be:
-
-dmaengine: dw-edma: Do not enable watermark interrupts for HDMA
-
-> DW_HDMA_V0_LIE and DW_HDMA_V0_RIE are initialized as BIT(3) and BIT(4)
-> respectively in dw_hdma_control enum. But as per HDMA register these
-> bits are corresponds to LWIE and RWIE bit i.e local watermark interrupt
-> enable and remote watermarek interrupt enable. In linked list mode LWIE
-> and RWIE bits only enable the local and remote watermark interrupt.
+On Wed, 17 Jul 2024 09:51:49 +0200,
+wangdicheng wrote:
 > 
-
-I guess you should also rename DW_HDMA_V0_LIE -> DW_HDMA_V0_LWIE and
-DW_HDMA_V0_RIE -> DW_HDMA_V0_RWIE in the code, unless the register name changes
-with mode.
-
-> As we are not handling watermark interruprt so removing watermark
-> interrupt enablement logic to avoid unnecessary watermark interrupt
-> event.
+> From: wangdicheng <wangdicheng@kylinos.cn>
 > 
-
-How about,
-
-"Since the watermark interrupts are not used but enabled, this leads to
-spurious interrupts getting generated. So remove the code that enables them
-to avoid generating spurious watermark interrupts."
-
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-
-Again, please include Fixes tag and CC stable.
-
-> ---
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
+> I own an external usb Webcam, HD webcam, which had low mic volume and
+> inconsistent sound quality. Video works as expected.
 > 
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index 88bd652f..aaf2e27 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -197,23 +197,13 @@ static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
->  	struct dw_edma_burst *child;
->  	struct dw_edma_chan *chan = chunk->chan;
+> (snip)
+> [   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
+> [   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
+> [   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> [   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
+> [   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
+> [   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
+> [   96.092610][ 2] [ T3680] usb 5-2.2: Warning! Unlikely big volume range (=4096), cval->res is probably wrong.
+> [   96.102436][ 2] [ T3680] usb 5-2.2: [5] FU [Mic Capture Volume] ch = 1, val = 0/4096/1
+> 
+> Set up quirk cval->res to 16 for 256 levels,
+> Set GET_SAMPLE_RATE quirk flag to stop trying to get the sample rate.
+> Confirmed that happened anyway later due to the backoff mechanism,
+> After 3 failures.
+> 
+> All audio stream on device interfaces share the same values,
+> apart from wMaxPacketSize and tSamFreq :
+> 
+>       bLength                 9
+>       bDescriptorType         4
+>       bInterfaceNumber        3
+>       bAlternateSetting       4
+>       bNumEndpoints           1
+>       bInterfaceClass         1 Audio
+> 
+> Interface Descriptor:
+>   bLength                 9
+>   bDescriptorType         4
+>   bInterfaceNumber        3
+>   bAlternateSetting       4
+>   bNumEndpoints           1
+>   bInterfaceClass         1 Audio
+>   bInterfaceSubClass      2 Streaming
+>   bInterfaceProtocol      0
+>   iInterface              0
+>   AudioStreaming Interface Descriptor:
+>     bLength                 7
+>     bDescriptorType        36
+>     bDescriptorSubtype      1 (AS_GENERAL)
+>     bTerminalLink           3
+>     bDelay                  1 frames
+>     wFormatTag         0x0001 PCM
+>   AudioStreaming Interface Descriptor:
+>     bLength                11
+>     bDescriptorType        36
+>     bDescriptorSubtype      2 (FORMAT_TYPE)
+>     bFormatType             1 (FORMAT_TYPE_I)
+>     bNrChannels             1
+>     bSubframeSize           2
+>     bBitResolution         16
+>     bSamFreqType            1 Discrete
+>     tSamFreq[ 0]        48000
+>   Endpoint Descriptor:
+>     bLength                 9
+>     bDescriptorType         5
+>     bEndpointAddress     0x86  EP 6 IN
+>     bmAttributes            5
+>       Transfer Type            Isochronous
+>       Synch Type               Asynchronous
+>       Usage Type               Data
+>     wMaxPacketSize     0x0064  1x 100 bytes
+>     bInterval               4
+>     bRefresh                0
+>     bSynchAddress           0
+>     AudioStreaming Endpoint Descriptor:
+>       bLength                 7
+>       bDescriptorType        37
+>       bDescriptorSubtype      1 (EP_GENERAL)
+>       bmAttributes         0x01
+>         Sampling Frequency
+>       bLockDelayUnits         0 Undefined
+>       wLockDelay         0x0000
+> (snip)
+> 
+> Testing patch provides consistent good sound recording quality and volume range.
+> 
+> (snip)
+> [   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
+> [   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
+> [   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> [   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
+> [   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
+> [   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
+> [   96.110630][ 3] [ T3680] usbcore: registered new interface driver snd-usb-audio
+> [   96.114329][ 7] [ T3677] usb 5-2.2: Found UVC 1.00 device HD webcam (1bcf:2281)
+> [   96.167555][ 7] [ T3677] usbcore: registered new interface driver uvcvideo
+> 
+> Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
 
-This becomes unused as reported by bot.
+The patch can't be applied cleanly to the latest tree, as the table
+has been sorted.  Could you rebase and resubmit?  Also a nitpicking:
 
-- Mani
+> --- a/sound/usb/quirks.c
+> +++ b/sound/usb/quirks.c
+> @@ -2179,6 +2179,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+>  		   QUIRK_FLAG_FIXED_RATE),
+>  	DEVICE_FLG(0x1bcf, 0x2283, /* NexiGo N930AF FHD Webcam */
+>  		   QUIRK_FLAG_GET_SAMPLE_RATE),
+> +	DEVICE_FLG(0x1bcf, 0x2281, /* FHD Webcam */
+> +			QUIRK_FLAG_GET_SAMPLE_RATE),
 
--- 
-மணிவண்ணன் சதாசிவம்
+Please try to align the space.
+
+
+thanks,
+
+Takashi
