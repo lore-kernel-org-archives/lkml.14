@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83CEFBEA;
-	Wed, 17 Jul 2024 03:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6861FBEA;
+	Wed, 17 Jul 2024 03:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721187674; cv=none; b=CfU6DIvWqj6ToRjSFSgEr/bu5orQNZ8C/9ZM7/t6ao6+9Cp+hPO6C+ikM/S78QH8hfs+v9oIsHxja+prE0Eg6opGwZkQfDzNFeFDBELbq6ZV6xV+C6vtRjgGPYRVQn3fSsdwFSqVkbQCZWlmpTvDefkOWB4OimCGf4Jflg0nc88=
+	t=1721187680; cv=none; b=dEDVjns6DSKwc+xMKQkhpVJb4sclG/vm1tX7eh6GmWCenzNSaNXv2G3sQBoE2oQyQPUlWW8Ci5WmV3yQOdI9X/WIH+U2SA5UH3AXslhKkjCyOKqp8eCZ1ZW/WA4voswyIGzcPAZeED+rft7OvGxXXPFd3IJOC3qp4btINQogea4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721187674; c=relaxed/simple;
-	bh=6ijwVBE78YFDivz/d8+zBvfY9v8iI1faK1uvaOKYN2E=;
+	s=arc-20240116; t=1721187680; c=relaxed/simple;
+	bh=7hG+uRTOF5VT/BVJAB9g4uCVmdMHl/IaV9iSHLeVdZg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mJqrsLSC+Hjhx50URx5zc08B3CcBkI+tMdjw297HOxb5xRAmKha4kVrL4JK7ZheePdOeSmGGw5Q6v5uy933zWakbs31QZjWJQ9Lsi14VRFWFX4wq0UzBMxf2hHi0hSh0iqyLWSKVacAXU5bl/UCqGM9D1T/H1/Gc+6O+cRugfb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=File3HTL; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=uQFZAO+G0nBHClkxlBGHstL5BGdMOQEX4kumWGKu+6jLwiJQlFhLzM2YLaw+c8Atf8q4vN+bndFNp7V0ZNgsTDlzxpRlTzpw5B8ALEQ+PUcAcdDY9x77ViGZ25n6vCse9jy6XcGcaOA5c2hU8oXF7MewDmijFx+uGaptfjF688o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TG0v/cqH; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="File3HTL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TG0v/cqH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721187673; x=1752723673;
+  t=1721187679; x=1752723679;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=6ijwVBE78YFDivz/d8+zBvfY9v8iI1faK1uvaOKYN2E=;
-  b=File3HTLmVAxePV2Pmi1vpDI+Qc+mMDrwFanviQ2mRV7YYJIT1osTKQ7
-   X4IuRCMID2tna9eHaXGMMTq1rS1i27zJzbaXbOoUzs82bBl3AyQJ9br3c
-   3hxJY5YfBvdCeYPkMlvWynDWEtgHBqJAFPsmX+p6Jzjtjj8OqTt048HB/
-   OxxIQOik8RrhquNPwiGf5w6Zp10arjj6iT1T+GHxb1S3WANIvqZMSVWzQ
-   1ZQjuzeaJTXuv2dMw/spXAYWWh5he+ILD8+Gog0EmE+0T+eRukQQMHXiF
-   yILgewIFPiTYhwBUk71n45lkXHdxZBl2SqJ/NJcoFdIIHEzGRgVefkFXo
-   Q==;
-X-CSE-ConnectionGUID: +Pd1sMtnRJyfTN3HOfRZsQ==
-X-CSE-MsgGUID: MSc5eIzdTMygivhwA+SYRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18512471"
+  bh=7hG+uRTOF5VT/BVJAB9g4uCVmdMHl/IaV9iSHLeVdZg=;
+  b=TG0v/cqHkZrnzqWfgS8cLghcYQcNk/X6ya4enai8xusOOV7d6JzDfDk6
+   QMBIlrGAhoxHcm0RFjfFvv3n6Ksdcn7K26WszY4/2DuxN+DZ5N5k2na94
+   97hLx+MFWM1t4cZf8fa3RB3z/9QQr+yJmjRFUG8tMyR4fSRQSVX8QlO77
+   IYjsHsnMhqYhB4QgsS/WFnK80sCCNS1frllHSAiSHx2s1AiLHLpS8j7Lk
+   dn2ziX6RD7dMK9Uzvmff4TZZ5nIPnC9UJACYkubWWnJkOt7VOaGzC8LIt
+   sO1MrLSpTHeND7WwmftZLAIc1EQ3mkRCxaDwW4PUWlQ7NAp2whsNfm05F
+   w==;
+X-CSE-ConnectionGUID: W0kGoxpVQLukTfiJe5L70g==
+X-CSE-MsgGUID: viLFhnx9TzS7eFCL26bAGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18512479"
 X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
-   d="scan'208";a="18512471"
+   d="scan'208";a="18512479"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:12 -0700
-X-CSE-ConnectionGUID: Z/cDHmnAQ+GJwtomkO9Hsg==
-X-CSE-MsgGUID: hNOLH89WS+mJ5djd5euveg==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:16 -0700
+X-CSE-ConnectionGUID: Jv6nFXSATyGC2o0DgcuVkg==
+X-CSE-MsgGUID: KNQmO0T+QQiYyCRPqZew1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
-   d="scan'208";a="54566761"
+   d="scan'208";a="54566771"
 Received: from rfrazer-mobl3.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.222.184])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:00 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:10 -0700
 From: Kai Huang <kai.huang@intel.com>
 To: dave.hansen@intel.com,
 	kirill.shutemov@linux.intel.com,
@@ -62,9 +62,9 @@ Cc: x86@kernel.org,
 	chao.gao@intel.com,
 	binbin.wu@linux.intel.com,
 	kai.huang@intel.com
-Subject: [PATCH v2 08/10] x86/virt/tdx: Print TDX module basic information
-Date: Wed, 17 Jul 2024 15:40:15 +1200
-Message-ID: <1e71406eec47ae7f6a47f8be3beab18c766ff5a7.1721186590.git.kai.huang@intel.com>
+Subject: [PATCH v2 10/10] x86/virt/tdx: Don't initialize module that doesn't support NO_RBP_MOD feature
+Date: Wed, 17 Jul 2024 15:40:17 +1200
+Message-ID: <d307d82a52ef604cfff8c7745ad8613d3ddfa0c8.1721186590.git.kai.huang@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1721186590.git.kai.huang@intel.com>
 References: <cover.1721186590.git.kai.huang@intel.com>
@@ -76,201 +76,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the kernel doesn't print any information regarding the TDX
-module itself, e.g. module version.  In practice such information is
-useful, especially to the developers.
+Old TDX modules can clobber RBP in the TDH.VP.ENTER SEAMCALL.  However
+RBP is used as frame pointer in the x86_64 calling convention, and
+clobbering RBP could result in bad things like being unable to unwind
+the stack if any non-maskable exceptions (NMI, #MC etc) happens in that
+gap.
 
-For instance, there are a couple of use cases for dumping module basic
-information:
+A new "NO_RBP_MOD" feature was introduced to more recent TDX modules to
+not clobber RBP.  This feature is reported in the TDX_FEATURES0 global
+metadata field via bit 18.
 
-1) When something goes wrong around using TDX, the information like TDX
-   module version, supported features etc could be helpful [1][2].
+Don't initialize the TDX module if this feature is not supported [1].
 
-2) For Linux, when the user wants to update the TDX module, one needs to
-   replace the old module in a specific location in the EFI partition
-   with the new one so that after reboot the BIOS can load it.  However,
-   after kernel boots, currently the user has no way to verify it is
-   indeed the new module that gets loaded and initialized (e.g., error
-   could happen when replacing the old module).  With the module version
-   dumped the user can verify this easily.
-
-So dump the basic TDX module information:
-
- - TDX module version, and the build date.
- - TDX module type: Debug or Production.
- - TDX_FEATURES0: Supported TDX features.
-
-And dump the information right after reading global metadata, so that
-this information is printed no matter whether module initialization
-fails or not.
-
-The actual dmesg will look like:
-
-  virt/tdx: Initializing TDX module: 1.5.00.00.0481 (build_date 20230323, Production module), TDX_FEATURES0 0xfbf
-
-Link: https://lore.kernel.org/lkml/e2d844ad-182a-4fc0-a06a-d609c9cbef74@suse.com/T/#m352829aedf6680d4628c7e40dc40b332eda93355 [1]
-Link: https://lore.kernel.org/lkml/e2d844ad-182a-4fc0-a06a-d609c9cbef74@suse.com/T/#m351ebcbc006d2e5bc3e7650206a087cb2708d451 [2]
+Link: https://lore.kernel.org/all/c0067319-2653-4cbd-8fee-1ccf21b1e646@suse.com/T/#mef98469c51e2382ead2c537ea189752360bd2bef [1]
 Signed-off-by: Kai Huang <kai.huang@intel.com>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
 ---
 
-v1 -> v2 (Nikolay):
- - Change the format to dump TDX basic info.
- - Slightly improve changelog.
+v1 -> v2:
+ - Add tag from Nikolay.
 
 ---
- arch/x86/virt/vmx/tdx/tdx.c | 64 +++++++++++++++++++++++++++++++++++++
- arch/x86/virt/vmx/tdx/tdx.h | 33 ++++++++++++++++++-
- 2 files changed, 96 insertions(+), 1 deletion(-)
+ arch/x86/virt/vmx/tdx/tdx.c | 17 +++++++++++++++++
+ arch/x86/virt/vmx/tdx/tdx.h |  1 +
+ 2 files changed, 18 insertions(+)
 
 diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 3253cdfa5207..5ac0c411f4f7 100644
+index 3c19295f1f8f..ec6156728423 100644
 --- a/arch/x86/virt/vmx/tdx/tdx.c
 +++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -319,6 +319,58 @@ static int stbuf_read_sysmd_multi(const struct field_mapping *fields,
- 	return 0;
- }
- 
-+#define TD_SYSINFO_MAP_MOD_INFO(_field_id, _member)	\
-+	TD_SYSINFO_MAP(_field_id, struct tdx_sysinfo_module_info, _member)
-+
-+static int get_tdx_module_info(struct tdx_sysinfo_module_info *modinfo)
-+{
-+	static const struct field_mapping fields[] = {
-+		TD_SYSINFO_MAP_MOD_INFO(SYS_ATTRIBUTES, sys_attributes),
-+		TD_SYSINFO_MAP_MOD_INFO(TDX_FEATURES0,  tdx_features0),
-+	};
-+
-+	return stbuf_read_sysmd_multi(fields, ARRAY_SIZE(fields), modinfo);
-+}
-+
-+#define TD_SYSINFO_MAP_MOD_VERSION(_field_id, _member)	\
-+	TD_SYSINFO_MAP(_field_id, struct tdx_sysinfo_module_version, _member)
-+
-+static int get_tdx_module_version(struct tdx_sysinfo_module_version *modver)
-+{
-+	static const struct field_mapping fields[] = {
-+		TD_SYSINFO_MAP_MOD_VERSION(MAJOR_VERSION,    major),
-+		TD_SYSINFO_MAP_MOD_VERSION(MINOR_VERSION,    minor),
-+		TD_SYSINFO_MAP_MOD_VERSION(UPDATE_VERSION,   update),
-+		TD_SYSINFO_MAP_MOD_VERSION(INTERNAL_VERSION, internal),
-+		TD_SYSINFO_MAP_MOD_VERSION(BUILD_NUM,	     build_num),
-+		TD_SYSINFO_MAP_MOD_VERSION(BUILD_DATE,	     build_date),
-+	};
-+
-+	return stbuf_read_sysmd_multi(fields, ARRAY_SIZE(fields), modver);
-+}
-+
-+static void print_basic_sysinfo(struct tdx_sysinfo *sysinfo)
-+{
-+	struct tdx_sysinfo_module_version *modver = &sysinfo->module_version;
-+	struct tdx_sysinfo_module_info *modinfo = &sysinfo->module_info;
-+	bool debug = modinfo->sys_attributes & TDX_SYS_ATTR_DEBUG_MODULE;
-+
-+	/*
-+	 * TDX module version encoding:
-+	 *
-+	 *   <major>.<minor>.<update>.<internal>.<build_num>
-+	 *
-+	 * When printed as text, <major> and <minor> are 1-digit,
-+	 * <update> and <internal> are 2-digits and <build_num>
-+	 * is 4-digits.
-+	 */
-+	pr_info("Initializing TDX module: %u.%u.%02u.%02u.%04u (build_date %u, %s module), TDX_FEATURES0 0x%llx\n",
-+			modver->major, modver->minor, modver->update,
-+			modver->internal, modver->build_num,
-+			modver->build_date, debug ? "Debug" : "Production",
-+			modinfo->tdx_features0);
-+}
-+
- #define TD_SYSINFO_MAP_TDMR_INFO(_field_id, _member)	\
- 	TD_SYSINFO_MAP(_field_id, struct tdx_sysinfo_tdmr_info, _member)
- 
-@@ -339,6 +391,16 @@ static int get_tdx_tdmr_sysinfo(struct tdx_sysinfo_tdmr_info *tdmr_sysinfo)
- 
- static int get_tdx_sysinfo(struct tdx_sysinfo *sysinfo)
- {
-+	int ret;
-+
-+	ret = get_tdx_module_info(&sysinfo->module_info);
-+	if (ret)
-+		return ret;
-+
-+	ret = get_tdx_module_version(&sysinfo->module_version);
-+	if (ret)
-+		return ret;
-+
+@@ -484,6 +484,18 @@ static int get_tdx_sysinfo(struct tdx_sysinfo *sysinfo)
  	return get_tdx_tdmr_sysinfo(&sysinfo->tdmr_info);
  }
  
-@@ -1121,6 +1183,8 @@ static int init_tdx_module(void)
- 	if (ret)
- 		return ret;
++static int check_module_compatibility(struct tdx_sysinfo *sysinfo)
++{
++	u64 tdx_features0 = sysinfo->module_info.tdx_features0;
++
++	if (!(tdx_features0 & TDX_FEATURES0_NO_RBP_MOD)) {
++		pr_err("NO_RBP_MOD feature is not supported\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ /* Calculate the actual TDMR size */
+ static int tdmr_size_single(u16 max_reserved_per_tdmr)
+ {
+@@ -1266,6 +1278,11 @@ static int init_tdx_module(void)
  
-+	print_basic_sysinfo(&sysinfo);
+ 	print_basic_sysinfo(&sysinfo);
+ 
++	/* Check whether the kernel can support this module */
++	ret = check_module_compatibility(&sysinfo);
++	if (ret)
++		return ret;
 +
  	/*
  	 * To keep things simple, assume that all TDX-protected memory
  	 * will come from the page allocator.  Make sure all pages in the
 diff --git a/arch/x86/virt/vmx/tdx/tdx.h b/arch/x86/virt/vmx/tdx/tdx.h
-index b5eb7c35f1dc..861ddf2c2e88 100644
+index 4b43eb774ffa..20fd7cb5937a 100644
 --- a/arch/x86/virt/vmx/tdx/tdx.h
 +++ b/arch/x86/virt/vmx/tdx/tdx.h
-@@ -31,6 +31,15 @@
-  *
-  * See the "global_metadata.json" in the "TDX 1.5 ABI definitions".
-  */
-+#define MD_FIELD_ID_SYS_ATTRIBUTES		0x0A00000200000000ULL
-+#define MD_FIELD_ID_TDX_FEATURES0		0x0A00000300000008ULL
-+#define MD_FIELD_ID_BUILD_DATE			0x8800000200000001ULL
-+#define MD_FIELD_ID_BUILD_NUM			0x8800000100000002ULL
-+#define MD_FIELD_ID_MINOR_VERSION		0x0800000100000003ULL
-+#define MD_FIELD_ID_MAJOR_VERSION		0x0800000100000004ULL
-+#define MD_FIELD_ID_UPDATE_VERSION		0x0800000100000005ULL
-+#define MD_FIELD_ID_INTERNAL_VERSION		0x0800000100000006ULL
-+
- #define MD_FIELD_ID_MAX_TDMRS			0x9100000100000008ULL
- #define MD_FIELD_ID_MAX_RESERVED_PER_TDMR	0x9100000100000009ULL
- #define MD_FIELD_ID_PAMT_4K_ENTRY_SIZE		0x9100000100000010ULL
-@@ -124,8 +133,28 @@ struct tdmr_info_list {
-  *
-  * Note not all metadata fields in each class are defined, only those
-  * used by the kernel are.
-+ *
-+ * Also note the "bit definitions" are architectural.
-  */
- 
-+/* Class "TDX Module Info" */
-+struct tdx_sysinfo_module_info {
-+	u32 sys_attributes;
-+	u64 tdx_features0;
-+};
-+
-+#define TDX_SYS_ATTR_DEBUG_MODULE	0x1
-+
-+/* Class "TDX Module Version" */
-+struct tdx_sysinfo_module_version {
-+	u16 major;
-+	u16 minor;
-+	u16 update;
-+	u16 internal;
-+	u16 build_num;
-+	u32 build_date;
-+};
-+
- /* Class "TDMR Info" */
- struct tdx_sysinfo_tdmr_info {
- 	u16 max_tdmrs;
-@@ -134,7 +163,9 @@ struct tdx_sysinfo_tdmr_info {
+@@ -148,6 +148,7 @@ struct tdx_sysinfo_module_info {
  };
  
- struct tdx_sysinfo {
--	struct tdx_sysinfo_tdmr_info tdmr_info;
-+	struct tdx_sysinfo_module_info		module_info;
-+	struct tdx_sysinfo_module_version	module_version;
-+	struct tdx_sysinfo_tdmr_info		tdmr_info;
- };
+ #define TDX_SYS_ATTR_DEBUG_MODULE	0x1
++#define TDX_FEATURES0_NO_RBP_MOD	_BITULL(18)
  
- #endif
+ /* Class "TDX Module Version" */
+ struct tdx_sysinfo_module_version {
 -- 
 2.45.2
 
