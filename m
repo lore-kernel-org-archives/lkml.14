@@ -1,109 +1,183 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81661CAB1
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947672E631
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721202776; cv=none; b=OQV/4VxD3YSaaOMKA8BrbU21y2gbSNiwA6pgNrsPJsXprHwVrAYkngNsEp/SEsrBzoH1chDXuEf8yCkZ9BCG+A+6zQB6ZLL0l/hExEsSV1GmRNhyygWYD4/ju0JfaAZWEZR2pOwBuzn6VaLqMQHvxGDZ8VB0VtWWe4SBNVZqSzY=
+	t=1721202814; cv=none; b=fNCJHDF4KoxbPkgYF6T2MoUGqhq7xdnxI7FziXhHuXnlF/mtUt9SRACbt74/o2te3dVfXTFsWmYagEZiumMFtq8faP5sx1UYnur7QZpkb6iOZmh7iiX+xLTHyeiU0wIFRhLS/2a6gMmA1e4fyXJJcPDbDULtY2vkuCLoEIztILI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721202776; c=relaxed/simple;
-	bh=tmn7dZaZf/63VEF8gNjawg4siNTUl1KUDSGXNI8Zuqo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rRsCaHpx9r4QMDBA6+nSC58EzPB63++MkKrFEWNA6vfjoQUn6zVceGEHVGnfpPTI/XWCC+UEhhaqzF8WYyBy4mRyXTQI4Edd6oztOteL6UQJk7TyOFnNQxqdWdW0lEpGwRzv2fHBggDh/IZLiYlazsgnLd7nCqRMHn5AUSNJ8mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CvxTVdSP; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1721202814; c=relaxed/simple;
+	bh=qpXx8DefeHSsvgTZuVKLsCBg8nkwFmy59pd5HFFAO0c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b9OKC2vso0EQIuXoYQyPsZVjoNTrwudd02culoq9QIoEFHWpw+1fSnXumkZS791457IETDZxxhkBUnFvFtruPhMq4R+3Y8lA0yHSu3EmmqAJWBAb5f7Desh3upkq57Zyw1U43fh5IMX0n8Hxq2Kk07+Zfbo7MkmMNRz7TcFeCOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iNoXkxOa; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CvxTVdSP"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4277a5ed48bso48244215e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 00:52:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1721202772; x=1721807572; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q7JxP1X9anMugApULpKE/NNH8t1wNvqt4dSmpMOS7bM=;
-        b=CvxTVdSPg81xHQ++BLKV3G/no2sn8ynpkd1R4m6I4nf/z6TlSlLGu8lqIiEKdANfgq
-         bUMrf7mOqShBWpFeQE04pYfQwqVQ6qsydKjkiqKcbGDfggmfFcL7V2fEQ+B4uGqHWO0Y
-         lbIT8RwIWcsZ8U0RtriyknzZhTudiA3+kSVyeU8CH9+OTpcC1kHLJi8kOpiv8ia1jP2O
-         P79JQtjlB9XKCCF+eVQKxLDrLEmQllwCypUMBv1BH7m8uC0i/3qBWIbPPLo/Rs0fBL7f
-         6MKC2BT6Jtpo0kn90HA2Zyqu7XsN6fUHy1frN5+ypQu8odbADkIXIB7knP5sI/O1uYHY
-         8Fzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721202772; x=1721807572;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q7JxP1X9anMugApULpKE/NNH8t1wNvqt4dSmpMOS7bM=;
-        b=OK7uuOkQU1Rze70O+Tr6Pb1qqk6GaXA1Q1CfUN+6rfQeXPYf+/TuKA/l4QYBlluIzD
-         LWcEEwUTQwq7Cs+p2pavKAL2YFNl3WTr9vm5ZfFNAsgHX0aJYhbb56CX3GNyTxSUM6bO
-         u14jlmt9E7aXdEK0WmH83GAiwiHNbMRDZT4UEykXrDKl9pj0XbfEr6nq2O6dndcHF/+I
-         wlu4u0/FJ/pboRJt9S8QcpuW0WFw0QzMNqfpiz5JDkkPwayNclF3XbxROIT7pE2Ndd3d
-         /iYJyekkKrdVJjiyvtPlsKAzrtxTq+efTlycJdpsj/6752LeeQB5aM6OIgVgmnB5nX2Z
-         sTuA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/icwgOtaZClYhZu/8+QRzpmUAjrZ+X5saTByvJkNfpThNvOxP+eFAJhy+oudEB4f+2kgU/XjYxibiXYlyHvZGybXqn8GDiPaFtWDF
-X-Gm-Message-State: AOJu0Yyq6hqMnEq8hCe0vBqA9mE7xOYU1ugE4odOA8QaZg7aTPdVFDUh
-	DWMxRyPENboF/MgayCzJqkS2/YNl3WcotTje/IJqJh2BNNxrNokKop3LrDj1lU8=
-X-Google-Smtp-Source: AGHT+IFTDDbi5O+/Lw8G4Rbx40psRglcjVnjshWdv+9mQbxcPrfb0y6tuYnBZuD00ssqlWOSynokpA==
-X-Received: by 2002:a5d:45d2:0:b0:367:83e9:b4a5 with SMTP id ffacd0b85a97d-368316fad85mr507737f8f.49.1721202771882;
-        Wed, 17 Jul 2024 00:52:51 -0700 (PDT)
-Received: from ?IPV6:2001:a61:137b:5001:be5a:c750:b487:ff1b? ([2001:a61:137b:5001:be5a:c750:b487:ff1b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db038dbsm10862882f8f.95.2024.07.17.00.52.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 00:52:51 -0700 (PDT)
-Message-ID: <991f7feb-a5bf-4eb4-9623-a13534a02b98@suse.com>
-Date: Wed, 17 Jul 2024 09:52:50 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iNoXkxOa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=4GVmu
+	RflNQuk38b4FkTRNGzpZ2+WoDkRlDKdrK3RSvo=; b=iNoXkxOa5buN8GyIa6+5d
+	SukUMOUJGPIl63gnuuMAJISa4RXd6UZsaT7OqKBeX5yrtN5AaxgvHoQFIvh147zT
+	bZFGBuyXWTAWNxbFp45IEq1DATIr0xZH3VJGjpGiGfdrayblN7+XVT7PUlO8l5Ho
+	KdU0f4cSRGq/kZ0kmlNzDM=
+Received: from localhost.localdomain (unknown [111.48.69.245])
+	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wD331sXeJdm2Pm2DA--.62258S2;
+	Wed, 17 Jul 2024 15:51:53 +0800 (CST)
+From: wangdicheng <wangdich9700@163.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linux-arm-kernel@lists.infradead.org,
+	wangdicheng <wangdicheng@kylinos.cn>
+Subject: [PATCH] ALSA: usb-audio: Fix microphone sound on HD webcam.
+Date: Wed, 17 Jul 2024 15:51:49 +0800
+Message-Id: <20240717075149.6915-1-wangdich9700@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] usb: usbfs: Add reset_resume for usbfs
-To: Hongyu Xie <xy521521@gmail.com>, stern@rowland.harvard.edu,
- oneukum@suse.com
-Cc: gregkh@linuxfoundation.org, brauner@kernel.org, jlayton@kernel.org,
- jack@suse.cz, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- xiehongyu1@kylinos.cn
-References: <20240711084321.44916-1-xiehongyu1@kylinos.cn>
- <527927b8-9475-47da-bf2b-7a5d9e81e470@suse.com>
- <9ef72886-13b8-46cf-a0aa-54dad36102e9@rowland.harvard.edu>
- <2a80d11d-029f-4e7e-9a8e-3abae1034add@suse.com>
- <429eb27a-578a-4208-8ce1-89434b8d739f@rowland.harvard.edu>
- <3073c8ce-1923-4816-a442-41b4cc333af9@suse.com>
- <6419a4e9-e084-4eb6-8376-9202930ea8be@kylinos.cn>
- <ee0a5160-233a-485c-a34b-99d4a1e046c5@rowland.harvard.edu>
- <45b87923-d256-4c5e-8167-8ef764add1e9@kylinos.cn>
-Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <45b87923-d256-4c5e-8167-8ef764add1e9@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD331sXeJdm2Pm2DA--.62258S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXw43JFy5tFyrCF45Xw13urg_yoWrCF17pr
+	1Iva97JryDJr17Xr48GayUu34rXw4Iyws8Ca4qkwna9ryft34rta42y39rAayakrWrC342
+	qryqy390g3y5Gw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j5Ef5UUUUU=
+X-CM-SenderInfo: pzdqwv5lfkmliqq6il2tof0z/1tbiRxQfT2V4KU6QQgABsq
 
-On 17.07.24 05:13, Hongyu Xie wrote:
-> From: Hongyu Xie <xiehongyu1@kylinos.cn>
+From: wangdicheng <wangdicheng@kylinos.cn>
 
-> But I still think that there's no need to rebind for a USB device that was using usbfs.
+I own an external usb Webcam, HD webcam, which had low mic volume and
+inconsistent sound quality. Video works as expected.
 
-Technically you are correct. From a conceptual view point the only
-hard requirement we have is that the first operation after reset_resume()
-has to fail with an error code user space can interpret.
+(snip)
+[   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
+[   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
+[   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
+[   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
+[   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
+[   96.092610][ 2] [ T3680] usb 5-2.2: Warning! Unlikely big volume range (=4096), cval->res is probably wrong.
+[   96.102436][ 2] [ T3680] usb 5-2.2: [5] FU [Mic Capture Volume] ch = 1, val = 0/4096/1
 
-> Because rebinding doesn't fix settings lost. And it looks strange from user-space's perspective.
-> What do you think?
+Set up quirk cval->res to 16 for 256 levels,
+Set GET_SAMPLE_RATE quirk flag to stop trying to get the sample rate.
+Confirmed that happened anyway later due to the backoff mechanism,
+After 3 failures.
 
-Only user space can reapply the settings. The kernel, however, must notify
-user space of the need to do so and avoiding a race condition is tricky.
-However, it is the same race that also applies to a disconnected device and that
-problem is solved.
+All audio stream on device interfaces share the same values,
+apart from wMaxPacketSize and tSamFreq :
 
-ENODEV clearly is an error that makes clear to user space that settings have
-been lost. User space has to be able to deal with a device being disconnected
-at any time, as we are talking about USB.
-Hence, where is the need to add a special case for reset_resume()?
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        3
+      bAlternateSetting       4
+      bNumEndpoints           1
+      bInterfaceClass         1 Audio
 
-	HTH
-		Oliver
+Interface Descriptor:
+  bLength                 9
+  bDescriptorType         4
+  bInterfaceNumber        3
+  bAlternateSetting       4
+  bNumEndpoints           1
+  bInterfaceClass         1 Audio
+  bInterfaceSubClass      2 Streaming
+  bInterfaceProtocol      0
+  iInterface              0
+  AudioStreaming Interface Descriptor:
+    bLength                 7
+    bDescriptorType        36
+    bDescriptorSubtype      1 (AS_GENERAL)
+    bTerminalLink           3
+    bDelay                  1 frames
+    wFormatTag         0x0001 PCM
+  AudioStreaming Interface Descriptor:
+    bLength                11
+    bDescriptorType        36
+    bDescriptorSubtype      2 (FORMAT_TYPE)
+    bFormatType             1 (FORMAT_TYPE_I)
+    bNrChannels             1
+    bSubframeSize           2
+    bBitResolution         16
+    bSamFreqType            1 Discrete
+    tSamFreq[ 0]        48000
+  Endpoint Descriptor:
+    bLength                 9
+    bDescriptorType         5
+    bEndpointAddress     0x86  EP 6 IN
+    bmAttributes            5
+      Transfer Type            Isochronous
+      Synch Type               Asynchronous
+      Usage Type               Data
+    wMaxPacketSize     0x0064  1x 100 bytes
+    bInterval               4
+    bRefresh                0
+    bSynchAddress           0
+    AudioStreaming Endpoint Descriptor:
+      bLength                 7
+      bDescriptorType        37
+      bDescriptorSubtype      1 (EP_GENERAL)
+      bmAttributes         0x01
+        Sampling Frequency
+      bLockDelayUnits         0 Undefined
+      wLockDelay         0x0000
+(snip)
+
+Testing patch provides consistent good sound recording quality and volume range.
+
+(snip)
+[   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
+[   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
+[   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
+[   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
+[   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
+[   96.110630][ 3] [ T3680] usbcore: registered new interface driver snd-usb-audio
+[   96.114329][ 7] [ T3677] usb 5-2.2: Found UVC 1.00 device HD webcam (1bcf:2281)
+[   96.167555][ 7] [ T3677] usbcore: registered new interface driver uvcvideo
+
+Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
+---
+ sound/usb/mixer.c  | 7 +++++++
+ sound/usb/quirks.c | 2 ++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 409fc1164694..561c974a4f14 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1211,6 +1211,13 @@ static void volume_control_quirks(struct usb_mixer_elem_info *cval,
+ 			cval->res = 16;
+ 		}
+ 		break;
++	case USB_ID(0x1bcf, 0x2281): /* FHD Webcam */
++		if (!strcmp(kctl->id.name, "Mic Capture Volume")) {
++			usb_audio_info(chip,
++				"set resolution quirk: cval->res = 16\n");
++			cval->res = 16;
++		}
++		break;
+ 	}
+ }
+ 
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 4e64842245e1..16070cd7440e 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -2179,6 +2179,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
+ 		   QUIRK_FLAG_FIXED_RATE),
+ 	DEVICE_FLG(0x1bcf, 0x2283, /* NexiGo N930AF FHD Webcam */
+ 		   QUIRK_FLAG_GET_SAMPLE_RATE),
++	DEVICE_FLG(0x1bcf, 0x2281, /* FHD Webcam */
++			QUIRK_FLAG_GET_SAMPLE_RATE),
+ 
+ 	/* Vendor matches */
+ 	VENDOR_FLG(0x045e, /* MS Lifecam */
+-- 
+2.25.1
 
