@@ -1,172 +1,139 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B13A17F4F4
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8B13FB83;
+	Wed, 17 Jul 2024 11:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721214487; cv=none; b=dril9cva4wn/oprd6Q2Fy6WhlMvJTX9aZgIXxzubZ3nUX0sRmjD0/d1gW4bpQuLxph6bVsaGvBeYlmthxn+DFuHubacX7w9rPi60tBQX67Ea2qq3GstidFIED1Rj64Lhs7IG0XkI9fHYeYevaGFIasqt56Bj59yjFFCEWL/Sejs=
+	t=1721214530; cv=none; b=T9aoaKT1aenuhT5IRu2LD9N/rnc2q81fxIIZYFQnCzwRsaKTr9Z6bMHFCtyfu9DEEh3MsBDrCxk7xRj1XAGMrKVkj5bYhSakRbvtp6e4ZkTpPZQWPPy1i537asg/B2DFXmK/juFV5lIHR2fgg6SpGr00cs7Tf/91GLBZJSDP7jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721214487; c=relaxed/simple;
-	bh=0xtRiDcLRpbp3c4QTQ15UTUc5YjtrK0gkuZ2i0E6yPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/1NJu+Q53xQ9r/rXraUk+Qvm1NEq8OEqGkOGgcwyymMUDST7NUngHVgYc212NK/0mSA06tlsbbJc3KXq+RBMo4g4gywgZGG5wZMSUJThoGZMSxi26TtvNdoQlKVBTwptItWTfJ0B101MiID/uYE9ph0E925GDzx6HP3rzuV5xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Z7525m4h; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1721214530; c=relaxed/simple;
+	bh=I5ched4wENHpHAD6luPQefl8V5ngs+XBJs0SDQGExw0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ADgmH7Sb1yUbhpSjsvRWTGiLQ7uRYjlKuzotsEWzGSFFXzY+3CSVWPjmCdA30yEwP3+/9p7ZKHTz6ErCpad24rVOyiLpTs/BPX7b5Wkajr1E6zWo3YDiftOq5UQXygj6Ivr1pQjIXsw54uktfGuvaOT8w4ehAP0BepUFTXou7Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QPbSpq2t; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Z7525m4h"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HAxZn3015377;
-	Wed, 17 Jul 2024 11:07:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=ufLhQsXaGXmg1LtYzZJrj5G5Hh8
-	YczERYy+8wEipvCw=; b=Z7525m4hckA+DXWMtfCy/T6Ep4nXXONApf525sRBEyI
-	msQdDIrAv5f3bIawPGbEi39XB4cUh8sOHTDDyKmhNSXzwCSFK02DhEEo9j3vTadm
-	Pa7OFQOVsYaIdRc44+fVKrVoz0y3416UuAWqpbFFjmczipxxD20rQ8TrN2oqihZS
-	4JjAZjJcY8mtbXxL8zLh8uzn2CqoIRQHEpHhywwgq1PAzFQK9kLWy1yOBQITc92z
-	2CCCIvSfttXZ2MYbiMxuX2szDCDMPH1QRNpAnq0Pj20qSDFAx7vVvGxQ1KbgBGOa
-	s0Fx2iEAW8SdliJmQwDguzgWHVlLY6//bZT7scqC0cQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ecp8g0n2-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QPbSpq2t"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H78QOx005470;
+	Wed, 17 Jul 2024 11:08:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0Gcz2+gTCHZ2HMufSAZ2uNdMkEEsbN7s70NtFj1vsmA=; b=QPbSpq2t3SxudNZu
+	ak4gaQ5nG8NBFQMKAoUnHoI5bY1xyAvZhX8YXrm/UD4bX9Hc/8e2CncxXwP2hV1K
+	eUza40BZ/kgay4RYaSWgYIDt2nqnOMo+nkdO1RRCCT4O9lsWQ9/q0MVuAasvQyuc
+	bk1i+F8Tb4TxyP1mSEltcP3QjwEwQBGZWGkceKRsls59jVIraqoDXGmgD7HsggXA
+	LSAiTy1nvEOWNElcIZRULEU7lVNvePyVcZxuuHXa/noEZfAuDfLUh1PCZhMVxEj2
+	CCCdHQxUyvc+4XEag+SxS44aZTNLwNB3qSYAS04q9Ob0CxwHFHJFVFiyVtv91nWp
+	t0U9kw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfuj3ye-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 11:07:36 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46HB7ZD2027729;
-	Wed, 17 Jul 2024 11:07:35 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ecp8g0my-1
+	Wed, 17 Jul 2024 11:08:40 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46HB8dsH024283
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 11:07:35 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46H9paUv009549;
-	Wed, 17 Jul 2024 11:07:34 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40dwkmku7n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 11:07:34 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46HB7Vdl52035866
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Jul 2024 11:07:33 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ECDC22004D;
-	Wed, 17 Jul 2024 11:07:30 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 057CA20043;
-	Wed, 17 Jul 2024 11:07:29 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.43.22.40])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 17 Jul 2024 11:07:28 +0000 (GMT)
-Date: Wed, 17 Jul 2024 16:37:26 +0530
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: Chuyi Zhou <zhouchuyi@bytedance.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, chengming.zhou@linux.dev,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Remove cfs_rq::nr_spread_over and
- cfs_rq::exec_clock
-Message-ID: <Zpel7oyBNTpkLiPS@linux.ibm.com>
-References: <20240716150634.21247-1-zhouchuyi@bytedance.com>
+	Wed, 17 Jul 2024 11:08:39 GMT
+Received: from [10.218.19.46] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Jul
+ 2024 04:08:36 -0700
+Message-ID: <02679111-1a35-b931-fecd-01c952553652@quicinc.com>
+Date: Wed, 17 Jul 2024 16:38:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240716150634.21247-1-zhouchuyi@bytedance.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: kj8nf_K2NfzRdToMIeCuaVmgC-D3Y6R9
-X-Proofpoint-ORIG-GUID: oVUcsdHVOuAUPqYKNxCd8j8gWqyWQvWE
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH] clk: qcom: camcc-sc8280xp: Remove always-on GDSC
+ hard-coding
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen
+ Boyd <sboyd@kernel.org>
+CC: <dmitry.baryshkov@linaro.org>, <stable@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240715-linux-next-24-07-13-sc8280xp-camcc-fixes-v1-1-fadb5d9445c1@linaro.org>
+ <f0d4b7a3-2b61-3d42-a430-34b30eeaa644@quicinc.com>
+ <86068581-0ce7-47b5-b1c6-fda4f7d1037f@linaro.org>
+From: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>
+In-Reply-To: <86068581-0ce7-47b5-b1c6-fda4f7d1037f@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ZBp46_3COGzf4gZf0njbrJ_ktu-8zD5Z
+X-Proofpoint-ORIG-GUID: ZBp46_3COGzf4gZf0njbrJ_ktu-8zD5Z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-17_06,2024-07-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1011
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407170084
-
-On Tue, Jul 16, 2024 at 11:06:34PM +0800, Chuyi Zhou wrote:
-> cfs_rq::nr_spread_over and cfs_rq::exec_clock are not used anymore in
-> eevdf. Remove them from struct cfs_rq.
-> 
-
-nr_spread_over tracks the number of instances where the difference
-between a scheduling entity's virtual runtime and the minimum virtual
-runtime in the runqueue exceeds three times the scheduler latency,
-indicating significant disparity in task scheduling.  
-Commit that removed its usage: 5e963f2bd: sched/fair: Commit to EEVDF
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 priorityscore=1501 impostorscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407170086
 
 
-cfs_rq->exec_clock was used to account for time spent executing tasks.
-Commit that removed its usage: 5d69eca542ee1 sched: Unify runtime
-accounting across classes
+On 7/17/2024 2:19 PM, Bryan O'Donoghue wrote:
+> On 17/07/2024 07:32, Satya Priya Kakitapalli (Temp) wrote:
+>>
+>> On 7/15/2024 8:29 PM, Bryan O'Donoghue wrote:
+>>> We have both shared_ops for the Titan Top GDSC and a hard-coded 
+>>> always on
+>>> whack the register and forget about it in probe().
+>>>
+>>> @static struct clk_branch camcc_gdsc_clk = {}
+>>>
+>>> Only one representation of the Top GDSC is required. Use the CCF
+>>> representation not the hard-coded register write.
+>>>
+>>> Fixes: ff93872a9c61 ("clk: qcom: camcc-sc8280xp: Add sc8280xp CAMCC")
+>>> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # Lenovo X13s
+>>> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>>> ---
+>>>   drivers/clk/qcom/camcc-sc8280xp.c | 7 +------
+>>>   1 file changed, 1 insertion(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/clk/qcom/camcc-sc8280xp.c 
+>>> b/drivers/clk/qcom/camcc-sc8280xp.c
+>>> index 479964f91608..f99cd968459c 100644
+>>> --- a/drivers/clk/qcom/camcc-sc8280xp.c
+>>> +++ b/drivers/clk/qcom/camcc-sc8280xp.c
+>>> @@ -3031,19 +3031,14 @@ static int camcc_sc8280xp_probe(struct 
+>>> platform_device *pdev)
+>>>       clk_lucid_pll_configure(&camcc_pll6, regmap, &camcc_pll6_config);
+>>>       clk_lucid_pll_configure(&camcc_pll7, regmap, &camcc_pll7_config);
+>>> -    /* Keep some clocks always-on */
+>>> -    qcom_branch_set_clk_en(regmap, 0xc1e4); /* CAMCC_GDSC_CLK */
+>>
+>>
+>> As I mentioned on [1], this change might break the GDSC 
+>> functionality. Hence this shouldn't be removed.
+>
+> How would it break ?
+>
+> We park the clock to XO it never gets turned off this way.
+>
 
-> Signed-off-by: Chuyi Zhou <zhouchuyi@bytedance.com>
+Parking the parent at XO doesn't ensure the branch clock is always on, 
+it can be disabled by consumers or CCF if modelled.
 
-Acked-by: Vishal Chourasia <vishalc@linux.ibm.com>
+If the CCF disables this clock in late init, then the clock stays in 
+disabled state until it is enabled again explicitly. Hence it is 
+recommended to not model such always-on clocks.
+
+
 > ---
->  kernel/sched/debug.c | 4 ----
->  kernel/sched/sched.h | 6 ------
->  2 files changed, 10 deletions(-)
-> 
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index c1eb9a1afd13..90c4a9998377 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -641,8 +641,6 @@ void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
->  	SEQ_printf(m, "\n");
->  	SEQ_printf(m, "cfs_rq[%d]:\n", cpu);
->  #endif
-> -	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "exec_clock",
-> -			SPLIT_NS(cfs_rq->exec_clock));
->  
->  	raw_spin_rq_lock_irqsave(rq, flags);
->  	root = __pick_root_entity(cfs_rq);
-> @@ -669,8 +667,6 @@ void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
->  			SPLIT_NS(right_vruntime));
->  	spread = right_vruntime - left_vruntime;
->  	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", "spread", SPLIT_NS(spread));
-> -	SEQ_printf(m, "  .%-30s: %d\n", "nr_spread_over",
-> -			cfs_rq->nr_spread_over);
->  	SEQ_printf(m, "  .%-30s: %d\n", "nr_running", cfs_rq->nr_running);
->  	SEQ_printf(m, "  .%-30s: %d\n", "h_nr_running", cfs_rq->h_nr_running);
->  	SEQ_printf(m, "  .%-30s: %d\n", "idle_nr_running",
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 4c36cc680361..8a071022bdec 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -599,7 +599,6 @@ struct cfs_rq {
->  	s64			avg_vruntime;
->  	u64			avg_load;
->  
-> -	u64			exec_clock;
->  	u64			min_vruntime;
->  #ifdef CONFIG_SCHED_CORE
->  	unsigned int		forceidle_seq;
-> @@ -619,10 +618,6 @@ struct cfs_rq {
->  	struct sched_entity	*curr;
->  	struct sched_entity	*next;
->  
-> -#ifdef	CONFIG_SCHED_DEBUG
-> -	unsigned int		nr_spread_over;
-> -#endif
-> -
->  #ifdef CONFIG_SMP
->  	/*
->  	 * CFS load tracking
-> @@ -1158,7 +1153,6 @@ struct rq {
->  	/* latency stats */
->  	struct sched_info	rq_sched_info;
->  	unsigned long long	rq_cpu_time;
-> -	/* could above be rq->cfs_rq.exec_clock + rq->rt_rq.rt_runtime ? */
->  
->  	/* sys_sched_yield() stats */
->  	unsigned int		yld_count;
-> -- 
-> 2.20.1
-> 
+> bod
