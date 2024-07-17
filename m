@@ -1,117 +1,129 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0B01802D2;
-	Wed, 17 Jul 2024 14:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C5517FAD8
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 14:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721227128; cv=none; b=Jg0YLU1lblzv+p6SWLKnLoDhh9P9Q1FvXmu9nKKywOb5siFRXeRfUgvBQIQS8NFeO+jSnjE1J5pvi7zFR724lTZyXn30W9Zcyl8uaZpn6x1MAb7eMawFSySU/bH7VQzYoquHs1zPdTHFoOMaiUCGjrUnaMx1lSAJeQ9fJSNbr6E=
+	t=1721227239; cv=none; b=cBBvRWJxM7XQE994kr51pJ16+Gr2D2htiabK/EXQnK5N6qtaLBZQVRvQgISal/nx9qZcMf4cnYE82PeARWmktdYjMPK21t/nToqo+c6kJqHV3LvAow7cRdH4YrLBJz1tUgL8P7CQZh+PtyGVkv/zjR3QiUr7PNm5+38vzbeXabM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721227128; c=relaxed/simple;
-	bh=IYZNEZXY+8y0fxebQxamTuKynXKI41woQF6rtvnXO/w=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=LxD1MyY3aKOhSbt9EU91nsZzuUDK+thQLE0pTjx+K7pe3GkWJJfCOgmdkiIyzJPQqVC61PenRCP/0JXdR5E3JfSAMTNr6mswiB7y6Qdc69xHhbKgrtxLRUcFbZ7+fHEW4SisS40iApAV2idUEJGSv+NIj59sCafzPh9/j3V3/iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0bVLfh1M; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n5BmbYxM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1721227239; c=relaxed/simple;
+	bh=+cqM+pZK352HwU5frTpgb4pjngsVXMFRVEWBIdM9+Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AkFQyQfg2piDzHrB/xHX6FLbxBKDexMMqoGLC0JWixZ8Df2Gc97F/AMKMHSrFwLxjexQedwd/XMHLsw8V1khUwXll4dv0DNnoXjKi2pPf+xK+FoweHw5prztsAHgd9UmiXIpkRXJHlb0mScOm7eosmRxN2xZSN/ETqNy5R+64L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GD+b+m6V; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0bVLfh1M";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n5BmbYxM"
-Date: Wed, 17 Jul 2024 14:38:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1721227124;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jqKzduM1S07qdTBmR1uBLOv43G76gBA2I7I3DQVs9UU=;
-	b=0bVLfh1MqBwsooz8crO/B0WPntJdU71Qyse0eymBNDMY1M33sSDCeHIK5p6rmy3Ab9Y/kj
-	BiSZHGAQXAgPfLe9bdqZIkYgTFYJX9K8rUBbaNBDzoK+QGhr+VWhxa6mrqwJ+alqpYJLzU
-	r6yaoaD3bFnWK+58iNmIJFjQK8fIWfXC5lEWcrsriwa1MznkgV/GLUcpLnWPwOBxcDMXPJ
-	eiP3xLbACu3livkzL6UC/F1k56sBSTOEe0I9dM9lCSN1gsIjuzY6WipHAYR3yPg0g+AFqk
-	JV5GJLMt3gMik9Fp1SM2MB0Tt883p90h8EL14VqKjRA9HkoTzHQb2cS4tlkHyQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1721227124;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jqKzduM1S07qdTBmR1uBLOv43G76gBA2I7I3DQVs9UU=;
-	b=n5BmbYxMS0LWJnHrDQPWzen/BbqmgyFZlRE/kkmhzmrGfxsGkUljWUirzp/kl1oYie0ooT
-	aI5vjLufE4gfDkDw==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking/atomic/x86: Redeclare x86_32
- arch_atomic64_{add,sub}() as void
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240605181424.3228-2-ubizjak@gmail.com>
-References: <20240605181424.3228-2-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GD+b+m6V"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2eedeca1c79so52881541fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721227235; x=1721832035; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=exCaK8M+IVOutz8AA1dE561HuzN3r+WbizxFtXswF5Y=;
+        b=GD+b+m6VXdpT238UY3Yejra1nvOmwJgsZ4s/cgAzJ/0UtpYTjPhqKOP3VAWZO3KnhZ
+         gEq6+pfE43iMhSNRFaIcJPqss6zA6BWNPtRyZ+7UflwfKy/qa5aDh37zo+6xW9CtL5eX
+         9Np+ptj4o3Fe6FSw8IgI607k3UeL73CIK6IImwDpVtPshWvqfnblugR7bAm/xW1e1Pja
+         jT5jppOgC0LKbW1zaGMIitFrFTerpbclh9HZKKJgNlcv1PFHDpNoiQMfl5efWpoTGbje
+         2Yy8vkQtZx5gKS16cJCtBWUaZRNxx29pLPwd9n9WVbIW6KZr/pvW4/6Uc48RfLEfXuBr
+         I6LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721227235; x=1721832035;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=exCaK8M+IVOutz8AA1dE561HuzN3r+WbizxFtXswF5Y=;
+        b=GTkJKw4G9JAYPJEYa4QG4Lc5KoYwd09KeqY/O37PC0/MasTESsMqhCPvn7TZu0q0dh
+         EkF/5H3jVBigpOwT8Ou4TJkNoz8pAcV60IPcNUG03C1RyuIWLw0QneLrZy4yVyAVrrIw
+         Pi1k86XymVadekEhjLm4qwVnUydm/10gumUkbMz0Z1BgZ6pQOEqliCn9JJshJf4KqgAh
+         imYOdFdV2DO5K6rAF0hOAX8imB82hScPyKxa9wiyktVS80sobe5HnDut11Qy1EL7Kzu/
+         4qZ1XGRBiDyxABhLR4zbarjz0YUCxZY+uzwPAKW5L29V5+xLoMPDAXP1EDEGo5JPpnTb
+         nZ8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFslgia+/tTDSIayBrnIChjn13VIFSQcRybyHwHNGNDNveqJdvYt0gIqZjRJQsQUorEVjeGjI84HCx1wK/gxlfRiPhbjY+QknG3crh
+X-Gm-Message-State: AOJu0YwWWNpYP3HhlHLqcRbXRaG6beryjgD56rNcfdcDD77ptc9P4B4e
+	w9IoDn6b2BZ4g5ZYbzHlekyo+DBj6yS987JRh3/LWOpt1lM0w5c+
+X-Google-Smtp-Source: AGHT+IGlFB/5u6bBosn/exSsjgVwwLykPI+2u+YZGoEyoIoszW9DKCvlegrjxtJe81bngK8nvhddCA==
+X-Received: by 2002:a05:6512:2803:b0:52e:9951:7881 with SMTP id 2adb3069b0e04-52ee5411e4amr1515180e87.52.1721227235116;
+        Wed, 17 Jul 2024 07:40:35 -0700 (PDT)
+Received: from gmail.com (84-236-112-196.pool.digikabel.hu. [84.236.112.196])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427c78076f7sm241275e9.37.2024.07.17.07.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 07:40:34 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 17 Jul 2024 16:40:32 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH 1/2] x86/percpu: Fix "multiple identical address spaces
+ specified for type" clang warning
+Message-ID: <ZpfX4KelYaXsHlHe@gmail.com>
+References: <20240526175655.227798-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172122712354.2215.11754309852163574251.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240526175655.227798-1-ubizjak@gmail.com>
 
-The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     dce2a224763ce968445e14c43b49321936309c75
-Gitweb:        https://git.kernel.org/tip/dce2a224763ce968445e14c43b49321936309c75
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Wed, 05 Jun 2024 20:13:16 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 17 Jul 2024 16:28:19 +02:00
+* Uros Bizjak <ubizjak@gmail.com> wrote:
 
-locking/atomic/x86: Redeclare x86_32 arch_atomic64_{add,sub}() as void
+> The clang build with named address spaces enabled currently fails with:
+> 
+> error: multiple identical address spaces specified for type [-Werror,-Wduplicate-decl-specifier]
+> 
+> The warning is emitted when accessing const_pcpu_hot structure,
+> which is already declared in __seg_gs named address space.
+> 
+> Use specialized accessor for __raw_cpu_read_const() instead, avoiding
+> redeclaring __seg_gs named address space via __raw_cpu_read().
+> 
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Bill Wendling <morbo@google.com>
+> Cc: Justin Stitt <justinstitt@google.com>
+> ---
+>  arch/x86/include/asm/percpu.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+> index c55a79d5feae..aeea5c8a17de 100644
+> --- a/arch/x86/include/asm/percpu.h
+> +++ b/arch/x86/include/asm/percpu.h
+> @@ -160,7 +160,10 @@ do {									\
+>  	*(qual __my_cpu_type(pcp) *)__my_cpu_ptr(&(pcp)) = (val);	\
+>  } while (0)
+>  
+> -#define __raw_cpu_read_const(pcp)	__raw_cpu_read(, , pcp)
+> +#define __raw_cpu_read_const(pcp)					\
+> +({									\
+> +	*(typeof(pcp) *)(__force uintptr_t)(&(pcp));			\
+> +})
 
-Correct the return type of x86_32 arch_atomic64_add() and
-arch_atomic64_sub() functions to 'void' and remove redundant return.
+So shouldn't this be carried together with the patch that enables named 
+address spaces on Clang? Is it possible that this patch might not be needed 
+in a Clang version where named address spaces work as expected?
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20240605181424.3228-2-ubizjak@gmail.com
----
- arch/x86/include/asm/atomic64_32.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/arch/x86/include/asm/atomic64_32.h b/arch/x86/include/asm/atomic64_32.h
-index 8db2ec4..1f650b4 100644
---- a/arch/x86/include/asm/atomic64_32.h
-+++ b/arch/x86/include/asm/atomic64_32.h
-@@ -163,20 +163,18 @@ static __always_inline s64 arch_atomic64_dec_return(atomic64_t *v)
- }
- #define arch_atomic64_dec_return arch_atomic64_dec_return
- 
--static __always_inline s64 arch_atomic64_add(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_add(s64 i, atomic64_t *v)
- {
- 	__alternative_atomic64(add, add_return,
- 			       ASM_OUTPUT2("+A" (i), "+c" (v)),
- 			       ASM_NO_INPUT_CLOBBER("memory"));
--	return i;
- }
- 
--static __always_inline s64 arch_atomic64_sub(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_sub(s64 i, atomic64_t *v)
- {
- 	__alternative_atomic64(sub, sub_return,
- 			       ASM_OUTPUT2("+A" (i), "+c" (v)),
- 			       ASM_NO_INPUT_CLOBBER("memory"));
--	return i;
- }
- 
- static __always_inline void arch_atomic64_inc(atomic64_t *v)
+	Ingo
