@@ -1,143 +1,145 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E74D17F36A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 12:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F4817F36A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 12:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721219485; cv=none; b=uySd06SBj/oTRLt2TooY9f08U1UHbpuVBn23jP9NQkdCFeBt1k15SdqaZncrBZuA2zJKnc1wv2Qe2ctWc/s68hkW5wQlwKC5FQQsAus789cn2zQede8xK00Cw3TR2wjVYTMikFVNFlWdWW8Isnn0ITHtZt3DApCHj+np9n1SFA8=
+	t=1721219533; cv=none; b=NlxMutQc5/+h4ulQpdoO5f0MWT40U+zQWDb6LrFizLvwo6TuPKJ5Uv0nRbopT6lZv7WrH1h5N+PvPtSpuPQE7NuJaTE+fjDOTOiWvaJgOiGlE1jBmxe/B6EBYDi6BRKrjsDYm/dQdmObA1bKLb5IcWRD3gmBMD+I+INgoA/+UMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721219485; c=relaxed/simple;
-	bh=UNszfCjChXTTd/rpztGRz0i9zU7cMX073/88o9O5mgE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=MOYLCMOmzPmpnyjXFxokQVEURHs1P+3kJsC0noSXrr5Ey65tG1mV6qxXDL8gcYErcWiSa8aLHGd8uM8XDyOI6T4DMHp8G6owob5fAl3WurMhYXr9J2BdAJpbXUERK0OgV4a6SBy4OtOO59xlVg8tEX1pRRb3szW8AB212NIsUFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-321-dz86oElmNVWuwStxJxcuUw-1; Wed, 17 Jul 2024 13:31:14 +0100
-X-MC-Unique: dz86oElmNVWuwStxJxcuUw-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 17 Jul
- 2024 13:30:35 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Wed, 17 Jul 2024 13:30:35 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Thorsten Blum' <thorsten.blum@toblux.com>, "Russell King (Oracle)"
-	<linux@armlinux.org.uk>
-CC: "marcin.s.wojtas@gmail.com" <marcin.s.wojtas@gmail.com>,
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] net: mvpp2: Improve data types and use min()
-Thread-Topic: [PATCH net-next] net: mvpp2: Improve data types and use min()
-Thread-Index: AQHa16hWNoGlAe16mU2xD580+EMHA7H61/pA
-Date: Wed, 17 Jul 2024 12:30:35 +0000
-Message-ID: <3f8d78d6b539465c8040888409eb35a7@AcuMS.aculab.com>
-References: <20240711154741.174745-1-thorsten.blum@toblux.com>
- <ZpVDVHXh4FTZnmUv@shell.armlinux.org.uk>
- <D2AAC5AF-59D0-4985-A3DD-EC9E72324CD7@toblux.com>
-In-Reply-To: <D2AAC5AF-59D0-4985-A3DD-EC9E72324CD7@toblux.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1721219533; c=relaxed/simple;
+	bh=l05qdUDYtYtzIwJ2QhcxqvorSJ35g1P9v6/n6D76rGE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r/YXOUbYGQxqbxuYEgtWTOEPJIA8E+kAqA7Agc/aggpKC3lvmmAaQwv3/ZDl9P6pZi4AlSHZt0kn5e4jeUTWHi3kMmaHWlCg5QTl5Kp2XUWZedbNtIFS5uhE88PRrF44Nt2OeL68CPXtCASzW+2gsDxh5VuCDz1OJLoZW1UpiRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=chlnY269; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="chlnY269"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so88301231fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 05:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721219529; x=1721824329; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GbUBi1oeUQFJbnBtGH+G+FVuJioTAizxvp0fQS1vBdo=;
+        b=chlnY269M/8PJCXrxxYMx5C4UbVcY/XeBhtBF+N+eaDqDph64xeVJV4o3B+prlrMAw
+         I9jxcoxnFDahQ67hgmg0HANHBMtBfnBXxHgqTE24XRr/IOHaSQXdsZW5RnFRLCMUPAKy
+         sL5hipQhKV4kDnJZNF5r+eqqXkrprxuxFM++pspUPw9kohv9Appgcel/SIEMoqdwPeUz
+         7hbnvQD4wSXn5WQhGWRpMBgXbhS50Q1Z96QD2D8nzL4yb6u1pSaihcdtTxaCKli7YGQs
+         9lAWflDitq/3JCuKOAsoKgdpJEZ0ieOge1voWhfkEmfd8xpUz6voa1T700cRZo3MZNRY
+         jnxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721219529; x=1721824329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GbUBi1oeUQFJbnBtGH+G+FVuJioTAizxvp0fQS1vBdo=;
+        b=I8AjSFjAQV/6Kb/GhPjodkDtlsep3iLWeuv4Xk/wWkayXveUnl/wPrz35LcICxmhBk
+         pAX8mSz/D07AegBkb5oq+Jbawa6FI4VB/RqQ43enkrbTrTpv945p3arrvNsc4j4sdkFW
+         T96GGtGLWlS+AUhsbhgVpT++fq5chnMKWBBSxB13GnVRNDWnCT0J6QmZYy+wSZJa2tGr
+         FTzANuT1XP4tycfTilBmDXUJYk/rKCCF/Bp3HUMINwbMDjkAk+COXAgkXgPIfMxGi87b
+         WirxyeyaYtwi8A8B7A6c1tsKKswosHVOy7xz9MFdh71mpB5PWnhdckBjxiVFr5FgutfB
+         9dlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFE4HF+VG9CSfrKEm00y5+7qo8g71qGstc2D5T15hULkIC2vEwwwMJ+ks01oQbG5xY4+gaoPhbN88ZOQ1urUhP1C/+mVl8kDuSfiHl
+X-Gm-Message-State: AOJu0YwoOTPM0ouu+JLJ5+dRpYyP+Huawl+UhN99f+A7IZeSvuWLc+KV
+	UyqA/G3E2SOrH1TAz0QlNy1H7DxHZv5BmCECQMefGgcmvmlA7x1ix/a4rGSjK3BwS86L8Ar5i7c
+	3E1h2aELHVkzVHhyCOShiM8NS1TarZW1Khk/J0w==
+X-Google-Smtp-Source: AGHT+IHrd6WA/u4topx2ck+TD1y4nbBr1UNLmG0DLlnysPBcQgOKnNlEbr4yK/AY56sZ0v8vExJDv8A5pxM3+zla9B8=
+X-Received: by 2002:a2e:a456:0:b0:2ee:4aaf:5f16 with SMTP id
+ 38308e7fff4ca-2eefd04b65amr10712341fa.1.1721219528955; Wed, 17 Jul 2024
+ 05:32:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+References: <20240716152318.207178-1-brgl@bgdev.pl> <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
+ <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com>
+ <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
+ <CACMJSeuSS1GBeMP66xt8CP3=6X9xNUZvj9cZHm_Lav6iaw9Gdw@mail.gmail.com> <CAHk-=wgK=P_7LbCH9pzX4EZFYSd7HdJ8y=Fpt797F9XxT3ThUQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgK=P_7LbCH9pzX4EZFYSd7HdJ8y=Fpt797F9XxT3ThUQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 17 Jul 2024 14:31:57 +0200
+Message-ID: <CAMRc=MdcUhBe6-P0KH8KfrHfp8wqM0fCWGoUZaVZ7+FAkECtpA@mail.gmail.com>
+Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-From: Thorsten Blum
-> Sent: 16 July 2024 18:49
->=20
-> On 15. Jul 2024, at 17:44, Russell King (Oracle) <linux@armlinux.org.uk> =
-wrote:
-> > On Thu, Jul 11, 2024 at 05:47:43PM +0200, Thorsten Blum wrote:
-> >> Change the data type of the variable freq in mvpp2_rx_time_coal_set()
-> >> and mvpp2_tx_time_coal_set() to u32 because port->priv->tclk also has
-> >> the data type u32.
-> >>
-> >> Change the data type of the function parameter clk_hz in
-> >> mvpp2_usec_to_cycles() and mvpp2_cycles_to_usec() to u32 accordingly
-> >> and remove the following Coccinelle/coccicheck warning reported by
-> >> do_div.cocci:
-> >>
-> >>  WARNING: do_div() does a 64-by-32 division, please consider using div=
-64_ul instead
-> >>
-> >> Use min() to simplify the code and improve its readability.
-> >>
-> >> Compile-tested only.
-> >>
-> >> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+On Tue, Jul 16, 2024 at 10:29=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, 16 Jul 2024 at 13:10, Bartosz Golaszewski
+> <bartosz.golaszewski@linaro.org> wrote:
 > >
-> > I'm still on holiday, but it's a wet day today. Don't expect replies
-> > from me to be regular.
+> >     select PCI_PWRCTL_PWRSEQ if ARCH_QCOM
 > >
-> > I don't think this is a good idea.
-> >
-> > priv->tclk comes from clk_get_rate() which returns an unsigned long.
-> > tclk should _also_ be an unsigned long, not a u32, so that the range
-> > of values clk_get_rate() returns can be represented without being
-> > truncted.
-> >
-> > Thus the use of unsigned long elsewhere where tclk is passed into is
-> > actually correct.
->=20
-> I don't think tclk should be an unsigned long.
->=20
-> In [1] Eric Dumazet wrote:
->=20
->   "This is silly, clk_hz fits in a u32, why pretends it is 64bit ?"
->=20
-> and all functions in mvpp2_main.c (mvpp2_write(), do_div(),
-> device_property_read_u32(), and mvpp22_gop_fca_set_timer()), which have
-> tclk as a direct or indirect argument, assume tclk is a u32.
->=20
-> Although mvpp2_cycles_to_usec() suggests it can be called with an
-> unsigned long clk_hz, do_div() then immediately casts it to a u32
-> anyway.
->=20
-> Yes, the function clk_get_rate() returns an unsigned long according to
-> its signature, but tclk is always used as a u32 afterwards.
->=20
-> I'm not familiar with the hardware, but I guess the clock rate always
-> fits into 32 bits (just like Eric wrote)?
+> > in the ATH11K_PCI and ATH12K Kconfig entries? Am I getting this right?
+>
+> So on the whole, I'd prefer these things to be done where they are
+> actually required.
+>
+> But I'm not actually entirely sure what the hard _requirements_ from a
+> hardware - or a kernel build - standpoint actually are.
+>
+> If there aren't any hard requirements at all, then maybe the whole "do
+> you want pweseq" should be an actual question (but limited only to
+> situations where it makes sense).
+>
+> If the hard requirement is at the level of the driver itself, then the
+> "select" should be in the driver.
+>
+> That doesn't seem to be the case here, since ATH11K_PCI certainly
+> works without it, but if that driver requires power sequencing on
+> ARCH_QCOM platforms, then maybe that is indeed the right thing.
+>
+> And if the hard requirement comes from some SoC setup, then optimally
+> I think the "select" should be at that level, but we don't actually
+> seem to have that level of questions (but maybe something in
+>
+>    drivers/soc/qcom/Kconfig
+>
+> might make sense?)
+>
 
-'long' can't be correct - it is 32bit on 32bit systems.
-They are just as likely to have a clock that is faster than 4GHz than a 64b=
-it system.
+The hard requirement really comes from the board level - not SoC. It's
+the board that has the BT/WLAN module hardwired and - depending on how
+the module is powered - may or may not require power sequencing. But I
+don't think we have any per-board infrastructure in Kconfig.
 
-The type should either be u64 or u32 (or just unsigned int - Linux isn't go=
-ing to
-get far if int is 16 bits).
-This is true of a lot of the uses of 'long'.
+> Anyway, this is not necessarily something where there is "one correct
+> answer". This may be a somewhat gray area, and it looks like ARCH_QCOM
+> is a very big "any Qualcomm SoC" thing and not very specific.
+>
+> So I'm not sure what the right answer is, but I *am* pretty sure of
+> what the wrong answer is. And this:
+>
+>         default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
+>
+> looks like it cannot possibly be right if ATH11K_PCI is built-in,
+> since then the probing of the device will happen long before that
+> PCI_PWRCTL_PWRSEQ module has been loaded.
+>
+> And that doesn't sound sensible to me. Does it?
+>
+> TL;DR:  I do think that the
+>
+>       select PCI_PWRCTL_PWRSEQ if ARCH_QCOM
+>
+> in the ATH11K_PCI and ATH12K Kconfig entries *may* be the right thing.
+> But again, I'm not actually 100% sure of the hard requirements here.
+>
+>            Linus
 
-There are cases where 'long' will generate better code than 'int' on 64bit =
-systems.
-In particular it can save sign/zero extension (and maybe masking) of functi=
-on
-parameters and results.
-But that is only likely to matter on very hot paths - and particularly for =
-array indexes.
-(OTOH the masking for char/short is likely to be really horrid on anything =
-except x86.)
+After sleeping on it I really think that it may be better to introduce
+a more generic ARCH_HAVE_PCI_PWRCTL symbol so that we don't have to
+update the ATH Kconfig entires for every new platform that needs it.
+For want of a more fine-grained solution, we would select it from
+ARCH_QCOM.
 
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+Bart
