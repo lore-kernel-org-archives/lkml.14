@@ -1,100 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82AD566A;
-	Wed, 17 Jul 2024 13:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA1057CBE;
+	Wed, 17 Jul 2024 14:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721224669; cv=none; b=Eb1Ni0PKx6YjIJW0xF8RMVelkEvZAEHyDnkKG5LZmrJhtLE78hg+zsClWhUtyV9GW7ou6oDlyxdTB3w/pWf7jd+Dez5Itq2ODz5pS8qb2Yq8Fp6AkOCmWGEslftVZTpo7I453S+vhvheQ/hQywZJFON7xbdKVA2XprtF3yvW0dQ=
+	t=1721224840; cv=none; b=NV/INcrzsDuKVnEKce/7C6K7HZeUrWmVsLAp/AuB2mZ5FJz6w4PKrQpOFpLezBp1zdNip0HmKBnuhbrmzJsY7+I6T2/Z/qfzC28C98m/wNyLUHnI745UL3xZk5/NM5zHElqlpW4F2SVWOk/uEaDaukG2H9CMdX2qY1RXV3ODxYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721224669; c=relaxed/simple;
-	bh=WTDYTC4j9QxgDS55lJZ6UHk83ICcMmBkNZj6P0bitLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iIoGkqSCkTEechZHtKi8Ua6t/uuxdYwrDkCT1vZDE6QQWqiLAV/WE2k0RzI3QIDJl3Fbrt3lGcq+7aDMPbA8mJMdOpgGKSNcw7HDzoMGPg8GJdW++sZKOXIjN9kgfcLuRgRsmgnmZOh/3OdU7EazBxoo92fpW2dF/wR1q8G3280=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KE9N9A5A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721224840; c=relaxed/simple;
+	bh=E+FhYuxmNkP3RZDL/N0m140+nk3hN68k0YFGrWbX+s8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EoA3KrV6jATlw/cvrAUUe3BaVA+Y9d38I1lJJTNCeJjwxjzYBUrFDP+akqrK0AS2YIyCtTY3t4+MaaU9QQVhU/Y2xhgqXQATEOfuy047qpHAq7Yo9nrjNjd5j7nkCZNQMqdAjbpHWcVMAgZSMZrsTtKHFdndjPgKYK6YHAHHivU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TUiKmoNY; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KE9N9A5A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF203C2BD10;
-	Wed, 17 Jul 2024 13:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721224669;
-	bh=WTDYTC4j9QxgDS55lJZ6UHk83ICcMmBkNZj6P0bitLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KE9N9A5AZ96hBtGFEGL4RSQZCg7pqn5VXRR/yS3ahvW4Xc3YrO7xa3Yz9uwv9xQfP
-	 T10f7yqFEr+jGsgdOQ29JS49ShRohTCwlZCWZxH9JVLob2hjTzuTAo5Eijg38YmKY8
-	 U+4xU2LxhJt3n0JDjJ4wTeBA9IPy56KLd8oQf2Rb6f8XTpziqWm0gz438QcKyoIqwW
-	 U9qaoKkmbKY2BoQI2wPHcR4MlZG5FVadP/Jky4VkGyjssgAasJMSdTm/nM2ff2zsoB
-	 4kWPL7DMUsz1zu0KJ+G21utz6kBPjtGXdn4+sRf4LWIcpGkess5MU5tETOqfCjh9iv
-	 nO3dXhoat10iA==
-Date: Wed, 17 Jul 2024 06:57:47 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	"Jan Alexander Steffens (heftig)" <heftig@archlinux.org>,
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v6] kbuild: add script and target to generate pacman
- package
-Message-ID: <20240717135747.GC24892@thelio-3990X>
-References: <20240716-kbuild-pacman-pkg-v6-1-d3a04e308013@weissschuh.net>
- <20240717011515.GA1230090@thelio-3990X>
- <CAK7LNARYNqjcMkdnaY2oAkxttFTtTEgJ9VuOZOn0i4AuXp-How@mail.gmail.com>
- <CAK7LNARGWu8q5dAW5tYzfiSKKtZ9t8Dm9FzRoaoZhU4d-TWswQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TUiKmoNY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721224838; x=1752760838;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E+FhYuxmNkP3RZDL/N0m140+nk3hN68k0YFGrWbX+s8=;
+  b=TUiKmoNY0bAlr9jXNK7AUOBtMyBEy+LcwlkAMAKqI/KpojIXGeriZUMH
+   LAqXNAEqFae/jjsN1mXu7L2GDGtZHG+MA9ZBnugtC0UDOEe4UTPI1ZAYZ
+   Os9VvQ3ds8uxc4kLXwcOevHlIMCyMSmg+kJooU+4r+XBY6JFMim62EJH9
+   r6P0DSdrSO1YIzMlWdN1fNW/aDAr1Z081q1wXc4fl6r77Nuzv4A6zgQP5
+   zSOoEw1T0tqCnurcm6qMlrb+r/OQZJ2a4LpNXA6k+RS+YYfTdtVmu9/GL
+   rLLjnM7YeAUxWH6C3Yyk0uw2fdCFv/rXZIlrZs4N5rt6UfWItOQNqY0q6
+   w==;
+X-CSE-ConnectionGUID: Q0seOagRStSJsxWXpobwaQ==
+X-CSE-MsgGUID: Ydyt0NseSEiVsY+ddQZSrA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="18541819"
+X-IronPort-AV: E=Sophos;i="6.09,214,1716274800"; 
+   d="scan'208";a="18541819"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 07:00:38 -0700
+X-CSE-ConnectionGUID: 26aK0OAyTY+G8/R+yIbgdw==
+X-CSE-MsgGUID: sUrvdMyPSAu1kwoM8ZXrdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,214,1716274800"; 
+   d="scan'208";a="50189660"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.125.247.52]) ([10.125.247.52])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 07:00:34 -0700
+Message-ID: <bd0006c9-2386-4d81-9147-f262262d70ce@intel.com>
+Date: Wed, 17 Jul 2024 22:00:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNARGWu8q5dAW5tYzfiSKKtZ9t8Dm9FzRoaoZhU4d-TWswQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 23/49] KVM: x86: Handle kernel- and KVM-defined CPUID
+ words in a single helper
+To: Sean Christopherson <seanjc@google.com>,
+ Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Hou Wenlong <houwenlong.hwl@antgroup.com>,
+ Kechen Lu <kechenl@nvidia.com>, Oliver Upton <oliver.upton@linux.dev>,
+ Binbin Wu <binbin.wu@linux.intel.com>,
+ Yang Weijiang <weijiang.yang@intel.com>,
+ Robert Hoo <robert.hoo.linux@gmail.com>
+References: <20240517173926.965351-1-seanjc@google.com>
+ <20240517173926.965351-24-seanjc@google.com>
+ <7bf9838f2df676398f7b22f793b3478addde6ff0.camel@redhat.com>
+ <ZoxXur7da11tP3aO@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <ZoxXur7da11tP3aO@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 17, 2024 at 05:51:21PM +0900, Masahiro Yamada wrote:
-...
-> > > > diff --git a/scripts/package/PKGBUILD b/scripts/package/PKGBUILD
-> > > > new file mode 100644
-> > > > index 000000000000..eb3957fad915
-> > > > --- /dev/null
-> > > > +++ b/scripts/package/PKGBUILD
-> > > > @@ -0,0 +1,99 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > > +# Maintainer: Thomas Weiﬂschuh <linux@weissschuh.net>
-> > > > +# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
-> > > > +
-> > > > +pkgbase=linux-upstream
-...
-> Perhaps, this may make sense.
+On 7/9/2024 5:18 AM, Sean Christopherson wrote:
+> On Thu, Jul 04, 2024, Maxim Levitsky wrote:
+>> On Fri, 2024-05-17 at 10:39 -0700, Sean Christopherson wrote:
+>>> Merge kvm_cpu_cap_init() and kvm_cpu_cap_init_kvm_defined() into a single
+>>> helper.  The only advantage of separating the two was to make it somewhat
+>>> obvious that KVM directly initializes the KVM-defined words, whereas using
+>>> a common helper will allow for hardening both kernel- and KVM-defined
+>>> CPUID words without needing copy+paste.
+>>>
+>>> No functional change intended.
+>>>
+>>> Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
+>>> ---
+>>>   arch/x86/kvm/cpuid.c | 44 +++++++++++++++-----------------------------
+>>>   1 file changed, 15 insertions(+), 29 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>> index f2bd2f5c4ea3..8efffd48cdf1 100644
+>>> --- a/arch/x86/kvm/cpuid.c
+>>> +++ b/arch/x86/kvm/cpuid.c
+>>> @@ -622,37 +622,23 @@ static __always_inline u32 raw_cpuid_get(struct cpuid_reg cpuid)
+>>>   	return *__cpuid_entry_get_reg(&entry, cpuid.reg);
+>>>   }
+>>>   
+>>> -/* Mask kvm_cpu_caps for @leaf with the raw CPUID capabilities of this CPU. */
+>>> -static __always_inline void __kvm_cpu_cap_mask(unsigned int leaf)
+>>> +static __always_inline void kvm_cpu_cap_init(u32 leaf, u32 mask)
+>>>   {
+>>>   	const struct cpuid_reg cpuid = x86_feature_cpuid(leaf * 32);
+>>>   
+>>> -	reverse_cpuid_check(leaf);
+>>> +	/*
+>>> +	 * For kernel-defined leafs, mask the boot CPU's pre-populated value.
+>>> +	 * For KVM-defined leafs, explicitly set the leaf, as KVM is the one
+>>> +	 * and only authority.
+>>> +	 */
+>>> +	if (leaf < NCAPINTS)
+>>> +		kvm_cpu_caps[leaf] &= mask;
+>>> +	else
+>>> +		kvm_cpu_caps[leaf] = mask;
+>>
+>> Hi,
+>>
+>> I have an idea, how about we just initialize the kvm only leafs to 0xFFFFFFFF
+>> and then treat them exactly in the same way as kernel regular leafs?
+>>
+>> Then the user won't have to figure out (assuming that the user doesn't read
+>> the comment, who does?) why we use mask as init value.
+>>
+>> But if you prefer to leave it this way, I won't object either.
 > 
-> Currently,
-> pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-api-headers")
-> is hard-coded.
+> Huh, hadn't thought of that.  It's a small code change, but I'm leaning towards
+> keeping the current code as we'd still need a comment to explain why KVM sets
+> all bits by default.  
+
+> And in the unlikely case that we royally screw up and fail
+> to call kvm_cpu_cap_init() on a word, starting with 0xff would result in all
+> features in the uninitialized word being treated as supported.
+
++1
+
+> For posterity...
 > 
-> I do not think linux-upstream-headers make sense
-> when CONFIG_MODULE is disabled.
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 18ded0e682f2..6fcfb0fa4bd6 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -762,11 +762,7 @@ do {                                                                       \
+>          u32 kvm_cpu_cap_emulated = 0;                                   \
+>          u32 kvm_cpu_cap_synthesized = 0;                                \
+>                                                                          \
+> -       if (leaf < NCAPINTS)                                            \
+> -               kvm_cpu_caps[leaf] &= (mask);                           \
+> -       else                                                            \
+> -               kvm_cpu_caps[leaf] = (mask);                            \
+> -                                                                       \
+> +       kvm_cpu_caps[leaf] &= (mask);                                   \
+>          kvm_cpu_caps[leaf] &= (raw_cpuid_get(cpuid) |                   \
+>                                 kvm_cpu_cap_synthesized);                \
+>          kvm_cpu_caps[leaf] |= kvm_cpu_cap_emulated;                     \
+> @@ -780,7 +776,7 @@ do {                                                                        \
+>   
+>   void kvm_set_cpu_caps(void)
+>   {
+> -       memset(kvm_cpu_caps, 0, sizeof(kvm_cpu_caps));
+> +       memset(kvm_cpu_caps, 0xff, sizeof(kvm_cpu_caps));
+>   
+>          BUILD_BUG_ON(sizeof(kvm_cpu_caps) - (NKVMCAPINTS * sizeof(*kvm_cpu_caps)) >
+>                       sizeof(boot_cpu_data.x86_capability));
 > 
-> scripts/package/mkspec turns off with_devel
-> when CONFIG_MODULE is disabled.
 
-Yes, I think that is a reasonable change to make. In the face of that
-potential change, would it make sense to slightly adjust the
-makedepends? pahole is only needed when CONFIG_DEBUG_INFO_BTF is enabled
-but I guess no other package building infrastructure makes dependencies
-conditional in that manner.
-
-Another thing I wonder about would be allowing the user to customize the
-value of pkgbase, like
-
-  pkgbase=${PACMAN_PKGBASE:-linux-upstream}
-
-because unlike Debian and Fedora, multiple versions of the same kernel
-package cannot be installed at once. If I wanted to build a package
-against mainline and -next and install them side by side, I could only
-do so if they are named differently. This would allow one to provide
-PACMAN_PKGBASE=linux-mainline and PACMAN_PKGBASE=linux-next to
-accomplish that. Might be a hyper specific use case though, so I am not
-opposed to disregarding it.
-
-Cheers,
-Nathan
