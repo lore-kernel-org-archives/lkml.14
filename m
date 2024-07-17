@@ -1,130 +1,111 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDA03BBCE;
-	Wed, 17 Jul 2024 09:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819193032A;
+	Wed, 17 Jul 2024 09:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721208906; cv=none; b=YK/gYibn+qn+v2ARjB1wzt+ru7/CKB6GQozF1rpm5rM3P531cp2knXaxClZhqZiJKBdWQr6WJpdeLX1wS6BOPmOModMhdcjgHhmCFi5WA3tEHzAlpFvZBqf4GfOT+rU0Gq47X3pElwqTEtKcp9nfa3gyQ4KJ3QMnOwm/eozp6yo=
+	t=1721208999; cv=none; b=VHzwP8m5Cqsz+covEh62l2sHQ0K/3MGP1H1YMv0jQ09zfgzxDBOAZRYsCq+aj49CtkfTOKk8IWqRlAGfYDyK1jm3AhKMqT3mtct//D/1gNhsLoovw3WlA7tYNEqGSTE3iE6cqe4K2XSW49OxuJ1rV/pGfLTgJ6eT8cov8lffxn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721208906; c=relaxed/simple;
-	bh=CZnUbOaUwzx/0gXeJAh/4PVi/RA9aD0FMDoYABbCM4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NpnI287AW8LsX2X+3yG9dBRU6o5hBjGfK3nd60sxjkE8Hl6Q8InD3hvObgll25MmKypAEfvRlCSfZFn0TfeMNBwm04SjBNof1rDsUri5+k5qeheV0Rnx14KftiXy1SDkcB7MonEEvshdUUpL6XoEAzc6uaTuYmU0kwJwei0oLCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=kfKmGF5p; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1721208999; c=relaxed/simple;
+	bh=xyjyfNGXdWpRnYLoYvaMCdzkbU3pFFxpX1W4+PfIUb0=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=ePcSSy9j79BVYdy45mwzVy5MiaIfVWc8BNC1QkuCaa65wsDrtmknIjMlALbhsHKDGCKB8CuGzi7skKAllkXSlLxIJPHgdmuOwqY/Y5QGp0hwCc0waKJd50wAnKC6wp3Oq9g4r70NdEKO6UPSaDcVCtPfmh2zmyQk76E9/ByFOU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=isyoZPSE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IuTu2zxP; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="kfKmGF5p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1721208874; x=1721813674; i=frank.scheiner@web.de;
-	bh=s2sSpNCYmt/O5DHa9VM0FTL/ofl6LuG2kphIafi/fTY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=kfKmGF5p4OjoDv9+o9bUafd9UxnZQ6k9rHEV/GU0l9yhyAnazJuvHuPcQAnOwsMA
-	 kXLniqMxBv+CmdI3BedFy77LvmfBIG9iEAUJIObCcr5t+ZaYNteg2jJlIWhYbNzwH
-	 G4r/pvLe7PYsBYJnmlSPvVPs68F3CkFqxy5Gmcow9RQYRMLPwZsdPvaqgksakC21v
-	 F5I1CCRqe5Ywod06cTCM1JlQ4YDcyP5jl1jQggdy/wlouxN24HLswX/O63acExFtG
-	 sX/BgAjJhQq0cu67p+oJ4E7ADUaRU2NRgs0F1ff5aQhL5zD1xT1GiNrmlAueGpypc
-	 mZT1XIMVbLO0Dylphg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.30] ([84.152.252.217]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MdwNW-1rt2PU1lv4-00fm6q; Wed, 17
- Jul 2024 11:34:34 +0200
-Message-ID: <8bc5fd5c-e3ae-436a-94f9-8806841e34ad@web.de>
-Date: Wed, 17 Jul 2024 11:34:32 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="isyoZPSE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IuTu2zxP"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 92EC41380327;
+	Wed, 17 Jul 2024 05:36:36 -0400 (EDT)
+Received: from wimap26 ([10.202.2.86])
+  by compute6.internal (MEProxy); Wed, 17 Jul 2024 05:36:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1721208996; x=1721295396; bh=ds4aqM5Kli
+	aeb4EM9aEvOVD2sDxY4nAQiMOn0gmaAbs=; b=isyoZPSErBU9/B/t1RVSo3tn7U
+	Tc3YRkr7pgDPJni2+1kEPudKDRq9Z/DhmIm3IdRxv/xc5IbMqawD7hhI4RMUiZc8
+	9mACyynTn6yuEc4yNx+Wwg3lJYaxoZOqG9slbIAn4AdR9gu4GwgCVOmY4N0FYFbE
+	LQ7sr6n6dmOZ2a8Qp2MpuKR3NDWfVRo9Bmy3D329b6ex17kTCU8oKgUWjgmgk7mz
+	qr3c8jdpENSTE7CybQub0T7N8kA3EiBe9qEczTmxUV9bcDNvAguh9t7vQpGd2rJz
+	2g3g/Km2lgKDnj8MZetYS2/jbUNsV+KMueiMxxHXdFa+vj60MQw+gfhIIG6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1721208996; x=1721295396; bh=ds4aqM5Kliaeb4EM9aEvOVD2sDxY
+	4nAQiMOn0gmaAbs=; b=IuTu2zxPr6v2uLemejK0Ei3q2B4Q5qgGmSQzRk8i6DLv
+	vTrmN2pXjRAB7TogFn4MgE1l/SlcRTGZFdNhMgX6RowdwUfgZyXdETR7l/oQx8Uz
+	acXX3NohpJxvp7OEXzYW402k1xxPokR0RTJ7A3FxrsYAOigVoUPmiM74YMAM7jz6
+	PUfcqVFTwhWWYY63PWHaGQUB6ReeN+MssZ8JEUodVtXKlnLS2Ky5GIoUkEKePm6W
+	xRLMDKvrDQrp/Im3iLn/kL1I7ykewwGpFDWrRhFJKtH6gP0CoH/HcxfbEZvMCALB
+	OeLTYztagTQn3c5EnEI0C4GHxk9qYKBz1JwxEuvoKg==
+X-ME-Sender: <xms:o5CXZuhHJeo328Hjywk4ATXGO_xTowOvuBLqBMB9x7vDw3N3_h3p6A>
+    <xme:o5CXZvApUPKK7-wHjTzWsNyRJQ2vxM4h4IV9UcTrUVvPT3l8JJUm7IS8o4dZENEDn
+    YB1kug2ZKo964UxCck>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeigddujecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:o5CXZmHTb_KO_B7rug2PaYI8JJcj3CGwU5Q-oWM_o3p-cfzt28dWmA>
+    <xmx:o5CXZnSS1fFdG2a24qTS-iXIVfIn1WLz_T_hXOQBWB2dQPO-29ZlzQ>
+    <xmx:o5CXZrxXt7Ba_vQnQnpzMzBBqhuM1FlyIaX28V6hNbIT4Gm9_2zDQw>
+    <xmx:o5CXZl7fGWEov250RGBtfHL3SyIT_rpGUYjYUFhCMJk8j0lTbSPSMg>
+    <xmx:pJCXZgpR0x6tJgWfugM-QILTlcTWV-om2c6810xHInv2PguUoHyykUCM>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 301D919C005F; Wed, 17 Jul 2024 05:36:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4.19 00/66] 4.19.318-rc1 review
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: akpm@linux-foundation.org, allen.lkml@gmail.com, broonie@kernel.org,
- conor@kernel.org, f.fainelli@gmail.com, jonathanh@nvidia.com,
- linux-kernel@vger.kernel.org, linux@roeck-us.net,
- lkft-triage@lists.linaro.org, patches@kernelci.org, patches@lists.linux.dev,
- pavel@denx.de, rwarsow@gmx.de, shuah@kernel.org, srw@sladewatkins.net,
- stable@vger.kernel.org, sudipm.mukherjee@gmail.com,
- torvalds@linux-foundation.org, =?UTF-8?B?VG9tw6HFoSBHbG96YXI=?=
- <tglozar@gmail.com>
-References: <20240716152738.161055634@linuxfoundation.org>
- <01082e96-8c2e-4ebe-8030-6e308a03f9e5@web.de>
- <2024071700-precision-basin-0e6e@gregkh>
-From: Frank Scheiner <frank.scheiner@web.de>
-In-Reply-To: <2024071700-precision-basin-0e6e@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1D2GXMk7jklKJ7WG5adFz5K2pz1HPTWYHhYK3LCMzkGauDkkQK5
- ZOLaUOy8Y4Xu7uvVzJj/OonTQHYbWYFta98l5fh/GY70uB0eVORXEnsM0333Nv7ZaRxxRul
- zer6sV565/D7BoZl52E5izehSMrFIEG1r20ujZOOeKjmCA9od8zJAsFErd8outqiZ/EJfz5
- IrtPeO5/hbpGP2lxWcHQQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:aA0xWoaPFAk=;vsRpJdfaWhch3xROWbcLlD1hZXH
- EmurSd0qfHQlx9hZuqQ9xv0QAWvTpWzdEbEyEVpFgBBd9h13W4ma4nAKYbLReRR8TFxrA0nA6
- MAwEmDyIXlT1cDoKUruXuz4rgU80RK2ALt+PVvV+k9Onh8X9r9wkeKZDqIxVdSh+xXc79YoR0
- OPIweFlqwbtlk/aXzoyd866tK7arGv7SVqXnt3k63KlKpBXW2Be7KsO65FZ9YRcSkNzT8VN/k
- 6JbRksOJxrsfAjtZz0Pm98pVpZWvNHF8EO1wEFKpm3d0eNSIfm7mE2unP3imzTquOkkY+pNar
- 7sg8VlyOZbn8Y7rZfb0kgOXdFUbomJlmvtTOs1pDv50/pFeclFEwj9+ErluEC4bDGM+U1JnbQ
- KE545oKQhF5qpM0VaoMf1yEyEhPcThRryXbBiWF6Tj+5Z6DLLx45e1b0oUNz1cnwpw/RAV3+5
- HwNQ9EQM2xVtM8xgxV/Pg+ZmQc8tnl7cpbOEqLn9EMjh0MgfV9CMm/YHZMJYfdHL6lzcQzVna
- uCorB7Df4NsjUH69mul+Illlu0RWqOXHym3BXmAE5jhgSHXdohvfoVMA/rAmW63ppLn+rYFtU
- NR+fhXC8gKvFzRHaAOUXM503ePyqopwbLjUiXEAv/py7Trv/NUyJFlMzEwjv4AP4xBpUntGfv
- vwgEMxiosSC1d4rynZhpfp0lboJCKiqoT/lBEE+I/NebMeZtvNKgXZVmgdDJ4vmUt9b3V97ZS
- H1vSh0rXue82Fmwcuiziq6gO5KaEs1XLty3Ye2R3X/duCVK1C1Nqtk6iOPf09KbWDLTPUxTCh
- 6riMpHWJHtjoxLsYbkiU4vk2DwZR2pDu/wyq5jVt6Wfx8=
+Message-Id: <4d471a38-f86f-429d-a1a3-b882439ef7ba@app.fastmail.com>
+In-Reply-To: <Zpd-Bx3VwrYWVeTs@hovoldconsulting.com>
+References: <a662962e-e650-4d99-bed2-aa45f0b2cf19@app.fastmail.com>
+ <CAHk-=wibB7SvXnUftBgAt+4-3vEKRpvEgBeDEH=i=j2GvDitoA@mail.gmail.com>
+ <d7d6854b-e10d-473f-90c8-5e67cc5d540a@app.fastmail.com>
+ <CAHk-=wir5og_Pd6MBSDFS+dL-bxoBix03QyGheySeeWPX82SDw@mail.gmail.com>
+ <CAHk-=wjqr_ahprUjddSBdQfSXUtg3Y2dCxHre=-Wa4VGdi7wuw@mail.gmail.com>
+ <2b6336d1-34e0-48dd-b901-7b5208045597@app.fastmail.com>
+ <ZpdnhhaQum_epcGp@hovoldconsulting.com>
+ <be80d8f6-2a1b-4f63-a43e-652fa5328d11@app.fastmail.com>
+ <Zpd-Bx3VwrYWVeTs@hovoldconsulting.com>
+Date: Wed, 17 Jul 2024 11:36:15 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Johan Hovold" <johan@kernel.org>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>, linux-kernel@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-snps-arc@lists.infradead.org
+Subject: Re: [GIT PULL] asm-generic updates for 6.11
+Content-Type: text/plain
 
-On 17.07.24 11:30, Greg KH wrote:
-> On Wed, Jul 17, 2024 at 10:54:40AM +0200, Frank Scheiner wrote:
->> fb3739759474d150a9927b920a80ea2afb4c2a51 (from mainline) should be
->> included in linux-4.19.y, if a589979f345720aca32ff43a2ccaa16a70871b9e
->> stays in.
+On Wed, Jul 17, 2024, at 10:17, Johan Hovold wrote:
+> On Wed, Jul 17, 2024 at 10:01:10AM +0200, Arnd Bergmann wrote:
 >
-> I do not know what commit a589979f345720aca32ff43a2ccaa16a70871b9e is,
-> sorry.  If you rea referring to commits in the -rc tree, please don't as
-> that tree is rebased and regenerated all the time.  In fact, my scripts
-> don't even save a local copy when they are generated so I have no idea
-> how to find this :(
+> Yeah, that's not something I noticed at least (and I assume I would
+> have). And I only did aarch64 builds on a 6.9 x86_64 host (make 4.4.1).
 
-I see. Makes sense.
+Ok, I can reproduce the problem now: I installed a Fedora
+VM guest and chroot mount and I see the same issue in there.
 
-> Please refer to the commit id in Linus's tree so I have a hint as to
-> what is happening here.
+My normal Debian host has make 4.3, so I'll see if I can figure
+if a specific change in make does it.
 
-Ok, will do in the future.
-
->> ****
->>
->> ## Long version ##
->>
->> It looks like:
->>
->> ```
->> hpet: Support 32-bit userspace
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
-git/commit/?h=3Dlinux-4.19.y&id=3Da589979f345720aca32ff43a2ccaa16a70871b9e
->> ```
->
-> Ah, you mean commit 4e60131d0d36 ("hpet: Support 32-bit userspace"),
-> right?
-
-Exactly.
-
-> [...]
->> So fb3739759474d150a9927b920a80ea2afb4c2a51 should be included in
->> linux-4.19.y, too, if a589979f345720aca32ff43a2ccaa16a70871b9e stays in=
-.
->
-> Ok, I'll queue this one up as well, hopefully nothing else breaks...
-
-+1
-
-Cheers,
-Frank
+     Arnd
