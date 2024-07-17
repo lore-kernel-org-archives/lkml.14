@@ -1,93 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB59381DE;
-	Wed, 17 Jul 2024 09:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D22517DE29
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721209897; cv=none; b=VzEqlgmDAw7sV7ZpPm0ainPKJd4QVoNJm7mcL1iNOXnMg+7dEtkE6SUYcSTIXCgiMDLpWaaLDpn6O9jhGd7cRbTSrXXRDJ8jyVDnmErBXSbzeEVHu2HvuVpcAIv/JuvYYa9m7VggwcDUTn+bXb+aitGIsSjUa0LLS5UZZY94QuQ=
+	t=1721209903; cv=none; b=nHDXheSZpcqub3Za2+kjZtQdg80blk0/Ht0cBkLDNu/Igzgt1WyQqmY6PwNjJEr5R7srrTwn9zL+tG7HHoYyxJlU/mDJpZS3y7mRtERz+sIn6PQCXNLeI/+uwSXH6v5YCPxsJ8/90iI3N0u6h/KzEhTnHDop5ebNfizcSYMzvlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721209897; c=relaxed/simple;
-	bh=0mehBSeLwhUZ/WAmUEaJbbNRA0Jr5Eg0HVEFt1KnCRI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jEnugU5I0xtgBMXJYgSSRWpoY71BLPa2xRTO8YRYkYNZA8rEgm0AiElpXUumMheAt+T3jyzSUuwSy00SC9B8PBFgx0zCZorjzxtLpBEeQkwFU/uwr3Q8YnPjFR8YsgnuSP+F9/tsxDKGAH+Ac4WuQA7w6Wc9nosw38GHCiT4k/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=M/glFTDN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721209903; c=relaxed/simple;
+	bh=XjPO4Ujl3TqO0ehaFLTH9wqk7RVaiNdwo+utqr7DVQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hw7M5ifXXhesrOQ9rC87HiZdk0a8+u1sJ4JKQqxOOMiaB6EtevarVVswabEMfYx4RPmyd3j/f1nDgZFQOQA1YaUJRxaesF/WEctXn3W5hriAgmW+1B/PPtnPMvR+jkN98kg3TnvxEppp8uW6fC9gq6jkNibzzk7dhfV9N1pekJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EPdazVsK; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="M/glFTDN"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H6ofal027012;
-	Wed, 17 Jul 2024 09:51:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=0mehBSeLwhUZ/WAmUEaJbbNR
-	A0Jr5Eg0HVEFt1KnCRI=; b=M/glFTDN4RbCmzyETyZkxwZ/+8O3cljf+unaupWF
-	tHwKFRB9ouGNSc9rTTH1Q9i/Kb6Qz2WDMwM17S9bnreatqITVYh2sGiM72kYBuKX
-	8e7HfI4Tw4cry8GOUxq80WXcCMSpYsaiMx/8EUH+NptTpMMz27fHGDKPSqBbP6nE
-	Kg1KLFyYSoS7jhUCEV+gsqJ/bTFTKCFGTVO+KFCSE/kW4fUxuofie8mL9zSUAApt
-	iyDyEuLFX+bdLnrWxRyWYaiSlgH4C2FCnNuAvHRP0ZIIhDrjC7zEizPMCd9/UNj1
-	iTRze056mq60U7+S6KfjZRHPQaP2ckf3tls26oySEUr4uw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfs1whw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 09:51:32 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46H9pVrl008851
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 09:51:31 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 17 Jul 2024 02:51:27 -0700
-Date: Wed, 17 Jul 2024 15:21:23 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Rob Herring <robh@kernel.org>
-CC: <gregkh@linuxfoundation.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <quic_wcheng@quicinc.com>, <johan+linaro@kernel.org>,
-        <quic_kriskura@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v0 1/2] dt-bindings: usb: qcom,dwc3: Add minItems for
- interrupt info
-Message-ID: <ZpeUG66oI2D/r4Ma@hu-varada-blr.qualcomm.com>
-References: <20240711065615.2720367-1-quic_varada@quicinc.com>
- <20240711142202.GA2256964-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EPdazVsK"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-426717a2d12so3584275e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 02:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721209900; x=1721814700; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KrgfBcfXJnebqfMYE7lcXwUabsHP1Gvn4fS4TLr/7sc=;
+        b=EPdazVsK1pzee+fn+PXSdVPdTouEXH4U9lEFCUXeLTYYwHS3DhnF4kaDPW9cUzMRyH
+         kUvEQfcCfPfcjymWVry8UfHTuygB6gj0ntyJwvFTaEJmLXvSekxKDwIP7ZCHgmO3mU6+
+         7snuwzmiNH+PCy0eFbal2tm/0FtsUmJik73Q6nXs9FxQTYwJqjTbKAScF6+1aUSK3Lyt
+         3MopZsgRnxW8FTNEyA91i8VElEILMNAXsQc+dBqjVK6ASzQUdg3kOSBGIwnjPWiGL3CZ
+         +GBLr0N3ffj/cejnW6Br86LqMz1AD5awW7ozy7wS8Z1/AV9G4lfVvIy5ib5SpHw3z4S3
+         BSGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721209900; x=1721814700;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KrgfBcfXJnebqfMYE7lcXwUabsHP1Gvn4fS4TLr/7sc=;
+        b=UcKvwAd2mU/2O5RW74YpF++ITOZp/9xUHPsius3vXJfAPAOJ+P0TDkkB/E2iGGkYeg
+         M5FFO7Hp9f+gT1hRyR1Yo2HGvA1kWSWGT6H7JaV/keihzoRCaIjesOupM8PUQilVXf57
+         sfPdDRZHnOgvhOH0j/HWj7FPvI3WQR842lmx9o1QfIPUWXwxYD1yyNDS9ZaPPeh+jZJc
+         3AWrsZl4/7FbE/56jxT5q+wW/q2hRNBklj+7YBt6MGckQWXZlIJNQDtWQPbBsbYFGmLY
+         L5VnchoaCCh2muaEumuPSLIY5yJX/NS+IlsysvERO2vWgf7bgF06nB+Q0LI2o7YcoNIR
+         xc7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUVDwZJ9p8IpnowOiX/UJ0vqyJakuVi83bmM7e2X5UOZX1fPV8m0UB0rthQqPBjJ6sW4APUiqePngsEFFFVTwB9CZmwecBqdG+v94v7
+X-Gm-Message-State: AOJu0YwQe9Kt/JVWldnlNQqr/1UFAL+946iDvJup8uJSIfBf1ODnxzXV
+	S0LhHy8W6kSjgRVUIbOyPr3XFs05ObwtAgYGkZFsBUP2O5NAesz8kb23A7tVDgA=
+X-Google-Smtp-Source: AGHT+IHt87UdRCgV2hI8InjDLgAXNmflrFtTlkgJQLWAM9c6YH0WpJaeBwuCRentm5LDb2Gd9eIfcg==
+X-Received: by 2002:a05:600c:5121:b0:426:618a:a092 with SMTP id 5b1f17b1804b1-427bb8e85c4mr32743525e9.13.1721209899817;
+        Wed, 17 Jul 2024 02:51:39 -0700 (PDT)
+Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef4617sm162447795e9.41.2024.07.17.02.51.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 02:51:39 -0700 (PDT)
+From: Rayyan Ansari <rayyan.ansari@linaro.org>
+To: linux-arm-msm@vger.kernel.org
+Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ARM: dts: qcom: {a,i}pq8064: correct clock-names in sata node
+Date: Wed, 17 Jul 2024 10:49:14 +0100
+Message-ID: <20240717094914.17931-2-rayyan.ansari@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240711142202.GA2256964-robh@kernel.org>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tO9HBD7Uz4dxzSPmFB9il-1whlWnBc-J
-X-Proofpoint-GUID: tO9HBD7Uz4dxzSPmFB9il-1whlWnBc-J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_06,2024-07-16_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=525
- impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0 clxscore=1015
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407170076
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 11, 2024 at 08:22:02AM -0600, Rob Herring wrote:
-> On Thu, Jul 11, 2024 at 12:26:14PM +0530, Varadarajan Narayanan wrote:
-> > IPQ5332 has only three interrupts. Update min items
-> > accordingly for interrupt names to fix the following
-> > dt_binding_check errors.
->
-> Patch version numbering starts at 1, not 0.
+Correct the clock-names in the AHCI SATA controller node to adhere to
+the bindings.
 
-Sorry. Have posted v2 addressing the above and other
-comments. Please take a look.
+Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
+---
+v1 -> v2: split off from patch series (no change in patch contents)
+v1: https://lore.kernel.org/all/20240716105245.49549-1-rayyan.ansari@linaro.org/
 
-Thanks
-Varada
+ arch/arm/boot/dts/qcom/qcom-apq8064.dtsi | 4 ++--
+ arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
+index 769e151747c3..be42e93bee1c 100644
+--- a/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064.dtsi
+@@ -890,9 +890,9 @@ sata0: sata@29000000 {
+ 				 <&gcc SATA_PMALIVE_CLK>;
+ 			clock-names = "slave_iface",
+ 				      "iface",
+-				      "bus",
++				      "core",
+ 				      "rxoob",
+-				      "core_pmalive";
++				      "pmalive";
+ 
+ 			assigned-clocks = <&gcc SATA_RXOOB_CLK>,
+ 					  <&gcc SATA_PMALIVE_CLK>;
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi
+index da0fd75f4711..dd974eb4065f 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq8064.dtsi
+@@ -1292,7 +1292,7 @@ sata: sata@29000000 {
+ 				 <&gcc SATA_A_CLK>,
+ 				 <&gcc SATA_RXOOB_CLK>,
+ 				 <&gcc SATA_PMALIVE_CLK>;
+-			clock-names = "slave_face", "iface", "core",
++			clock-names = "slave_iface", "iface", "core",
+ 					"rxoob", "pmalive";
+ 
+ 			assigned-clocks = <&gcc SATA_RXOOB_CLK>, <&gcc SATA_PMALIVE_CLK>;
+-- 
+2.45.2
+
