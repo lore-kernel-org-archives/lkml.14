@@ -1,117 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF04181BB5;
-	Wed, 17 Jul 2024 14:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B728A1802DC;
+	Wed, 17 Jul 2024 14:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721226271; cv=none; b=tejT1pUmqQSWbStRLv/WffV+a7O0v+uSdQm4d7svL0CfPxoQ+v6xZI6uHgMzTdaTzGPgByecFo2LaaZb/5ZyspnuLw8Ymr4c2+HILUVvjzgolV9sUpoKGJVD7UjpdeDSJBxg+AG0jRCuLqe3KVBfkr68GG6V8LkUfBo/QKRMtm0=
+	t=1721226300; cv=none; b=K4xUHzII9DBQU4IXXfKEE6oCAViyrZLliJ2GWUmKhbDDuIM2gKH7iMnrQUDaTg4NwpaaXzdiCBX7opXanwNXpEWPdJBMNk7FgBUu+a60ph4u8JW3Dv/9IXR10Uk+9SjYb9EcGVzG5pwvIyLD85H6ViHcYGDbZIIjXMo9o9vQDkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721226271; c=relaxed/simple;
-	bh=TR9wDqpaITrEN63de3ORwuMv6UCzobFiwu1pNhvmIH8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ejwh6Khl4TCDFnc2T1OJ3VvZaO7rTi9aNuzdUXMxY9F40ddDOYNQUHKicBvKD7iJLqkyhgQOKMOZMONFFcvtTRdNAwerkRKK7lQBuds8ImozhRU2Dera6vT02kcU+okvmI9cP0V2BhDz+4+UlkQ9JxWV8HMnTTfpQJXK7D6njnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kOo5jTEk; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721226300; c=relaxed/simple;
+	bh=F/95jOqqUWmHLY8Y3mhofPF2OMSPHcbueeuNkZhH9oU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=orcXkH2C7VCBkGBSIsDTNo7x2wdmQUwhm7lsOXHK9nwnKagJ1fQzd73B2EWQICpZdHF0E9l8lFxmVqs8+zYsvwZMwSwMZYhd2b/pkUpgEmIeeI8YIz0Mt24lQYdyZ6ldTunzcNV+rZ1mjUGsxqgmLxbLfBJ3w4swsWCbOB/ChHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujq7Is0b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kOo5jTEk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721226270; x=1752762270;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TR9wDqpaITrEN63de3ORwuMv6UCzobFiwu1pNhvmIH8=;
-  b=kOo5jTEkDndahHaQuPu/myMUDDITiakP+CQPxXOB8yOE+/3fR0Qb1Wlb
-   7Y+bjgdCWnoHdxh75nT9DPvDNM/rOqlrCCWvqd14z3m2cdiqJ4EgebDDK
-   jZjXwOW6BV47lWcei/o9WwWWKBpJlI4VGAL3B+ceh49OPlKe+8iSXXrGo
-   UFv3WsEx786YyEt9g6oz/ek79pSPVmlWygb16msWXbUFhUG27bYOmu5sg
-   7NxtoWHlT10Y5kSCIggmFR30wzxr6EUPk4W10Lxf7gYh1t3MpaIJ7KPQe
-   wybwoP2HBjOSDdXIyf6PP1j7M5fmOoCDBQLHZ4PvIqfiUwHFGZDrG18N4
-   g==;
-X-CSE-ConnectionGUID: LlNYvW49TtOsVPs8Zy0k8A==
-X-CSE-MsgGUID: lwl3qL3VSGGP8gkSeNJy6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="29313624"
-X-IronPort-AV: E=Sophos;i="6.09,214,1716274800"; 
-   d="scan'208";a="29313624"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 07:24:30 -0700
-X-CSE-ConnectionGUID: jKjpkE64RcWgbvztYQJWZA==
-X-CSE-MsgGUID: Rz9R95s5QwWZRtGtSSAW5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,214,1716274800"; 
-   d="scan'208";a="54596639"
-Received: from linux-pnp-server-16.sh.intel.com ([10.239.177.152])
-  by fmviesa003.fm.intel.com with ESMTP; 17 Jul 2024 07:24:27 -0700
-From: Yu Ma <yu.ma@intel.com>
-To: brauner@kernel.org,
-	jack@suse.cz,
-	mjguzik@gmail.com,
-	edumazet@google.com
-Cc: yu.ma@intel.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pan.deng@intel.com,
-	tianyou.li@intel.com,
-	tim.c.chen@intel.com,
-	tim.c.chen@linux.intel.com,
-	viro@zeniv.linux.org.uk
-Subject: [PATCH v5 3/3] fs/file.c: add fast path in find_next_fd()
-Date: Wed, 17 Jul 2024 10:50:18 -0400
-Message-ID: <20240717145018.3972922-4-yu.ma@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240717145018.3972922-1-yu.ma@intel.com>
-References: <20240614163416.728752-1-yu.ma@intel.com>
- <20240717145018.3972922-1-yu.ma@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujq7Is0b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BEB6C2BD10;
+	Wed, 17 Jul 2024 14:24:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721226300;
+	bh=F/95jOqqUWmHLY8Y3mhofPF2OMSPHcbueeuNkZhH9oU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ujq7Is0bDM4e+5rpC5i+fr9sNIUG4lqH6V3s5Z/kvVwZ29/fWtnKurLD2PsVmUlso
+	 vQu2aJpR3lSL/R/uiAa5NKjfGhWvE2uvJ9noiRGJ2kvupaZ1xFTZOJ/FmBxVJQKjyT
+	 zlzzLse1FVXl/W6PvHLWBRLdoJh/ndkbz94c+gr4OVWC/rKrzcK+LHbEG6zbHJrqWx
+	 3XI9OXfqvBePfZYT5UWcM+ULXGFzlUF4cBDk9jjzwrPeCNyFGhojRIFe/6BRUS3KOC
+	 mhW9PTfUAjvwTr9Z9zaxKAt9RMdeZYfBcFySEVDg9t6Ig1zCNwBXdmL3AhUcCX9c9W
+	 R0Wo1X2sUUM3A==
+Date: Wed, 17 Jul 2024 15:24:55 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Stanislav Jakubek <stano.jakubek@gmail.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Baolin Wang <baolin.wang7@gmail.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Yanxin Huang <yanxin.huang@unisoc.com>,
+	huang yanxin <yanxin.huang07@gmail.com>,
+	Wenming Wu <wenming.wu@unisoc.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: sprd,sc2731-efuse: convert to
+ YAML
+Message-ID: <20240717-move-jogger-a01fd2015889@spud>
+References: <9fba73ce66f1f3b7b2a8f46e7c21f60cff5a85f0.1721199034.git.stano.jakubek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4VW+Z+Fn9ly/ZGMN"
+Content-Disposition: inline
+In-Reply-To: <9fba73ce66f1f3b7b2a8f46e7c21f60cff5a85f0.1721199034.git.stano.jakubek@gmail.com>
 
-Skip 2-levels searching via find_next_zero_bit() when there is free slot in the
-word contains next_fd, as:
-(1) next_fd indicates the lower bound for the first free fd.
-(2) There is fast path inside of find_next_zero_bit() when size<=64 to speed up
-searching.
-(3) After fdt is expanded (the bitmap size doubled for each time of expansion),
-it would never be shrunk. The search size increases but there are few open fds
-available here.
 
-This fast path is proposed by Mateusz Guzik <mjguzik@gmail.com>, and agreed by
-Jan Kara <jack@suse.cz>, which is more generic and scalable than previous
-versions. And on top of patch 1 and 2, it improves pts/blogbench-1.1.0 read by
-8% and write by 4% on Intel ICX 160 cores configuration with v6.10-rc7.
+--4VW+Z+Fn9ly/ZGMN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Yu Ma <yu.ma@intel.com>
----
- fs/file.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On Wed, Jul 17, 2024 at 08:54:47AM +0200, Stanislav Jakubek wrote:
+> Convert the Spreadtrum SC27XX eFuse bindings to DT schema.
+> Rename the file after the only in-tree user, SC2731.
+>=20
+> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
 
-diff --git a/fs/file.c b/fs/file.c
-index 1be2a5bcc7c4..729c07a4fc28 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -491,6 +491,15 @@ static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
- 	unsigned int maxfd = fdt->max_fds; /* always multiple of BITS_PER_LONG */
- 	unsigned int maxbit = maxfd / BITS_PER_LONG;
- 	unsigned int bitbit = start / BITS_PER_LONG;
-+	unsigned int bit;
-+
-+	/*
-+	 * Try to avoid looking at the second level bitmap
-+	 */
-+	bit = find_next_zero_bit(&fdt->open_fds[bitbit], BITS_PER_LONG,
-+				 start & (BITS_PER_LONG - 1));
-+	if (bit < BITS_PER_LONG)
-+		return bit + bitbit * BITS_PER_LONG;
- 
- 	bitbit = find_next_zero_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
- 	if (bitbit >= maxfd)
--- 
-2.43.0
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
+--4VW+Z+Fn9ly/ZGMN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpfUNwAKCRB4tDGHoIJi
+0h1nAP49WI7YC21XHbycMJVltiB7JgalCPZVttqh2gkUb13MxQD/UogHuV03RWt1
+YtC//BamDPCMgkwL+U7YKLXmWbD5QAQ=
+=JkxJ
+-----END PGP SIGNATURE-----
+
+--4VW+Z+Fn9ly/ZGMN--
