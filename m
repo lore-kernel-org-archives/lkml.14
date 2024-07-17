@@ -1,154 +1,166 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2525C187325
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 21:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC69185E60;
+	Wed, 17 Jul 2024 21:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721251729; cv=none; b=D/DzFpsLS3RPMwTfh9hdfoW3ssapOKgZEeYWsq4+TYGbJXr6/A9+a8GoYahUVCUjRNsjNpYxlBiTQGVKNyKqdK7tWh+GV+h10ztCtJgIXO3TilXIIUGH8y4sjwCE+Wk8Tk6aZajiolriGlsqrYWZ84NbwXG6re0ixdhTGjI6l7U=
+	t=1721251743; cv=none; b=KTPbW7p13X6wTSpOaChLSh/fcNaHytyIMfs2dl3LjUVFz7yvF77MaOlcKelGHOT1LkuChRM2rWxVt/ugUr1GIrfzMb7NdU57GtuhKKr1VYURWSwHuzGMiQfpjUoaJZlXpsXnoWh8Oxz/SYIjBbAGCgSR3+pIVa6h0A6zD/g3QFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721251729; c=relaxed/simple;
-	bh=hV+gOr49p4cocawq3YpFNMPhdSPOJ5ilUmbodlA9FZI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lRCubD1aWoddVIzbh5B1sQRz8VvjFdbgX2NaAue00dF74AOqV3MfufDXdCLGX2mHPKIzygRs8YiLgBujFzDc9lFqfOrfpdzH4+tFT5j29ZlmqAygg5HD+PAbV2lvv9v9vWQ+gE5mDK12j1ybU4Uk2GdjmyKPs0NdB2Ro4lYxDIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v/WPp6RX; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	s=arc-20240116; t=1721251743; c=relaxed/simple;
+	bh=tZdbzZAllKFHS+uGPe7keBWufqKl9nQ0WYp7kK5MWzM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VHO1HYX3TEhNQnRqKqWn+r/prSR4qriATk/x3vWh3nIzoPAdFadmGtlRixIAxBXNMjM+Q3naWAJ2T5rfRmVEyLujbKlhZqn1HI8WodfmKZgn/STcs6ziGk+puYOB/Vr6neU0TRVytSS9aypbqicXAWLw83qJ2QnGq0wD4qBBbSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4cFos4V; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v/WPp6RX"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-650fccfd1dfso2323857b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 14:28:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4cFos4V"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eee1384e0aso2221651fa.1;
+        Wed, 17 Jul 2024 14:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721251727; x=1721856527; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bC1XYrE8D3FwqV+dReridNcLxNzpjkdxcOvL08MCL8A=;
-        b=v/WPp6RXzAb8dRyANuKl13dRDZngyeiUccrWtTRzYSafen0oQTzdAP2TAAdXHXOnbS
-         RidsXLjc3yjIJ+i9RQD2G/FRq/lDHZzlsbOfswiZAaZQy1Jtu7huWxdGocTV8N7BalFx
-         UlNXtXLilp+PIavXdrr0S9dnP5Uz4TRbPVK0PUVhzU7ZB9wiR7USzuWYNYk/03la0F12
-         PBWQ0IV2EVZ/dWgnHFNFEntNTm+ya7FdyScyQv/uXPkpWQ2D5UquT6BUde9jHVNirotJ
-         xIs48WHmKZomzs4pQgrLW1cZl847sb1fw5izjaGZ4v7eQBLZ5lwVOD39+leZlastEwgO
-         UaGw==
+        d=gmail.com; s=20230601; t=1721251739; x=1721856539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fc29YR0MLavAb8gDvKJJKOxIauGbyGNvRrfyjZ4hmXI=;
+        b=Y4cFos4V1OEf7p47eztrqcAXeC3WcXk+ffCbyae5slIkDH09ynuadCvH89cyLmnU1h
+         YWHYyjFWB8dNC4peUATnQmv9HPeiAlIqqSZNWv7vuVRP748TYn0Gr8cOe025xQ8ScvGj
+         98hJqc5M6/rMh/rPtw+bZQgOIgcgLK6qIW84bXBkZNMp+2SMUUrdmt+PgGY8I/WDkBo9
+         xxueJQ6x0+4AzF1IFb7ElCPuFN+wbI3852BaK4jhHgQN4YH+JwESalLrY61OH1uxxhNc
+         xWBoaK/b689qHaHoz2ZXZdW6gW0JamcRAJTz2IYFNxjz5CDoO27jRfvryWRW/3+IAedR
+         hMqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721251727; x=1721856527;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bC1XYrE8D3FwqV+dReridNcLxNzpjkdxcOvL08MCL8A=;
-        b=cPBDptkWHiFvTCO3nAc0+UMi3C5qT2qCx6K3bkzf0jOnIG0hvEttg4YDvvk58DbfJI
-         s8vUoTtmeZZ8rkkG3NRUm7BfdTlfgF9qSc6XAdMQNfL3CDP0nZaxYLccnEG/d0KIoc1Q
-         5x4hWHmQ94J6akaYzrAi5+Uhyr0RmGptavitpIoIVbX7ly2T28ll66SyKkMSf7DCbWeR
-         PjQVTs3d6WIvlv0GGYExmSqPUBx2cUIbcoO6KHSk+8Ctn2zZ2VYF5AOppbwWivVF/PKt
-         +1PxYxxMh3oKh5qtER6We/lSfFSTwRlvn1fFtNZPTK8X570NsFV1EA/TqxKFfqmDaFjR
-         /fGg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2Jc/YmPts7bAkJwu8YtIZhjF00dNTJ7MB9iqI6YRTvukCyaMxOmYOzAnIh/9piN8fcNsfGtrRdWjLAtLWc1gcB2nXPlu1VuaUSrzm
-X-Gm-Message-State: AOJu0Yyzzk24QCy+TW8Vo/ZqE4TWVM5JQxvTWtURUubTgUp/BSCk5k+T
-	f1Z3IRQ4xnnkvLFYDISnGU4y2YcgrJMoCmP57ChT8ENqklEV3nUoco1GTo1GqbCGFG3GwVOYCw9
-	NmA==
-X-Google-Smtp-Source: AGHT+IFLgB2C6j0dFHpvLIU7N8gDZUpXVn/57H01SUptIZ7LA4eVWYxCTx/3TCCmKxlLkZBSM9SJzGCH+/E=
-X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:f44b:e467:5c7c:74ab])
- (user=surenb job=sendgmr) by 2002:a05:690c:d8d:b0:62f:f535:f2c with SMTP id
- 00721157ae682-6660248e324mr151227b3.2.1721251727081; Wed, 17 Jul 2024
- 14:28:47 -0700 (PDT)
-Date: Wed, 17 Jul 2024 14:28:44 -0700
+        d=1e100.net; s=20230601; t=1721251739; x=1721856539;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fc29YR0MLavAb8gDvKJJKOxIauGbyGNvRrfyjZ4hmXI=;
+        b=HqDsjbhetw5q/yBSu+N57pwbpOkFHsAEiLFcB0WWyC+Tc7cJ/sqANsNSKJ8WqMwCpo
+         I9yOYQZy2eDyhr5HZB0Rs1QNIQTuh70CFcuGw3dmH209/xelS6N9QLxjyXDknUyMR0tE
+         70VzIeFjWGP05XzdWLzOAODf5ZAXdhjYb7ETbNsT1hRcjpaiwiPKxDI+329zY3x4w9bV
+         fKDL746JTvE1Qnb0A1JZim0c8c532CmJS8IkyWYVWPisVrcLTPvga5pzowCbv4y0HJBH
+         /6liT/z84vH76tAMo6r+7r5aPxPiowwC6VNCzR15mdF4lpOhC7UB1990lKOnrjAA4UYD
+         nFaA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+YJh1vfqOTXbEIukx2JyrdL5JKgg/GSDZn71Sx1SrSw56mH3JSOcqWWh/ds7+guiIVabVw0fzVK+OyLHJL9yaOv8naSl6vb2Za2Ps4z488u2xSu9uscTQn87fZb85GAvL/9cBk28obw==
+X-Gm-Message-State: AOJu0YwC9/0yZfdGkAW2gmeofN2U8kGwj76fR2BPH4u89iTtZw3t/Sw1
+	vHLcHjPivcBbPf5H8RWoAwFi6ujLXPN+bFvGMdHDZvLs5hdoBuLf2L3qWJPe
+X-Google-Smtp-Source: AGHT+IEWeL4oJBrjTRu/BEp4+ibBQJr6iOFZvDrpOaq/euB6dt6YEBehpmxyuVTdEK3rW4H8dBU3UA==
+X-Received: by 2002:a2e:9dc3:0:b0:2ee:8db7:47b7 with SMTP id 38308e7fff4ca-2ef05c990admr3884601fa.26.1721251738708;
+        Wed, 17 Jul 2024 14:28:58 -0700 (PDT)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b24a76f02sm7529198a12.2.2024.07.17.14.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 14:28:58 -0700 (PDT)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 2/2] dt-bindings: net: dsa: vsc73xx: add {rx,tx}-internal-delay-ps
+Date: Wed, 17 Jul 2024 23:27:33 +0200
+Message-Id: <20240717212732.1775267-2-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240717212732.1775267-1-paweldembicki@gmail.com>
+References: <20240717212732.1775267-1-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Message-ID: <20240717212844.2749975-1-surenb@google.com>
-Subject: [PATCH v3 1/1] alloc_tag: outline and export free_reserved_page()
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, hch@infradead.org, vbabka@suse.cz, 
-	pasha.tatashin@soleen.com, souravpanda@google.com, keescook@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, surenb@google.com, 
-	kernel test robot <lkp@intel.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Outline and export free_reserved_page() because modules use it and it
-in turn uses page_ext_{get|put} which should not be exported. The same
-result could be obtained by outlining {get|put}_page_tag_ref() but that
-would have higher performance impact as these functions are used in
-more performance critical paths.
+Add a schema validator to vitesse,vsc73xx.yaml for MAC-level RGMII delays
+in the CPU port. Additionally, valid values for VSC73XX were defined,
+and a common definition for the RX and TX valid range was created.
 
-Fixes: dcfe378c81f7 ("lib: introduce support for page allocation tagging")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407080044.DWMC9N9I-lkp@intel.com/
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Suggested-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: stable@vger.kernel.org # v6.10
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+
 ---
-Changes since v2 [1]
-- Dropped the first unnecessary patch from the patchset, per Vlastimil Babka
-- Added Acked-by, per Vlastimil Babka
-- CC'ed stable@, per Vlastimil Babka
+v2:
+  - added info about default value when the rx/tx delay property
+    is missing
+---
+ .../bindings/net/dsa/vitesse,vsc73xx.yaml     | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-[1] https://lore.kernel.org/all/20240717181239.2510054-1-surenb@google.com/
-
- include/linux/mm.h | 16 +---------------
- mm/page_alloc.c    | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+), 15 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index eb7c96d24ac0..b58bad248eef 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3177,21 +3177,7 @@ extern void reserve_bootmem_region(phys_addr_t start,
- 				   phys_addr_t end, int nid);
+diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml
+index b99d7a694b70..7022a6afde5c 100644
+--- a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml
++++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml
+@@ -52,6 +52,25 @@ properties:
+ allOf:
+   - $ref: dsa.yaml#/$defs/ethernet-ports
  
- /* Free the reserved page into the buddy system, so it gets managed. */
--static inline void free_reserved_page(struct page *page)
--{
--	if (mem_alloc_profiling_enabled()) {
--		union codetag_ref *ref = get_page_tag_ref(page);
--
--		if (ref) {
--			set_codetag_empty(ref);
--			put_page_tag_ref(ref);
--		}
--	}
--	ClearPageReserved(page);
--	init_page_count(page);
--	__free_page(page);
--	adjust_managed_page_count(page, 1);
--}
-+void free_reserved_page(struct page *page);
- #define free_highmem_page(page) free_reserved_page(page)
- 
- static inline void mark_page_reserved(struct page *page)
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 9ecf99190ea2..7d2fa9f5e750 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5805,6 +5805,23 @@ unsigned long free_reserved_area(void *start, void *end, int poison, const char
- 	return pages;
- }
- 
-+void free_reserved_page(struct page *page)
-+{
-+	if (mem_alloc_profiling_enabled()) {
-+		union codetag_ref *ref = get_page_tag_ref(page);
++patternProperties:
++  "^(ethernet-)?ports$":
++    additionalProperties: true
++    patternProperties:
++      "^(ethernet-)?port@6$":
++        allOf:
++          - if:
++              properties:
++                phy-mode:
++                  contains:
++                    enum:
++                      - rgmii
++            then:
++              properties:
++                rx-internal-delay-ps:
++                  $ref: "#/$defs/internal-delay-ps"
++                tx-internal-delay-ps:
++                  $ref: "#/$defs/internal-delay-ps"
 +
-+		if (ref) {
-+			set_codetag_empty(ref);
-+			put_page_tag_ref(ref);
-+		}
-+	}
-+	ClearPageReserved(page);
-+	init_page_count(page);
-+	__free_page(page);
-+	adjust_managed_page_count(page, 1);
-+}
-+EXPORT_SYMBOL(free_reserved_page);
+ # This checks if reg is a chipselect so the device is on an SPI
+ # bus, the if-clause will fail if reg is a tuple such as for a
+ # platform device.
+@@ -67,6 +86,16 @@ required:
+   - compatible
+   - reg
+ 
++$defs:
++  internal-delay-ps:
++    description:
++      Disable tunable delay lines using 0 ps, or enable them and select
++      the phase between 1400 ps and 2000 ps in increments of 300 ps.
++      When the property is missing, the delay value is set to 2000 ps
++      by default.
++    enum:
++      [0, 1400, 1700, 2000]
 +
- static int page_alloc_cpu_dead(unsigned int cpu)
- {
- 	struct zone *zone;
-
-base-commit: e2f710f97f3544df08ebe608c8157536e0ffb494
+ unevaluatedProperties: false
+ 
+ examples:
+@@ -108,6 +137,8 @@ examples:
+             reg = <6>;
+             ethernet = <&gmac1>;
+             phy-mode = "rgmii";
++            rx-internal-delay-ps = <0>;
++            tx-internal-delay-ps = <0>;
+             fixed-link {
+               speed = <1000>;
+               full-duplex;
+@@ -150,6 +181,8 @@ examples:
+           ethernet-port@6 {
+             reg = <6>;
+             ethernet = <&enet0>;
++            rx-internal-delay-ps = <0>;
++            tx-internal-delay-ps = <0>;
+             phy-mode = "rgmii";
+             fixed-link {
+               speed = <1000>;
 -- 
-2.45.2.993.g49e7a77208-goog
+2.34.1
 
