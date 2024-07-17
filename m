@@ -1,138 +1,105 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A4341C6A;
-	Wed, 17 Jul 2024 22:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC9D3BBEB;
+	Wed, 17 Jul 2024 22:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721254943; cv=none; b=XwIncW8Dj8S5ABAbApzuRB6FTIGMBipuoLrqpL7+n9f0VU+oQTUEdIkAgqnysPDc8RDr2gZJ9AlEpIj4sJIBThY/OVEsFxk7DkNNWNnpe73CsJWQS4INXTlMwtPV96yEbQiCn2WsCdqaUvAFLHEQLhrXva1bo1RLnOsTQyNMSkI=
+	t=1721255038; cv=none; b=PHuuQiOpu/J10hZ89iysQfPqJ72LfKdKXWtzlU5PXGC1BIqdf6LMcN7UeyeZzpj6kiubifSEaiQed9Uxrk4mxgs/bg33IIk4jPAgbIuaMDJLbHjKC8vAQ2fOtcxKdUHTbaQB3ST7UdsNYRbrEs/qYchHvtSJQ9QuCwwGALEPhLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721254943; c=relaxed/simple;
-	bh=85Kb0E3hPI0Cde+9G22x9Z7TDf0kIOEZciazLIa3os4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ghu1Ez0U03fr/wIRdQSzqJNMVj1FdReqD/qUNyHI2TzIhaQ6NDqkFcgaMzj2JZj79JZt3+fndZCTrwsHLmgVebLA7YGAopGwvRZFcmJnWDRJHxRXHt9diZm86WqL2116aSsTrI6jhUfB2cMv9JymNfhbPGXyw4WhAY+j14sK/Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eVrJjAJ0; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721255038; c=relaxed/simple;
+	bh=lVte0NjxgcA/RIrwcGCMqJelccj6in8YLPIu7QjUJ94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMM1LtvO0+FiC0bXJX12q4eZJZ+GbXZEtjiLLwzWPxXPp0jGvm/MUOrEsSQU0ESY2M3SY3CrgNJnWvshv9okJGNLsofDa0NhQixQoiwb8BIXQNgfTMzFJ8bD15mrX8XNE1ixAvGy5PbjrVniSOhGrDZZOV36fanOX63K19+f/Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqSZ/kTb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVrJjAJ0"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-75a6c290528so83432a12.1;
-        Wed, 17 Jul 2024 15:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721254937; x=1721859737; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UPEiF2RNiOzdnwwKo/hkn+r0utVVZvhpdHxJImlCUO8=;
-        b=eVrJjAJ0UMuxKoz52W27e/aNdKT9mx1At8Ac/W3Mcl46VPzHSidP4ldIMT23xpPCGq
-         FJ60Ayq+N2iDR/h+IZmlVLboQrjn06Xaa+v27xRPQ8cXWH/xvzD2MQjkVHj6CT3S+rWs
-         dN3fpOyAJ/l5rIWa6rQ47lekkk7zxlVIvMyv7WZxLLxoIFpXzSKu8L+aTJQhQ+rmR1ID
-         qLLR3dyKz8uQ7yT1nN1STcSVJa4XBg3+B3WnYxvXKGrlEaE7PmvlJmQv4h5TRBPViz+2
-         jJHEqhAFWyEq62YRR3cmrMYU4w/E/TpcuEEj9XFP2I5IWcB6QDYK7fLSilZ/yDICAXj1
-         x1aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721254937; x=1721859737;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UPEiF2RNiOzdnwwKo/hkn+r0utVVZvhpdHxJImlCUO8=;
-        b=XIKS9T6JwSJBMjNwjwbFMDp6tgH9uuwJALrkRDj31IekW9j5Ke9NyhWj8OSGoQK/h8
-         xmltdybxNDOMR74EQxbAaxujrSGWq3xGppnr0OC7CbpUgYebfIvz93Y4DA3IUoSFkwgr
-         0V/oNw9R6fzpM+Z4D/O3pOTJWm8HYFqZfLomczs9Vg7aBHerY04ihJniFffBIsmfzQv8
-         3KWo/7TTjJ1h9Wn10wZq9lwOiMC23aqD7E0WZU2A1E8SDMRnzVdBOAaxFNBmJQcSYRVz
-         MTV2fpjvU7EXSL/6GX4UNnepkfTZACECkglHbRJT8rYrCmSRtmr8pwtVPt/30cFmLfUf
-         wTKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJkbM95j6J/jinedVJP/urn76/GGFrP9CIwn2aSvuzANKxlchPlYFbc180wds75l5aIO6W8/UUVGfuOwR0THTNviILDUOep/T2HN3I
-X-Gm-Message-State: AOJu0YzBB/knnlsR+FHKrN3WQk8GWbGfOW0ZFEslanqpQll3wWj1wzRy
-	b/3EEPDIcnlMQXVd9WjLZGeXGroTccLfelAom7uN0WvUkniozJaS
-X-Google-Smtp-Source: AGHT+IFqu8OC2JShWRB4tKGgnZFmWEnFxHEbXhlwUw4JCt0M5FB5lfSluPJXB0/bnIZgneeirpI3cQ==
-X-Received: by 2002:a05:6a20:2445:b0:1c0:e564:d720 with SMTP id adf61e73a8af0-1c3fdccb16fmr3849860637.33.1721254937422;
-        Wed, 17 Jul 2024 15:22:17 -0700 (PDT)
-Received: from win. ([24.5.160.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc43febsm80029015ad.234.2024.07.17.15.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 15:22:17 -0700 (PDT)
-From: James Tucker <jftucker@gmail.com>
-Date: Wed, 17 Jul 2024 15:22:14 -0700
-Subject: [PATCH] net: uapi: add TCPI_OPT_NODELAY to tcp_info
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqSZ/kTb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F365C2BD10;
+	Wed, 17 Jul 2024 22:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721255037;
+	bh=lVte0NjxgcA/RIrwcGCMqJelccj6in8YLPIu7QjUJ94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EqSZ/kTb0yENo4g8xgwq6oW20Jm2cUhCWp+6LGPXJY+yfVs6bsyXSYESYHSIF3KFF
+	 BMnyBbQatBUrThevej6hETgTAEdE3Cy41tXhOwdXCuj08M386PQcnS8nGeL6R4cdu2
+	 QLHT9j5Fika+1kVGR8YJsvW5WjTNw8kh+BhEHeN4M6bbjTX/eF4c9duUAvpDNknV9m
+	 1B5/rc+7e+FMemHgb1t5SSn/AQApGZVj4t7ZF6YL/HyFfOGX/BEYcBEwlO3+Oa4dT7
+	 lQqeJczc59Uuj1ERRP6//1TEDBvhHPhoaqgG2EXbM3BPaX1fJDQxNLyFwSjhKw0Vjj
+	 kWDZeoAh+PAUg==
+Date: Wed, 17 Jul 2024 15:23:56 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Adrian Ratiu <adrian.ratiu@collabora.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, kernel@collabora.com,
+	gbiv@google.com, inglorion@google.com, ajordanr@google.com,
+	Doug Anderson <dianders@chromium.org>, Jeff Xu <jeffxu@google.com>,
+	Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
+Message-ID: <202407171520.FD49AE35@keescook>
+References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
+ <202407171017.A0930117@keescook>
+ <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240717-nagle-tcpinfo-v1-1-83e149ef9953@gmail.com>
-X-B4-Tracking: v=1; b=H4sIABVEmGYC/x3MQQqAIBBA0avIrBPUIqmrRIuy0QZCRSMC8e5Jy
- 7f4v0DGRJhhZgUSPpQp+AbZMTDn5h1yOppBCTUILTX3m7uQ3yaSt4Gb0fSIVuyTPKA1MaGl9/8
- ta60fXpPdBl8AAAA=
-To: Eric Dumazet <edumazet@google.com>, 
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Tucker <jftucker@gmail.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1815; i=jftucker@gmail.com;
- h=from:subject:message-id; bh=85Kb0E3hPI0Cde+9G22x9Z7TDf0kIOEZciazLIa3os4=;
- b=owEBbQKS/ZANAwAIAaeenghooCfkAcsmYgBmmEQXvoIWtWPvxlVC0zg50Sv19qAOTk1ZAztxK
- 8OOc1uH6S2JAjMEAAEIAB0WIQSg43nLjsVzAlrc3Zennp4IaKAn5AUCZphEFwAKCRCnnp4IaKAn
- 5NeID/sH/nhoMvkKvRNEQL2g+klUsvtSv1gS0bI5PtDbPoUnnZp/dJ36oVpmQb3guZoxLH6XPs3
- s0r+X59AK2KGU0niCKhVh1MmNQEkuTE85ufwChyOCW+Ww9DJxtVMSlhur5XJer/3rkegSdwHFx2
- r4KT+CjYBhi1rPndS9X2YqheDNwweHtZi2+1V7n2t8Hv5r44rDf45IShuDiA6vqSyHuYMbtH6VQ
- zKv47dMRL6g5Up/2IUFtEZ22lLx1oCgHUwzDs3/EOebgWdgNlm3eJVFN1wKGLviHYBOLmKNEB1u
- Gf4oTr4SFJpxggRrbkDHH1mN1Pvd36rqAyjiaBtyink2xVUsEp0A3LnZ3AJ440FpeTMkdd2LsBK
- tqS53QjfDm20xijrdJ3nuBSiQBOuMipMaKqV+NNHBZafCBQoaV6N+dFwwVE0K56q3qOnm5+NhKg
- VT/3sNiYHijaQRrC4+Ud7GzqP7HLrlc8nArvzf01KeZC5oSv6taZVsfyPpPjFj243TpVVdjVYJK
- 5ixgjsItrcUk8cefmTnnsmT4cQ8e7rOmhVyBPZZLfzywFWoSU/UHlfqfdg3kZdsheOnBzEbLbzZ
- MHUU6QQ2fG90dOkSlSXTQ5wFMiJjfgnxnMljKlRFEYE3W4umnQpYmN4SEWpGXkWXMZ+0oqR13z9
- 147Xt8IkZu43oVA==
-X-Developer-Key: i=jftucker@gmail.com; a=openpgp;
- fpr=A0E379CB8EC573025ADCDD97A79E9E0868A027E4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
 
-Nagle's algorithm is one of the classic causes of poor performance for
-certain classes of userspace software over TCP, but is currently not
-reported in userspace tools such as ss(1) from iproute2 as it is only
-observable via getsockopt.
+On Wed, Jul 17, 2024 at 11:16:56AM -0700, Linus Torvalds wrote:
+> On Wed, 17 Jul 2024 at 10:23, Kees Cook <kees@kernel.org> wrote:
+> >
+> > For this to be available for general distros, I still want to have a
+> > bootparam to control this, otherwise this mitigation will never see much
+> > testing as most kernel deployments don't build their own kernels. A
+> > simple __ro_after_init variable can be used.
+> 
+> Oh, btw, I looked at the FOLL_FORCE back in 2017 when we did this:
+> 
+>     8ee74a91ac30 ("proc: try to remove use of FOLL_FORCE entirely")
+> 
+> and then we had to undo that with
+> 
+>     f511c0b17b08 (""Yes, people use FOLL_FORCE ;)"")
+> 
+> but at the time I also had an experimental patch that worked for me,
+> but I seem to have only sent that out in private to the people
+> involved with the original issue.
+> 
+> And then that whole discussion petered out, and nothing happened.
+> 
+> But maybe we can try again.
+> 
+> In particular, while people piped up about other uses (see the quotes
+> in that commit f511c0b17b08) they were fairly rare and specialized.
+> 
+> The one *common* use was gdb.
+> 
+> But my old diff from years ago mostly still applies, so I resurrected it.
+> 
+> It basically restricts FOLL_FORCE to just ptracers.
+> 
+> That's *not* good for some of the people that piped up back when (eg
+> Julia JIT), but it might be a more palatable halfway state.
+> 
+> In particular, this patch would make it easy to make that
+> SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE config option be a "choice"
+> where you pick "never, ptrace, always" by just changing the rules in
+> proc_is_ptracing().
 
-Signed-off-by: James Tucker <jftucker@gmail.com>
----
-The impact of Nagle is substantial on TCP connections in a lot of use
-cases, but is currently unreported in the TCP info structure.
----
- include/uapi/linux/tcp.h | 1 +
- net/ipv4/tcp.c           | 2 ++
- 2 files changed, 3 insertions(+)
+So the original patch could be reduced to just the single tristate option
+instead of 3 tristates? I think that would be a decent middle ground,
+and IIUC, will still provide the coverage Chrome OS is looking for[1].
 
-diff --git a/include/uapi/linux/tcp.h b/include/uapi/linux/tcp.h
-index dbf896f3146c..d7675e7022b4 100644
---- a/include/uapi/linux/tcp.h
-+++ b/include/uapi/linux/tcp.h
-@@ -178,6 +178,7 @@ enum tcp_fastopen_client_fail {
- #define TCPI_OPT_ECN_SEEN	16 /* we received at least one packet with ECT */
- #define TCPI_OPT_SYN_DATA	32 /* SYN-ACK acked data in SYN sent or rcvd */
- #define TCPI_OPT_USEC_TS	64 /* usec timestamps */
-+#define TCPI_OPT_NODELAY	128 /* Nagle's algorithm is disabled */
- 
- /*
-  * Sender's congestion state indicating normal or abnormal situations
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index e03a342c9162..2f5aa78800d3 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3853,6 +3853,8 @@ void tcp_get_info(struct sock *sk, struct tcp_info *info)
- 		info->tcpi_options |= TCPI_OPT_SYN_DATA;
- 	if (tp->tcp_usec_ts)
- 		info->tcpi_options |= TCPI_OPT_USEC_TS;
-+	if (tp->nonagle & TCP_NAGLE_OFF)
-+		info->tcpi_options |= TCPI_OPT_NODELAY;
- 
- 	info->tcpi_rto = jiffies_to_usecs(icsk->icsk_rto);
- 	info->tcpi_ato = jiffies_to_usecs(min_t(u32, icsk->icsk_ack.ato,
+-Kees
 
----
-base-commit: e2f710f97f3544df08ebe608c8157536e0ffb494
-change-id: 20240717-nagle-tcpinfo-c6c3eef0b91d
+[1] https://lore.kernel.org/lkml/CABi2SkWDwAU2ARyMVTeCqFeOXyQZn3hbkdWv-1OzzgG=MNoU8Q@mail.gmail.com/
 
-Best regards,
 -- 
-James Tucker <jftucker@gmail.com>
-
+Kees Cook
