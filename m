@@ -1,55 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F9B558B6
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAF43BBEB
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721255079; cv=none; b=TKbe+uqBGDZHU+curczr1rnMia3EyLlV4/2WjW5eFa/oPRxK3vMJddxWju/jfmBJiGl0HY+XBFfqMIr8//inZL41jzXQi6mYPGQXtbLOWqyG8TdhMzMboA8DcfNY6pGfHBA0YRDlFaw7YeooEKHKMQrFMRl15Q/ylO9/Zu+nJzU=
+	t=1721255080; cv=none; b=LmPj168U1/J+K7i3OVox8PQJ+BRUT4GN0s0Ik1WU+Q0liayfZjXUkOw5NgIU8CleJPUTUx4VCUTMph+wGmMtLqUQK3OZqCz9WHeuTNrPsbNm62aa956PBZZyuud+dtXIQ+X6xmvrVHNo4eI5Lyo4d+fpD0uVUFHivEPrPlq017k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721255079; c=relaxed/simple;
-	bh=kMqdRxWNiI9YiTgGPD1e6dunxlUyzqetxFSiKFvNiPI=;
+	s=arc-20240116; t=1721255080; c=relaxed/simple;
+	bh=U735gPL/j4/gNkZpIZj10CDDwOkKG7qvXtx9agyPju4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CO0ZZ9LjtW8CS0LEws3iJEbP9AyZhzyvXNdipTZPVT9oUNgmUEVIuqpHZDmBUONY8JVBSbpYDHvXt/bdnfhPg+5olT0zC7WVIaTYe8PDAkmaQkiNRfDRS++AeITL9hjJmQ3x9G2/aZZFy3Ju9aNrmMKyGBfvV/4kjtFXJNWVCB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ipDKW34L; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=gvcIhxegcAkkChlKLJy0moYK3eV61On2cOOkPklexI4ljk5bo+x/KYBE4Y6Iy/JuhvCaup269cGtVXD6mMx8SGTsKxvX6Ib7gUEEGkoekZ3wc6HT9j7DjygBfAa5rxiOuum3SvDMTOtmf9K2eFEGpjj/mLh+L2KAbE5Is8qvf/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WtsjuEEN; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ipDKW34L"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-65fabcd336fso4296687b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:24:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WtsjuEEN"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e05a8aa4478so516314276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721255077; x=1721859877; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721255074; x=1721859874; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sdMf+ufr3mRNGP33DXF0RnpzY+vpJ6GjjPw/JpyYHhE=;
-        b=ipDKW34LDXjO8jvBw0bPwF8/fNk4EqV5BGvo9qg0sVImlHjWi1b9PmeFX59ArGeq+G
-         +i92H6fx9Zom8toZlHZ9HQF5vhCiO1RQYmS6YLDnVQI2wGn+lq0odiF3k6V8ZJZbtcLr
-         0LiqXaebg4WO/L6OdwhPdoVLCiQJBX2plUpgQ166DwNFAr9oJkRL1DkBp1M2g7DTyRxg
-         TsBuG+pcUM4oVi7Chgdl8gb02CoLdpd3ksTFQuvOm/piV4JTADM2ueoReE4JYuHAbNR2
-         Vp8XB1S2nK1Iu4hZD6iO6qPbwdttkv+vRU+IqIGfJ6DO7WdRbqqqSHJ2b3PDp0XbmXh1
-         t69Q==
+        bh=qsLfk3WKZqMTvBKd64i6B/HOksUTK2sb8iIXkimCFQM=;
+        b=WtsjuEENOZRIG63ydjGdZH+zB/mTTX1FrMa9aMXn2ie9UHAG3qWCZPUzTUjPMfpkwJ
+         43NSXBom3kriptX3ASUiy9wcPhe0vUp+2pLqp/PXwI/xMek25DqAx9rwPI+6rrC9Ti9f
+         GWI6ObXEKI6RdBkmqfb4ftJs8cZJiVooKSmOStegocIEM7dLvZJzKc2pBQM+mxDCWdUc
+         m/nQKj5NzX6KILVFoTXBl/XzkpnAp9BSdI79izn7cDz078MUueR09jmECbazG7uAXVGG
+         8nqu/h88psSMNGDj/tiR645QamqOeNDdnHbCqIVBSufQ3RauhRmOpBpcRqNB4j0Y4Dgb
+         k5EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721255077; x=1721859877;
+        d=1e100.net; s=20230601; t=1721255074; x=1721859874;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sdMf+ufr3mRNGP33DXF0RnpzY+vpJ6GjjPw/JpyYHhE=;
-        b=V5f5BRsL6nB4uNxJGx1Z9Z8Q8VKXyl4AlLaBnRSaYVjgS6u0YzMdEalL+32A9g3dX7
-         FChqL8G3BucjKV54j4jGqYYAgPhlyX9wwoQy8oLyCempotWp6NwdvYxc5QEwUJaPdmFJ
-         GTjlZzb1ux0ITPnx6sRwj2ZiJbymIHbC6t6PPyWGpnKKhlaXjAxuLVwmFNFsWVLTtcqv
-         HYH0pmg10/NpXj1nrecE6fXHgfbbjL8BQQoJwhjB8rd7he/1lGk+H9z/6k9FfDYfAZhy
-         jvWsgNjuJKQA/VNtYvx9R/8H2SSmuNxrApfpllKa8izdpfbSsTqCHIdcpzUkPvRwpjE0
-         a8Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZcqYNsqY12NeHlTZESAOYngA/rmtEMVeP51+FyYkJRX/dFlP7i+9fLJUHbw0uRcW9asVmhu1zXe0syhGGWgMUc4R6pSvd5cXj6bL9
-X-Gm-Message-State: AOJu0Yx4bIYKkRB2EzGhZ1wIt/Unn43tJ9q7UBesIpZPb1uGtcKCI9Pl
-	NLq26bmaDJfDny7cGwjVk76rM2FSX49IpJKkxJPwWSiQ+0jM3U0mQWQzezWn3UDKL8Iv+NZZeAB
-	1+g6OyabgBWgWYTUBAqJX3WjrnokolA==
-X-Google-Smtp-Source: AGHT+IEV6mYusUj8ULHke+1RPPJco+bwaOOORCvPCTttFeFfrfUKPgZ9QPG4zLl9wVzK07pSlcLnXXgBKQS8++ePE95q
+        bh=qsLfk3WKZqMTvBKd64i6B/HOksUTK2sb8iIXkimCFQM=;
+        b=WtcFf4gEo4kmDxVCFlEeJEXTRN44Bg1dsyYgZ2DVwQLn6o7YnpTChCx7dsWGx8MG5y
+         g63VWKGUtins/A8Jzz8R/dxQ9D8OEhMY//irBv083PHBUTq8X7Zv8Yi1OTHpCKUxEr0Q
+         2L8uPlha6gsCW/7J1A59e/QyWsjpol0mSyMa83MBvsgR9VH6GkuMNExBaiEGa/TZDJx/
+         A91v7e3VOvDQ13nsfKl61U8hkkNU4PFk1XbZtuXwqnhWD5dH9nD9DOqJfEMWHWOCzeMB
+         HFgcXeL1jK7J6WE+hUxOmUf3/GjHjvJc/GP47pKsncnc+xDJXzrqhQBdQLWnohYQjt61
+         UnjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0ZKdLE86ZDzyVhu4u+kbFyLeRBkAFbsK6Ou7CAufnqeOYyOe7GqICSqMealj8046m7w4G02Vq3htAs4fDKVdN3rYV/2StM965F1VY
+X-Gm-Message-State: AOJu0YxNx7Tpo5xIdq+t9M1HpUlD1SYWeTfkxGF7ESjM4oM+yBuqYW4L
+	86eCO65n/1cWXSlWYiy7Uv6sOMxJSXkt1hj0KvLrZNSrtqbycxD75jYppeAL85SxJSB0DjoO50+
+	A98buAvB6SZtZMCQBN2CwxkLULwnigQ==
+X-Google-Smtp-Source: AGHT+IGCouqY3qXBhAPrZ6wvEyo1BAsuREg2PdFRGGE6O0pnpk9sCyfzUe+hPFbHoZJIUAjhm0fj6BPI5AYV1WJqT77p
 X-Received: from axel.svl.corp.google.com ([2620:15c:2a3:200:a503:d697:557b:840c])
- (user=axelrasmussen job=sendgmr) by 2002:a05:690c:f94:b0:64a:e220:bfb5 with
- SMTP id 00721157ae682-666015f1508mr450367b3.1.1721255076965; Wed, 17 Jul 2024
- 15:24:36 -0700 (PDT)
-Date: Wed, 17 Jul 2024 15:24:29 -0700
+ (user=axelrasmussen job=sendgmr) by 2002:a05:6902:120c:b0:e02:f35c:d398 with
+ SMTP id 3f1490d57ef6-e05ff371065mr23222276.0.1721255073882; Wed, 17 Jul 2024
+ 15:24:33 -0700 (PDT)
+Date: Wed, 17 Jul 2024 15:24:27 -0700
 In-Reply-To: <20240717222429.2011540-1-axelrasmussen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240717222429.2011540-1-axelrasmussen@google.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Message-ID: <20240717222429.2011540-4-axelrasmussen@google.com>
-Subject: [PATCH 6.6 3/3] vfio/pci: Insert full vma on mmap'd MMIO fault
+Message-ID: <20240717222429.2011540-2-axelrasmussen@google.com>
+Subject: [PATCH 6.6 1/3] vfio: Create vfio_fs_type with inode per device
 From: Axel Rasmussen <axelrasmussen@google.com>
 To: stable@vger.kernel.org
 Cc: Alex Williamson <alex.williamson@redhat.com>, Ankit Agrawal <ankita@nvidia.com>, 
@@ -68,74 +68,173 @@ Cc: Alex Williamson <alex.williamson@redhat.com>, Ankit Agrawal <ankita@nvidia.c
 	Kunwu Chan <chentao@kylinos.cn>, Leah Rumancik <leah.rumancik@gmail.com>, 
 	Miaohe Lin <linmiaohe@huawei.com>, Stefan Hajnoczi <stefanha@redhat.com>, Yi Liu <yi.l.liu@intel.com>, 
 	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Yan Zhao <yan.y.zhao@intel.com>, Axel Rasmussen <axelrasmussen@google.com>
+	Jason Gunthorpe <jgg@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
 From: Alex Williamson <alex.williamson@redhat.com>
 
-commit d71a989cf5d961989c273093cdff2550acdde314 upstream.
+commit b7c5e64fecfa88764791679cca4786ac65de739e upstream.
 
-In order to improve performance of typical scenarios we can try to insert
-the entire vma on fault.  This accelerates typical cases, such as when
-the MMIO region is DMA mapped by QEMU.  The vfio_iommu_type1 driver will
-fault in the entire DMA mapped range through fixup_user_fault().
+By linking all the device fds we provide to userspace to an
+address space through a new pseudo fs, we can use tools like
+unmap_mapping_range() to zap all vmas associated with a device.
 
-In synthetic testing, this improves the time required to walk a PCI BAR
-mapping from userspace by roughly 1/3rd.
-
-This is likely an interim solution until vmf_insert_pfn_{pmd,pud}() gain
-support for pfnmaps.
-
-Suggested-by: Yan Zhao <yan.y.zhao@intel.com>
-Link: https://lore.kernel.org/all/Zl6XdUkt%2FzMMGOLF@yzhao56-desk.sh.intel.com/
-Reviewed-by: Yan Zhao <yan.y.zhao@intel.com>
-Link: https://lore.kernel.org/r/20240607035213.2054226-1-alex.williamson@redhat.com
+Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Link: https://lore.kernel.org/r/20240530045236.1005864-2-alex.williamson@redhat.com
 Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Axel Rasmussen <axelrasmussen@google.com>
 ---
- drivers/vfio/pci/vfio_pci_core.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/vfio/device_cdev.c |  7 ++++++
+ drivers/vfio/group.c       |  7 ++++++
+ drivers/vfio/vfio_main.c   | 44 ++++++++++++++++++++++++++++++++++++++
+ include/linux/vfio.h       |  1 +
+ 4 files changed, 59 insertions(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 7b74c71a3169..b16678d186d3 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1659,6 +1659,7 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
- 	struct vm_area_struct *vma = vmf->vma;
- 	struct vfio_pci_core_device *vdev = vma->vm_private_data;
- 	unsigned long pfn, pgoff = vmf->pgoff - vma->vm_pgoff;
-+	unsigned long addr = vma->vm_start;
- 	vm_fault_t ret = VM_FAULT_SIGBUS;
+diff --git a/drivers/vfio/device_cdev.c b/drivers/vfio/device_cdev.c
+index e75da0a70d1f..bb1817bd4ff3 100644
+--- a/drivers/vfio/device_cdev.c
++++ b/drivers/vfio/device_cdev.c
+@@ -39,6 +39,13 @@ int vfio_device_fops_cdev_open(struct inode *inode, struct file *filep)
  
- 	pfn = vma_to_pfn(vma);
-@@ -1666,11 +1667,25 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
- 	down_read(&vdev->memory_lock);
+ 	filep->private_data = df;
  
- 	if (vdev->pm_runtime_engaged || !__vfio_pci_memory_enabled(vdev))
--		goto out_disabled;
-+		goto out_unlock;
- 
- 	ret = vmf_insert_pfn(vma, vmf->address, pfn + pgoff);
-+	if (ret & VM_FAULT_ERROR)
-+		goto out_unlock;
- 
--out_disabled:
 +	/*
-+	 * Pre-fault the remainder of the vma, abort further insertions and
-+	 * supress error if fault is encountered during pre-fault.
++	 * Use the pseudo fs inode on the device to link all mmaps
++	 * to the same address space, allowing us to unmap all vmas
++	 * associated to this device using unmap_mapping_range().
 +	 */
-+	for (; addr < vma->vm_end; addr += PAGE_SIZE, pfn++) {
-+		if (addr == vmf->address)
-+			continue;
++	filep->f_mapping = device->inode->i_mapping;
 +
-+		if (vmf_insert_pfn(vma, addr, pfn) & VM_FAULT_ERROR)
-+			break;
-+	}
-+
-+out_unlock:
- 	up_read(&vdev->memory_lock);
+ 	return 0;
  
+ err_put_registration:
+diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
+index 610a429c6191..ded364588d29 100644
+--- a/drivers/vfio/group.c
++++ b/drivers/vfio/group.c
+@@ -286,6 +286,13 @@ static struct file *vfio_device_open_file(struct vfio_device *device)
+ 	 */
+ 	filep->f_mode |= (FMODE_PREAD | FMODE_PWRITE);
+ 
++	/*
++	 * Use the pseudo fs inode on the device to link all mmaps
++	 * to the same address space, allowing us to unmap all vmas
++	 * associated to this device using unmap_mapping_range().
++	 */
++	filep->f_mapping = device->inode->i_mapping;
++
+ 	if (device->group->type == VFIO_NO_IOMMU)
+ 		dev_warn(device->dev, "vfio-noiommu device opened by user "
+ 			 "(%s:%d)\n", current->comm, task_pid_nr(current));
+diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+index 40732e8ed4c6..a205d3a4e379 100644
+--- a/drivers/vfio/vfio_main.c
++++ b/drivers/vfio/vfio_main.c
+@@ -22,8 +22,10 @@
+ #include <linux/list.h>
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
++#include <linux/mount.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
++#include <linux/pseudo_fs.h>
+ #include <linux/rwsem.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+@@ -43,9 +45,13 @@
+ #define DRIVER_AUTHOR	"Alex Williamson <alex.williamson@redhat.com>"
+ #define DRIVER_DESC	"VFIO - User Level meta-driver"
+ 
++#define VFIO_MAGIC 0x5646494f /* "VFIO" */
++
+ static struct vfio {
+ 	struct class			*device_class;
+ 	struct ida			device_ida;
++	struct vfsmount			*vfs_mount;
++	int				fs_count;
+ } vfio;
+ 
+ #ifdef CONFIG_VFIO_NOIOMMU
+@@ -186,6 +192,8 @@ static void vfio_device_release(struct device *dev)
+ 	if (device->ops->release)
+ 		device->ops->release(device);
+ 
++	iput(device->inode);
++	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
+ 	kvfree(device);
+ }
+ 
+@@ -228,6 +236,34 @@ struct vfio_device *_vfio_alloc_device(size_t size, struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(_vfio_alloc_device);
+ 
++static int vfio_fs_init_fs_context(struct fs_context *fc)
++{
++	return init_pseudo(fc, VFIO_MAGIC) ? 0 : -ENOMEM;
++}
++
++static struct file_system_type vfio_fs_type = {
++	.name = "vfio",
++	.owner = THIS_MODULE,
++	.init_fs_context = vfio_fs_init_fs_context,
++	.kill_sb = kill_anon_super,
++};
++
++static struct inode *vfio_fs_inode_new(void)
++{
++	struct inode *inode;
++	int ret;
++
++	ret = simple_pin_fs(&vfio_fs_type, &vfio.vfs_mount, &vfio.fs_count);
++	if (ret)
++		return ERR_PTR(ret);
++
++	inode = alloc_anon_inode(vfio.vfs_mount->mnt_sb);
++	if (IS_ERR(inode))
++		simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
++
++	return inode;
++}
++
+ /*
+  * Initialize a vfio_device so it can be registered to vfio core.
+  */
+@@ -246,6 +282,11 @@ static int vfio_init_device(struct vfio_device *device, struct device *dev,
+ 	init_completion(&device->comp);
+ 	device->dev = dev;
+ 	device->ops = ops;
++	device->inode = vfio_fs_inode_new();
++	if (IS_ERR(device->inode)) {
++		ret = PTR_ERR(device->inode);
++		goto out_inode;
++	}
+ 
+ 	if (ops->init) {
+ 		ret = ops->init(device);
+@@ -260,6 +301,9 @@ static int vfio_init_device(struct vfio_device *device, struct device *dev,
+ 	return 0;
+ 
+ out_uninit:
++	iput(device->inode);
++	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
++out_inode:
+ 	vfio_release_device_set(device);
+ 	ida_free(&vfio.device_ida, device->index);
  	return ret;
+diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+index 5ac5f182ce0b..514a7f9b3ef4 100644
+--- a/include/linux/vfio.h
++++ b/include/linux/vfio.h
+@@ -64,6 +64,7 @@ struct vfio_device {
+ 	struct completion comp;
+ 	struct iommufd_access *iommufd_access;
+ 	void (*put_kvm)(struct kvm *kvm);
++	struct inode *inode;
+ #if IS_ENABLED(CONFIG_IOMMUFD)
+ 	struct iommufd_device *iommufd_device;
+ 	u8 iommufd_attached:1;
 -- 
 2.45.2.993.g49e7a77208-goog
 
