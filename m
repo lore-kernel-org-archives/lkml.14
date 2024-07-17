@@ -1,259 +1,213 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978BF1802E
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721199326; cv=none; b=kacKZyq9SUxbHRFBwi+lU6Ke+bDvLAIoebc8FXmV5idacOnL7+e1rHXARxr9B8LFrb7McEpNyrfbX/GIGG52zmlUt5+SFEhKxVS6mYNGO1GcX/gsSuDCcuUeZaXKfgpMDmVeyBW64Y4xQxHfzaAYFd08b1srRCqfPbR+ZG0z1SE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721199326; c=relaxed/simple;
-	bh=Sf8igZhAdC/C8+41b9Q9Clyrx0vbc6io3As6zl1+oJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vCI9kJA/QHqA0euHRox3JsIePJHnFT3W2CWjvLdipk94h0YWPwJt9DbLL6kIgletn9XGMRkPCn9wSOUpDm0axqbDrnIrnrDTt1kzF0kOECbkiTl2bSGm+LqxF1H1g6JaLWUnpY61P8ry1tD52lGY7gzO2edACqMoOkGvTRAs+Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CB1F1063;
-	Tue, 16 Jul 2024 23:55:42 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B83913F762;
-	Tue, 16 Jul 2024 23:55:13 -0700 (PDT)
-Date: Wed, 17 Jul 2024 08:54:58 +0200
-From: Beata Michalska <beata.michalska@arm.com>
-To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ionela.voinescu@arm.com, sudeep.holla@arm.com, will@kernel.org,
-	catalin.marinas@arm.com, vincent.guittot@linaro.org,
-	sumitg@nvidia.com, yang@os.amperecomputing.com,
-	lihuisong@huawei.com, viresh.kumar@linaro.org, rafael@kernel.org
-Subject: Re: [PATCH v6 3/4] arm64: Provide an AMU-based version of
- arch_freq_get_on_cpu
-Message-ID: <ZpdqwhKrHWEU3g_P@arm.com>
-References: <20240603082154.3830591-1-beata.michalska@arm.com>
- <20240603082154.3830591-4-beata.michalska@arm.com>
- <aasc2rpfqtqis74hsrgv2nurrz5uumh3pgfuwbwbntlgvtavzh@egisja6opuuz>
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2074.outbound.protection.outlook.com [40.107.117.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF4E18EB1;
+	Wed, 17 Jul 2024 06:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721199325; cv=fail; b=ihsOgBmwsFdpCnZj/w3GObVr5iLa+aVFrVjxH9++OIrT1qXybpZCaXdkvN5RWeeON84v5qtOzpI8mEH/24yOqNb+pbww/Dy99oqwPQUfPrhLalMMsiCDvS4ET/AR5JHh6AY0UNIIW8CVsgy5lQ77LdutICGEMBSakBsnNRAhDrQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721199325; c=relaxed/simple;
+	bh=fi+O2wT7+p+dqAneHdw0z7XKGYCtomBYcwAeYULxIH0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=O6iA0QHemYNq2Mnfx4U5v48oSTRwHNF9UDniKMJxar5SINcLMeTx08G43WLqvke/mR55SauQ6YchI0dj6+enWGlYk+W0LvUGxn0fI54pGGCu3ucFrlBqU0gGK3SigTE36lqWTwUaYnilrqr5EsxCzXjIkkelziVv+r8mRrgsUWM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=k+qbST+9; arc=fail smtp.client-ip=40.107.117.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="k+qbST+9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SuMB+K2osiSp2MUbfhadPSnu+vwfOTKUrd/pwlC/zp0g4GTl24KBo+CR97DrGQQGSKEQWkpr7chNpeH7DKWJ3lA/06742mOw7ZukJFmKmhoch0Q9d7bvw51eW01ioBLZrJvX61emnzevUFGsqlTKqbZdpRkl6kCFdnw4jjNwN3j7yyQODKTdwR3E0MVmyjWMsRiVY7mUtuszE1IHOAwsSPEMjUqKNeh8p7YtnXfih7ibamq+X+vzjBkmHb7sJSjtZJMFYynV2+uo8JlMoHiKDnvxpZaNERi51C4XgkstHGOX3hzYEMxKBWnlBKSGopmiGz6YRNcL1nDBDPTRcANFTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tO6cQfZfVeBjs//Dga8fJ6F98CIz9ZZBSWTrnmZP2gM=;
+ b=mCkJ5qWxkuPWeJ0+YmUsw6DTFfikjR2I6aRYHHl9tHWe94/0ARLzDJQ/U5+8cTWE8msiUObapBnKOxFf9v+NNForunCym9v/z+ljgAyXF+5a1R9qVEc1MNKKiSID/1g7Ptc1ZBpnIvJY4s91TIMmyc3SUQjfIcAsvhxVCDbbJjuTWHSmb3QRDuFYmtYDbSmZxRv4YjcpubILK/jp5YhNtORwt3/G7wTaxykQIWpN1MaUDBuE3IY16gXEmwl32Q7e9QCtiJuqb3iv3jdsjF90bxjr5kT/wyAvd/5Gw63HHT4CvM2acpkruc0vt0C+1HJbYbZqVVP4oPlAJPip87J9mA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tO6cQfZfVeBjs//Dga8fJ6F98CIz9ZZBSWTrnmZP2gM=;
+ b=k+qbST+9L4h/20SRYi+lafQuYSS01c44k02/E1X0M8Flne97U7GyIZ8ZkFV/Xofitsxmc04UcxUAN7QvrjCijBRqc3SZ3k/zKWZJ6DZKwIOVpgl0MRX6/8egTJImEvaT0nr9Z9/1GfmIPvJAa/u366KXX5MF56v3S/lMyLI6+XmkHxNLSRlJChjSdeLHbqsISBLBhhyubieOrrqUK6YcLtTYqxeOtXMe0pvKRk6rX8FQSDyU03U6rP8qL7F/68spEI5vCKUk/j8Mojrqzs5OzuSMBIKjVtf2IDMfUQUtdMZMST2xgK40R96k6cATJuTXII9jNJcHqYTr6s55QROu9w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PUZPR06MB5676.apcprd06.prod.outlook.com (2603:1096:301:f8::10)
+ by JH0PR06MB6510.apcprd06.prod.outlook.com (2603:1096:990:30::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Wed, 17 Jul
+ 2024 06:55:19 +0000
+Received: from PUZPR06MB5676.apcprd06.prod.outlook.com
+ ([fe80::a00b:f422:ac44:636f]) by PUZPR06MB5676.apcprd06.prod.outlook.com
+ ([fe80::a00b:f422:ac44:636f%6]) with mapi id 15.20.7762.027; Wed, 17 Jul 2024
+ 06:55:19 +0000
+From: Huan Yang <link@vivo.com>
+To: Gerd Hoffmann <kraxel@redhat.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org
+Cc: opensource.kernel@vivo.com,
+	Huan Yang <link@vivo.com>
+Subject: [PATCH] udmabuf: change folios array from kmalloc to kvmalloc
+Date: Wed, 17 Jul 2024 14:54:43 +0800
+Message-ID: <20240717065444.369876-1-link@vivo.com>
+X-Mailer: git-send-email 2.45.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0001.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::7)
+ To PUZPR06MB5676.apcprd06.prod.outlook.com (2603:1096:301:f8::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aasc2rpfqtqis74hsrgv2nurrz5uumh3pgfuwbwbntlgvtavzh@egisja6opuuz>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PUZPR06MB5676:EE_|JH0PR06MB6510:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34236d4d-babb-4a26-5e64-08dca62d6bac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oBpcqAz74lLAQiIwRS6ALI/5dpRnQtD3EWkghm1qaI/LwvjhSnsHThA2DXbm?=
+ =?us-ascii?Q?lOHvTkxq8KTaUMfjP+xM9XTgQBfn1UJsbd/YRooAoArAWaJbfgo7zy8AQm/s?=
+ =?us-ascii?Q?EHb1bb95wPPgGfHquGCENQoJY7yNWHELuuirpSUYl/E6URrlhoeUC3WLaqJQ?=
+ =?us-ascii?Q?eDwaEcWB97ZOKbmLL0XHctUd4YYvLa4ZVuA9ZgDM+0ax/CoYHL2UjvhS/6kZ?=
+ =?us-ascii?Q?wSE0nWz4ZLdiPulkALZER5RqwwcLGFVG1fmYNUwhk5c3PkaLUf7jkPksfUcN?=
+ =?us-ascii?Q?wX4CLYqEhhOFtNjMHc1EtuQRiGSVTFKXLPmVCky/TKTKnrI0l+P/JALhE6oD?=
+ =?us-ascii?Q?eurUTwq+h8c/61vLO70AyK1Nsxut3XMoJ6IJ6cXYApU7KJNtcmKwRmDB+DTF?=
+ =?us-ascii?Q?6Wr+aoE2vj5fR86XOM8844G7PkOeFN5snZUYmmeGEMcnJ+LojhfMBG3QbKou?=
+ =?us-ascii?Q?yyNdwo9tjV1AnVyc210txxBSBXbFttJRC/0kdPPr1aCh+eeAMhqBzXyMV6ON?=
+ =?us-ascii?Q?+CBUXAOhR3GLttfEryW7WAvtAmQ50XUG35Fcx1juM/FT7DWZGZnPkZObqv2H?=
+ =?us-ascii?Q?DdjkdbcUav9i1ciUF8EhvMrljeVZjaYlnY/S/Sf5zIL32bOY+AOe6IiVmFTK?=
+ =?us-ascii?Q?z+mX8IvADRIpcyXNM34jBV6mQZooxDfafNBtLFNfXCdT5/5cJjtWdEIaMyKh?=
+ =?us-ascii?Q?rdsSPEPtswFotXrCYUJjLKhG5H3Nqs6WKgSVsMd8QwIbTLwYX2Z2PLOXKNPp?=
+ =?us-ascii?Q?cXwOfnE1cQAa1ojjAYMF4ulXAEQ/nIXB+n4yFlL4lwivQpngDlhvkr4wwrpV?=
+ =?us-ascii?Q?xbu4Zb0XUsjRkd2hvquK0qvJCIHfIyAANFohzakqWf/8mgnI7j9b5R+L69vI?=
+ =?us-ascii?Q?kcW0b0X88LEOam4h7irFeBySiXvoFvrjiltW06BgfTsrodGqSAyq9JMM00Gw?=
+ =?us-ascii?Q?GHeNzEpLqVTr+SK/QJ/vD4io3mLZWflwsx/ImK0hkdWXmQObE4vHIbaNLgmT?=
+ =?us-ascii?Q?lBOxGkWimC5LNc9dTz3E5exlFe0EKjFTDJj2oYbOdWuE9dZYApWgyA6g4Fir?=
+ =?us-ascii?Q?e56rux+RKUNHzawfRvjnEdgms/0mGzOciWMzrGENw5/K1nK1qihCjhnz1kK7?=
+ =?us-ascii?Q?P2skVhotdBvulvmDQl3qElpFnB+cIg9wWSyR83H6jfobizPsdfSsq59R3sZR?=
+ =?us-ascii?Q?3TFMUzARim9iZ+mTX7LNUVHbOyJiL01OHLMNNYiQbfaU06e7JIrcV/Zlwib8?=
+ =?us-ascii?Q?SFMhx61pO76/3uAg5FqFUn1b5rGde+zTP73M0Sjgqk8QbyPzX/HwN1gRAaEK?=
+ =?us-ascii?Q?9cf6Pvg/2Z9P3nZHGNZA6b8rRfStclB36jDzioRiaS/+dFgDyGSyWvPM9TfD?=
+ =?us-ascii?Q?0WWFGXnGFWtT58IeVwsKAqugMhvuxtd+McXq67KKN4SehWavhw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB5676.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?o+sc8ge+hbDf9OJyDWl6PAxaFFsxnNfIXZsk+wEiGkpf6ExFkOQ/sX5C7w7E?=
+ =?us-ascii?Q?u/GJJucF8I2D7MBbz18ddnjyfB+Ukrn/NFMB8hyj7+Crud1lAlGjxsZNwcPn?=
+ =?us-ascii?Q?EPOsHLKT8tk2AyC6kseYhsVpNchJPAfqVFDEsOUtRwVqZlj1lQ7rgHaAzI0m?=
+ =?us-ascii?Q?o9znGQWdxxAMxJQ23qrW0ReaxiiCSozQkZ/3lhAI5oPVqwwR4d7iw751uXcK?=
+ =?us-ascii?Q?CR/x1gmMjW1vDhEyQQaVEoQcLvwy8LzxdNxu7XL/ZN0B6IXLwr7ZsVV9jHdL?=
+ =?us-ascii?Q?CcwQYUvq9dn7hK7sVFB0xogi6HI4mbAmlFUlclAQiR5mtjAJriemvF6Nl126?=
+ =?us-ascii?Q?Gpt9qJzjjZZA/mgLqwZjagCimM6AF6Qk40tZmCWtwYlY+kCAzatcnK60YOVk?=
+ =?us-ascii?Q?zSwaRD99J6TGWd0u/yWRDlndQ15+mWbiDaelX1DM+aq2ENTF+D9Vzt+loRg7?=
+ =?us-ascii?Q?VhBL6cxUIbwaH0jfEYXnHrAKHiYljySyzLrEt5TBPKHZUr0CE2epQ2QmH5eV?=
+ =?us-ascii?Q?i0ZpIIT77C6XdixvDdfeLzJV5j73kartFFQSJJNgOnKsIehRn89rR3nBMNTV?=
+ =?us-ascii?Q?a/khCrq11LEFQcNQFawCJRpLI680cwr6aH4JoABC+kWfcPXhacjglhpkNLnS?=
+ =?us-ascii?Q?HDyWi/tERURFpYHtO9yUq3upOynSWixCR0YFprbH3Mw9YwvFMofBW6SWH+1i?=
+ =?us-ascii?Q?tX7ZEDudi7AIDpSLvh1wFvYo9B+tuMV9/R4XHP1AyEIM/fMtx2N5RgD20A5E?=
+ =?us-ascii?Q?8+q66tvvs1+Z2I8AlM1mH+Ar7BqA8Qel4/WREPzbbG/aojd4LKvFfacDgUfS?=
+ =?us-ascii?Q?ruOJJ8/8ni5ZcMJRrWH4d2tINUvXM50sqc52eRdOJp+eft4uP9krPzZwVp+G?=
+ =?us-ascii?Q?eEte+tzAxBLWIUiDAOGflX+MADU3MVph6stcQo5Mg+2Cge3V/YVxRV8oWXOb?=
+ =?us-ascii?Q?X0drifciBorw6IaYx2UUJ7NYz0QyJx4I8vb7tClWX5FYHiTktUwn+uBbRIQC?=
+ =?us-ascii?Q?QP2lDxPLr75zvhK7jW2Ut1mahCxLsrUFQfY8OZFvIJzui4mX4bGYvRyJqUmD?=
+ =?us-ascii?Q?3B8wbRLIFv8TaPuqwfUSY6yaAyVtZKpEtJ4DKR1poq0ftP1cXoeIct6FEG9h?=
+ =?us-ascii?Q?SWZeX0MEwCEbYdj/mcI0nqRneswv4MNX2LOWcErrR72xI/SD10F8DfqLmeUH?=
+ =?us-ascii?Q?qEGk68+b2ZyRW2CLUElIOxsG28gSaiQMRflx2NjXkoBKMI5/fY5ncoBxul/A?=
+ =?us-ascii?Q?qT396YrlQsYO1PAwSwlaS5fx5BWB8EENYTBWeh9aeQMzUAX7Help/AsODeTu?=
+ =?us-ascii?Q?OziewR+/AwT2oa/J9FN9vf0+gEOae9m3hKi+lM6Oot84MScOqyabDQ3gtl6r?=
+ =?us-ascii?Q?VSFKdOv7f4JGalp36uDGkXTnQpCCrzT5ME/byG2prmpdeMvWP+lNatrqPex+?=
+ =?us-ascii?Q?hCaY4dI0PEQYNBXXuxy+Eul0E26z4eFMYK5516FhQ8VkMLoCHEV3C4Oj1wVK?=
+ =?us-ascii?Q?j/+GwdgYkp72ss82mjfpwWBvm/F8pi1V/1kfKc8DNptEa/aFPXXkeCk3MJia?=
+ =?us-ascii?Q?it/xMNiZnLhBgLLHV15VGTafGULLue4zB2WiMpKq?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34236d4d-babb-4a26-5e64-08dca62d6bac
+X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB5676.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2024 06:55:19.2015
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tbDGSbFoMyieh3RSY8ig53XyarKXp0hsi3IyB+G52S+U77YAKsOImrZTIVmNlFeC7p1ISqqqPrHTvjNOpCj7UQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6510
 
-On Wed, Jul 10, 2024 at 10:44:41AM -0700, Vanshidhar Konda wrote:
-> I apologize for the late review. This series dropped off my radar. I will test
-> this on an AmpereOne system.
-> 
-> On Mon, Jun 03, 2024 at 09:21:53AM +0100, Beata Michalska wrote:
-> > With the Frequency Invariance Engine (FIE) being already wired up with
-> > sched tick and making use of relevant (core counter and constant
-> > counter) AMU counters, getting the current frequency for a given CPU,
-> > can be achieved by utilizing the frequency scale factor which reflects
-> > an average CPU frequency for the last tick period length.
-> > 
-> > The solution is partially based on APERF/MPERF implementation of
-> > arch_freq_get_on_cpu.
-> > 
-> > Suggested-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> > ---
-> > arch/arm64/kernel/topology.c | 110 +++++++++++++++++++++++++++++++----
-> > 1 file changed, 100 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> > index e475ec2705e1..2c002d2c3e0b 100644
-> > --- a/arch/arm64/kernel/topology.c
-> > +++ b/arch/arm64/kernel/topology.c
-> > @@ -17,6 +17,7 @@
-> > #include <linux/cpufreq.h>
-> > #include <linux/init.h>
-> > #include <linux/percpu.h>
-> > +#include <linux/sched/isolation.h>
-> > 
-> > #include <asm/cpu.h>
-> > #include <asm/cputype.h>
-> > @@ -88,18 +89,28 @@ int __init parse_acpi_topology(void)
-> >  * initialized.
-> >  */
-> > static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =  1UL << (2 * SCHED_CAPACITY_SHIFT);
-> > -static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
-> > -static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
-> > static cpumask_var_t amu_fie_cpus;
-> > 
-> > +struct amu_cntr_sample {
-> > +	u64		arch_const_cycles_prev;
-> > +	u64		arch_core_cycles_prev;
-> > +	unsigned long	last_update;
-> > +};
-> > +
-> > +static DEFINE_PER_CPU_SHARED_ALIGNED(struct amu_cntr_sample, cpu_amu_samples);
-> > +
-> > void update_freq_counters_refs(void)
-> 
-> Could this be renamed to update_amu_cntr_sample() for more clarity?
-I guess it could though to be fair I'd be more inclined to rename the struct
-itself: this function updates the cached counter values that are being used
-as a most recent ones but also as reference when calculating the delta
-between the readings, so I'd say the naming here is pretty accurate.
-> 
-> > {
-> > -	this_cpu_write(arch_core_cycles_prev, read_corecnt());
-> > -	this_cpu_write(arch_const_cycles_prev, read_constcnt());
-> > +	struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
-> > +
-> > +	amu_sample->arch_core_cycles_prev = read_corecnt();
-> > +	amu_sample->arch_const_cycles_prev = read_constcnt();
-> 
-> I think it would be better to update amp_sample->last_update here. update_freq_counters_refs
-> is the only way to update the amu_sample. So it should be safer to update the whole structure
-> in this method.
-Right, so the amu_sample->last_update is actually referring to updating the
-scale factor, not the counter values per-se, even though one cannot be updated
-without the other; so I'd rather keep those separated: the update time is being
-used to determine whether the last known freq scale is still somewhat relevant.
-If that would eliminate the confusion I can rename that filed.
-> 
-> > }
-> > 
-> > static inline bool freq_counters_valid(int cpu)
-> > {
-> > +	struct amu_cntr_sample *amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
-> > +
-> > 	if ((cpu >= nr_cpu_ids) || !cpumask_test_cpu(cpu, cpu_present_mask))
-> > 		return false;
-> > 
-> > @@ -108,8 +119,8 @@ static inline bool freq_counters_valid(int cpu)
-> > 		return false;
-> > 	}
-> > 
-> > -	if (unlikely(!per_cpu(arch_const_cycles_prev, cpu) ||
-> > -		     !per_cpu(arch_core_cycles_prev, cpu))) {
-> > +	if (unlikely(!amu_sample->arch_const_cycles_prev ||
-> > +		     !amu_sample->arch_core_cycles_prev)) {
-> > 		pr_debug("CPU%d: cycle counters are not enabled.\n", cpu);
-> > 		return false;
-> > 	}
-> > @@ -152,17 +163,22 @@ void freq_inv_set_max_ratio(int cpu, u64 max_rate)
-> > 
-> > static void amu_scale_freq_tick(void)
-> > {
-> > +	struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
-> > 	u64 prev_core_cnt, prev_const_cnt;
-> > 	u64 core_cnt, const_cnt, scale;
-> > 
-> > -	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
-> > -	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
-> > +	prev_const_cnt = amu_sample->arch_const_cycles_prev;
-> > +	prev_core_cnt = amu_sample->arch_core_cycles_prev;
-> > 
-> > 	update_freq_counters_refs();
-> > 
-> > -	const_cnt = this_cpu_read(arch_const_cycles_prev);
-> > -	core_cnt = this_cpu_read(arch_core_cycles_prev);
-> > +	const_cnt = amu_sample->arch_const_cycles_prev;
-> > +	core_cnt = amu_sample->arch_core_cycles_prev;
-> > 
-> > +	/*
-> > +	 * This should not happen unless the AMUs have been reset and the
-> > +	 * counter values have not been restored - unlikely
-> > +	 */
-> > 	if (unlikely(core_cnt <= prev_core_cnt ||
-> > 		     const_cnt <= prev_const_cnt))
-> > 		return;
-> > @@ -182,6 +198,8 @@ static void amu_scale_freq_tick(void)
-> > 
-> > 	scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
-> > 	this_cpu_write(arch_freq_scale, (unsigned long)scale);
-> > +
-> > +	amu_sample->last_update = jiffies;
-> 
-> Please see the comment above. I think this line could be moved to
-> update_freq_counters_refs method.
-> 
-> > }
-> > 
-> > static struct scale_freq_data amu_sfd = {
-> > @@ -189,6 +207,78 @@ static struct scale_freq_data amu_sfd = {
-> > 	.set_freq_scale = amu_scale_freq_tick,
-> > };
-> > 
-> > +static __always_inline bool amu_fie_cpu_supported(unsigned int cpu)
-> > +{
-> > +	return cpumask_available(amu_fie_cpus) &&
-> > +		cpumask_test_cpu(cpu, amu_fie_cpus);
-> > +}
-> > +
-> > +#define AMU_SAMPLE_EXP_MS	20
-> > +
-> > +unsigned int arch_freq_get_on_cpu(int cpu)
-> > +{
-> > +	struct amu_cntr_sample *amu_sample;
-> > +	unsigned int start_cpu = cpu;
-> > +	unsigned long last_update;
-> > +	unsigned int freq = 0;
-> > +	u64 scale;
-> > +
-> > +	if (!amu_fie_cpu_supported(cpu) || !arch_scale_freq_ref(cpu))
-> > +		return 0;
-> > +
-> > +retry:
-> > +	amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
-> > +
-> > +	last_update = amu_sample->last_update;
-> > +
-> > +	/*
-> > +	 * For those CPUs that are in full dynticks mode,
-> > +	 * and those that have not seen tick for a while
-> > +	 * try an alternative source for the counters (and thus freq scale),
-> > +	 * if available, for given policy:
-> > +	 * this boils down to identifying an active cpu within the same freq
-> > +	 * domain, if any.
-> > +	 */
-> > +	if (!housekeeping_cpu(cpu, HK_TYPE_TICK) ||
-> > +	    time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS))) {
-> > +		struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > +		int ref_cpu = cpu;
-> > +
-> > +		if (!policy)
-> > +			goto leave;
-> > +
-> > +		if (!policy_is_shared(policy)) {
-> > +			cpufreq_cpu_put(policy);
-> > +			goto leave;
-> > +		}
-> > +
-> > +		do {
-> > +			ref_cpu = cpumask_next_wrap(ref_cpu, policy->cpus,
-> > +						    start_cpu, false);
-> > +
-> > +		} while (ref_cpu < nr_cpu_ids && idle_cpu(ref_cpu));
-> > +
-> > +		cpufreq_cpu_put(policy);
-> > +
-> > +		if (ref_cpu >= nr_cpu_ids)
-> > +			/* No alternative to pull info from */
-> > +			goto leave;
-> > +
-> > +		cpu = ref_cpu;
-> > +		goto retry;
-> > +	}
-> > +	/*
-> > +	 * Reversed computation to the one used to determine
-> > +	 * the arch_freq_scale value
-> > +	 * (see amu_scale_freq_tick for details)
-> > +	 */
-> > +	scale = arch_scale_freq_capacity(cpu);
-> > +	freq = scale * arch_scale_freq_ref(cpu);
-> > +	freq >>= SCHED_CAPACITY_SHIFT;
-> > +leave:
-> > +	return freq;
-> > +}
-> > +
-> > static void amu_fie_setup(const struct cpumask *cpus)
-> > {
-> > 	int cpu;
-> > -- 
-> > 2.25.1
-> > 
+When PAGE_SIZE 4096, MAX_PAGE_ORDER 10, 64bit machine,
+change size limit into 3GB and then create a udmabuf,
+current ubuf->folios alloc from kmalloc_array will trigger this
+warn and fail create:
+
+[ 4080.876581] ------------[ cut here ]------------
+[ 4080.876843] WARNING: CPU: 3 PID: 2015 at mm/page_alloc.c:4556 __alloc_pages+0x2c8/0x350
+[ 4080.878839] RIP: 0010:__alloc_pages+0x2c8/0x350
+[ 4080.879470] Call Trace:
+[ 4080.879473]  <TASK>
+[ 4080.879473]  ? __alloc_pages+0x2c8/0x350
+[ 4080.879475]  ? __warn.cold+0x8e/0xe8
+[ 4080.880647]  ? __alloc_pages+0x2c8/0x350
+[ 4080.880909]  ? report_bug+0xff/0x140
+[ 4080.881175]  ? handle_bug+0x3c/0x80
+[ 4080.881556]  ? exc_invalid_op+0x17/0x70
+[ 4080.881559]  ? asm_exc_invalid_op+0x1a/0x20
+[ 4080.882077]  ? udmabuf_create+0x131/0x400
+
+Because MAX_PAGE_ORDER, kmalloc can max alloc 4096 * (1 << 10), 4MB
+memory, so can save 524288 pages(2GB).
+
+So, 2GB above size can not support in current udmabuf.
+
+Further more, costly order(order 3) may not be guaranteed that it can be
+applied for, due to fragmentation.
+
+This patch change folios arrary use kvmalloc_array, this can fallback
+alloc into vmalloc, which can guarantee allocation for any size and does
+not affect the performance of kmalloc allocations.
+
+Signed-off-by: Huan Yang <link@vivo.com>
+---
+ drivers/dma-buf/udmabuf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+index 047c3cd2ceff..71182a6d35b1 100644
+--- a/drivers/dma-buf/udmabuf.c
++++ b/drivers/dma-buf/udmabuf.c
+@@ -197,7 +197,7 @@ static void release_udmabuf(struct dma_buf *buf)
+ 
+ 	unpin_all_folios(&ubuf->unpin_list);
+ 	kfree(ubuf->offsets);
+-	kfree(ubuf->folios);
++	kvfree(ubuf->folios);
+ 	kfree(ubuf);
+ }
+ 
+@@ -322,7 +322,7 @@ static long udmabuf_create(struct miscdevice *device,
+ 	if (!ubuf->pagecount)
+ 		goto err;
+ 
+-	ubuf->folios = kmalloc_array(ubuf->pagecount, sizeof(*ubuf->folios),
++	ubuf->folios = kvmalloc_array(ubuf->pagecount, sizeof(*ubuf->folios),
+ 				    GFP_KERNEL);
+ 	if (!ubuf->folios) {
+ 		ret = -ENOMEM;
+@@ -399,7 +399,7 @@ static long udmabuf_create(struct miscdevice *device,
+ 		fput(memfd);
+ 	unpin_all_folios(&ubuf->unpin_list);
+ 	kfree(ubuf->offsets);
+-	kfree(ubuf->folios);
++	kvfree(ubuf->folios);
+ 	kfree(ubuf);
+ 	return ret;
+ }
+
+base-commit: 523b23f0bee3014a7a752c9bb9f5c54f0eddae88
+-- 
+2.45.2
+
