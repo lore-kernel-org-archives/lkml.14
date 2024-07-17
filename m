@@ -1,154 +1,112 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B324817FADC
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 12:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5A017F4FD;
+	Wed, 17 Jul 2024 12:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721218011; cv=none; b=Vvgp5SC4AWBkTcAM7aZdKFE8AhQ/iNyqAS9dQvpqz3LYnSOZJZEGDhyFqtmjELisZ2HFp8IegW6FxTvn1CKucPNiQpYTPhFoVocjGydji1Ge/EwSTcMlhE7hYgb+QqauCylFjf/9QzFWVwcsh/efVXgAvvq0bH9KjfbGNbxMTYY=
+	t=1721218106; cv=none; b=YsoQKxrns2K1GM+3WI9EmksQ9YnBGFhylSajKU0OePrvmJDZkh+gAf/t/Ui9f83T4saZWM+hht08Hfp22U8uWWsw5gb/EWScHJj9FIFAdmOJXDIpD3z4azDn09Xu3FW/NJXDj5G8z1/7HeG26hZUQSjtynK6CQnxdGFkRxumMZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721218011; c=relaxed/simple;
-	bh=yvH1bJuJPMDl0yHsKJUGXDy0li3oZEpOxlcFwqBzU0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZ4oRTsD6eI+ntwOmz3xQeoKeB+o87/6tEr+ZwwMROz1MzyAtkS3qsemYmlt+i1w19+JaqjU4bYAVGZg52t+F/F/UzemYZ9DKX/adzywby9NnNvWGBw3wiCBxZOYPf7AviqT/daxx1GuDV8BMtLGVpcUj6i9Vbq3gfs0aBxLDDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AkL4UWH0; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1721218106; c=relaxed/simple;
+	bh=9is3kWQq7byWjLnfjgZmgqt2HbsdE+iWQlwOhO1Kq68=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XcStqpKc29p9Kg76Q1/VeHMvfiOVv9RjCotwxdxLi6oZiBf+PZIhqxXhpD+Za2gX5qOpN121QWYzMdWE6ksurssvrFWzRao2ajBCe1AN4OR7GEUULgUwdEbjdJcx0woplSFIU9IgCQv1Z9oryiXvRs4p+ncPcLnFbSChJzAFjkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpvdwEs1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AkL4UWH0"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58b447c513aso7099432a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 05:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1721218008; x=1721822808; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1A+uhvZFWN0/aI6TtzrTAyQXjVBtroZMv7k34eBegwY=;
-        b=AkL4UWH0fjTo7/yr1I7J0TuJVaNgAI0ni3u0+qPBBRiwa2Ij2HWtnwnnDM3JEsJVBM
-         AcE81Vvhm40dS2FytehJdawA0P+MxrZeGAsvruEXemt56Nfta1bKKNsIMpewCXDjZVnO
-         7b//JTWbo9NXilIPE4RtKN/PLN3KFPokufLMlnGSbR0ru1ZKE2zvxzw3bjSI8QR2KufY
-         ZhXvocpbvRqNSt/xCCgkQetf5GnBESeMiJujUjRYesLLqNatPvCcGR8pghQZWzE5qOj1
-         6Mg6uQCOk6sKR4ZoIUtWuyVzE4L8u/bhIlCJH/RkS994CTRiIjn6ul4Uvz4F7tJ8Dqlr
-         XNVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721218008; x=1721822808;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1A+uhvZFWN0/aI6TtzrTAyQXjVBtroZMv7k34eBegwY=;
-        b=usc7qCmvhFp5CRyyGMfppaJe2E4QP1PUK/wVAytXKYGk8+blD2RP57qMxQIQoIWfxK
-         Fn4DMrrcDfTciLzZdlhY4RWAhShxe0Tw/ljjqCzUbrbyQklAxP3ThxoKKfPUkBlAR6xD
-         SQfqSFG+DjStxAwQyOW9txfiieiU5qEU4+qLf9pC/Ankp5P349MHZezmN6rmhw1LyvFP
-         lJGxlh3sNGN3gEaLsqdEgL76rEJlqGevAeNogvtxwdrCP+nGJpbnFWZKrtiluNUHLY+D
-         vPk2UO651MiqT6a9vXiru8kKPL2dpf0Bxlzfj3hmevRTv2kqQU53wK4rTWsHOKC+pV+A
-         Wvfg==
-X-Forwarded-Encrypted: i=1; AJvYcCWeK3spSOyut7/Ah4jtZT0PN7tjKxxyDuk9ynJjttykQhdOkKe5MfVOqL0i3WhOKsThoRUWx8ngePDcwy0NunazBUm+vPbd7PfzGdXO
-X-Gm-Message-State: AOJu0YxovyCAih7FcMLLVMq7i6n0YeV4NJuO5zh6vUpIVprv0tW+H+Se
-	g+ptkR2auASHnZVnXzlkcHAirJbrl1katx0XXZ7TY7ambbyfRSbA+5GRsFUQP5A=
-X-Google-Smtp-Source: AGHT+IFKEQnsVc87r2NlBgc3y7tiA0/99uSXp6CQ8sd9Ors0/3XF6WibUv9rRg2aDIdfojAjEABnDQ==
-X-Received: by 2002:a50:c30a:0:b0:59e:b95d:e748 with SMTP id 4fb4d7f45d1cf-5a05b416a9fmr1228473a12.8.1721218008012;
-        Wed, 17 Jul 2024 05:06:48 -0700 (PDT)
-Received: from localhost (109-81-86-75.rct.o2.cz. [109.81.86.75])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a0c2a750c0sm551431a12.60.2024.07.17.05.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 05:06:47 -0700 (PDT)
-Date: Wed, 17 Jul 2024 14:06:46 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Jianxiong Gao <jxgao@google.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] mm: Fix endless reclaim on machines with unaccepted
- memory.
-Message-ID: <Zpez1rkIQzVWxi7q@tiehlicka>
-References: <20240716130013.1997325-1-kirill.shutemov@linux.intel.com>
- <ZpdwcOv9WiILZNvz@tiehlicka>
- <xtcmz6b66wayqxzfio4funmrja7ezgmp3mvudjodt5xfx64rot@s6whj735oimb>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpvdwEs1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88703C32782;
+	Wed, 17 Jul 2024 12:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721218105;
+	bh=9is3kWQq7byWjLnfjgZmgqt2HbsdE+iWQlwOhO1Kq68=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IpvdwEs1o8Al8oPwIoFftr3t6x0JYNv7xcA1146nClLvyxB49gAafsgRdnAQTcpOh
+	 GJsIX5gF0rB14m/5ZoD+kYlfqW/uUx88VxLI5mV2eTcG/IiPQLDK64h4P5FI3cbWPq
+	 /HDGkn6eatNjlHaWAB7Oix/E1of8n+GMhuJ3+Fo5cCJ0Q7n3/1rc+ZJaSY35QIcdM4
+	 JADWNDdG3oxiQ9aifKnT8GEvOWKOvGj25wy+WcicPVnfVAsMK9NFaaWTBMgicLki6H
+	 EI7wFntk1h1DsKnMDRs2t6Oq+PH9AQPa73d886IYrl/Ps51E2Vvrac75uN4fGgox2k
+	 byiYLdF2ZrY8A==
+Message-ID: <04d94188-5e30-4cab-b534-e97c0b2a61f3@kernel.org>
+Date: Wed, 17 Jul 2024 14:08:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xtcmz6b66wayqxzfio4funmrja7ezgmp3mvudjodt5xfx64rot@s6whj735oimb>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: syscon: Add
+ ti,j784s4-acspcie-proxy-ctrl compatible
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, lee@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, vigneshr@ti.com,
+ kishon@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srk@ti.com
+References: <20240715120936.1150314-1-s-vadapalli@ti.com>
+ <20240715120936.1150314-2-s-vadapalli@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240715120936.1150314-2-s-vadapalli@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed 17-07-24 14:55:08, Kirill A. Shutemov wrote:
-> On Wed, Jul 17, 2024 at 09:19:12AM +0200, Michal Hocko wrote:
-> > On Tue 16-07-24 16:00:13, Kirill A. Shutemov wrote:
-> > > Unaccepted memory is considered unusable free memory, which is not
-> > > counted as free on the zone watermark check. This causes
-> > > get_page_from_freelist() to accept more memory to hit the high
-> > > watermark, but it creates problems in the reclaim path.
-> > > 
-> > > The reclaim path encounters a failed zone watermark check and attempts
-> > > to reclaim memory. This is usually successful, but if there is little or
-> > > no reclaimable memory, it can result in endless reclaim with little to
-> > > no progress. This can occur early in the boot process, just after start
-> > > of the init process when the only reclaimable memory is the page cache
-> > > of the init executable and its libraries.
-> > 
-> > How does this happen when try_to_accept_memory is the first thing to do
-> > when wmark check fails in the allocation path?
+On 15/07/2024 14:09, Siddharth Vadapalli wrote:
+> The ACSPCIE_PROXY_CTRL registers within the CTRL_MMR space of TI's J784S4
+> SoC are used to drive the reference clock to the PCIe Endpoint device via
+> the PAD IO Buffers. Add the compatible for allowing the PCIe driver to
+> obtain the regmap for the ACSPCIE_CTRL register within the System
+> Controller device-tree node in order to enable the PAD IO Buffers.
 > 
-> Good question.
-> 
-> I've lost access to the test setup and cannot check it directly right now.
-> 
-> Reading the code Looks like __alloc_pages_bulk() bypasses
-> get_page_from_freelist() where we usually accept more pages and goes
-> directly to __rmqueue_pcplist() -> rmqueue_bulk() -> __rmqueue().
-> 
-> Will look more into it when I have access to the test setup.
-> 
-> > Could you describe what was the initial configuration of the system? How
-> > much of the unaccepted memory was there to trigger this?
-> 
-> This is large TDX guest VM: 176 vCPUs and ~800GiB of memory.
-> 
-> One thing that I noticed that the problem is only triggered when LRU_GEN
-> enabled. But I failed to identify why.
-> 
-> The system hang (or have very little progress) shortly after systemd
-> starts.
+> The Technical Reference Manual for J784S4 SoC with details of the
+> ASCPCIE_CTRL registers is available at:
+> https://www.ti.com/lit/zip/spruj52
 
-Please try to investigate this further. The patch as is looks rather
-questionable to me TBH. Spilling unaccepted memory into the reclaim
-seems like something we should avoid if possible as this is something
-page allocator should care about IMHO.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> > > To address this issue, teach shrink_node() and shrink_zones() to accept
-> > > memory before attempting to reclaim.
-> > > 
-> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > Reported-by: Jianxiong Gao <jxgao@google.com>
-> > > Fixes: dcdfdd40fa82 ("mm: Add support for unaccepted memory")
-> > > Cc: stable@vger.kernel.org # v6.5+
-> > [...]
-> > >  static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
-> > >  {
-> > >  	unsigned long nr_reclaimed, nr_scanned, nr_node_reclaimed;
-> > >  	struct lruvec *target_lruvec;
-> > >  	bool reclaimable = false;
-> > >  
-> > > +	/* Try to accept memory before going for reclaim */
-> > > +	if (node_try_to_accept_memory(pgdat, sc)) {
-> > > +		if (!should_continue_reclaim(pgdat, 0, sc))
-> > > +			return;
-> > > +	}
-> > > +
-> > 
-> > This would need an exemption from the memcg reclaim.
-> 
-> Hm. Could you elaborate why?
+Best regards,
+Krzysztof
 
-Because memcg reclaim doesn't look for memory but rather frees charges
-to reclaim for the new use so unaccepted memory is not really relevant
-as it couldn't have been charged.
--- 
-Michal Hocko
-SUSE Labs
