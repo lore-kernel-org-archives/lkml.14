@@ -1,76 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F18181BA6;
-	Wed, 17 Jul 2024 15:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD04ED8
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721230020; cv=none; b=ssYU9MWmVIXdiAN6qcTrJ5yp3blR51sv1YJuxdcCswXSYTEmdoflmGm2uLoIaIutBuYji2DOaCw/k1PK9ZUSH4HS2zEEmHT8EZtrJLZ7pDTJzQ0uFRhtSXhqOKCKHtmPkCy/lF5NXLr7fFAVATpl+cnWJxPVO4wbyo+njOXIYw4=
+	t=1721230018; cv=none; b=Ckad4gOK0giRvz/gSEJ59KrrIgvomeXpjmYRq7T2euvXQWykTnZT9H2uZX2fxMSY3o+6wqmToG4ayoJHoBk1bAnezBfRrCGdyKOcsfjWWiQtjw7ElK+efnq/cf90H+VsuYkXxotRTc2xLPzRk5n+IRKEjDWS9tQsZKS3l9vKC0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721230020; c=relaxed/simple;
-	bh=o6ksGgCZ4nXFQWa+KewLnEYozl+Ia2t1l93hAy52I+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O4eBK9T2dyIAZYwScdBjxQE9r9lJ1My2b2abAnqmJ4t/F8lsaPfR3h58Ph4txhlQTarInxsToVLEMSi0z4s9IFBW4JH55mxidRTRRtkmyycNlVQpGO10UHiouhPUPXgm4222vRX6ll4TqVkNWoIAKqGH531IU/auVqFhiCDeKrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCw3AXjB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721230018; c=relaxed/simple;
+	bh=X4mXGG0Ukw5ol5x3EYC6ksmrHHZwXKI8jI/3u0LCUf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgFwkWzzu506a5KWxHoe4rxTZ6XieUyG7dxal7jIWs2hOUoysHN5iY1qBsuJkAmA7f434ddfC9hWDQVkNCMo3MKpBviRN8HUmDUSDaNg/51R5ntAye/sEXqkO6kGn67OW6NiFD9M2HtCADmftVv3Spl8+oaY/fiwI83gY3tnDaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=HTQ7Za33; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCw3AXjB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59587C32782;
-	Wed, 17 Jul 2024 15:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721230020;
-	bh=o6ksGgCZ4nXFQWa+KewLnEYozl+Ia2t1l93hAy52I+U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eCw3AXjBH9ZKHo9zYkGygBQGDA2e1faiOs4ZG905SSfYCbRWMZb4k37mRpR5pFFYO
-	 hWVkTDSQIsN2cQFJCM7L56dd0D64lX9Yr/doEjbGs4iFVhAVVsqSRU2wjy/war0JES
-	 FQ0Fv+67aOqCg97ypyLxgs/4Zhl/LyFkK67vQVXuG/UfDpOWmckcHIbyKGuv60C5TR
-	 3eTD6ZJEErAcEmqlHq3ecMzRR+QLxTNTkKINLMNBru9HMVXGu+sq0tmgKSg7U7QRxi
-	 ErISQ+VIekaZJ5whNZf9mlaZuHMNNZwIdFZOQ6CWvJpRWvu9wyr/WWfW0casS/3qWA
-	 NUNfdCPJ5Dy/Q==
-Date: Wed, 17 Jul 2024 08:26:58 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
- <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Marek =?UTF-8?B?QmVow7pu?=
- <kabel@kernel.org>, Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
- <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
- mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>, Antoine Tenart
- <atenart@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Dan Carpenter
- <dan.carpenter@linaro.org>, Romain Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next v17 00/14] Introduce PHY listing and
- link_topology tracking
-Message-ID: <20240717082658.247939de@kernel.org>
-In-Reply-To: <20240716101626.3d54a95d@fedora-2.home>
-References: <20240709063039.2909536-1-maxime.chevallier@bootlin.com>
-	<20240715083106.479093a6@kernel.org>
-	<20240716101626.3d54a95d@fedora-2.home>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="HTQ7Za33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1721230006;
+	bh=X4mXGG0Ukw5ol5x3EYC6ksmrHHZwXKI8jI/3u0LCUf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HTQ7Za333gNO3sUmMxtodtjmHKjB/sbtCo/WJlLTfSUKMMH1dchS5CGR8v3So8/1v
+	 CkNra9rGjxhi+YdAi1PtoSJwst4J2TRPV9eQBbT7+SPkOuBP6tu0U4KH4fKLar+zgl
+	 p9m1rkH6D4aSaNKFF5yaVdeT7OU1kB2jH03ASGXc=
+Date: Wed, 17 Jul 2024 17:26:44 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sysctl: treewide: constify the ctl_table argument of
+ proc_handlers
+Message-ID: <cdf0831f-f9af-4aa7-a3a0-970efeec1def@t-8ch.de>
+References: <CGME20240619100941eucas1p25d522dca3b74c899434b97b0c0dc78a0@eucas1p2.samsung.com>
+ <20240619-sysctl-const-handler-v2-1-e36d00707097@weissschuh.net>
+ <20240715202319.mccb6jlsa6dkynap@joelS2.panther.com>
+ <f7489470-b0da-406b-a8dd-0ae7aaeceec8@t-8ch.de>
+ <20240716152705.juet6srejwq5o6je@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240716152705.juet6srejwq5o6je@joelS2.panther.com>
 
-On Tue, 16 Jul 2024 10:16:26 +0200 Maxime Chevallier wrote:
-> > I lack the confidence to take this during the merge window, without
-> > Russell's acks. So Deferred, sorry :(  
+On 2024-07-16 17:27:05+0000, Joel Granados wrote:
+> On Mon, Jul 15, 2024 at 10:58:10PM +0200, Thomas Weißschuh wrote:
+> > On 2024-07-15 22:23:19+0000, Joel Granados wrote:
+> ...
+> > > The merge window is now open. I want to send this patch on the Wednesday
+> > > of next week (jul 24).
+
+<snip>
+
+> > > 2. Does it still apply cleanly against the latest master branch?
+> > 
+> > Not against mainline master, but against next-20240715.
+> > To apply cleanly (and compile) on mainline master it still requires the
+> > net/ and sysctl trees to be merged.
+> > Otherwise some modified functions are missing, leading to (trivial) merge
+> > conflicts or the preparation commits are missing, leading to compilation
+> > errors.
 > 
-> Understood. Is there anything I can make next time to make that series
-> more digestable and easy to review ? I didn't want to split the netlink
-> part from the core part, as just the phy_link_topology alone doesn't
-> make much sense for now, but it that makes the lives of reviewers
-> easier I could submit these separately.
+> Understood. I have just sent Linus the changes for sysctl-next, so those
+> should land in master soon (baring any issues with the pull request).
+> 
+> These [1] and [2] are the two series in net-dev that are the deps for
+> the constification treewide patch. Once these two go into mainline, then
+> we are good to go. Right?
 
-TBH I can only review this from coding and netlink perspective, and 
-it looks solid. Folk who actually know PHYs and SFPs may have more
-meaningful feedback :(
+Right, but...
+
+It turns out the preparation patch for mm/hugetlb.c [0] is also still
+missing. I missed it in all the errors triggered in net/.
+But as far as I can see this patch will be part of Andrew's PR for mm.
+
+Other than that it looks good.
+
+<snip>
+
+[0] https://lore.kernel.org/lkml/20240518-sysctl-const-handler-hugetlb-v1-1-47e34e2871b2@weissschuh.net/
+
+> [1] net: constify ctl_table arguments of utility functions
+>     https://patchwork.kernel.org/project/netdevbpf/list/?series=856252&state=%2A&archive=both
+> [2] bpf: constify member bpf_sysctl_kern::table
+>     https://patchwork.kernel.org/project/netdevbpf/list/?series=854191&state=*
