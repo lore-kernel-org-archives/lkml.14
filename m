@@ -1,166 +1,138 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC69185E60;
-	Wed, 17 Jul 2024 21:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4FE18059
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 21:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721251743; cv=none; b=KTPbW7p13X6wTSpOaChLSh/fcNaHytyIMfs2dl3LjUVFz7yvF77MaOlcKelGHOT1LkuChRM2rWxVt/ugUr1GIrfzMb7NdU57GtuhKKr1VYURWSwHuzGMiQfpjUoaJZlXpsXnoWh8Oxz/SYIjBbAGCgSR3+pIVa6h0A6zD/g3QFc=
+	t=1721251843; cv=none; b=dlEAPmdpNKjroSDeMZUe74NZrh8HckfGm+DVKjNwLuYjQyyX88xzauKVXcfvb/lZx596zgYB25Av/rAqeDSieXzWJqqfFLcIqtf2TPZWHi5ZVo4eBScm0fie8kYnM/MAUyOjgJiVUH/VEikYuKiK5ryIlBukLm//lp+IXYxvS7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721251743; c=relaxed/simple;
-	bh=tZdbzZAllKFHS+uGPe7keBWufqKl9nQ0WYp7kK5MWzM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VHO1HYX3TEhNQnRqKqWn+r/prSR4qriATk/x3vWh3nIzoPAdFadmGtlRixIAxBXNMjM+Q3naWAJ2T5rfRmVEyLujbKlhZqn1HI8WodfmKZgn/STcs6ziGk+puYOB/Vr6neU0TRVytSS9aypbqicXAWLw83qJ2QnGq0wD4qBBbSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4cFos4V; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721251843; c=relaxed/simple;
+	bh=gix4RZzWCeOfWIRc59SMvMQVuoN4P1VF432Sc3mutug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KYe2eBfM5anaqODImElQUz5+0PVweUrmurg7d35n6SbY9HD1OjdPcVY1w2xMde0+98P29++yJVyfogeSNMuJoyydrPcJIMm/ptwXHta9TJyachMlQHKQSv0Lg6rbL5/1K5OH6PgvZi/wcEvQFuYuwTsEot34PUlUURM/nMzCMAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GjEtpAaw; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4cFos4V"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eee1384e0aso2221651fa.1;
-        Wed, 17 Jul 2024 14:29:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GjEtpAaw"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-64b0d45a7aaso1029127b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 14:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721251739; x=1721856539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1721251840; x=1721856640; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fc29YR0MLavAb8gDvKJJKOxIauGbyGNvRrfyjZ4hmXI=;
-        b=Y4cFos4V1OEf7p47eztrqcAXeC3WcXk+ffCbyae5slIkDH09ynuadCvH89cyLmnU1h
-         YWHYyjFWB8dNC4peUATnQmv9HPeiAlIqqSZNWv7vuVRP748TYn0Gr8cOe025xQ8ScvGj
-         98hJqc5M6/rMh/rPtw+bZQgOIgcgLK6qIW84bXBkZNMp+2SMUUrdmt+PgGY8I/WDkBo9
-         xxueJQ6x0+4AzF1IFb7ElCPuFN+wbI3852BaK4jhHgQN4YH+JwESalLrY61OH1uxxhNc
-         xWBoaK/b689qHaHoz2ZXZdW6gW0JamcRAJTz2IYFNxjz5CDoO27jRfvryWRW/3+IAedR
-         hMqw==
+        bh=gix4RZzWCeOfWIRc59SMvMQVuoN4P1VF432Sc3mutug=;
+        b=GjEtpAawRdtKXm1yG1aKagF8zO0Zx04L7G95aFiddg8C5o60d8nlarYSmb1DilxeYq
+         pg0XfNoBXkZnWA4d2ONOofbJkLpYG2M+qlxtjZrjXahKpxL+R9yHHYvyiexLrxXFIqrX
+         K73QJWgghpI0gUmT+MffkVrsMim8O+nWL0lon4EaUbwJtjN3h1q+psfr2u6akN+rTIF0
+         5Y5DMhUzINzWKTj/teAzv+5UyJIhj/dG7GMGFljouhg0qKzgQx94QfBCiLwMphX1e0/e
+         eXFTFw4Um23sPoWh/OZL2e4Xb4SWDUKMNQQeJLu42gWs89nPCiTvvbrMgfU47y4uAs/y
+         F5ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721251739; x=1721856539;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1721251840; x=1721856640;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fc29YR0MLavAb8gDvKJJKOxIauGbyGNvRrfyjZ4hmXI=;
-        b=HqDsjbhetw5q/yBSu+N57pwbpOkFHsAEiLFcB0WWyC+Tc7cJ/sqANsNSKJ8WqMwCpo
-         I9yOYQZy2eDyhr5HZB0Rs1QNIQTuh70CFcuGw3dmH209/xelS6N9QLxjyXDknUyMR0tE
-         70VzIeFjWGP05XzdWLzOAODf5ZAXdhjYb7ETbNsT1hRcjpaiwiPKxDI+329zY3x4w9bV
-         fKDL746JTvE1Qnb0A1JZim0c8c532CmJS8IkyWYVWPisVrcLTPvga5pzowCbv4y0HJBH
-         /6liT/z84vH76tAMo6r+7r5aPxPiowwC6VNCzR15mdF4lpOhC7UB1990lKOnrjAA4UYD
-         nFaA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+YJh1vfqOTXbEIukx2JyrdL5JKgg/GSDZn71Sx1SrSw56mH3JSOcqWWh/ds7+guiIVabVw0fzVK+OyLHJL9yaOv8naSl6vb2Za2Ps4z488u2xSu9uscTQn87fZb85GAvL/9cBk28obw==
-X-Gm-Message-State: AOJu0YwC9/0yZfdGkAW2gmeofN2U8kGwj76fR2BPH4u89iTtZw3t/Sw1
-	vHLcHjPivcBbPf5H8RWoAwFi6ujLXPN+bFvGMdHDZvLs5hdoBuLf2L3qWJPe
-X-Google-Smtp-Source: AGHT+IEWeL4oJBrjTRu/BEp4+ibBQJr6iOFZvDrpOaq/euB6dt6YEBehpmxyuVTdEK3rW4H8dBU3UA==
-X-Received: by 2002:a2e:9dc3:0:b0:2ee:8db7:47b7 with SMTP id 38308e7fff4ca-2ef05c990admr3884601fa.26.1721251738708;
-        Wed, 17 Jul 2024 14:28:58 -0700 (PDT)
-Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b24a76f02sm7529198a12.2.2024.07.17.14.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 14:28:58 -0700 (PDT)
-From: Pawel Dembicki <paweldembicki@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Pawel Dembicki <paweldembicki@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 2/2] dt-bindings: net: dsa: vsc73xx: add {rx,tx}-internal-delay-ps
-Date: Wed, 17 Jul 2024 23:27:33 +0200
-Message-Id: <20240717212732.1775267-2-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240717212732.1775267-1-paweldembicki@gmail.com>
-References: <20240717212732.1775267-1-paweldembicki@gmail.com>
+        bh=gix4RZzWCeOfWIRc59SMvMQVuoN4P1VF432Sc3mutug=;
+        b=rtSPiJl9Mq6CZ6mNjKFxbWBfNaUD3XIeK8OEdPT4YTWjcFtyWANsYZojPvlx/z5dKx
+         pD7ZxNc5WptT+h7Xbx/s//IUcjTY7nxH2DeGodE5r9F2FUHVSChIv/WHHWFhbcmmEykc
+         xuuHQHUXquw+lL2bXlXSa5aCzRnP7tqvAOQHK8MgZRrqeD9fYiTblpWxtMjCtOtvQkZi
+         AFjRslJL/LpZT4MwTUPog+KR0jwxkfItIbwr/gqJwtVEOrYm1bpeJF7o1uwgVaDsgbKD
+         RT6t/r8f08HYgouhImIzuoQhyYdvfb4TuUPh6o1NGO4XN9gnDh2ZN++t087fps3739Wk
+         S9VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxjI6QjvsVQu3KmhhKkXpGkeujHj4RgQPLrMuaiBdgY5NWK9fiFekFQ8/59dP/SEMOzBcDoi7jWioBeU3fRGHbXD12gI0NvUMDpclv
+X-Gm-Message-State: AOJu0YxT1hY9uJY5jNshhJXFRv67E2qFr2IXJ7Nws1olHbN0x/jyPH1G
+	4F3EJUv/2Pm9HzY+An1mAk3zaB3U2zd4TlKoNzHA2QfkyWssQbACokvdk7BFYa7oK7WL9XVJNjN
+	447Kss1CPjqLmtv3OeH0jkJlU4pk6NcWVBb8t
+X-Google-Smtp-Source: AGHT+IFSQBXEEFmY88tpxdB9yZZ2M8dx8Tc06bJmHiaqFmB+8K8WkvgdngYKietzjrhO7uyZ+9fZI51PUM/+P1vw3f8=
+X-Received: by 2002:a05:690c:4502:b0:64b:9a00:240e with SMTP id
+ 00721157ae682-666038006e4mr8807447b3.31.1721251840163; Wed, 17 Jul 2024
+ 14:30:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240717181239.2510054-1-surenb@google.com> <20240717181239.2510054-2-surenb@google.com>
+ <16286915-1350-4e6b-a0f6-deec02b7fa92@suse.cz> <CAJuCfpG2uNicytRYhfqAKrfkxJoNLUUK_o066D=yKggsoc3wKQ@mail.gmail.com>
+ <10865b0a-175e-4b90-9042-7b63b1ea19f8@suse.cz> <CAJuCfpEnLGi8754DQeumLz0t+d6aXmEPEV64BMC0oRRqr9UX1A@mail.gmail.com>
+In-Reply-To: <CAJuCfpEnLGi8754DQeumLz0t+d6aXmEPEV64BMC0oRRqr9UX1A@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 17 Jul 2024 14:30:29 -0700
+Message-ID: <CAJuCfpG0W=65v9Z5zPg4R3cmeQSexhA5nJTJSAsEc4ogqbC8eA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] alloc_tag: outline and export free_reserved_page()
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, hch@infradead.org, 
+	pasha.tatashin@soleen.com, souravpanda@google.com, keescook@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a schema validator to vitesse,vsc73xx.yaml for MAC-level RGMII delays
-in the CPU port. Additionally, valid values for VSC73XX were defined,
-and a common definition for the RX and TX valid range was created.
+On Wed, Jul 17, 2024 at 2:20=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Wed, Jul 17, 2024 at 1:19=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> =
+wrote:
+> >
+> > On 7/17/24 10:04 PM, Suren Baghdasaryan wrote:
+> > > On Wed, Jul 17, 2024 at 12:36=E2=80=AFPM Vlastimil Babka <vbabka@suse=
+.cz> wrote:
+> > >>
+> > >> On 7/17/24 8:12 PM, Suren Baghdasaryan wrote:
+> > >> > Outline and export free_reserved_page() because modules use it and=
+ it
+> > >> > in turn uses page_ext_{get|put} which should not be exported. The =
+same
+> > >> > result could be obtained by outlining {get|put}_page_tag_ref() but=
+ that
+> > >> > would have higher performance impact as these functions are used i=
+n
+> > >> > more performance critical paths.
+> > >> >
+> > >> > Fixes: dcfe378c81f7 ("lib: introduce support for page allocation t=
+agging")
+> > >> > Reported-by: kernel test robot <lkp@intel.com>
+> > >> > Closes: https://lore.kernel.org/oe-kbuild-all/202407080044.DWMC9N9=
+I-lkp@intel.com/
+> > >> > Suggested-by: Christoph Hellwig <hch@infradead.org>
+> > >> > Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> > >> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > >>
+> > >> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > >>
+> > >> Are these two patches now stable@ material as 6.10 build is broken o=
+n ppc64
+> > >> with alloc taging enabled?
+> > >
+> > > I tested them with that specific configuration mentioned in the bug
+> > > report and with several usual ones I use.
+> > > Yeah, I guess from now on all such fixes should have
+> > >
+> > > Cc: stable@vger.kernel.org # v6.10
+> >
+> > Right. BTW I have just realized that the way you did Patch 2/2 and outl=
+ined
+> > the whole free_reserved_page() (which is fair, it's an init-time functi=
+on),
+> > mem_alloc_profiling_enabled() didn't stay inlined so Patch 1/2 is in fa=
+ct
+> > not necessary anymore?
+>
+> Yeah, I think you are right, currently no module has reasons to use
+> mem_alloc_profiling_enabled() directly. That might change in the
+> future but we can add the export at the time it's needed.
+> I checked and ppc64 build passes with just this patch. Let me post v3
+> with just this patch and Cc stable@.
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+v3 posted at https://lore.kernel.org/all/20240717212844.2749975-1-surenb@go=
+ogle.com/
 
----
-v2:
-  - added info about default value when the rx/tx delay property
-    is missing
----
- .../bindings/net/dsa/vitesse,vsc73xx.yaml     | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml
-index b99d7a694b70..7022a6afde5c 100644
---- a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml
-+++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.yaml
-@@ -52,6 +52,25 @@ properties:
- allOf:
-   - $ref: dsa.yaml#/$defs/ethernet-ports
- 
-+patternProperties:
-+  "^(ethernet-)?ports$":
-+    additionalProperties: true
-+    patternProperties:
-+      "^(ethernet-)?port@6$":
-+        allOf:
-+          - if:
-+              properties:
-+                phy-mode:
-+                  contains:
-+                    enum:
-+                      - rgmii
-+            then:
-+              properties:
-+                rx-internal-delay-ps:
-+                  $ref: "#/$defs/internal-delay-ps"
-+                tx-internal-delay-ps:
-+                  $ref: "#/$defs/internal-delay-ps"
-+
- # This checks if reg is a chipselect so the device is on an SPI
- # bus, the if-clause will fail if reg is a tuple such as for a
- # platform device.
-@@ -67,6 +86,16 @@ required:
-   - compatible
-   - reg
- 
-+$defs:
-+  internal-delay-ps:
-+    description:
-+      Disable tunable delay lines using 0 ps, or enable them and select
-+      the phase between 1400 ps and 2000 ps in increments of 300 ps.
-+      When the property is missing, the delay value is set to 2000 ps
-+      by default.
-+    enum:
-+      [0, 1400, 1700, 2000]
-+
- unevaluatedProperties: false
- 
- examples:
-@@ -108,6 +137,8 @@ examples:
-             reg = <6>;
-             ethernet = <&gmac1>;
-             phy-mode = "rgmii";
-+            rx-internal-delay-ps = <0>;
-+            tx-internal-delay-ps = <0>;
-             fixed-link {
-               speed = <1000>;
-               full-duplex;
-@@ -150,6 +181,8 @@ examples:
-           ethernet-port@6 {
-             reg = <6>;
-             ethernet = <&enet0>;
-+            rx-internal-delay-ps = <0>;
-+            tx-internal-delay-ps = <0>;
-             phy-mode = "rgmii";
-             fixed-link {
-               speed = <1000>;
--- 
-2.34.1
-
+>
+>
+> >
+> >
+> >
