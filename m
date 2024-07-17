@@ -1,41 +1,33 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5371B948;
-	Wed, 17 Jul 2024 06:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F67A17C66;
+	Wed, 17 Jul 2024 06:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721199544; cv=none; b=pwCwGYMoJ8Ds2ArGPeDetzxeh+3GGTsGlIrZVh50xNddPrlO1vfDxFn4yPJN2K2OZr8DqTJtMMZetYPPtofpVQNnEAYlG7u44OBVixGLi7YNDR0cqNKtOc2nZ6wIpZngugbvEWzP0Eroc/yqRGrQDWUubBdEXMj2BKB1LUF99xU=
+	t=1721199588; cv=none; b=uDGGWiB650xjL5OgY/coboOyDN0EH9t5FdFmae/W/XcacRu9zXwX9KvElKwcqGDDs5WhRaopifLNrawOEs8BL7UW2Evd9cwBuhlq4/c6AjD4Kn9yJ9ByuawKl+S9z0L8+CBn97Ko3ndA2ooccUjKzj0ptMboFVO1E+XqTMqsEFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721199544; c=relaxed/simple;
-	bh=pbbU9/TzxhEHItO5TAmPaoXqw/Q2R3mIiFX1cmaykEM=;
+	s=arc-20240116; t=1721199588; c=relaxed/simple;
+	bh=GtOgORRYMWszJwNCSDlGW+roFQ9+QPNsaZ082A7wGJY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dl4OYZs1ygUAJodWUxCfLU0GUFFvwdttJWYzfyK9CR3WQyqCG6wQ+vAu0EXwgwck2kPCeUwocukARQqtnV2k+PMxSrHLLlz3fuEfdMsZKIyhJhBZaT0lGpfBrHfSePk3MS/hDUlwIClJ1gOl8Ql2oYbX0yIpt6bcnHmOqa01Cxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=UabpUZVX; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=lpqa6VjIcPxE99BK/Yz18JV9LCURVa7tm8x9ByOb00O3oBCpJTitjzs/xQJqGiwND8jmveik20nJS+sC/vtnFhz3j/wT505feozmceP5Q0c0iVwoAuD1q+MgSI90SwRaAQRFjfkWYrd08icPKcbbLj7VMJmX/ac7JExhVtf0PTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nC26tcJD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="UabpUZVX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1721199501; x=1721804301; i=markus.elfring@web.de;
-	bh=pbbU9/TzxhEHItO5TAmPaoXqw/Q2R3mIiFX1cmaykEM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=UabpUZVX/prXXrIiHEbzB0UtbTyph6MDCs0v7G2XE2CAQF3sWGk09fHedu9fHrZB
-	 qVUuvE/Kzqmj+fpTP/6ma94FIuruJDvyME9/Be1AoCVo/yDHWs137s7xACGhkbE3q
-	 v3L5wguDSo0yzUwiR2emknZg445C8svf0qXtGRfM81nlAWpIzPnMJr+V4xawO55fS
-	 BF3aiPhI0zZY4g0SD+Xpm+iMGTbM0JQIQDtIOWaqKitrZf3ETs9glrdEcjzfoCxrq
-	 u0evtUeIlz0zjsZpVzH8DDXx2tK1TpFEHKYZ5Mi4F9J0rN2s1drBfHyjqfdsIkoNS
-	 +a60lsORX+OrEWTmOA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Md6xz-1ru5V82M55-00o5xu; Wed, 17
- Jul 2024 08:58:21 +0200
-Message-ID: <2cc9a090-7d30-49c5-a4c1-1cc1271bf641@web.de>
-Date: Wed, 17 Jul 2024 08:58:18 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nC26tcJD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A5D2C32782;
+	Wed, 17 Jul 2024 06:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721199588;
+	bh=GtOgORRYMWszJwNCSDlGW+roFQ9+QPNsaZ082A7wGJY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nC26tcJD67QaLU4sOxSBwZQ8PjR17Bdzl4rdOKAQbgBLqSlzIQFXQa6Gzv3wVSut0
+	 TXLJmKLQaObCKTHrutjDD18ONxonj1eY5/i540hhI8QhslDUA/DWotccwaWTaKBTKG
+	 ckL9xfPDVF2wB0yFYGi0l9wF06rfxOuWnJrgUeUgZnS1vKTyrrDHqNrOJruWl4+Pxp
+	 6UjMKGxqJAK+lxVhVDN8EpFRN9okw7XABcutgHT1yaTagtYjks4Xhl2DwOuj0BdliB
+	 ZPLV2fz9m3ZuqQQBFx5WZIJcdpPcVWJdqxQ6U1RV7VHWw4/Kh0v6A7N/fdYVTNjnpQ
+	 4J5jiWKlrbN6A==
+Message-ID: <1f9227a8-7c96-41ad-aaba-d6cf4435631d@kernel.org>
+Date: Wed, 17 Jul 2024 08:59:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,55 +35,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: x86/resctrl: Use seq_putc() in two functions
-To: Christian Heusel <christian@heusel.eu>,
- Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-References: <d4be0dc8-f6db-4bf1-bb6d-ccff161dfde9@web.de>
- <cb908d7f-db6a-4b04-8867-bf36fb2dd45f@intel.com>
- <bceb7649-f2fe-4418-99c3-e054f0b0e778@heusel.eu>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <bceb7649-f2fe-4418-99c3-e054f0b0e778@heusel.eu>
+Subject: Re: [PATCH 0/6] mfd: add adp5585 gpio and pwm support
+To: Frank Li <Frank.Li@nxp.com>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, Haibo Chen <haibo.chen@nxp.com>,
+ Jun Li <jun.li@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+ Jindong Yue <jindong.yue@nxp.com>
+References: <20240716-adi-v1-0-79c0122986e7@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240716-adi-v1-0-79c0122986e7@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:PVNkBJqpxaSQv/BbYzjO1YWx+MHiMLPEsfJ5TL3s70WN5PpV1Yx
- 2yP1TREuX7s+684aenYSlyX8I4d+tH8s4aHUGB/jK0x/pk4Q12EAVT+g1PoFl1gZZq/0mR2
- NHm1gR2uuxfXQga7S0oREte78G1K+yX/lUfMvi7O/tLp8uzKjJVSeggoLJ4kkNFa139rZ3g
- olEHGEn8WOXI/fgHnXB/g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qS2T9jhw8qU=;qJctjSrmlPBVYvU+lrj/5FTyRoo
- pSxiVUCQ01OL4NCSxLE6GmKjLv4SmYOabrbdlEYuJi4uvLpFj2iIizv7Q8GAHCUYUgzs8fDAC
- mzDOPS2d3CGlqlVldaHo7LVYTyK+6AXT1eeJfDpK4MGaA/1S6hF155sIzC8r4AZ09UCKBxMGw
- zqaDNxQxcTslDmAD8y7qgWdQDhucZDafhD9ZbVPKjExoGCeNSlSBRdW0iPiZuQ3P76ct+W6t+
- shzNh7HvY1UrJivIBz7A4CC8B1Eo+mXWv6WCFb3kA7NdrbpTUfbuxX5gL6F4NsnIHwPWoTONv
- fm99U6Lw19p/GVjmQ9yv+zdJ7YWPN3acWjal5MQDFElmRiL/2iM5u4YW17gPLxAb7yF9QmYgd
- hMNPvJK5QEJwRvSmwDEK5qtXcBPAAjsYmfttP7dzroqYFnAk24i1YQNgMbEXhlxjcZ2LSx7xr
- 13bppbI2H6oL8Ga9ZWOgdqxWxSHHCJQn9MwkhATgmk+j4W7vtkx2uY4/K4rzUXkfhnZiQHU6N
- SFKVeWWPZJkW7WN7lmdtvZmNGRmNgb3TDi3Il75/LOaUjz4//hPjwCg/yHPbl02rSensiFPfb
- rApHdn/N20FRlh0CZuEyM8+7ZN0iyk3xC+yy15yehhVNifksAWiJs0vP98v1rUcBznOqdCt3E
- HrRgTUqxP6iyyRuY2E8jUjAuw6gooMqT3/ouj1m1s7pRpfkNeCcJ1w6/8Nw3dhbs3kDEz27hG
- dOIqws9fJnXhenAFc+Hm/uuHOKkaJBWqpxhDAv+cILNSs9ewqZXBHSU5rD4GvlZvp0a0DzYLx
- 9XvcC4FQI8XDN378RPSlxiTw==
 
-> Just to give some context to this: Markus usually uses extra
-> (out-of-tree) coccinelle scripts to change code to his liking,
+On 16/07/2024 21:28, Frank Li wrote:
+> adp5585 is totally difference adp5588, which in
+> drivers/input/keyboard/adp5588-keys.c.
+> 
+> So create new driver for it.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-I occasionally dare to present special change possibilities.
+There is ongoing work (v4 if I recall) for adp5585, so please rebase on
+that. Existing patches do not look abandoned.
 
+Best regards,
+Krzysztof
 
-> sometimes these are good changes,
-
-These can be nice.
-
-
-> sometimes they are meaningless.
-
-Further development ideas can trigger corresponding communication challenges.
-
-Regards,
-Markus
