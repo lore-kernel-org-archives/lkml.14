@@ -1,142 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144D44685
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700C818EBF
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721255509; cv=none; b=rLBn3K4Adc9dX/+Ux8nvrlRBFNQ5+GFEKw0mPVmj9YPy2QDeQrfhvA8AHQa+bVMJonq+zkaIBKm9qmwAVyXYKw2sELp8zG3wYQeGdpcUSGwNBkOjkDxymnihsnxi+naGN5U/P4N3iv9C4svq2o6R8qlZGcovjE0Uf46iQEfKzJ8=
+	t=1721256182; cv=none; b=pIM9jrVeHKno3wd2AX9sBIJiEzgnZoM1jiVJDsBb6k8ipbjXBhUxx3ZJQb10Nu0LYsEodjAO0zmqhPB8WKKazOgUwCu3WrEpJZ2hL69D6lmdndGAiMWezlI8yVSK1xMkmLbPRjlm/vYDmn0uBJ//9hRb/6KUmM2M5vSKQSZqMfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721255509; c=relaxed/simple;
-	bh=ZeVb4NV1UtDsKj/hoB610U1gFo/rAq+Zrk+VLQva224=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fngkKY45ZG78ejqxqdljH9G92jj95TzpEVDyT2jLQME8t/mA15Pehde6BS/x7BnYQL1CvH7RawYsw0qGmlVv3ORsW59CTjnMmLFhzP1hRop65l2SYuFprX6LtG+j9AdxKa3fmhnUHtKsPRgg1OfafCe2HXkF4j47Ix8TBBYEYvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E/YEt22p; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721256182; c=relaxed/simple;
+	bh=4LKJAGaHGvPNEZ9UvqrJxcaNnxkVxqT67rRUgPNfpus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F8b4biW+b8F9Shahtdw/P8/wy0UualIwl6oAL3T66H6wkuDvkyHvATN+exztY9lmQeBAt72LxpjpHu4otkW9XunBWNv6iYk/NFSyxEiByHq5RsHNQqizk3yJqFOx9S1OqoY7YzgBoERw3bg3z9NTP78ZJzwp4EM6Xr460IyoTs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=mvTtJLVV; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/YEt22p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721255507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JBsCYjvHFqCofeJfqJ0FDpq4lR84OryByqZWEVkFAUs=;
-	b=E/YEt22prWZzu2ECYMGb9An6VXIMMSyX2/fVsZfr+goRiM+c2e95bDBxXy8nPVl9vQuOn7
-	0vIHrUoscdyULVQh8ss07TJ8JBAVGMQDrXrryTNQL4l7C4KhNl+d4XNrBtgdMhszJPYHHU
-	9Q9Fg5ECexuLyboiCnm2VdROHNZoZoc=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-490-s2j_lkfqOY2ewpokd66eEw-1; Wed, 17 Jul 2024 18:31:45 -0400
-X-MC-Unique: s2j_lkfqOY2ewpokd66eEw-1
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8152f0c4837so25813739f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:31:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="mvTtJLVV"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3d9dd7e5f6eso123834b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1721256180; x=1721860980; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4LKJAGaHGvPNEZ9UvqrJxcaNnxkVxqT67rRUgPNfpus=;
+        b=mvTtJLVV0i49SKUEIaUzBzKxhsRXx+HgsT/sXmUeWh48+gMQ874GcdMe4BKo8P+gpM
+         /tplFyf8BdsOfdXPetg+iPtEWhiX1Oz0NwBVGRVZ32mRxbjakecvmXOCe1AuwtfYViOE
+         Mbw5zBxjIpZ6tS8dSwORQ6CZ+bt2dpM4Tk/0U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721255505; x=1721860305;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JBsCYjvHFqCofeJfqJ0FDpq4lR84OryByqZWEVkFAUs=;
-        b=mbWnZkBMsM82vV9I5xtv/gx7nzeHlHyNTLJLlO1hO3mv6A52NyqCeGoblSWh6UxnRy
-         BQVW6lr2TYsU94+Vdj5r6yNVcznIpEvxtLTrMF3MD1CsR6ICq78YbBcmfsM0wlbgO2MB
-         IBPUCIMQ4x2278zvZfg3DCmXPugPp5K28cMzB2tvRBiAdCPot8gdNcZjv+qBznM/URvc
-         6FO7Wa526ENlkode+iu9GzQ0JQ+tDg8VO3o+qqdxRQ/IIAHeXm3Gl/eYKd0U89HNFPCj
-         Hjf9EZnSnkEOWsIDb5L+JBluyHW45J/rTwwiSJrBR7FlMrpabfEwfmY4qfZbPdINC8rN
-         uS6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXZHItImeJ90OIIgInbcR7+Onv6NE6Z6peVNIp7n9QSy5rCpqjThlXNxlv82YYQIxKAQ+J6QPp57qjJMxjNFBwUf6Mx9dHlbWw2xnl1
-X-Gm-Message-State: AOJu0Yw+HRaI0Mywla2QxeEEuIDHZRwhK3IZYbuvOMGAnPi8k40LKikL
-	J1TViNpgpxVgFk1V9q/uLLNGda2K+Pxghqalk0pP0g6dl0/5R9aN0YQw72QCniscsj8tF7Re+vE
-	Q+fWWOlfk/qWr/CQcUHiTwUoIzbok/WyrFCYKgFu2xjfQz5M/nkv/v8XeZMg6EQ==
-X-Received: by 2002:a05:6602:29c2:b0:806:2e60:d169 with SMTP id ca18e2360f4ac-817123e1c6fmr434707639f.17.1721255505088;
-        Wed, 17 Jul 2024 15:31:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPb97hbNXON2ByzzRKRynxRHlbiYrD3yDjp2uo84hIKMI6iQ+GFeGYUQQkaZREiI+LQxB6iA==
-X-Received: by 2002:a05:6602:29c2:b0:806:2e60:d169 with SMTP id ca18e2360f4ac-817123e1c6fmr434705739f.17.1721255504742;
-        Wed, 17 Jul 2024 15:31:44 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-816c17c5044sm92133839f.19.2024.07.17.15.31.43
+        d=1e100.net; s=20230601; t=1721256180; x=1721860980;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4LKJAGaHGvPNEZ9UvqrJxcaNnxkVxqT67rRUgPNfpus=;
+        b=K4jNCVllPfTa3twPxeuf7NlIiDbzhywFXb8SgvTIO/zno7gQeh4G7y4mHiv8y7MSdF
+         631UM4G4aP9wHG3hgzHMoUGXjCcs6zAzhKso3Z1m3P4pgxPwDOOn2+p/+eEcw4r03bSq
+         iVuYrDiS+IkpejUspSP3ldaE+Zx5TlawDJkzBMP9x/QEgD/9cxUiwvdFEIyMKZQ8LlWA
+         9aHWKbWaC7mb3GvMtcN9Pj1pnwSm3NYGaOsw/dJ7qmGkKZNJ7csc8jkwffgS4SNWAQTs
+         3Z0AS27SKIhM0G8NoBnPtJ29Q/I583Ds1lN4nh9z637XeUiy2ExWQXQHdkC5k4Ov8MkV
+         608w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNJ0rxRswcF3lk+UNPnBjv8sN5iJTxmTq2+ZXjzo/x0UzYfqFGBxS3Z/drLdsr1i7I3vVAoebc9P9DAdAtWFNbJc3j1TmfXGDdA1rW
+X-Gm-Message-State: AOJu0YwItdIwVm4qHqQ9EAapYiiecGdv3WGEDnoaVyS+dK6uRZ3Ye2F5
+	T/ydXdu1clYElr4kGcZTy/QM6qAI1WodMjruJkmqRxM4kGJkuR8Gg9Nfs2pDFl0=
+X-Google-Smtp-Source: AGHT+IHvVu7dD6e39qfjBq4LcOCOSqjRIbhJfaT0GnWVja/LKd3zcb6HhdQrirpi7Bj58JS1y/2PyA==
+X-Received: by 2002:a05:6808:bd6:b0:3da:aba0:8255 with SMTP id 5614622812f47-3dad1f34478mr3569237b6e.16.1721256180529;
+        Wed, 17 Jul 2024 15:43:00 -0700 (PDT)
+Received: from LQ3V64L9R2 ([2600:381:d627:95eb:19b4:6e7a:6e37:ba63])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3dad5297a26sm221670b6e.40.2024.07.17.15.42.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 15:31:44 -0700 (PDT)
-Date: Wed, 17 Jul 2024 16:31:43 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Axel Rasmussen <axelrasmussen@google.com>
-Cc: stable@vger.kernel.org, Ankit Agrawal <ankita@nvidia.com>, Eric Auger
- <eric.auger@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
- <kevin.tian@intel.com>, Kunwu Chan <chentao@kylinos.cn>, Leah Rumancik
- <leah.rumancik@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>, Stefan
- Hajnoczi <stefanha@redhat.com>, Yi Liu <yi.l.liu@intel.com>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.6 0/3] Backport VFIO refactor to fix fork ordering bug
-Message-ID: <20240717163143.49b914cb.alex.williamson@redhat.com>
-In-Reply-To: <20240717222429.2011540-1-axelrasmussen@google.com>
-References: <20240717222429.2011540-1-axelrasmussen@google.com>
-Organization: Red Hat
+        Wed, 17 Jul 2024 15:43:00 -0700 (PDT)
+Date: Wed, 17 Jul 2024 15:42:57 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: James Tucker <jftucker@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: uapi: add TCPI_OPT_NODELAY to tcp_info
+Message-ID: <ZphI8Z89iLe3ksVP@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	James Tucker <jftucker@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20240717-nagle-tcpinfo-v1-1-83e149ef9953@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240717-nagle-tcpinfo-v1-1-83e149ef9953@gmail.com>
 
-On Wed, 17 Jul 2024 15:24:26 -0700
-Axel Rasmussen <axelrasmussen@google.com> wrote:
+Hi:
 
-> 35e351780fa9 ("fork: defer linking file vma until vma is fully initialized")
-> switched the ordering of vm_ops->open() and copy_page_range() on fork. This is a
-> bug for VFIO, because it causes two problems:
-> 
-> 1. Because open() is called before copy_page_range(), the range can conceivably
->    have unmapped 'holes' in it. This causes the code underneath untrack_pfn() to
->    WARN.
-> 
-> 2. More seriously, open() is trying to guarantee that the entire range is
->    zapped, so any future accesses in the child will result in the VFIO fault
->    handler being called. Because we copy_page_range() *after* open() (and
->    therefore after zapping), this guarantee is violated.
-> 
-> We can't revert 35e351780fa9, because it fixes a real bug for hugetlbfs. The fix
-> is also not as simple as just reodering open() and copy_page_range(), as Miaohe
-> points out in [1]. So, although these patches are kind of large for stable, just
-> backport this refactoring which completely sidesteps the issue.
-> 
-> Note that patch 2 is the key one here which fixes the issue. Patch 1 is a
-> prerequisite required for patch 2 to build / work. This would almost be enough,
-> but we might see significantly regressed performance. Patch 3 fixes that up,
-> putting performance back on par with what it was before.
-> 
-> Note [1] also has a more full discussion justifying taking these backports.
-> 
-> I proposed the same backport for 6.9 [2], and now for 6.6. 6.6 is the oldest
-> kernel which needs the change: 35e351780fa9 was reverted for unrelated reasons
-> in 6.1, and was never backported to 5.15 or earlier.
+FYI new features should be sent with net-next in the subject line
+(e.g. [PATCH net-next])
 
-AFAICT 35e351780fa9 was reverted in linux-6.6.y as well, so why isn't
-this one a 4-part series concluding with a new backport of that commit?
-I think without that, we don't need these in 6.6 either.  Thanks,
+On Wed, Jul 17, 2024 at 03:22:14PM -0700, James Tucker wrote:
+> Nagle's algorithm is one of the classic causes of poor performance for
+> certain classes of userspace software over TCP, but is currently not
+> reported in userspace tools such as ss(1) from iproute2 as it is only
+> observable via getsockopt.
 
-Alex
+Commit messages should be written in imperative mood.
 
-> 
-> [1]: https://lore.kernel.org/all/20240702042948.2629267-1-leah.rumancik@gmail.com/T/
-> [2]: https://lore.kernel.org/r/20240717213339.1921530-1-axelrasmussen@google.com
-> 
-> Alex Williamson (3):
->   vfio: Create vfio_fs_type with inode per device
->   vfio/pci: Use unmap_mapping_range()
->   vfio/pci: Insert full vma on mmap'd MMIO fault
-> 
->  drivers/vfio/device_cdev.c       |   7 +
->  drivers/vfio/group.c             |   7 +
->  drivers/vfio/pci/vfio_pci_core.c | 271 ++++++++-----------------------
->  drivers/vfio/vfio_main.c         |  44 +++++
->  include/linux/vfio.h             |   1 +
->  include/linux/vfio_pci_core.h    |   2 -
->  6 files changed, 125 insertions(+), 207 deletions(-)
-> 
-> --
-> 2.45.2.993.g49e7a77208-goog
-> 
-
+Thanks,
+Joe
