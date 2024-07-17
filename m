@@ -1,102 +1,207 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7BF181BB9
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD4B17F385;
+	Wed, 17 Jul 2024 15:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721231038; cv=none; b=pFx0JxlV/xOg07PAVXrslp/vl+XW/HvUKiEIAbGwl9dBMTOEefsr+ksK6bNrc4TnzhoCxyKBzt5na6psmJpCzApkAu8nFtCufp/J/znFnzR94lk0+TzL0XzclvAsZ0OIwCNRwUFvX9/oxKzNoMbWiWTsBAONRaJY5wXiTUWsVm4=
+	t=1721231080; cv=none; b=gVy8kkm+k7TK7yintL2edL1ZttJvmpxwlR0/d2Dt5+HPoPi06YQUdp0E1rnAP1nvSteP/RXGdZBMvRs+7AWdvGLTpaEiudo0xMV0NNLZRfots+v8BsRGA27GcDQ3Ex9XomRQp/KKDpH+NpFQzq0xwwKTY9ZJ7Z31kosFWLfGOy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721231038; c=relaxed/simple;
-	bh=wb1LYv4A0acrrEtIIC/SAaWQ8u2gOiMpH/PnqcW8a6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PaG7nJLHd6C7MI1xtG4mNPubYUYJfzd0ddSiiObLn3JWPjOPNTj4+Ckb2LzH6Fy6/0vKDQP2xu5GxvMmT6DPNMuG9dNc7063/B0pIzguoB25JhRw3tDaSWKFmTd/k9q46JrbK7GlkAavy7o/AP329yaAK4WSgnww9zzSMa9EVeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=W7fer3mC; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1721231080; c=relaxed/simple;
+	bh=uaEj7iTr2UmUrYASQGx6ADA0/zrmRFYqjz3ZynR1oXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdzrhMEHmaenPfbBwNZVR88MmjkKX+Z+M0kFvrn2VsJCNwCUxwFDact2Dkp+vzQkDs1wGrjsitGcJck7O5rYpwXIHh5bzzhgSWch+Ta2jITYWatEtL6PmrTJ/FxqZjt3EIN2hIrUKPq6UneDIsSNZ47GZobY4muznrkdPw5mbc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2gz48Fv6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yHobnwdt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dLG6Mv1M; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mZV4Vh8R; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="W7fer3mC"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7f3c804daf7so4926939f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1721231036; x=1721835836; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EhC5AUh0nXY2Z/jAhnsZPgn+TyMTEjILQNMnkrHVTOg=;
-        b=W7fer3mCYnFwJLWVm5x0l6nS3QdyVyK/6U2yH0K+IjpAJXtRhKwqaCjN9MrKaBuFsl
-         7hLAzQlfSICcm38X/zKxLzRbjB7nzxumvK4GRfcpQFxLnCKMYhHzC+VeCmmEm1f6sgIy
-         NxnYqrWpqFDfuHuV0nFKjCBfMKPJzenHJifuY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721231036; x=1721835836;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EhC5AUh0nXY2Z/jAhnsZPgn+TyMTEjILQNMnkrHVTOg=;
-        b=YdoeV+VYh+cTXc1LJKr1uW49schrf2zOmJCl2vdli6+mWldJV3lXBZNQ/qkCcLimcc
-         93TPy8LpkOjrK8xyqvippj9QpH/tTZ9K5zS1sv9/GKfcO8m9RWu3JGhekM5myKA4lOWa
-         Hwqv5MfD+uU7nffrbFDr5dqBR2Wj71Kk2PedxXBT+If+EIwrqM/3IQCdccfrKytAp0rd
-         vQ1/j8TLLWtd0FkqhrirsjkMgXqGCrWq5hTRgQFJD3hnWndtmutLMqrTKL74VGmGhhG4
-         ruCxHtpHRO2tUY+8cBbp4NiMz2rYfdRY4nlXYdQVlQ85nkbLDbXelMZD/InREIWyoDg/
-         F8fA==
-X-Forwarded-Encrypted: i=1; AJvYcCU44QKzmDWcJvQH3ok/lsDsjwsjVf0vTrFHNH+pYDvSbYwwoR31FuPSsyZ9h6ry0C1majTSWYX4rbooipEOZ9E17k/JNPQPimnDlXGX
-X-Gm-Message-State: AOJu0YyjM4qxnmAk+mtRmIUYNEu8VxgMoZ9z9NIzcgiZmFERcWOzjzLf
-	gVO36cUmWszhWkl+04E/K4+9pbbhgPMmA4A+znCBwL9pThhMMtytyu64eA8Gfgg=
-X-Google-Smtp-Source: AGHT+IHZXl0hg8iG9vIuc9XxlrCQtDPuT6ZziCdBXxjOkrQv2c9JNy1ocmAplgM+FJOKVBGMYPOa/A==
-X-Received: by 2002:a6b:ed13:0:b0:7f6:85d1:f81a with SMTP id ca18e2360f4ac-81711e195e9mr149045339f.2.1721231036378;
-        Wed, 17 Jul 2024 08:43:56 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-816c17c4e40sm69814039f.12.2024.07.17.08.43.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 08:43:56 -0700 (PDT)
-Message-ID: <a00b55c7-9491-4e63-add7-7f0f8649ae3d@linuxfoundation.org>
-Date: Wed, 17 Jul 2024 09:43:55 -0600
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2gz48Fv6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yHobnwdt";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dLG6Mv1M";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mZV4Vh8R"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B645321BDB;
+	Wed, 17 Jul 2024 15:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721231077; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oZ16iqaXvxlzRu55kee9Kw2H7AaJIjqGp2L3FBXi+X4=;
+	b=2gz48Fv67UMOLUS6fdc7dT4M1/9rheQgHaq6EdKlyNJHCQhBIFzhNZDw5E9zmPUdsF8MjM
+	2oRd9IKFahSs5fEbkzlxgt04pJ8fMaVEi/CUBjnAIyXaTrTisFGpGDxnKc6jUr3xNUiaWj
+	vvpvmzKmWNuGYAbWd0+3uZM3rf87x7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721231077;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oZ16iqaXvxlzRu55kee9Kw2H7AaJIjqGp2L3FBXi+X4=;
+	b=yHobnwdt4fFQFv0CyrRFXOgXiAVSir1GBJOzzrK1iCAh6Q4ZsW0MeFmYI3PGqjMCdtpnc/
+	Hp4GEWhyr7Yk8dDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=dLG6Mv1M;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=mZV4Vh8R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721231076; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oZ16iqaXvxlzRu55kee9Kw2H7AaJIjqGp2L3FBXi+X4=;
+	b=dLG6Mv1MMcM6rpLbL5OY0oGvF1vTtXOG6h58b1jFIpOX97fEZ/xcbntddqLQmOvU9SIZub
+	V5VtokjMmKFkLGb083Cad6cWUVTlyPrf9spixI3Nno0D7S83hfU06HcE9W7+WWRg56xnL9
+	CBATAOqlHEaid6Yq0a5+AylCEnvp9L8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721231076;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oZ16iqaXvxlzRu55kee9Kw2H7AaJIjqGp2L3FBXi+X4=;
+	b=mZV4Vh8RrzZSaovrrbXb/9c2lZQBUj81oLzKGkkTNvLasFAla+3tRxtESFnTdfazAoUQyG
+	2BpHo3r4RbgsirAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A211136E5;
+	Wed, 17 Jul 2024 15:44:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pkHIHeTml2bwHwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 17 Jul 2024 15:44:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 6623EA0987; Wed, 17 Jul 2024 17:44:34 +0200 (CEST)
+Date: Wed, 17 Jul 2024 17:44:34 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mirsad Todorovac <mtodorovac69@gmail.com>
+Cc: Jan Kara <jack@suse.cz>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <kees@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Jeff Layton <jlayton@kernel.org>,
+	reiserfs-devel@vger.kernel.org
+Subject: Re: [PROBLEM linux-next] =?utf-8?Q?fs=2Freiserfs=2Fdo=5Fbalan=2Ec?=
+ =?utf-8?B?OjExNDc6MTM6IGVycm9yOiB2YXJpYWJsZSDigJhsZWFmX21p?=
+ =?utf-8?B?4oCZ?= set but not used [-Werror=unused-but-set-variable]
+Message-ID: <20240717154434.jba66jupaf566tes@quack3>
+References: <39591663-9151-42f9-9906-4684acaa685c@gmail.com>
+ <20240715172826.wbmlg52ckdxze7sg@quack3>
+ <9aec9df8-ca82-4b2f-b227-5e318c66b97e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/121] 6.6.41-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240716152751.312512071@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240716152751.312512071@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9aec9df8-ca82-4b2f-b227-5e318c66b97e@gmail.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.01
+X-Spam-Level: 
+X-Rspamd-Queue-Id: B645321BDB
 
-On 7/16/24 09:31, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.41 release.
-> There are 121 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue 16-07-24 19:17:05, Mirsad Todorovac wrote:
+> On 7/15/24 19:28, Jan Kara wrote:
+> > Hello Mirsad!
+> > 
+> > On Wed 10-07-24 20:09:27, Mirsad Todorovac wrote:
+> >> On the linux-next vanilla next-20240709 tree, I have attempted the seed KCONFIG_SEED=0xEE7AB52F
+> >> which was known from before to trigger various errors in compile and build process.
+> >>
+> >> Though this might seem as contributing to channel noise, Linux refuses to build this config,
+> >> treating warnings as errors, using this build line:
+> >>
+> >> $ time nice make W=1 -k -j 36 |& tee ../err-next-20230709-01a.log; date
+> >>
+> >> As I know that the Chief Penguin doesn't like warnings, but I am also aware that there are plenty
+> >> left, there seems to be more tedious work ahead to make the compilers happy.
+> >>
+> >> The compiler output is:
+> >>
+> >> ---------------------------------------------------------------------------------------------------------
+> >> fs/reiserfs/do_balan.c: In function ‘balance_leaf_new_nodes_paste_whole’:
+> >> fs/reiserfs/do_balan.c:1147:13: error: variable ‘leaf_mi’ set but not used [-Werror=unused-but-set-variable]
+> >>  1147 |         int leaf_mi;
+> >>       |             ^~~~~~~
+> > 
+> > Frankly, I wouldn't bother with reiserfs. The warning is there for ages,
+> > the code is going to get removed in two releases, so I guess we can live
+> > with these warnings for a few more months...
 > 
-> Responses should be made by Thu, 18 Jul 2024 15:27:21 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.41-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> In essence I agree with you, but for sentimental reasons I would like to
+> keep it because it is my first journaling Linux system on Knoppix 🙂
 
-Compiled and booted on my test system. No dmesg regressions.
+As much as I understand your sentiment (I have a bit of history with that
+fs as well) the maintenance cost isn't really worth it and most fs folks
+will celebrate when it's removed. We have already announced the removal
+year and half ago and I'm fully for executing that plan at the end of this
+year.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+> Patch is also simple and a no-brainer, as proposed by Mr. Cook:
+> 
+> -------------------------------><------------------------------------------
+> diff --git a/fs/reiserfs/do_balan.c b/fs/reiserfs/do_balan.c
+> index 5129efc6f2e6..fbe73f267853 100644
+> --- a/fs/reiserfs/do_balan.c
+> +++ b/fs/reiserfs/do_balan.c
+> @@ -1144,7 +1144,9 @@ static void balance_leaf_new_nodes_paste_whole(struct tree_balance *tb,
+>  {
+>  	struct buffer_head *tbS0 = PATH_PLAST_BUFFER(tb->tb_path);
+>  	int n = B_NR_ITEMS(tbS0);
+> +#ifdef CONFIG_REISERFS_CHECK
+>  	int leaf_mi;
+> +#endif
 
-thanks,
--- Shuah
+Well, I would not like this even for actively maintained code ;) If you
+want to silence these warnings in this dead code, then I could live with
+something like:
+
+#if defined( CONFIG_REISERFS_CHECK )
+#define RFALSE(cond, format, args...) __RASSERT(!(cond), ....)
+#else
+- #define RFALSE( cond, format, args... ) do {;} while( 0 )
++ #define RFALSE( cond, format, args... ) do { (void)cond; } while( 0 )
+#endif
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
