@@ -1,57 +1,44 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E4E17F398;
-	Wed, 17 Jul 2024 11:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A872E64A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721214890; cv=none; b=ZdgCVAURmqgA+MI5j7Vvx+ZI9uv72sNlG1TybEScNvy1TdfRJujOQ2u6Z6XTFp5UfBhdk9gJLaRDQeSBbm9xH4xTAKLd7X94I20iD4lG1/V9mx3dCak+twwhqTstpL4fpkqCZF2fPnEh1spPkifqrt/yS9DVVRuxUXEqpr8iyxc=
+	t=1721214927; cv=none; b=qt/3l0ANrv+r8cSUnEc+Dag7IyzFeL3gam67wZds+aYO0Yp03td81QzVSxctOsNj7Cqanx2571nbErW+1XSA45R63hOZqfFLDZDHloDdJUxMj7dRqQGML1QlzOTtn4vKLhxqCTTl+GiwMZMSjcBFOtPsSiHZZbNj4RTKSqzbcLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721214890; c=relaxed/simple;
-	bh=uKIQZyZb4wlIcTIQWuj2eLj1eh0WA1HrCO/Syb8iJB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GW4Z/gz36gAcX+ta0JvROYGPsTTrMyU6NT6gG0DAIlxLKNuYfoBiWQIDkZkeFaeqkysEPx1kULUdZ6D21bRm4yDCFc+ASO4EW+dyCAw4P755IgNN5xLEgbdvuNNF31ey3yNJB6/epNrfGFDIdyfCFUQtJhqBSI0MeAV56+a3t/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bUQUacIO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bUQUacIO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1721214887;
-	bh=uKIQZyZb4wlIcTIQWuj2eLj1eh0WA1HrCO/Syb8iJB0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bUQUacIOuc8/IUKEzBK2agauSMgBeqCeJFsxJaqgc+V/GEvsdu/w9/9ZVNqms9hNJ
-	 cQo2YzK5acaY/F1sonOsvh/XYBh6LLNv/8I7fKQP6WN0AEUramlOsNLuL5+gS4uHfy
-	 8VN25xoqih5K51nogszVpR+dVUI82J+eRDM/8EWLpmgkAW43zTtqHH3DzEw/rtyaV/
-	 R72O3dIaU6Iq3pDky9s2S+oXY3P9Quz9Dci55SVJYl8TJh6pejFEwGIsZ4xJr0Jc1D
-	 UDG1YDABJygqh3M0QVfNnmvMcVh7e+Rj3GbZXWBC/mkTr6KEOhzhjWr1Ibx+ChbY1p
-	 EbaRRqKxs458Q==
-Received: from gentoo.ratioveremundo.com (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: aratiu)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1B7043780C11;
-	Wed, 17 Jul 2024 11:14:46 +0000 (UTC)
-From: Adrian Ratiu <adrian.ratiu@collabora.com>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org,
+	s=arc-20240116; t=1721214927; c=relaxed/simple;
+	bh=G5wrRJdtY3srXR0DCXgj0dxICAEmp/C47cWByB8cBqY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tGUl2sRoGLnuw4Snw6o+X9Vjju3b8DMOn/UHN5cwBkKL//fx3HYxU3vYJX20r7CF4EdP62YCNeFFJy+Eas2rUwwKF4SI0MXskM6ywMw6lQ4OUIRgn7H373aaVJUAtbdXecfMbGjgaXwQfSS1phXMkOFH2/Gc+Qz8pSH4HqCzJGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.51.143])
+	by sina.com (10.185.250.23) with ESMTP
+	id 6697A7C20000334E; Wed, 17 Jul 2024 19:15:16 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 8710978913247
+X-SMAIL-UIID: F489EBE2EA4B4915A4F0E50DDBABFABC-20240717-191516-1
+From: Hillf Danton <hdanton@sina.com>
+To: Bharata B Rao <bharata@amd.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Yu Zhao <yuzhao@google.com>,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	kernel@collabora.com,
-	gbiv@google.com,
-	inglorion@google.com,
-	ajordanr@google.com,
-	Adrian Ratiu <adrian.ratiu@collabora.com>,
-	Doug Anderson <dianders@chromium.org>,
-	Jeff Xu <jeffxu@google.com>,
-	Jann Horn <jannh@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH] proc: add config to block FOLL_FORCE in mem writes
-Date: Wed, 17 Jul 2024 14:13:58 +0300
-Message-ID: <20240717111358.415712-1-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.44.2
+	willy@infradead.org,
+	Mel Gorman <mgorman@suse.de>
+Subject: Re: Hard and soft lockups with FIO and LTP runs on a large system
+Date: Wed, 17 Jul 2024 19:15:10 +0800
+Message-Id: <20240717111510.1260-1-hdanton@sina.com>
+In-Reply-To: <9a53c5cd-6215-4ebd-a17c-1706077a9e65@amd.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,71 +47,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This simple Kconfig option removes the FOLL_FORCE flag from
-procfs write calls because it can be abused.
-
-Enabling it breaks some debuggers like GDB so it defaults off.
-
-Previously we tried a more sophisticated approach allowing
-distributions to fine-tune proc/pid/mem behaviour via both
-kconfig and boot params, however that got NAK-ed by Linus [1]
-who prefers this simpler approach.
-
-Link: https://lore.kernel.org/lkml/CAHk-=wiGWLChxYmUA5HrT5aopZrB7_2VTa0NLZcxORgkUe5tEQ@mail.gmail.com/ [1]
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Jeff Xu <jeffxu@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
- fs/proc/base.c   |  6 +++++-
- security/Kconfig | 14 ++++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 72a1acd03675..53ad71d7d785 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -855,7 +855,11 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
- 	if (!mmget_not_zero(mm))
- 		goto free;
- 
--	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
-+	flags = (write ? FOLL_WRITE : 0);
-+
-+#ifndef CONFIG_SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE
-+	flags |= FOLL_FORCE;
-+#endif
- 
- 	while (count > 0) {
- 		size_t this_len = min_t(size_t, count, PAGE_SIZE);
-diff --git a/security/Kconfig b/security/Kconfig
-index 412e76f1575d..24053b8ff786 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -19,6 +19,20 @@ config SECURITY_DMESG_RESTRICT
- 
- 	  If you are unsure how to answer this question, answer N.
- 
-+config SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE
-+	bool "Remove FOLL_FORCE usage from /proc/pid/mem writes"
-+	default n
-+	help
-+	  This restricts FOLL_FORCE flag usage in procfs mem write calls
-+	  because it bypasses memory permission checks and can be used by
-+	  attackers to manipulate process memory contents that would be
-+	  otherwise protected.
-+
-+	  Enabling this will break GDB, gdbserver and other debuggers
-+	  which require FOLL_FORCE for basic functionalities.
-+
-+	  If you are unsure how to answer this question, answer N.
-+
- config SECURITY
- 	bool "Enable different security models"
- 	depends on SYSFS
--- 
-2.44.2
-
+On Wed, 17 Jul 2024 16:20:04 +0530 Bharata B Rao <bharata@amd.com>
+> On 17-Jul-24 3:07 PM, Vlastimil Babka wrote:
+> > 
+> > It seems weird to me to see anything that would require ZONE_DMA allocation
+> > on a modern system. Do you know where it comes from?
+> 
+> We measured the lruvec spinlock start, end and hold
+> time(htime) using sched_clock(), along with a BUG() if the hold time was
+> more than 10s. The below case shows that lruvec spin lock was held for ~25s.
+>
+What is more unusual could be observed perhaps with your hardware config but
+with 386MiB RAM assigned to each node, the so called tight memory but not
+extremely tight.
