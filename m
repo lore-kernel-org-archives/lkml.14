@@ -1,120 +1,91 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1A817E8F9;
-	Wed, 17 Jul 2024 09:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2794A210EC;
+	Wed, 17 Jul 2024 09:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721209768; cv=none; b=ZDEbcUAPSDNcIAAywWgT1nYUdKhFBghJ0xgD/wqP8FgmgKkg/ahhH3AaOzUi6uN510idzSSpKbzYIYBZ/eHkvuJes+Ieoz6eSXt0fiiRLWTLTlN8LjeRr0aEBAG/CiOi40lmWPW2+e77wzDbFeODx8uKCJzpj3q4/Fc/4mse4MA=
+	t=1721209784; cv=none; b=gfG3Cu8MUzQehtN9il3WgpKu1BjQ/SZa3bal/n4T+pvnLyzqqvzv6BNW4rtsmA4XfK0d+InVKTt05wiM4NVQ3cuTy+OusFbKwMR5wvN8X8ksrCQGWu+lDkz+99Wg+uIc/tApDHKS/YE2FJJc5K+Sv21KxpvVKc4B5hrEFO/Ord8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721209768; c=relaxed/simple;
-	bh=26CUJ3fTo1PVxcLPtvOiRCqkB2bx1YYQ/UoSpcFrCNg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oYtnY6bcAmDaqJf7md+6G+l5+T8uWEUGrL1BGrqj6yKNexcwdK5v3GVQf/oIK5RNCW83WK4nX0q/dRcQVzGvhTLPDJapgfpzhmw+gKkAabsPx8Ie/jki7dS8+3N5O38Urf3xuJa6cWDsNL1zcPz0LH1HWSx04TR22Pdhqj+QUL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HGIijW84; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721209784; c=relaxed/simple;
+	bh=M3SgeIYU3cLDNvzNl/r/KSBmjP/DUuhRZJB9w9wk5t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fN6kByrXzkpC4TW3CyNQP0KBg+nypo406NUM0rbmhDT4qZAItfx7wb26AQgyfBYFRhM6PiZNcZZTPXk8ch0MAc5nd+6HcLSo+2z75+No36pXQ3FTK7xVunpOeePyfE8uCYDOytpYHJ8/C0L5DSgC2FooAU4rSgwEGfg4kO8iNgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DbQVqDTp; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HGIijW84"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H79vco029055;
-	Wed, 17 Jul 2024 09:49:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=5E9h2/RoTdgVUBIiWmCHLa
-	lzQuAZA0+NEPCzWP40ZBE=; b=HGIijW84kKA5XcRZYA3adU9htYYBu95d/NtyX8
-	Qd5JEA0XRCDV08sr5CCA4jd6wdG5EUqaR3ZnDBimQSAZt6h1SuS/brQfdW0NFNCV
-	4FmMMBhFEP6TUd7aQzamKJET1dD586NqGgZrarEZK7+h76Htjbicn4yPC0yA6zK/
-	tq5gYXcWS1w4yETgmSv4cM3GA0HGzYob58nUIw2lCe9SWze7bKLdz8+kpocgYVfy
-	4KqNyIZ3cCV0JKU2hpxS6Ba1Zrl13HE+wzRXU2/x0nAEKgZtYf0k7Gi0T/M363Fi
-	fplLJKCsPVIQhYJcmX7HuC6udQ+CbIpGbQiy+/BsIxL0h1lg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwj1hwcc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 09:49:10 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46H9nAvw005358
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 09:49:10 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 17 Jul 2024 02:49:06 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <gregkh@linuxfoundation.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <quic_wcheng@quicinc.com>,
-        <quic_kriskura@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Varadarajan Narayanan <quic_varada@quicinc.com>
-Subject: [PATCH v2 1/2] dt-bindings: usb: qcom,dwc3: Update ipq5332 interrupt info
-Date: Wed, 17 Jul 2024 15:18:47 +0530
-Message-ID: <20240717094848.3536239-1-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DbQVqDTp"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8B1F540E01A2;
+	Wed, 17 Jul 2024 09:49:31 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id iazDfRnirfCM; Wed, 17 Jul 2024 09:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1721209766; bh=T8SnuMCaKdsLxP8ZJvjEI/aaWXRDOi4dmWKtPvrU7iI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DbQVqDTpoihRNOhUeWAVOW/lXkI5+q4UktIqInwF3tC/U7ibZYgnL9aEGRZvqzhz2
+	 1eMA4zcFkysAUQWTFtRHcBHzT7IREbXz8yX0JimEVnG0D5mFPO1A9wHnk0Gu3IyAWk
+	 jNzFp35W982Olau8fJpSBCm5sGfWTeoSgbR7G6tMnIWySi9Msr0KCHqAdLBK8ix1Zq
+	 SyHB6lIyO3ziV3k2FDQP72W+OI985DkzDHy3wthUnOlOApXMK/83w+KrJvtp4gG7Ta
+	 QDmSLgARJDnjktoAy7OOnQzfCQYlhjvA3mjEmSXuWGaNbh/vutV74qQ295HU2Qdwd/
+	 qBuD35M2nssNL8j1vznuRz/emOh9pxjehIkuPV+ATKbwn4w60FSTGqsexk3u+IuzH2
+	 RAamUkXcPExlRpO+/Go1ak0v+QimTFHTIVxCaVmFgVc4V4z2YnJljZ0TgolAHQoHG+
+	 6rXNVQeum7bI9c0EBXTuVAITmRLb52gO2qxjML5ZlbJaRgHHo2WQyluOPQu5ZglprG
+	 HFVy+8/GHAqO6ZBQK8+MWn+CVxm+kwJYOUAGCse79MPPN34x63iB+7JNxJaVTdC6wH
+	 t+yaHRzHAST/iL4x2VKu/mpjITRg9Lq+gBjEq1vZ9gVbvSgJHDYqxM9Q85wcYqGZE9
+	 /Wn7m46rcqcOwqUt7JWeNdm0=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 90BF240E01B3;
+	Wed, 17 Jul 2024 09:49:13 +0000 (UTC)
+Date: Wed, 17 Jul 2024 11:49:07 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Xiaojian Du <Xiaojian.Du@amd.com>
+Subject: Re: linux-next: manual merge of the tip tree with the pm tree
+Message-ID: <20240717094907.GAZpeTk403VSYORXOH@fat_crate.local>
+References: <20240702141555.3494c5a6@canb.auug.org.au>
+ <20240717114155.1a3d4c07@canb.auug.org.au>
+ <38ff1530e63a1659f35c3a0ff315b17b65f2dbd5.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pZ7zxeHShegCEf0BTIljOtaSWOGPivB6
-X-Proofpoint-ORIG-GUID: pZ7zxeHShegCEf0BTIljOtaSWOGPivB6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_06,2024-07-16_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=815 phishscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
- mlxscore=0 impostorscore=0 clxscore=1015 priorityscore=1501 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2407170075
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <38ff1530e63a1659f35c3a0ff315b17b65f2dbd5.camel@linux.intel.com>
 
-IPQ5332 has only three interrupts. Update the constraints
-to fix the following dt_binding_check errors.
+On Tue, Jul 16, 2024 at 07:33:12PM -0700, srinivas pandruvada wrote:
+> linux-next branch of linux-pm tree needs to be rebased to Linus's tree.
 
-	interrupt-names: ['pwr_event', 'dp_hs_phy_irq', 'dm_hs_phy_irq'] is too short
+Why?
 
-Fixes: 53c6d854be4e ("dt-bindings: usb: dwc3: Clean up hs_phy_irq in binding")
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v2: Fix patch version numbering. Incorrectly marked the first version as v0
-    Add interrupts and interrupt-names for ipq5332 instead of clubbing it with
-    qcom,x1e80100-dwc3
----
- Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+You resolve the merge conflict and show Linus the resolution when sending the
+pull request.
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-index 6c5f962bbcf9..5e5cc2175526 100644
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-@@ -235,6 +235,13 @@ allOf:
-             - const: core
-             - const: sleep
-             - const: mock_utmi
-+        interrupts:
-+          maxItems: 3
-+        interrupt-names:
-+          items:
-+            - const: pwr_event
-+            - const: dp_hs_phy_irq
-+            - const: dm_hs_phy_irq
- 
-   - if:
-       properties:
-@@ -442,7 +449,6 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - qcom,ipq5332-dwc3
-               - qcom,x1e80100-dwc3
-     then:
-       properties:
+Rebasing is a no-no.
+
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
