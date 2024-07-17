@@ -1,100 +1,202 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB54812E75;
-	Wed, 17 Jul 2024 18:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0456D181BBE;
+	Wed, 17 Jul 2024 18:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721240349; cv=none; b=nJnj85oQ1dR1BNyVrAeblrudYbqgcViyOsw1KrkIy8NNcJ+jD4qGz7YR/rP7raz/Ak/TwnOkndMt1/q4XQvphoEzsX4jLAggePcFaxBrtgsWsWjtXgXEoOPZLnQXdJ3dpxwGs1rlbkvrQ6zvhWV9O9hadkL0tlk29FY5pidDokg=
+	t=1721240364; cv=none; b=Ywj+d7uU/V3Zh30/n/97/xScWF9skNzlVeuzo2NnSJ+WK0+md/t9wWeDwRlzgaQnl7eD1VxxMHWZZ4Lb7tlU+pbkqRRT+VTBJnIB3JPnXkPYRn89CdV6jl3b5CFyqaOjgBZJQGcacGZeN2XO7j0b5762plaVvn7v1hEqm17MPck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721240349; c=relaxed/simple;
-	bh=b1aouR+Nif/3pJdFAc+mKgJd7ddCAcxvRCJD0JbS8jI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bXc8wEq+fbTAPY+9hI04TR5XVYuIM4FJeSfDH6SU/WslPWGc3jaESjslfZYtk+Q4cixZesVLYDFrGAjLFCAguGijtHeywDpF0OWcCHvwRX9QOeyFpBGEITJIC+d1aOiQ7zhhAs2C3PS3UlqcLwRfV/oWAVkzNv86Cz12+YMwovw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OhFxAIc6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1721240364; c=relaxed/simple;
+	bh=GmUUSK5wGPMIjTgA2rtDl0EVIe+HRUqTQRe1IJXXyoQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SKKMj5bO+W0BC/S5mTpLx3+81EBfzhjJyfKDQHM/lhvPhvSSZth56EpPem4uWmPR4ywnvlyJzdW+u0TwEJJqIVBnDoxovi2YkUz3z6BZuu7740xBIq8KBVsWt8IaTpVzZGP4QFpwDmuE0htSbVIEaMdUo9rnzZOLUVt+3dPl7P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZtLqw72z; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OhFxAIc6"
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8C91C20B7165;
-	Wed, 17 Jul 2024 11:19:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C91C20B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1721240347;
-	bh=tJdPiTzkzL7kgsepa1RSwY8pS6OHdOQ3F2zaVjV9kCg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=OhFxAIc677f8IqoXw8fkc7DEx9Q+cXUJi3G4rOZDYBneRlzPDrjR/CFTVzqwIbbm0
-	 HFEb5lGZUS8QYZIRkCfOC+BMbijncDDiglaGQAisAM2JNl8ST6zjFRhrGXClE1Dh67
-	 CFadODeFv2QGdIzToPUffWMbbhbsJOjiIRQfib3I=
-Message-ID: <c13f74fc-1c18-480e-84d4-55f11bcb1e98@linux.microsoft.com>
-Date: Wed, 17 Jul 2024 11:19:03 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZtLqw72z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721240362; x=1752776362;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GmUUSK5wGPMIjTgA2rtDl0EVIe+HRUqTQRe1IJXXyoQ=;
+  b=ZtLqw72zTZ1XD1rty/MpkrpVxIk6ZrzfOiDbKUlwWezqUGwRfGGuvXj9
+   ZR7y64rEZ4W+UfOIRz4+eUx5BxiZ824PHvdDWHC6vnzMGh5o8feH72LL0
+   NH+i/54GFpGLT7coKHW8MGeORpx7hOPmN7uGqPZJl4qriqTS8/KNi1zIe
+   4FUTUev3AcgaWAfDzquyrpDEjC08dJ8lbBt+tx8ttBociyNxvtW6zaSWd
+   JCoktSRyQTiJbPRXqnjQYB+9V7UDfdwFB8Iqpc3elQEclySJogV287JkE
+   YOh3H/uu+JOcKA05BbdmLiFkmHLbcfn1I11RsIWq8lvHS4De/GbEjJu19
+   Q==;
+X-CSE-ConnectionGUID: YMjvFbxhRfqD3sdYkQR28Q==
+X-CSE-MsgGUID: Kbnf9STSSye7ROe72Sskgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="18461490"
+X-IronPort-AV: E=Sophos;i="6.09,215,1716274800"; 
+   d="scan'208";a="18461490"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 11:19:21 -0700
+X-CSE-ConnectionGUID: BK4n1Gw7TPi3uA5tprpqAg==
+X-CSE-MsgGUID: YDzbysw2RuCRKkhBAcMtQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,215,1716274800"; 
+   d="scan'208";a="50358864"
+Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
+  by fmviesa008.fm.intel.com with ESMTP; 17 Jul 2024 11:19:20 -0700
+From: matthew.gerlach@linux.intel.com
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH] dt-bindings: PCI: altera: msi: Convert to YAML
+Date: Wed, 17 Jul 2024 13:17:56 -0500
+Message-Id: <20240717181756.2177553-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-To: Jocelyn Falempe <jfalempe@redhat.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Petr Mladek
- <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jani Nikula <jani.nikula@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240702122639.248110-1-jfalempe@redhat.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20240702122639.248110-1-jfalempe@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/2/2024 5:26 AM, Jocelyn Falempe wrote:
-> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-> callback.
-> This patch adds a new struct kmsg_dump_detail, that will hold the
-> reason and description, and pass it to the dump() callback.
-> 
-> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-> function and a macro for backward compatibility.
-> 
-> I've written this for drm_panic, but it can be useful for other
-> kmsg_dumper.
-> It allows to see the panic reason, like "sysrq triggered crash"
-> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
-> 
-> v2:
->  * Use a struct kmsg_dump_detail to hold the reason and description
->    pointer, for more flexibility if we want to add other parameters.
->    (Kees Cook)
->  * Fix powerpc/nvram_64 build, as I didn't update the forward
->    declaration of oops_to_nvram()
-> 
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
-> ---
->  arch/powerpc/kernel/nvram_64.c             |  8 ++++----
->  arch/powerpc/platforms/powernv/opal-kmsg.c |  4 ++--
->  arch/um/kernel/kmsg_dump.c                 |  2 +-
->  drivers/gpu/drm/drm_panic.c                |  4 ++--
->  drivers/hv/hv_common.c                     |  4 ++--
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-Acked-by: Nuno Das Neves <nunodasneves@linux.microsoft.com> (hyperv)
+Convert the device tree bindings for the Altera PCIe MSI controller
+from text to YAML.
 
-LGTM
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+---
+ .../bindings/pci/altera-pcie-msi.txt          | 27 --------
+ .../bindings/pci/altr,msi-controller.yaml     | 65 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 66 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+
+diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+deleted file mode 100644
+index 9514c327d31b..000000000000
+--- a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* Altera PCIe MSI controller
+-
+-Required properties:
+-- compatible:	should contain "altr,msi-1.0"
+-- reg:		specifies the physical base address of the controller and
+-		the length of the memory mapped region.
+-- reg-names:	must include the following entries:
+-		"csr": CSR registers
+-		"vector_slave": vectors slave port region
+-- interrupts:	specifies the interrupt source of the parent interrupt
+-		controller. The format of the interrupt specifier depends on the
+-		parent interrupt controller.
+-- num-vectors:	number of vectors, range 1 to 32.
+-- msi-controller:	indicates that this is MSI controller node
+-
+-
+-Example
+-msi0: msi@0xFF200000 {
+-	compatible = "altr,msi-1.0";
+-	reg = <0xFF200000 0x00000010
+-		0xFF200010 0x00000080>;
+-	reg-names = "csr", "vector_slave";
+-	interrupt-parent = <&hps_0_arm_gic_0>;
+-	interrupts = <0 42 4>;
+-	msi-controller;
+-	num-vectors = <32>;
+-};
+diff --git a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml b/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+new file mode 100644
+index 000000000000..84ff0b8a7725
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright (C) 2015, 2024, Intel Corporation
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/altr,msi-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Altera PCIe MSI controller
++
++maintainers:
++  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
++
++properties:
++  compatible:
++    enum:
++      - altr,msi-1.0
++
++  reg:
++    items:
++      - description: CSR registers
++      - description: Vectors slave port region
++
++  reg-names:
++    items:
++      - const: csr
++      - const: vector_slave
++
++  interrupts:
++    maxItems: 1
++
++  msi-controller: true
++
++  num-vectors:
++    description: number of vectors
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 32
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - msi-controller
++  - num-vectors
++
++allOf:
++  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    msi0: msi@ff200000 {
++        compatible = "altr,msi-1.0";
++        reg = <0xff200000 0x00000010>,
++              <0xff200010 0x00000080>;
++        reg-names = "csr", "vector_slave";
++        interrupt-parent = <&hps_0_arm_gic_0>;
++        interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++        msi-controller;
++        num-vectors = <32>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f296a5ea2529..8a3424a03772 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17585,7 +17585,7 @@ PCI MSI DRIVER FOR ALTERA MSI IP
+ M:	Joyce Ooi <joyce.ooi@intel.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Supported
+-F:	Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
++F:	Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
+ F:	drivers/pci/controller/pcie-altera-msi.c
+ 
+ PCI MSI DRIVER FOR APPLIEDMICRO XGENE
+-- 
+2.34.1
+
