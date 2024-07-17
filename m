@@ -1,54 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D84717C;
-	Thu, 18 Jul 2024 00:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420DA110A;
+	Thu, 18 Jul 2024 00:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721260845; cv=none; b=r1+rONXildiysinXRDR5LoiE+sfvYtgAf6X4CZopJ2vrTZxPdQ8MBRhf81F+ilzH6JCvlRQxhTeZ/SHoPoOzMFnzmMv2/HZXvfX+PMdk9TCwmYGXKrS73BG5LyAUkC1AipneiXjUdy+TfudelKpBw4OkOIL7s8KKO1LLcy6yIrk=
+	t=1721260980; cv=none; b=h86QYI04oIUW5GeIay9Bgd4eNMmSXqDpzrSKufitNcPTgm/NkPhakct1OqbqKMhyUIP0H06A2WkLamtW7HHE8TB5n7aZ/s1HOs5CPCl2hC6TsvMjG1+D2jQ164yH5sCats1vG5XW31VDtXUaTe98KwZtIWDHCW28g69XuJW1D1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721260845; c=relaxed/simple;
-	bh=1K/eLbk0Vgwfxwjr5jlZ5haAjXZM1N9RcoofjyCY0+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d+UYqzzpDVGWh4CIzr7IlQ+VH8i0ub/QpDwR2HPMLZ0QkPocjfTE9VhJtGRRizFbbvRy/YO+vYiYlt0vS0nIrAaxGbtTfbAi4W8Dp0y9JFAZ7Q1OX2xb2Kj9G9McYOiAjZs01rhcyL/3F7ObkZXmHohAliFjAXNUMp1VCsuUBm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdTvG/eP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdTvG/eP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67C07C2BD10;
-	Thu, 18 Jul 2024 00:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721260844;
-	bh=1K/eLbk0Vgwfxwjr5jlZ5haAjXZM1N9RcoofjyCY0+k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BdTvG/ePDPre6eCjMNfPI/dCR4bigWGD4cdLBO9awDvnCYcLncXcpRtSwoSN41LYc
-	 abkDmBU//5R1kkvn8npJPOL/076wAWalKVJUjiW11RQZuPywjaFGW4+CO77g9Tpr8Z
-	 D346ol8uJtTldbnzuJumCuF9sqH3t55u3rzIaw5xVSf4S4WBuQxBsWyClPHHTgv7cy
-	 DymypF1XWJFnoKCUJoTO+elnyUYrpUJd7+8N50axiSwIpTMUebAFeiDBLBTU43VIVq
-	 o7bqZnJ0MNK9tSUpXlW/3onYXNlXDsBchRg/VErBRasxxhTTpIexYREPZ6GPXFSM7X
-	 titfbTjRajjRg==
-Date: Wed, 17 Jul 2024 17:00:43 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
- <michal.simek@amd.com>, <andrew@lunn.ch>, <netdev@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <git@amd.com>, Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: Re: [PATCH net-next] net: axienet: Fix coding style issues
-Message-ID: <20240717170043.45aaf7e2@kernel.org>
-In-Reply-To: <1721242483-3121341-1-git-send-email-radhey.shyam.pandey@amd.com>
-References: <1721242483-3121341-1-git-send-email-radhey.shyam.pandey@amd.com>
+	s=arc-20240116; t=1721260980; c=relaxed/simple;
+	bh=VjUGKZ3qVd+2tzNkMyHtQ4ZoixFDGkxiFILn0GlzxgQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mAChWZ42siDZpge7S5tIugP9S4+Uy1cjvS5xv5yo9O6Omb9Hv3IcyXuM0PnYouqRxmeQnjw3B2Xed4AjvRXD1hQ2v3il10z70JUKzkfVVPK2bBusSv3bXPZlqvByyuLlG3cosvf3J75FD408NkZPnfvgRXoQa5ZzPlZeeWabHFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b693a1.dsl.pool.telekom.hu [::ffff:81.182.147.161])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000073351.0000000066985A7C.001802A6; Thu, 18 Jul 2024 01:57:48 +0200
+Message-ID: <4fc2a95afd8f852c8dff1a95ddc54f56cea5c0ed.camel@irl.hu>
+Subject: Re: [PATCH 3/4] platform/x86: ideapad-laptop: move ymc_trigger_ec
+ from lenovo-ymc
+From: Gergo Koteles <soyer@irl.hu>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+  Ike Panhc <ike.pan@canonical.com>,
+  platform-driver-x86@vger.kernel.org,
+  LKML <linux-kernel@vger.kernel.org>
+Date: Thu, 18 Jul 2024 01:57:47 +0200
+In-Reply-To: <828057ef-b941-879e-170e-f4e769d4b77a@linux.intel.com>
+References: <cover.1720515666.git.soyer@irl.hu>
+	 <44f63dfa758c811ae941216874fbb1ec77f4a293.1720515666.git.soyer@irl.hu>
+	 <828057ef-b941-879e-170e-f4e769d4b77a@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 18 Jul 2024 00:24:43 +0530 Radhey Shyam Pandey wrote:
-> Replace all occurences of (1<<x) by BIT(x) to get rid of checkpatch.pl
-> "CHECK" output "Prefer using the BIT macro".
+Hi Ilpo,
 
-FWIW the BIT() thing is a matter of preference, we don't enforce it
-strictly in networking, it may not be worth patching. Up to you.
+Thanks for the review.
+
+On Thu, 2024-07-11 at 11:18 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Tue, 9 Jul 2024, Gergo Koteles wrote:
+>=20
+> > Some models need to trigger the EC for the yoga mode control to work
+> > properly. EC triggering consists of a VPC call that needs to be
+> > synchronized. The vpc_mutex is in the ideapad-laptop module, so
+> > synchronization is easier there.
+> >=20
+> > Move the ymc_trigger_ec function to the ideapad-laptop module.
+> >=20
+> > Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> > ---
+> >  drivers/platform/x86/Kconfig          |  1 +
+> >  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++
+> >  drivers/platform/x86/ideapad-laptop.h |  2 ++
+> >  drivers/platform/x86/lenovo-ymc.c     | 34 ++++-----------------------
+> >  4 files changed, 26 insertions(+), 29 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+> > index 665fa9524986..ddfccc226751 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -477,6 +477,7 @@ config LENOVO_YMC
+> >  	tristate "Lenovo Yoga Tablet Mode Control"
+> >  	depends on ACPI_WMI
+> >  	depends on INPUT
+> > +	depends on IDEAPAD_LAPTOP
+> >  	select INPUT_SPARSEKMAP
+> >  	help
+> >  	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE i=
+nput
+> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x=
+86/ideapad-laptop.c
+> > index 464cc5fd0088..4dcdbb153dda 100644
+> > --- a/drivers/platform/x86/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/ideapad-laptop.c
+> > @@ -1615,6 +1615,24 @@ static void ideapad_sync_touchpad_state(struct i=
+deapad_private *priv, bool send_
+> >  	priv->r_touchpad_val =3D value;
+> >  }
+> > =20
+> > +void ideapad_ymc_trigger_ec(void)
+> > +{
+> > +	struct ideapad_private *priv;
+> > +	int ret;
+> > +
+> > +	guard(mutex)(&ideapad_shared_mutex);
+> > +
+> > +	priv =3D ideapad_shared;
+> > +	if (!priv)
+> > +		return;
+> > +
+> > +	scoped_guard(mutex, &priv->vpc_mutex)
+>=20
+> It feels the ordering in this series is off because patch 2 add the=20
+> mutex and here you add it into yet another function. If this patch=20
+> would be before the other, the mutex changes could all go into the same=
+=20
+> patch.
+>=20
+
+I (wrongly) thought it would be easier to explain why a new dependency
+is needed.=20
+Mutex changes go into one patch in the v2.
+
+
+> > +		ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
+> > +	if (ret)
+> > +		dev_warn(&priv->platform_device->dev, "Could not write YMC: %d\n", r=
+et);
+> > +}
+> > +EXPORT_SYMBOL_GPL(ideapad_ymc_trigger_ec);
+>=20
+> This export should be namespaced.
+
+It will be in the v2.
+
+>=20
+> I'll have to say I can accept this approach only grudgingly... it feels=
+=20
+> off even if I understand why you have to do this cross driver thing.
+>=20
+
+Based on the WMI driver development guide, I will add a notification
+chain in v2 soon. Looks better.
+
+Best Regards,
+Gergo Koteles
+
