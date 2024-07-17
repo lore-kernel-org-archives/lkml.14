@@ -1,44 +1,68 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0AE1CAB1
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E306438396;
+	Wed, 17 Jul 2024 07:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721202602; cv=none; b=H/gMtVKFgtV6QraD9eAhXUj0k6WdwOEZwiduKNyFHBNbmYz8PrE6jWOXAXQt8DSKkoHyiaF/igXn+sWEr1AdvBjn/GXDXu2qG/U7wii5pjMGFWIP1lKKvHbkWoyF183SEeQQmYkAXcagAUVebVUpwQqipbx9xnJ8tbDg5ovrrnc=
+	t=1721202622; cv=none; b=fTnRfKP5S2Aoq07gym1MauRMLiFVkPy8QZj8E7FLAlgwu9xuA2dzRxvA9fmRTBp7Pruz7h0qQ1uIwxruiY1Xm3BzSeriVCWdPLxuH0tpuHDYI07IwCjtaCKgt9vjH4e4dm6yk6ejDyrnCHF+Yfh8qyoM3pl2WC+woq0d9c1Pj9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721202602; c=relaxed/simple;
-	bh=7cfB05wqWfZ7ZLYsZf4c8t9HiM1SeJC/CHEPTLl6qLY=;
+	s=arc-20240116; t=1721202622; c=relaxed/simple;
+	bh=SLUV51RvtIWgXuM7MBTSJv2TYkDWKXLtsIRRZESaCLo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CIKdtjkyOHUIqrAlBxO+HBH1s7v9WdMYfRL07BFwqVaD5KHfC6kxteoP1mKVnsHdd731gOSkzLLUs4uq5XGCxkSzID5TtEI4+zCNHc+aShvymSaBV4B/RrbE29EXZWje/4p2RpyirK4Q81syXEu9cMXO4Q2mZLkQSNspS27fZOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WP7PC3JZ8znb9y;
-	Wed, 17 Jul 2024 15:49:19 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6C38F1800A3;
-	Wed, 17 Jul 2024 15:49:57 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 17 Jul
- 2024 15:49:56 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <linux@armlinux.org.uk>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
-	<gregkh@linuxfoundation.org>, <arnd@arndb.de>, <deller@gmx.de>,
-	<javierm@redhat.com>, <bhe@redhat.com>, <robh@kernel.org>,
-	<peterz@infradead.org>, <julian.stecklina@cyberus-technology.de>,
-	<rafael.j.wysocki@intel.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH -next v3 2/2] ARM: Fix crash memory reserve exceed system memory bug
-Date: Wed, 17 Jul 2024 15:54:39 +0800
-Message-ID: <20240717075439.2705552-3-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240717075439.2705552-1-ruanjinjie@huawei.com>
-References: <20240717075439.2705552-1-ruanjinjie@huawei.com>
+	 MIME-Version:Content-Type; b=f00Gf9udBV9dH8qGlt+DIWobOrorSUr5t5zJyoOSiQMsV2Z8gZer7bPz7llCofJwEuCzfdRTwRLvVZQmni1UgthNVn4lgNnBHMeN/n800GigdhWVyzncpHGKh5GHT9HA2Efaymay622peIbmw7oZ6kp6XiWBuY78FJjBd53rb0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=tX7o1c51; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="tX7o1c51"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H5wxV5001490;
+	Wed, 17 Jul 2024 09:49:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	1DknkizxVV/IH/bP7HOHWWENUi7tH+dKqef25hsU4VU=; b=tX7o1c51BNMX83uU
+	QnB7F6YQLetN5UBKgy2WH5mwxkvE1VaHUOE8LcOkQdsu1YlFajsMF93uKyVpqvVp
+	C9O7em4ebNSlN27asC/lr2hU45G0mwgp3BO8x6Lc2BhW2x404fZ4scQZa7lI3FYy
+	n+c5KvrT/PqPcz6H3IIwO9/z3q8TjXNucfRiFbhVD1gokqNb5Stx+49Nxxp04PuT
+	AwojyNSM77Zv7gfjxsCbGbVWPXAREtuwZkSnsJAeJLWVXAahvcRoDVU7VQ5zNEfL
+	+aS7jqI/Zw3qtKvXldjlTVXDTOJCSepFijWm+sP0LltaA+xJv/d+CObPCb/VxCCM
+	qN3YJQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 40dwfkt78u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 09:49:54 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6AD664002D;
+	Wed, 17 Jul 2024 09:49:37 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 24E02241491;
+	Wed, 17 Jul 2024 09:48:57 +0200 (CEST)
+Received: from localhost (10.48.86.111) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 17 Jul
+ 2024 09:48:56 +0200
+From: Valentin Caron <valentin.caron@foss.st.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC: <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>,
+        Valentin Caron
+	<valentin.caron@foss.st.com>
+Subject: [PATCH v2 4/4] rtc: stm32: add alarm A out feature
+Date: Wed, 17 Jul 2024 09:48:35 +0200
+Message-ID: <20240717074835.2210411-5-valentin.caron@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240717074835.2210411-1-valentin.caron@foss.st.com>
+References: <20240717074835.2210411-1-valentin.caron@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,56 +71,156 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-17_04,2024-07-16_02,2024-05-17_01
 
-Similar with x86_32, on Qemu vexpress-a9 with 1GB memory, the crash kernel
-"crashkernel=4G" is ok as below:
-	Reserving 4096MB of memory at 2432MB for crashkernel (System RAM: 1024MB)
+STM32 RTC can pulse some SOC pins when an RTC alarm expires.
+This patch adds this functionality for alarm A. The pulse can out on three
+pins RTC_OUT1, RTC_OUT2, RTC_OUT2_RMP (PC13, PB2, PI8 on stm32mp15)
+(PC13, PB2, PI1 on stm32mp13) (PC13, PF4/PF6, PI8 on stm32mp25).
 
-The cause is that the crash_size is parsed and printed with "unsigned long
-long" data type which is 8 bytes but allocated used with "phys_addr_t"
-which is 4 bytes in memblock_phys_alloc_range().
+This patch only adds the functionality for devices which are using
+st,stm32mp1-rtc and st,stm32mp25-rtc compatible.
 
-Fix it by checking if the crash_size is greater than system RAM size and
-warn out if so as Baoquan suggested.
+Add "alarm-a" in pinmux functions.
 
-After this patch, it fails and warn out as expected and no above confusing
-reserve success info.
-
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
 ---
-v3:
-- Handle the check in reserve_crashkernel() Baoquan suggested.
-- Split x86_32 and arm32.
-- Add Suggested-by.
-- Drop the wrong fix tag.
-v2:
-- Also fix for x86_32.
-- Update the fix method.
-- Peel off the other two patches.
-- Update the commit message.
----
- arch/arm/kernel/setup.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/rtc-stm32.c | 60 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index e6a857bf0ce6..791d5f046163 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -1015,6 +1015,11 @@ static void __init reserve_crashkernel(void)
- 	if (ret || !crash_size)
- 		return;
+diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+index 675860a13051..3e4f2ee22b0b 100644
+--- a/drivers/rtc/rtc-stm32.c
++++ b/drivers/rtc/rtc-stm32.c
+@@ -47,8 +47,10 @@
+ #define STM32_RTC_CR_ALRAE		BIT(8)
+ #define STM32_RTC_CR_ALRAIE		BIT(12)
+ #define STM32_RTC_CR_OSEL		GENMASK(22, 21)
++#define STM32_RTC_CR_OSEL_ALARM_A	FIELD_PREP(STM32_RTC_CR_OSEL, 0x01)
+ #define STM32_RTC_CR_COE		BIT(23)
+ #define STM32_RTC_CR_TAMPOE		BIT(26)
++#define STM32_RTC_CR_TAMPALRM_TYPE	BIT(30)
+ #define STM32_RTC_CR_OUT2EN		BIT(31)
  
-+	if (crash_size >= total_mem) {
-+		pr_warn("Crashkernel reserve memory cannot exceed physical memory.");
-+		return;
+ /* STM32_RTC_ISR/STM32_RTC_ICSR bit fields */
+@@ -158,6 +160,7 @@ struct stm32_rtc_data {
+ 	bool need_accuracy;
+ 	bool rif_protected;
+ 	bool has_lsco;
++	bool has_alarm_out;
+ };
+ 
+ struct stm32_rtc {
+@@ -245,6 +248,47 @@ struct stm32_rtc_pinmux_func {
+ 	int (*action)(struct pinctrl_dev *pctl_dev, unsigned int pin);
+ };
+ 
++static int stm32_rtc_pinmux_action_alarm(struct pinctrl_dev *pctldev, unsigned int pin)
++{
++	struct stm32_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
++	struct stm32_rtc_registers regs = rtc->data->regs;
++	unsigned int cr = readl_relaxed(rtc->base + regs.cr);
++	unsigned int cfgr = readl_relaxed(rtc->base + regs.cfgr);
++
++	if (!rtc->data->has_alarm_out)
++		return -EPERM;
++
++	cr &= ~STM32_RTC_CR_OSEL;
++	cr |= STM32_RTC_CR_OSEL_ALARM_A;
++	cr &= ~STM32_RTC_CR_TAMPOE;
++	cr &= ~STM32_RTC_CR_COE;
++	cr &= ~STM32_RTC_CR_TAMPALRM_TYPE;
++
++	switch (pin) {
++	case OUT1:
++		cr &= ~STM32_RTC_CR_OUT2EN;
++		cfgr &= ~STM32_RTC_CFGR_OUT2_RMP;
++		break;
++	case OUT2:
++		cr |= STM32_RTC_CR_OUT2EN;
++		cfgr &= ~STM32_RTC_CFGR_OUT2_RMP;
++		break;
++	case OUT2_RMP:
++		cr |= STM32_RTC_CR_OUT2EN;
++		cfgr |= STM32_RTC_CFGR_OUT2_RMP;
++		break;
++	default:
++		return -EINVAL;
 +	}
 +
- 	if (crash_base <= 0) {
- 		unsigned long long crash_max = idmap_to_phys((u32)~0);
- 		unsigned long long lowmem_max = __pa(high_memory - 1) + 1;
++	stm32_rtc_wpr_unlock(rtc);
++	writel_relaxed(cr, rtc->base + regs.cr);
++	writel_relaxed(cfgr, rtc->base + regs.cfgr);
++	stm32_rtc_wpr_lock(rtc);
++
++	return 0;
++}
++
+ static int stm32_rtc_pinmux_lsco_available(struct pinctrl_dev *pctldev, unsigned int pin)
+ {
+ 	struct stm32_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
+@@ -307,6 +351,7 @@ static int stm32_rtc_pinmux_action_lsco(struct pinctrl_dev *pctldev, unsigned in
+ 
+ static const struct stm32_rtc_pinmux_func stm32_rtc_pinmux_functions[] = {
+ 	STM32_RTC_PINMUX("lsco", &stm32_rtc_pinmux_action_lsco, "out1", "out2_rmp"),
++	STM32_RTC_PINMUX("alarm-a", &stm32_rtc_pinmux_action_alarm, "out1", "out2", "out2_rmp"),
+ };
+ 
+ static int stm32_rtc_pinmux_get_functions_count(struct pinctrl_dev *pctldev)
+@@ -763,6 +808,7 @@ static const struct stm32_rtc_data stm32_rtc_data = {
+ 	.need_accuracy = false,
+ 	.rif_protected = false,
+ 	.has_lsco = false,
++	.has_alarm_out = false,
+ 	.regs = {
+ 		.tr = 0x00,
+ 		.dr = 0x04,
+@@ -788,6 +834,7 @@ static const struct stm32_rtc_data stm32h7_rtc_data = {
+ 	.need_accuracy = false,
+ 	.rif_protected = false,
+ 	.has_lsco = false,
++	.has_alarm_out = false,
+ 	.regs = {
+ 		.tr = 0x00,
+ 		.dr = 0x04,
+@@ -822,6 +869,7 @@ static const struct stm32_rtc_data stm32mp1_data = {
+ 	.need_accuracy = true,
+ 	.rif_protected = false,
+ 	.has_lsco = true,
++	.has_alarm_out = true,
+ 	.regs = {
+ 		.tr = 0x00,
+ 		.dr = 0x04,
+@@ -847,6 +895,7 @@ static const struct stm32_rtc_data stm32mp25_data = {
+ 	.need_accuracy = true,
+ 	.rif_protected = true,
+ 	.has_lsco = true,
++	.has_alarm_out = true,
+ 	.regs = {
+ 		.tr = 0x00,
+ 		.dr = 0x04,
+@@ -878,6 +927,17 @@ MODULE_DEVICE_TABLE(of, stm32_rtc_of_match);
+ static void stm32_rtc_clean_outs(struct stm32_rtc *rtc)
+ {
+ 	struct stm32_rtc_registers regs = rtc->data->regs;
++	unsigned int cr = readl_relaxed(rtc->base + regs.cr);
++
++	cr &= ~STM32_RTC_CR_OSEL;
++	cr &= ~STM32_RTC_CR_TAMPOE;
++	cr &= ~STM32_RTC_CR_COE;
++	cr &= ~STM32_RTC_CR_TAMPALRM_TYPE;
++	cr &= ~STM32_RTC_CR_OUT2EN;
++
++	stm32_rtc_wpr_unlock(rtc);
++	writel_relaxed(cr, rtc->base + regs.cr);
++	stm32_rtc_wpr_lock(rtc);
+ 
+ 	if (regs.cfgr != UNDEF_REG) {
+ 		unsigned int cfgr = readl_relaxed(rtc->base + regs.cfgr);
 -- 
-2.34.1
+2.25.1
 
