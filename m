@@ -1,105 +1,134 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF5E1D52B;
-	Wed, 17 Jul 2024 16:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC99180A67;
+	Wed, 17 Jul 2024 16:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721233501; cv=none; b=W0nxUuvA+J/YYZFLPWHRXdqiPVouiNG7fdvwPrMMna1TJtAJXFjAA2CqEBFXSAsDZDE2eai0Q3AF8fJpCqeznK3ZRAGl/AICpNzy6ejBa7V7o9uLbf+pHWS3tkosKoiU1ddWY0Q28flvdlQWws5TyKOvMMamKIV1TJJ1CfHhwCs=
+	t=1721233521; cv=none; b=r7wtl7whIqfqaGCoTqpKzvvgsERqApywkvC4XUhw6FrHLbJTrDcdBNxwx0oJFcZElmGAcKdt1vyINPR0h/JazhV+hInQoGsGwcXma3922op1mRBhp8OgGPUHFx2VxBzjaomcAvz2hmkUnyVBCMhhdfEprTicSzHVqZOmpw/nMtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721233501; c=relaxed/simple;
-	bh=F17R1ylOnAHC4H/n8d8kSyYk/8iTj1Gyafq/NG1afZw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=lgnvfEFKXcgKrK0iT+cMIxTvLgA2b5yCfTj9mEi2lVJCwzwcwFQtAvc1Afm4C3irCPsVUXwajVtJsKsYz0YnP/eTTZOg7LOQsCNgV2poZJY1h/ELYRmHsBWlMHRB7hCUDku69Zo8LrBN0E67IUtTaSw1E6ajUq0TO9KpSghEgHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=beTfElnY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TCQQ7fuG; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="beTfElnY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TCQQ7fuG"
-Received: from compute9.internal (compute9.nyi.internal [10.202.2.228])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 8566D1140123;
-	Wed, 17 Jul 2024 12:24:57 -0400 (EDT)
-Received: from wimap26 ([10.202.2.86])
-  by compute9.internal (MEProxy); Wed, 17 Jul 2024 12:24:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1721233497; x=1721319897; bh=1W3K3SSfi2
-	iYaeyeomygFHiBI3aPjhu9ub0OyFFAtjg=; b=beTfElnYZrN7CEjAlJZ7NGKvby
-	TENCctlXZoWcKs440e4WBcdgdNhnumWfZQGutcmV4zu2Wva9zOGIM/AL+2l/SkCR
-	H+pOvSEe3NpUZUFzy02cY7QTtslDstB4bVthOcqefr1pYUd1NDGQI2emXkVoKJLs
-	1Yq7TeOnixkcKC3TKRUChwkUYvtZGKHSTjPNOp9f0jmcWMyWHPJWAc5XOL2VDowZ
-	7QZTsr/GOu6ay1knZrUMxWHhoIp7LNdI2nWjXe1o9VMAK0gEq6tV0Q6JzTvAU1UU
-	fdBtS5d7fVyAgJ/nKhZFiAURUx/VLdqtdsOpKbQKr+gVFXdCegTIAJGwxh6Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1721233497; x=1721319897; bh=1W3K3SSfi2iYaeyeomygFHiBI3aP
-	jhu9ub0OyFFAtjg=; b=TCQQ7fuGL+rFlxm+Sd+6z0Uw7KVyFvDNu8gZ0ouZBgS6
-	g4f15WlysNLgKGreIH4YsHrIzvOXKKBCFr6omYXmgj6tlTHWYvZV4mlhLtcUfvdJ
-	h73JX8lFmuhSn4gaE2gdQrRVR1+cKg/xo0oWDQYLys9CwBt7WjO6rk5vz+9mgCXa
-	Rasc2B40urtNQaHYCg70stcjMeGLUzQti5ujBdf7AGe63eZOPq0WjBhAFpOnGFno
-	xreaVlhbWFkjrXFvm11hDtICYO1yHr3OJ5BTytdCx5rzF4v6e1sHsdsEpnDL7dCL
-	ZnXvIFpo+9KS+9OEzal8zhn21KWVjsTb8Zsk5Risqw==
-X-ME-Sender: <xms:V_CXZhO8LNaIWm9OEYqjHzES-aJ1J6vb57vYjagWZNmehmTJkTU_qA>
-    <xme:V_CXZj9Cf4WlE0GpcDUpKjdiX-Gd6XvvyB-v4yVLqzUoj-8ge9IdK4yYsJgdTiyBt
-    SUx7aYR6z7Qao6XoWA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeejgddtlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:V_CXZgQnKNiojAFNWu0q2_IDsvTp5o5sqCwyHGlVb6BppFO7-V_9oQ>
-    <xmx:V_CXZtugudBNAaKQJ9gbPyayyf2vKtHqabYQCifBDi3zb4f1CJrj-Q>
-    <xmx:V_CXZpcDthWcwI_QvDfBfm6leE1TtmuWYarYxyhx-D3UX4LFSigpBA>
-    <xmx:V_CXZp3N04dHHx_C3Cg_hKujFFEZIS5vxnG-wEqa0iSS_fFRhFjQFA>
-    <xmx:WfCXZhRM3b7PRAYC2jZei_gViimYexbCP2msoUXaLlbjp-RBB0Yw_cqy>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B2FAC19C0062; Wed, 17 Jul 2024 12:24:55 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	s=arc-20240116; t=1721233521; c=relaxed/simple;
+	bh=gsTjsJKiSv9mO94ijtFAZFseVqYNxVDnZ1NCnfwYttA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=omX9BfJ5lScG0VOswBxUfRWZH0yJf3dqgCjpjZ5cVWUuY9ZSkLzBRErdN+pl1bigj41ZMyz5KLAZCI8yB+d6K3pvLA5haTCJXafqrKo1dtRaDr9af51JWmVg1zCJ4onPViiK92A1VsUlbMAdj6eFel0H5/xTz3m2923d87Cv4U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 431D92800B3CC;
+	Wed, 17 Jul 2024 18:17:45 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2E3BF21097A; Wed, 17 Jul 2024 18:17:45 +0200 (CEST)
+Date: Wed, 17 Jul 2024 18:17:45 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Stefan Berger <stefanb@linux.ibm.com>
+Cc: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+	davem@davemloft.net, herbert@gondor.apana.org.au,
+	dhowells@redhat.com, zohar@linux.ibm.com, jarkko@kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	patrick@puiterwijk.org
+Subject: Re: [PATCH v12 02/10] crypto: Add support for ECDSA signature
+ verification
+Message-ID: <ZpfuqeSVC47jqme2@wunner.de>
+References: <20210316210740.1592994-1-stefanb@linux.ibm.com>
+ <20210316210740.1592994-3-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <8333c062-a773-45d3-88d3-ba78e8abbd47@app.fastmail.com>
-In-Reply-To: 
- <CAK7LNASOtyqJMET7YuuFzTCkwg02p850PnqCC57-BZNJhyKT7Q@mail.gmail.com>
-References: <20240717124253.2275084-1-arnd@kernel.org>
- <CAK7LNASOtyqJMET7YuuFzTCkwg02p850PnqCC57-BZNJhyKT7Q@mail.gmail.com>
-Date: Wed, 17 Jul 2024 18:24:35 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Masahiro Yamada" <masahiroy@kernel.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
- linux-kbuild@vger.kernel.org, "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: mark "FORCE" target as secondary
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210316210740.1592994-3-stefanb@linux.ibm.com>
 
-On Wed, Jul 17, 2024, at 17:18, Masahiro Yamada wrote:
->
-> Of course, NACK.
->
-> Now I am surprised that this broken series was quickly merged
-> into the mainline.
-> I really dislike how you changed scripts/Makefile.asm-headers
->
->
-> I will send a correct fix.
-> Please do not break Kbuild even further.
+Hi Stefan,
 
-Should we maybe revert ff96f5c6971c..3db80c999deb then
-and find a better way to do it in 6.12?
+On Tue, Mar 16, 2021 at 05:07:32PM -0400, Stefan Berger wrote:
+> +/*
+> + * Get the r and s components of a signature from the X509 certificate.
+> + */
+> +static int ecdsa_get_signature_rs(u64 *dest, size_t hdrlen, unsigned char tag,
+> +				  const void *value, size_t vlen, unsigned int ndigits)
+> +{
+> +	size_t keylen = ndigits * sizeof(u64);
+> +	ssize_t diff = vlen - keylen;
+> +	const char *d = value;
+> +	u8 rs[ECC_MAX_BYTES];
+> +
+> +	if (!value || !vlen)
+> +		return -EINVAL;
+> +
+> +	/* diff = 0: 'value' has exacly the right size
+> +	 * diff > 0: 'value' has too many bytes; one leading zero is allowed that
+> +	 *           makes the value a positive integer; error on more
+> +	 * diff < 0: 'value' is missing leading zeros, which we add
+> +	 */
+> +	if (diff > 0) {
+> +		/* skip over leading zeros that make 'value' a positive int */
+> +		if (*d == 0) {
+> +			vlen -= 1;
+> +			diff--;
+> +			d++;
+> +		}
+> +		if (diff)
+> +			return -EINVAL;
+> +	}
+> +	if (-diff >= keylen)
+> +		return -EINVAL;
 
-      Arnd
+I'm in the process of creating a crypto_template for decoding an x962
+signature as requested by Herbert:
 
+https://lore.kernel.org/all/ZoHXyGwRzVvYkcTP@gondor.apana.org.au/
+
+I intend to move the above code to the template and to do so I'm
+trying to understand what it's doing.
+
+There's an oddity in the above-quoted function.  The check ...
+
++	if (-diff >= keylen)
++		return -EINVAL;
+
+... seems superfluous. diff is assigned the following value at the
+top of the function:
+
++	ssize_t diff = vlen - keylen;
+
+This means that:  -diff == keylen - vlen.
+
+Now, if vlen is zero, -diff would equal keylen and then the
+"-diff >= keylen" check would be true.  However at the top of
+the function, there's already a !vlen check.  No need to check
+the same thing again!
+
+Next, I'm asking myself if -diff can ever be greater than keylen.
+I don't think it can.  For that to be true, vlen would have to be
+negative.  But vlen is of unsigned type size_t!
+
+I just wanted to double-check with you whether ...
+
++	if (-diff >= keylen)
++		return -EINVAL;
+
+... is indeed superfluous as I suspect or whether I'm missing
+something.  I'm guessing that the check might be some kind of
+safety net to avoid an out-of-bounds access in the memset()
+and memcpy() calls that follow further down in the function,
+in case sig->curve->g.ndigits was neglected to be set by the
+programmer.  But there doesn't seem to be any real need for
+the check, so I'm leaning towards not carrying it over to the
+x962 template.
+
+The check was already present in v1 of your ecdsa patch set:
+
+https://lore.kernel.org/all/20210126170359.363969-2-stefanb@linux.vnet.ibm.com/
+
+Thanks,
+
+Lukas
