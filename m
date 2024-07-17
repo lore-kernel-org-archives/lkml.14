@@ -1,92 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E482517E8E2;
-	Wed, 17 Jul 2024 12:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20C81173F;
+	Wed, 17 Jul 2024 12:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721220201; cv=none; b=G2acvMK3lJw6HCkvvtN/UDfN3sD2xoy6cpNxperTn4+12giUzAinaW/sO5K8B2Tme34j+pX0rr12M8wdVsWO/MClXHFHk9ioojSDimbu0NLe3EScrmYkbuiIX3AgjzwQq7UZ9qH3t1dB5cefY3L+ZFtrttVBX9rLGTYSEGCUEn4=
+	t=1721220379; cv=none; b=EyTJLVrmIMqLAUvS/uvMJ1Rfwt0EJE2X5M4Aa26DbD62LxvaBYVhrXkhX7mMd3yq384OevrjQQ/hpuazIBorAASUKjbRpS+BOpmIXoGG0IDeT3O8c9N5/bQ4Di6T8A25z68+pGPIDbWSVq/5YwgzmyMK/z/MKl2SbiJATA5zY2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721220201; c=relaxed/simple;
-	bh=n71oolAmKfoaIOxjKUMGa6aVrF6KI/Baq9WOrJi1kI4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HZsmlBK+4NfnnbDCVKb5miwwUZbTuZxgFatK052x0xR4s3XfF5D4zuqg9QjDJKcZaV/9mq649TG+eHD6R3GRN4MwUC5vmEIU3YEfPFw2jCpQ2pVQOId0/HBmi6zBnnV6cQWqcKzUhUcfiZ8NWSKpINoHOUohEz2CRznKdwTZ+u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uA1Yv5yo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721220379; c=relaxed/simple;
+	bh=GuFkuwgqT80GRWXZvm7LRcX0ZMXSO6k1+urf/KtMogI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=EoH5999evv2KLFfT2BwDudy0psR8KUx1fEvvwI/J1I94k3lkpEppGo88OQcTzZO/q4CDZf16tvRyFbg2fvWQgwpA/qY91yf5UTB6o583Zw2B3apxcCCtc189bpE6ly3+SAqWTYXnCJSept8AXpnqBd+qFSIq4cB7eCtrCMCAiPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qiqOQV/Z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lYhGR3c6; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uA1Yv5yo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD64CC4AF0F;
-	Wed, 17 Jul 2024 12:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721220200;
-	bh=n71oolAmKfoaIOxjKUMGa6aVrF6KI/Baq9WOrJi1kI4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uA1Yv5yo7GmVHBeKumdIuEVVeJOu14+qIuNHUNKmj/XEnXnWwLc/tIad0rBU3Zb9K
-	 iv9zrK4rASYkD2ZvS7/SaeHqfCq4hv8EBiNMexemeLUp1PS3Nb6IuwCwAwEbMfgoLg
-	 BI3Xilck0al+aqW1HLkq8D0p4IKV7TDDiA+JsBr5cf/UhkDyHQhYp8diXY53KBG0KD
-	 9tb5TnMlOc4VmmLUBfBnDVxoX8Sx2UZRUyMCINJ8vwqN+0RhCO7UKhBFwj6oZ96gHz
-	 sSGwJRSjTmQCr4Gb/6ZKVg0pG1tw4LnmjL////45XBciFX5SffkV9G0tnSfsfbpRBP
-	 F2C6dSkGEUOVQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kbuild@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: mark "FORCE" target as secondary
-Date: Wed, 17 Jul 2024 14:42:44 +0200
-Message-Id: <20240717124253.2275084-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qiqOQV/Z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lYhGR3c6"
+Received: from compute9.internal (compute9.nyi.internal [10.202.2.228])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id D13FC1140186;
+	Wed, 17 Jul 2024 08:46:16 -0400 (EDT)
+Received: from wimap26 ([10.202.2.86])
+  by compute9.internal (MEProxy); Wed, 17 Jul 2024 08:46:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1721220376; x=1721306776; bh=/CApYD6wKY
+	nJBVN4NbL8zaH4ZDUgadgUBuZp5+ecVs4=; b=qiqOQV/ZBHOGp+WRExDp4NzLdj
+	ziUl9xIHaUXYnBshQBoAxGk/gVS9rKLhRK3WBuRgdNEnDrwmn0Lz+anGbh4newhE
+	qiATIwmRv/uj2g97g8OM9RmpergkSLw+X7W4kUIR3qD0+Sl3oiyBhFE7eqVdaNTI
+	hC5+8KqqGeDfYXzIGk8dMxUi5mEwdWN2Hc6IAtoq5iGyL4pQpuMcTcRNKOKP2de3
+	6zNHPaNDFteBrktsnqiWXnXbafZ0NsOCqMvmUv1OmeMZMyfrbORXxOjHXJeMxP2+
+	4q3LewaZnF+cG+ZYcI2RbDUOX+kfrd+vAJCTLl/90fgj2rZLmCRi4UlvyZMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1721220376; x=1721306776; bh=/CApYD6wKYnJBVN4NbL8zaH4ZDUg
+	adgUBuZp5+ecVs4=; b=lYhGR3c6zUvtgFpfRszwIHAm42Q0BxFUb415+QYJFeWc
+	xgsRAJPATdNRpoNNiS9aXLKn0WxLdP682FIdPO46JBZmfMGQhly4a8i6oFGthfZz
+	MhFlY26GuQSbriMBkK+V96uPCGjdex4OQ1xbetOET4QNa3VNWCeBc5hNFUyTNl+L
+	rHmQwOmCnsr3GcrnNgqz27e439an53N8EqFLy9tRPFumSP+Sq2OIEBy1i91XrbA1
+	KPpacdbigM/viaWRTAxU/POrsaT3X1zfv7DLwIDNeU0MIYbgtFpSqjy6mpU5h2Cg
+	3FlnIjvjSEGDizXvce20/14W1hOI1EbikHnEsxZt6Q==
+X-ME-Sender: <xms:FL2XZgu54zRo188ytbgokKLG-eM4_oct46qUF3zL2lA9v_10Y08z2A>
+    <xme:FL2XZtfHT4Wi8X98SWGHqJjKULUVb3Lv8BrlqYk6a31KbWqIe6kozNUkhdKJoFqki
+    AP5eR3FC6wazrKMIKk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeigdehhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:FL2XZryYFxReCHxYg1QjiiH7dcsKpiwNjFrFgvo9GdtpbStBQBAuag>
+    <xmx:Fb2XZjNceNt8fkAK1H8grmE9yW5ioXtEGgCiD38SIQUspwW20NYIWQ>
+    <xmx:Fb2XZg_YXApV0zJUjelNBs_wv_CkV8Vm_zjLElkOJ-FFFFFcNOuA0g>
+    <xmx:Fb2XZrUUYISPVoAHWqmqGi54AAfe6u4d7cGemq7uUnXOcqRDtpbcow>
+    <xmx:GL2XZh2MdXKDq-J1IfFLVUWchvHx5FvMcBTDJmK2Ej4vcoG0Bdlci1mt>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 1A54C19C0062; Wed, 17 Jul 2024 08:46:12 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <f92d9393-779d-408a-b3f0-906658fef3cd@app.fastmail.com>
+In-Reply-To: <91b10591-1554-4860-8843-01c6cfd7de13@app.fastmail.com>
+References: <a662962e-e650-4d99-bed2-aa45f0b2cf19@app.fastmail.com>
+ <CAHk-=wibB7SvXnUftBgAt+4-3vEKRpvEgBeDEH=i=j2GvDitoA@mail.gmail.com>
+ <d7d6854b-e10d-473f-90c8-5e67cc5d540a@app.fastmail.com>
+ <CAHk-=wir5og_Pd6MBSDFS+dL-bxoBix03QyGheySeeWPX82SDw@mail.gmail.com>
+ <CAHk-=wjqr_ahprUjddSBdQfSXUtg3Y2dCxHre=-Wa4VGdi7wuw@mail.gmail.com>
+ <2b6336d1-34e0-48dd-b901-7b5208045597@app.fastmail.com>
+ <ZpdnhhaQum_epcGp@hovoldconsulting.com>
+ <be80d8f6-2a1b-4f63-a43e-652fa5328d11@app.fastmail.com>
+ <Zpd-Bx3VwrYWVeTs@hovoldconsulting.com>
+ <4d471a38-f86f-429d-a1a3-b882439ef7ba@app.fastmail.com>
+ <91b10591-1554-4860-8843-01c6cfd7de13@app.fastmail.com>
+Date: Wed, 17 Jul 2024 14:45:46 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Johan Hovold" <johan@kernel.org>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>, linux-kernel@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-snps-arc@lists.infradead.org
+Subject: Re: [GIT PULL] asm-generic updates for 6.11
+Content-Type: text/plain
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jul 17, 2024, at 12:54, Arnd Bergmann wrote:
+> 
+> -$(obj)/syscall_table_%.h: $(syscalltbl) $(systbl) FORCE
+> +$(obj)/syscall_table_%.h: $(syscalltbl) $(systbl)
+>         $(call if_changed,systbl)
+> 
+>  # Create output directory. Skip it if at least one old header exists
+>
+> Masahiro, does that make sense to you? I assume you can
+> explain this properly, but I'll already send a patch with
+> this version.
 
-Starting with make-4.4.1, Kbuild uses the special .NOTINTERMEDIATE
-target to mark all targets as not intermediate, which slightly changes
-the behavior compared to older versions of make.
+This was not quite right either, but I sent a patch now
+that works with both old and new versions of make and
+has appears to have the intended behavior for incremental
+builds with or without changes to syscall.tbl:
 
-This causes a build regression with my change to the system call table
-scripts now in scripts/Makefile.asm-headers, forcing a rebuild of the
-generated files with every make invocation and effectively breaking
-incremental builds.
+https://lore.kernel.org/lkml/20240717124253.2275084-1-arnd@kernel.org/T/
 
-I have narrowed down the change in behavior to the way that the
-'FORCE' target is treated: If this is marked as not intermediate,
-the $(if_changed) macro always evaluates it as a missing prerequisite,
-but if it is marked as .SECONDARY, it works like before.
-
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org
-Fixes: 875ef1a57f32 ("kbuild: use .NOTINTERMEDIATE for future GNU Make versions")
-Fixes: fbb5c0606fa4 ("kbuild: add syscall table generation to scripts/Makefile.asm-headers")
-Closes: https://lore.kernel.org/lkml/91b10591-1554-4860-8843-01c6cfd7de13@app.fastmail.com/T/#m4c979c42d0c086f616e41b4ca76f2873902b8a25
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-----
-I'm still a bit confused by the way this works in detail, hopefully
-Masahiro Yamada can either confirm that this is a correct fix or provide
-a better one.
----
- scripts/Kbuild.include | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index faf37bafa3f8..aa1ffaeb8fc0 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -267,6 +267,7 @@ endif
- # deleted files.
- ifneq ($(and $(filter notintermediate, $(.FEATURES)),$(filter-out 4.4,$(MAKE_VERSION))),)
- .NOTINTERMEDIATE:
-+.SECONDARY: FORCE
- else
- .SECONDARY:
- endif
--- 
-2.39.2
-
+    Arnd
