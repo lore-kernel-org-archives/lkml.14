@@ -1,95 +1,125 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DED61C36;
-	Wed, 17 Jul 2024 23:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A3379D2
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 23:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721257572; cv=none; b=Z/29vw2+NvK6GVWV1pOupkLUBOtA3b9cf3hJpsSjwe7bvqTXJWhadr7SrhrJYMO7LP4ww/2DZQerHQznU41VxIpFiPGM9gRgCfwCH6fTuqzPmKjnflrYugSM65OZyFZmcx+c8lowyMpYCCY56mwnSJ++iOzs7+vI7XXG9lQaz4U=
+	t=1721258440; cv=none; b=LTHlx8QuW2O/HCNVJhFm/jdX/JBRoCGec4r2U9IDd3z/QPLjcgTYtfUNtUS4bYF/+6FtNl8hExMBoynrOATnqcs916bsg1rSOwH6Nx5TeXOyu8yiQOt+y03FKXPj1CeBbHJEG3AgZoNchSGZxsoJorYbHjtlnv9XYmFgjOnKA3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721257572; c=relaxed/simple;
-	bh=NAEl5BO6t+UhvzUxdMP1MqTiP61LVnti4s4gJOVxsp4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=AZ0YTJtQ9wi9YCAmwBkZ5gZ8xhJpehyDZ/mAz7qf/lRRBhYeb91HtRGizOGG8URiHd/Yb49VFCsmKMRq4XiUq0Y2TSRDvh0jg/dUoY1VCde5M/gQN/OyYDBg33BRdWmDHFRmalFKagqGnHSK5j20v4n7WleFLf+bdQfVmqhjKv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=FJF7XIGG; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1721258440; c=relaxed/simple;
+	bh=alkn7u8DptvmEkL2WvLNybsQ9pA+gLO09vP+UQQNaMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QBoqU/pUHAldrz9pYx+9G8T+aiCh1lEBLok3omAmTrf0RFxSKzg9TcLBPGZKSsZNXwoJmcCxpNTTzaLxQx2DM8qxcaXhV9nGfIp6EKxmTbFM55urhai3PFKhX8crk6nDJAO/CHFLZ8Bn++i8mF1zY295CAF3M9svpvXbg/C/u8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BfqWwxKq; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="FJF7XIGG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=z9pdZ21hvYIwVRiPXazOclxmW+YuoQrndU0f/vyzFq4=; b=FJF7XIGGlyUGv8xIOQKc/gmeey
-	WIe1tZwybuYe8Sh3hkXGe9gRuNkETTLVzccLAh8uiikbzTQG3Lpx8IgA9UYyyh0DHF0B749paMN3X
-	GzkQRCd4QOK0SyP8nxt3j210BHMRIUj1tm02Q5rUG74jkeMVOduak9uyy6xKI+QTGeGM3Ua7MQ+LN
-	esAAjIbbIp0AIcGumfIEojZUkpZm8XfK9JzvifnFCIEfmtfiMkP2Elh4L8RpxfRlsqqmRBOpNGvI+
-	cIifep9TZC0QTfVs1OUlyRrCBiq2ukbjCqqshk0OBaXPmTuhYgsnBasEU4/rdV/9K/qJMAkD4UIGH
-	3iUaRnWQ==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sUDHx-000L1Q-BE; Thu, 18 Jul 2024 00:38:21 +0200
-Received: from [178.197.248.43] (helo=linux.home)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1sUDHw-000Bnj-2K;
-	Thu, 18 Jul 2024 00:38:20 +0200
-Subject: Re: [PATCH 1/2] MAINTAINERS: Update email address of Naveen
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>
-Cc: Naveen N Rao <naveen@kernel.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, bpf@vger.kernel.org,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Hari Bathini <hbathini@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>
-References: <fb6ef126771c70538067709af69d960da3560ce7.1720944897.git.naveen@kernel.org>
- <20240716190222.f3278a2ef0c6a35bd51cfd63@kernel.org>
- <87sew8wtxw.fsf@mail.lhotse>
- <20240718064331.834e1359f9c3f285f2dd7eb5@kernel.org>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <6f979810-4992-13ba-c154-a4b5f838844d@iogearbox.net>
-Date: Thu, 18 Jul 2024 00:38:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BfqWwxKq"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ca8dfa2cceso157150a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1721258437; x=1721863237; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PJ4Rtgfw1crxH82KHr40tMf+xK9HrNqVoA0f8i6QWg8=;
+        b=BfqWwxKqzpWlfXe3JFQ8QSqs+t8QUb1R1NbC4OznrQ9xJk5FSRUtQH0MGeIjG12vE+
+         eI9GpbS34YcTMPZQZjM5U6yCJ+r8CKkfA9wt3NcVXdkACGZXen0B+wGKLCbd8vO+nKOM
+         PaV8aZRz6l4+2q3/iHFxUnsGyLgG218ThZWMI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721258437; x=1721863237;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PJ4Rtgfw1crxH82KHr40tMf+xK9HrNqVoA0f8i6QWg8=;
+        b=N/gw01+i4EMDMl0hKZpCupSZt03eR1080U9CtMURmsZhz4Vj+HX1MjW6x0SqWFPv9s
+         gYwRA9NwMDSls9SaKKbCF54sSgwzAcKImBOp2ldjcLWgPq23aHrjnd5ay3MN/KlNBGhE
+         Ouvpbhs+FGr7tRNDOPm4EwYk14SEj33Qa6hhb7UUBzAI/B1vJRd2dSj/Bb0u8G7vhrs+
+         Kzssr43Ar2Lo1iQHUw+RFtB5Piqw86jpcSNJqJy57Fc08SGMxJMcixxp9eXzn84BDw8Q
+         pQ0jIEIn82PFGcrQeVUdkGKbBXFtus1sDgmiMUDXRrcEFOx/oAeRGE39Oz3gJa0wDgfb
+         XFug==
+X-Forwarded-Encrypted: i=1; AJvYcCVgAgVjhW5bI/9X4rfB6fWSSmmZ07e6xhMwgSMcsAQ+Ls+uyTWPZbHQmnD2RkWZFnXNqfgnhTblxtNvRS71eoWT3SOt0nZHctkOJnIw
+X-Gm-Message-State: AOJu0Yw3N0LK++/UtTbrwlXcye47c7fEi30Um7euf5O9tzdhukQ44oSN
+	+YCfYxnBKCMmAM5AdC3zevdNHiJ8449qSkMjQVQlsX7mWJvGSb+WvGokb9+D+A==
+X-Google-Smtp-Source: AGHT+IGSq9WFJ24jFHe7nZE5xQPf4XbD2c2tgVy5+rSjm5TliJ99S5ZpUoONUIfw0XUZLKuOlJXl9w==
+X-Received: by 2002:a17:90b:a51:b0:2c9:7803:1cf6 with SMTP id 98e67ed59e1d1-2cb527a1155mr2419597a91.20.1721258437108;
+        Wed, 17 Jul 2024 16:20:37 -0700 (PDT)
+Received: from khazhy-linux.svl.corp.google.com ([2620:15c:2a3:200:62a5:b19:9711:d3a6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb60219d21sm510034a91.53.2024.07.17.16.20.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 16:20:36 -0700 (PDT)
+From: Khazhismel Kumykov <khazhy@chromium.org>
+X-Google-Original-From: Khazhismel Kumykov <khazhy@google.com>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Zdenek Kabelac <zkabelac@redhat.com>,
+	Joe Thornber <thornber@redhat.com>,
+	Heinz Mauelshagen <heinzm@redhat.com>,
+	dm-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Khazhismel Kumykov <khazhy@google.com>
+Subject: [RFC PATCH v2] dm ioctl: fix erroneous EINVAL when signaled
+Date: Wed, 17 Jul 2024 16:18:33 -0700
+Message-ID: <20240717231833.2090430-1-khazhy@google.com>
+X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
+In-Reply-To: <CACGdZYKbdyALADEMDV+Vg+eog+UjjgGigEpmJTSKw_64RM8rbA@mail.gmail.com>
+References: <CACGdZYKbdyALADEMDV+Vg+eog+UjjgGigEpmJTSKw_64RM8rbA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240718064331.834e1359f9c3f285f2dd7eb5@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27339/Wed Jul 17 10:36:14 2024)
+Content-Transfer-Encoding: 8bit
 
-On 7/17/24 11:43 PM, Masami Hiramatsu (Google) wrote:
-> On Wed, 17 Jul 2024 13:58:35 +1000
-> Michael Ellerman <mpe@ellerman.id.au> wrote:
->> Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
->>> On Sun, 14 Jul 2024 14:04:23 +0530
->>> Naveen N Rao <naveen@kernel.org> wrote:
->>>
->>>> I have switched to using my @kernel.org id for my contributions. Update
->>>> MAINTAINERS and mailmap to reflect the same.
->>>
->>> Looks good to me.
->>>
->>> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>>
->>> Would powerpc maintainer pick this?
->>
->> Yeah I can take both.
-> 
-> Thank you for pick them up!
+do_resume when loading a new map first calls dm_suspend, which could
+silently fail. When we proceeded to dm_swap_table, we would bail out
+with EINVAL. Instead, attempt to restore new_map and return ERESTARTSYS
+when signaled.
 
-Looks like patchbot did not send a reply, but I already took them
-to bpf tree.
+Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+---
+ drivers/md/dm-ioctl.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-Thanks,
-Daniel
+v2: don't leak new_map if we can't assign it back to hc.
+
+diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
+index c2c07bfa6471..0591455ad63c 100644
+--- a/drivers/md/dm-ioctl.c
++++ b/drivers/md/dm-ioctl.c
+@@ -1181,8 +1181,27 @@ static int do_resume(struct dm_ioctl *param)
+ 			suspend_flags &= ~DM_SUSPEND_LOCKFS_FLAG;
+ 		if (param->flags & DM_NOFLUSH_FLAG)
+ 			suspend_flags |= DM_SUSPEND_NOFLUSH_FLAG;
+-		if (!dm_suspended_md(md))
+-			dm_suspend(md, suspend_flags);
++		if (!dm_suspended_md(md)) {
++			r = dm_suspend(md, suspend_flags);
++			if (r == -EINTR)
++				r = -ERESTARTSYS;
++			if (r) {
++				down_write(&_hash_lock);
++				hc = dm_get_mdptr(md);
++				if (!hc)
++					r = -ENXIO;
++				if (hc && !hc->new_map) {
++					hc->new_map = new_map;
++					up_write(&_hash_lock);
++				} else {
++					up_write(&_hash_lock);
++					dm_sync_table(md);
++					dm_table_destroy(new_map);
++				}
++				dm_put(md);
++				return r;
++			}
++		}
+ 
+ 		old_size = dm_get_size(md);
+ 		old_map = dm_swap_table(md, new_map);
+-- 
+2.45.2.993.g49e7a77208-goog
+
