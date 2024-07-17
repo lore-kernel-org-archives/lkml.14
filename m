@@ -1,339 +1,110 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748321CF8A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726E5224FA;
+	Wed, 17 Jul 2024 16:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721233950; cv=none; b=UZgDeTHHk6MJPTzeHf6KfRyapFMoGEa9BAEzY6oHBWD7pUkmEaTRVM4axhK5tr6xXEd+btoF2lAVPMauKQYzQmyWkn7n9RBSuasPHJpkT62yehiFnc2ZiqGmwZvv9h8D/96zQyrRw47IlDHeMwtB7BYjfQRLrpS9mbTNvKgkTDM=
+	t=1721234014; cv=none; b=TfoXKOlc/e0V21bkWdfK+07BmkrB1m8qDu/mgqyLfIsCZNAJ9tQJFjoJTJ9G/2nvRTi/gVbYr7TKPg0LMm6L6md1i259HJLhN3kga/dhFYc4t1NBl8KU0KDb4eRLz67MTYnD6Fjj6wZN9jZThaObu/OFaC4VWVdDqpdRottk5DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721233950; c=relaxed/simple;
-	bh=NtEQHw6icc+eZOOGYuBEMREz5cq3XA+8Vsjrg/wANXE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gOsiVEkcWPqubC9e+uNptLOn9wGIIeg4B11APw0EISLK1ZSgtmhCg3hGz+XScthnq6Tsn2rol/7Jcau05BNe/CSDQnzQCzcJzQiqewyRZRT09OwR/fh+5OUKM8mvjIwK+QD6fMQS2+FFI2yCQO7Ka8ylcnnYrBDtdqPpTbU+O0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dcILhm9T; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721234014; c=relaxed/simple;
+	bh=UkC0sAZpE7/WRdVikjHbnqPQTCDC+XxSCjuX8q3pfp4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HRX/Tn3Vv/nk4GLEAjvh0lO7gq3VVpEDDYfZ+n8teVa4wB3ue22SnEKBsYtsMMoR13oAnKPnLjOPq3Vq2sAWs6XwyrwEOXRyAZEk4YfSvIcBitEWZAQoD0+BDRebATmZDWsc1sndr67aFaGlG0FQL7462LDMfXDYPBs7FhAc4jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=PQGwxwrR; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dcILhm9T"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a77d85f7fa3so184488166b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721233947; x=1721838747; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=n8xVRfMJ7abYq0IMMhEbnwpXyZd3kKKex3fs0rUVCOA=;
-        b=dcILhm9TGFdkXGjdq50vUMbAiNHriBhWgZixBDXvv1fafwROoDwomGgyOMDCJQhrhX
-         cRlCy0VrvQUgewoGFceQ4ZwXDd/945oRxh2Y5FgLpaB6Y9yFR4cYxlf7T4HRCluJDgDt
-         wjpp4/dt3nI93np0ZkhlnsoF3WNDhVURQIbgAEMViBgV0JxP3zS4eU29bGFFa6AmfjnT
-         UYVGj9OCb0/sJIzKstvw8ClEYMDvWWN5bgihVhSKoZ9NLSgLT4Ekqr1GFfQJPc9xq2cY
-         F/Ezt9KWp3tNUOLyCyu+NQWAtAP7AkylLRk8qu9YZ6GvJq+m3+kxCsIorfmQfxabV6Db
-         aJ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721233947; x=1721838747;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n8xVRfMJ7abYq0IMMhEbnwpXyZd3kKKex3fs0rUVCOA=;
-        b=vBLVGZJ3jEmhfqcLhrf2GM3CPb6S95LpjopUZy9wsc6AKE2cb7e+837t0PfVwKHpIb
-         1ZEZdOzE3fDL5Zcsi3lXvXRe+K3dKEn6DUHfAbVlzegjfUcPz8x+zzylVfL8cQAbSj+l
-         zlcrxOAm6lI9mxrVEfCPFPZMgXuN9IfNgKJyWS7bmn+oCCuZL5okpsoAiqhrfALcvgfN
-         OjzAJAny12s/0+aU3mUr4a6r/EtJPIwxCsPquAro6FBJ3aJBvRYyfSFbBg6EHnLHHHHd
-         kSsB+ff4vRlRmmTarUssFYCOmkYgZAncrSp/54dmeQMjCueVRQtqis4P5TzhT+1MIrw5
-         yFvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXhqKFTQFY4LORCrz8MC1Mr+O2XrUX8zqLyzgvSMuXKouIvBItoCAiRQo6FyrpZZKWiI8VhVAQvWvVpNIuUiWpUUYNn6n5JqFpAXFsx
-X-Gm-Message-State: AOJu0Ywxofgcrjwmpkq1GzmtctHr4SuorADew6GxxiQ/dbCYFANAFnU0
-	mAYUC/fgTyT3aRUe0HQKYftRIez1aYbOzqslNjMMY9EnPujEGdKMpgqSKR2wlqcoFNIc40ibdK6
-	2VBIvA9+0AaGzEF2olKjE5N5582RiZ+2HcwhX
-X-Google-Smtp-Source: AGHT+IHG5R+9vUC0pxg3o2S6hutLWKPft4fiUKe+vWmBY5Soqw+9Q4/c+7zXX5r5yN16r1FkY4xe/DpCTZx2CcRMxrk=
-X-Received: by 2002:a17:906:c0c7:b0:a77:cc93:ae02 with SMTP id
- a640c23a62f3a-a7a0f75e206mr15786166b.28.1721233946078; Wed, 17 Jul 2024
- 09:32:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="PQGwxwrR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1721234008;
+	bh=UkC0sAZpE7/WRdVikjHbnqPQTCDC+XxSCjuX8q3pfp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PQGwxwrRVZyGcGPG8VdfyoeXjmAWRfFso6dpzGonGXqWZ/2nWrhSgLaBJopa/qzHX
+	 g3KMQMDA9gWTXx44KaHXtxXp0/KBUmieI+x6oEuL4PpaShvPVpp2jvf5sZdppfxMjM
+	 wQNhAhQuyjWfy5oMiaK1xYwXXI3sYPRbWlYp/V0Y=
+Date: Wed, 17 Jul 2024 18:33:27 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v6] kbuild: add script and target to generate pacman
+ package
+Message-ID: <41cf1da7-ef13-4586-9e9a-f1f8f3b34d8e@t-8ch.de>
+References: <20240716-kbuild-pacman-pkg-v6-1-d3a04e308013@weissschuh.net>
+ <20240717011515.GA1230090@thelio-3990X>
+ <CAK7LNARYNqjcMkdnaY2oAkxttFTtTEgJ9VuOZOn0i4AuXp-How@mail.gmail.com>
+ <CAK7LNARGWu8q5dAW5tYzfiSKKtZ9t8Dm9FzRoaoZhU4d-TWswQ@mail.gmail.com>
+ <20240717135747.GC24892@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <172070450139.2992819.13210624094367257881.stgit@firesoul>
- <CAJD7tkYFwz_=kxCk-Tp4QfwKgK0C26+QzZQvbVxkAx8m9CLSFg@mail.gmail.com> <8c123882-a5c5-409a-938b-cb5aec9b9ab5@kernel.org>
-In-Reply-To: <8c123882-a5c5-409a-938b-cb5aec9b9ab5@kernel.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 17 Jul 2024 09:31:48 -0700
-Message-ID: <CAJD7tkbFPt-eTHkqtLxuOoV59eaqauodz008btEECT--x3VcBA@mail.gmail.com>
-Subject: Re: [PATCH V7 1/2] cgroup/rstat: Avoid thundering herd problem by
- kswapd across NUMA nodes
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: tj@kernel.org, cgroups@vger.kernel.org, shakeel.butt@linux.dev, 
-	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
-	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240717135747.GC24892@thelio-3990X>
 
-[..]
->
-> I agree that description should be updated as patch have evolved, and
-> you suggestions make sense, thanks.
->
-> But I'm not sure we are finished evolving this patch, because the scheme
-> of allowing all sub-cgroups to become the ongoing flusher (and only
-> avoiding lock-spinning when cgroup_is_descendant), is causing issues in
-> production.
+On 2024-07-17 06:57:47+0000, Nathan Chancellor wrote:
+> On Wed, Jul 17, 2024 at 05:51:21PM +0900, Masahiro Yamada wrote:
+> ...
+> > > > > diff --git a/scripts/package/PKGBUILD b/scripts/package/PKGBUILD
+> > > > > new file mode 100644
+> > > > > index 000000000000..eb3957fad915
+> > > > > --- /dev/null
+> > > > > +++ b/scripts/package/PKGBUILD
+> > > > > @@ -0,0 +1,99 @@
+> > > > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > > > +# Maintainer: Thomas Weißschuh <linux@weissschuh.net>
+> > > > > +# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+> > > > > +
+> > > > > +pkgbase=linux-upstream
+> ...
+> > Perhaps, this may make sense.
+> > 
+> > Currently,
+> > pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-api-headers")
+> > is hard-coded.
+> > 
+> > I do not think linux-upstream-headers make sense
+> > when CONFIG_MODULE is disabled.
+> > 
+> > scripts/package/mkspec turns off with_devel
+> > when CONFIG_MODULE is disabled.
 
-Sure, I just wanted to point out the the commit log should be updated
-going forward, not implying that we are done here :)
+Ack.
 
->
-> We are using cadvisor in production for collecting metrics, which walks
-> all the cgroups reading stat files e.g. io.stat, cpu.stat , memory.stat
-> (doing 3 flushes of same cgroup in short timespan), but individual
-> cgroups don't overlap much to benefit from ongoing_flusher scheme.
->
-> Below is (1 sec) production data, where cadvisor and kswapd collide:
->
->  > 02:01:33 @ongoing_flusher_cnt[kworker/u395:14]: 1
->  > @ongoing_flusher_cnt[kswapd5]: 3
->  > @ongoing_flusher_cnt[kswapd7]: 4
->  > @ongoing_flusher_cnt[kswapd6]: 4
->  > @ongoing_flusher_cnt[kswapd8]: 4
->  > @ongoing_flusher_cnt[kswapd9]: 5
->  > @ongoing_flusher_cnt[kswapd2]: 5
->  > @ongoing_flusher_cnt[kswapd10]: 5
->  > @ongoing_flusher_cnt[kswapd3]: 5
->  > @ongoing_flusher_cnt[kswapd11]: 5
->  > @ongoing_flusher_cnt[kswapd0]: 5
->  > @ongoing_flusher_cnt[kswapd4]: 6
->  > @ongoing_flusher_cnt[kswapd1]: 7
->  > @ongoing_flusher_cnt[cadvisor]: 9
->
-> For cadvisor ongoing_flusher only helps 9 times to avoid flush.
->
->  > @ongoing_flusher_cnt[handled_race]: 18
->  > @ongoing_flusher_cnt[all]: 61
->
-> Our ongoing_flusher scheme detects overlap and avoid 61 out of 462 flushes.
->
->  > @cnt[tracepoint:cgroup:cgroup_ongoing_flusher_wait]: 61
->  > @cnt[kfunc:vmlinux:cgroup_rstat_flush_locked]: 462
->  > @cnt[tracepoint:cgroup:cgroup_rstat_lock_contended]: 9032
->
-> This is bad: Lock is contended 9032 time within this 1 sec period.
-> Below, lock_contended cases is captured in more detail.
->
->  > @cnt[tracepoint:cgroup:cgroup_rstat_locked]: 9435
->  > @lock_contended[normal, 4]: 1
->  > @lock_contended[normal, 1]: 2
->  > @lock_contended[normal, 3]: 6
->  > @lock_contended[normal, 2]: 15
->  > @lock_contended[yield, 4]: 49
->  > @lock_contended[after_obtaining_lock, 4]: 49
->  > @lock_contended[normal, 0]: 59
->
-> The "normal" lock_contended for level 0,
-> meaning the cgroup root is contended 59 times within this 1 sec period.
->
->  > @lock_contended[after_obtaining_lock, 1]: 117
->  > @lock_contended[yield, 1]: 118
->  > @lock_contended[yield, 3]: 258
->  > @lock_contended[after_obtaining_lock, 3]: 258
->  > @lock_contended[after_obtaining_lock, 2]: 946
->  > @lock_contended[yield, 2]: 946
->
-> Lock contention for 'yielded' case for level 2.
-> Goes crazy with 946/sec.
->
->  > @lock_contended[yield, 0]: 7579
->
-> Lock contention for 'yielded' case for level 0, the root.
-> Is really crazy with 7579/sec lock spin cases.
->
->  > @lock_contended[after_obtaining_lock, 0]: 7579
->
->
-> IMHO this shows that, due to lock yielding, the scheme of
-> ongoing_flusher for sub-trees only cause issues.
+> Yes, I think that is a reasonable change to make. In the face of that
+> potential change, would it make sense to slightly adjust the
+> makedepends? pahole is only needed when CONFIG_DEBUG_INFO_BTF is enabled
+> but I guess no other package building infrastructure makes dependencies
+> conditional in that manner.
 
-Just to make sure I understand correctly, allowing non-root to become
-ongoing_flushers is problematic because we only support a single
-ongoing_flusher, so if we have a subsequent root flush, it won't be
-the ongoing_flusher and we won't benefit from skipping other flushes.
-Correct?
+The pahole dependency optimization seems like an overcomplication.
+Arch Linux in general is not hell-bent on minimizing dependencies,
+for example there are no dev-packages at all.
+Also if the kernel will require pahole in more cases it will create
+churn.
 
-I honestly think the problem here is not that we support
-ongoing_flusher for subtrees, which imo is nice to have at a low
-additional cost, and does have its benefits (see below). I think the
-problem is that lock yielding means that we can have multiple ongoing
-flushers, while the current scheme only records one.
+> Another thing I wonder about would be allowing the user to customize the
+> value of pkgbase, like
+> 
+>   pkgbase=${PACMAN_PKGBASE:-linux-upstream}
+> 
+> because unlike Debian and Fedora, multiple versions of the same kernel
+> package cannot be installed at once. If I wanted to build a package
+> against mainline and -next and install them side by side, I could only
+> do so if they are named differently. This would allow one to provide
+> PACMAN_PKGBASE=linux-mainline and PACMAN_PKGBASE=linux-next to
+> accomplish that. Might be a hyper specific use case though, so I am not
+> opposed to disregarding it.
 
-What I think we should be doing is either supporting multiple
-ongoing_flushers (by replacing the global variable with a per-cgroup
-flag, perhaps), or biting the bullet and start using a mutex to drop
-lock yielding. If there aren't any concerns beyond priority inversion
-(raised by Shakeel), maybe adding a mutex_lock_timeout() variant as I
-suggested could fix this issue (and also put a bound on the flushing
-latency in general)?
+Ack.
 
-(I suppose the latter is preferrable)
+FYI linux-upstream was picked to be consistent with pkg-debian and not
+to conflict with the existing linux-mainline package in AUR [0].
 
->
-> IMHO we should go back to only doing ongoing_flusher for root-cgroup.
-> There is really low chance of sub-trees flushes being concurrent enough
-> to benefit from this, and it cause issues and needs (ugly) race handling.
->
-> Further more sub-tree flushing doesn't take as long time as level 0
-> flushing, which further lower the chance of concurrent flushes.
-
-I agree that the race handling is not pretty, and we can try to
-improve the implementation or handle the race in other ways. However,
-I think that skipping flushes for subtrees is valuable. I am not sure
-about the cgroup arrangement in your use case, but we do have cgroups
-with a lot of tasks in them (and/or child cgroups). If there is memory
-pressure (or hit the cgroup limit), they all may go into direct
-reclaim concurrently, so skipping flushes could really be beneficial.
-
-Of course, if the difference in complexity is not justified, we can go
-back to only supporting root cgroups for ongoing_flusher for now. But
-as I mentioned in the v4 email thread, some of the complexity may
-still remain anyway as we have multiple root cgroups in v1.
-
->
-> Let's get some quick data on flush times from production, to support my
-> claim:
-
-Thanks for the data. I agree that in general root flushes will be a
-lot more expensive than subtree flushes, but keep in mind that the
-data may look really different depends on the cgroup setup. As I
-mentioned, I think we should still support subtree flushes unless the
-difference in complexity is not justified.
-
->
-> The bpftrace onliner:
->   sudo bpftrace -e '
->    tracepoint:cgroup:cgroup_rstat_locked {
->     if (args->cpu == -1) { @start[tid]=nsecs; }
->     @cnt[probe]=count();
->     if (args->contended) {
->       @lock_contended["after_obtaining_lock", args->level]=count();
->     }}
->    tracepoint:cgroup:cgroup_rstat_unlock {
->     if (args->cpu == -1) {
->      $now=nsecs; $start=@start[tid]; $diff=$now-$start;
->      @locked_time_level[args->level]=hist($diff);
->     }
->     @cnt[probe]=count()}
->    kfunc:cgroup_rstat_flush_locked {@cnt[probe]=count()}
->    interval:s:1 {time("%H:%M:%S ");
->     print(@cnt);
->     print(@lock_contended);
->     print(@locked_time_level);
->     clear (@cnt);
->     clear (@lock_contended); }
->    END {clear(@start)}'
->
-> Time below is in nanosec.
->
-> @locked_time_level[0]:
-> [4M, 8M)             623 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
->       |
-> [8M, 16M)            860
-> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-> [16M, 32M)           295 |@@@@@@@@@@@@@@@@@
->       |
-> [32M, 64M)           275 |@@@@@@@@@@@@@@@@
->       |
->
->
-> @locked_time_level[1]:
-> [4K, 8K)               6 |@@@@
->       |
-> [8K, 16K)             65
-> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-> [16K, 32K)            52 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
->       |
-> [32K, 64K)            23 |@@@@@@@@@@@@@@@@@@
->       |
-> [64K, 128K)           15 |@@@@@@@@@@@@
->       |
-> [128K, 256K)          10 |@@@@@@@@
->       |
-> [256K, 512K)           6 |@@@@
->       |
-> [512K, 1M)            15 |@@@@@@@@@@@@
->       |
-> [1M, 2M)               2 |@
->       |
-> [2M, 4M)              14 |@@@@@@@@@@@
->       |
-> [4M, 8M)               6 |@@@@
->       |
-> [8M, 16M)              7 |@@@@@
->       |
-> [16M, 32M)             1 |
->       |
->
->
-> @locked_time_level[2]:
-> [2K, 4K)               1 |
->       |
-> [4K, 8K)             160 |@@@@@@@@@
->       |
-> [8K, 16K)            733 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
->       |
-> [16K, 32K)           901
-> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-> [32K, 64K)           191 |@@@@@@@@@@@
->       |
-> [64K, 128K)          115 |@@@@@@
->       |
-> [128K, 256K)          61 |@@@
->       |
-> [256K, 512K)          70 |@@@@
->       |
-> [512K, 1M)            59 |@@@
->       |
-> [1M, 2M)              27 |@
->       |
-> [2M, 4M)               9 |
->       |
->
->
-> @locked_time_level[3]:
-> [1K, 2K)               3 |
->       |
-> [2K, 4K)               2 |
->       |
-> [4K, 8K)               5 |
->       |
-> [8K, 16K)            147 |@@@@@@
->       |
-> [16K, 32K)          1222
-> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-> [32K, 64K)           266 |@@@@@@@@@@@
->       |
-> [64K, 128K)          199 |@@@@@@@@
->       |
-> [128K, 256K)         146 |@@@@@@
->       |
-> [256K, 512K)         124 |@@@@@
->       |
-> [512K, 1M)            17 |
->       |
-> [1M, 2M)               0 |
->       |
-> [2M, 4M)               0 |
->       |
-> [4M, 8M)               1 |
->       |
->
->
-> @locked_time_level[4]:
-> [4K, 8K)               2 |@@
->       |
-> [8K, 16K)             17 |@@@@@@@@@@@@@@@@@@@@@@
->       |
-> [16K, 32K)            40
-> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-> [32K, 64K)             4 |@@@@@
->       |
->
-> --Jesper
->
+[0] https://aur.archlinux.org/packages/linux-mainline
