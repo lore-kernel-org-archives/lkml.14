@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8001B182A79;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C87018306E;
 	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721235795; cv=none; b=uR4CbS8lVHrLYmN5ZyNQ3C5hCSTc8EAtaMvzarmm1HnLnCiXaz15Rv4lLlLOn6Eqz8SbNdNO/m/Oo35S/BVxlaOPJrzzWZQOUar+6uDgF1W3qZ6lAO9r75k/TDN4McTO3lsrdD0yYVi206ps+pe3sdwidRoaca8EaK7RyrmXEmI=
+	t=1721235795; cv=none; b=MmK8FJNUm4m7iryb/H5x6VbbO6IuxHdy015t6T4E5pcUJcFjte8azrmmd+RSOfAZzzxRQDaCQDHh/IMIl3Ifemn/y1TokDuCP40MXa4mvixhStxyqK/29uVGIEpK7uaM29iw70D0cNuvVNIAKeUdHK8uEaPwcrcU1tg1JubZlCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721235795; c=relaxed/simple;
-	bh=LRGU1ZUSjT7pMjV8SjmoQEmYcbLwDjL9G1AFtQWIDsM=;
+	bh=9SpPkeVArnB3rJ4nPZ0WPdvcC8ctAG/YXTHNpaqeYTk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Tgt1M9F/vBYo4tvJ/Y9HbU7s1Af7Az/YhYsaut97JTsaMLWquCqC3ClaQA8AyjSZfqE6AUN3OX6HdSjGrre95u9BvNz2QoK1IRmte/P4mL1cc5X2BN3bAbNHDess0gqEx1PirqnRF7nRYhRiPmMXelvvtf62pW0roZtiqN9jp20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDetYLCJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=VIeyRCQkclH2mUPkaR4i5657Z4ya9A/NO1SReiZMd+QD4XyKyU+GB1LuTUeV2XaNlgjlu8kmJ/tABLHIIRWfi3lfgPwa6phViMiYOeXIj0EjwQ36CAPB1333Ekjf30AAEjD2WCsUD7CpoCQI31VuuTGzvLdwN0zZUb3KTWdWXLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OobH63Br; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDetYLCJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EBEE8C4AF14;
-	Wed, 17 Jul 2024 17:03:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OobH63Br"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5E999C4AF1A;
+	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721235795;
-	bh=LRGU1ZUSjT7pMjV8SjmoQEmYcbLwDjL9G1AFtQWIDsM=;
+	bh=9SpPkeVArnB3rJ4nPZ0WPdvcC8ctAG/YXTHNpaqeYTk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=RDetYLCJeh7EXB2FwEv3KPfj+0hfPbm1CizCYQb1YtI4etNOPfgxuPBJIXuBCS9Bc
-	 WWGA6i41putpOmcaqC/fp2SxdAU9p154PPuiKa4ZI4GGULpIXs2OOFovv+e2otIbrM
-	 r38gBJyGu7Oonbzg7Y8D8tu9VN7ODyWCt7JLmUXdSQq4OvWU7y0w7n/hkBc0cnzhh/
-	 7GeGdkht1TkurL9Hv/rzldTdg0OdNGG4ohEIqIA9bKeO4is9awcq3VMYyNMy664ity
-	 dT3EZQoGPnxitnssU1GgjxgwLlPww85Dni3CJu20WaBg/D/EezMsyocUWoSekUqrqf
-	 cVbxCwQrS2kEA==
+	b=OobH63Brw5e3Wl00GuzcRP2jf+t3XLCUngEkFnINvwfybj6SyL81DSLEUjsHboTeD
+	 rnYSeSP7DWb01ej/VkNuPz1UA2tPDCsnBAQ+qa9l/ndtNYkaBv/2PipNSrvmEalpWR
+	 TReq7ReTvp9nQebNaCvVnocYWtoOXGvEemi7QXUI4C807+8cqA0RQy4iqqs9xgN/2D
+	 CDt9wRFYtQKQqNo26NOYxk+jtoSyHFFjhf1gfmBLW5M/rZ28Dakc43yYVhJINaaewA
+	 zFF7eDzXqGl177+jE4X5uZajrlpJWMZ6aa8ki1ADUIlpQ7DKB6mM3L3HCCaTRHCsKu
+	 KMY9XKc39cGBw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EA2C3DA65;
-	Wed, 17 Jul 2024 17:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCC4C3DA63;
+	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Wed, 17 Jul 2024 22:33:08 +0530
-Subject: [PATCH v2 03/13] dt-bindings: PCI: pci-ep: Update Maintainers
+Date: Wed, 17 Jul 2024 22:33:14 +0530
+Subject: [PATCH v2 09/13] arm64: dts: qcom: sa8775p: Add 'linux,pci-domain'
+ to PCIe EP controller nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240717-pci-qcom-hotplug-v2-3-71d304b817f8@linaro.org>
+Message-Id: <20240717-pci-qcom-hotplug-v2-9-71d304b817f8@linaro.org>
 References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
 In-Reply-To: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -55,16 +56,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=988;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1289;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=hjExGhGjQYtIRypMJXzdJurZJRAD466HOf0lMqV3fm8=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBml/lNfQg31fke8+7oE4tHhiVq2trkn1dGnRBUr
- XPgVijg6keJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpf5TQAKCRBVnxHm/pHO
- 9au6B/wPjAG890Ex6xuP3e/ld/sG4k3HMnWw4SNgGuWBUlbG0HRtEstH87bHLLybXjXBhnxu8Ap
- lTfSu4AWyCuwvfW3nIsqqjSXL47MrsJxtj3V/h2l9EuGZc4P76S0/d+h+KXyjscab7Tiho2/ThA
- 5FgBVTmZ/In+XcxMSx94uKj3jxZX36OXPVJM69piD21ZkdCeU3NMrDfT9ELPh8LohvhycCKgaxE
- EjUoqvxZwZ9W0XMCIoPBxCV7DY8H9IKtkpE1mBH78ESyt9ifmUT5B0FWvbtIzTMqK+oV62C0QxJ
- dfazQj0E3ELoLFT8EODzryuYlc/XNzzuq7wkrkI+nn7zVU3K
+ bh=YKSy5vPklQvLJA99UbdPy4mFyoiPQChYvArhByAGkpA=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBml/lO0Dmif7USBFz5hYoCiza5W/fd8O+FngHr/
+ 24+q3osoLiJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpf5TgAKCRBVnxHm/pHO
+ 9awtB/4kSxxPulCuNa6RgrOTzuAeI/hkw6WQQ97HhrEZToQEkUZvp8WMGZ2aQIHLxS2xYUQxE5R
+ EdJWwjl83+26qlrhNwwR60/fltegr6Wyb4g3dhiRBrYGav0cCt7hSwbEatBc5axOyxNNwf80eg3
+ y4xM9rVaSJICwe8FTw+d4oYXWwcS6HdAR9W8PJpcVI/iFGOr7Dtia2yH1XKywUNyVAdS/JynHxV
+ nQfS2SIHXiCs3b2v6xYBx1NBgGVcKZoh7CM1u0bWJkaY4s+QlWL1QMJEK1JkLAzstaWYk/W2lth
+ pQLivgbf7hZuXjpGbCnm8+FbHBu0Gd3uSXy1T4cSCTa33tsV
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -74,29 +75,39 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Kishon's TI email ID is not active anymore, so use his korg ID. Also, since
-I've been maintaining the PCI endpoint framework, I'm willing to maintain
-the DT binding as well. So add myself as the Co-maintainer.
+'linux,pci-domain' property provides the PCI domain number for the PCI
+endpoint controllers in a SoC. If this property is not present, then an
+unstable (across boots) unique number will be assigned.
 
+Use this property to specify the domain number based on the actual hardware
+instance of the PCI endpoint controllers in SA8775P SoC.
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/pci-ep.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-index d1eef4825207..0b5456ee21eb 100644
---- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-@@ -10,7 +10,8 @@ description: |
-   Common properties for PCI Endpoint Controller Nodes.
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+index 23f1b2e5e624..198b39abde97 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+@@ -4618,6 +4618,7 @@ pcie0_ep: pcie-ep@1c00000 {
+ 		phy-names = "pciephy";
+ 		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
+ 		num-lanes = <2>;
++		linux,pci-domain = <0>;
  
- maintainers:
--  - Kishon Vijay Abraham I <kishon@ti.com>
-+  - Kishon Vijay Abraham I <kishon@kernel.org>
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ 		status = "disabled";
+ 	};
+@@ -4775,6 +4776,7 @@ pcie1_ep: pcie-ep@1c10000 {
+ 		phy-names = "pciephy";
+ 		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
+ 		num-lanes = <4>;
++		linux,pci-domain = <1>;
  
- properties:
-   $nodename:
+ 		status = "disabled";
+ 	};
 
 -- 
 2.25.1
