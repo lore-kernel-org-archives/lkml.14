@@ -1,76 +1,94 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DF71862A;
-	Wed, 17 Jul 2024 07:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09F418C3D;
+	Wed, 17 Jul 2024 07:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721199813; cv=none; b=F6dedco1Mg6k9i9uJS+GT89EJ6Bc+LloySjauEUQda3iUN+W4R1EaVqMZmw5TBewMKJT8Wj8P9oDcc44hXMUM7tvyNNMphJtpLPOpxBW4gkPzE6aP2j2ADvVlj2YeoDaMVdjyEI6VMfPlyshH/IGZCTVnG9hmv7d0YDYlRH0X0k=
+	t=1721199841; cv=none; b=B/cK5OMLjqHXeS1ugMhb+1k0uE2U3x5cusfCBn8qyhxIZcfBpRCYOE1kI8+BwiUiZ9ffXbSejocVnCoIscAUAgsGPRQ7LKha8mwkDYhtclYkIalA4P1Z1YptAntRhWAuRgB6mAEVo+jbEt/60QM4W8KnOWTD7FUCjSQU9z3MbaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721199813; c=relaxed/simple;
-	bh=hJvvScmhIqGJyC3XUqfGf9ZhzNYQ9GAhIcMvzBgGxW4=;
-	h=From:To:Subject:Date:Message-Id; b=uSStgWBTBykK8h++5IMKHhmVq5kkFSd+U7f/KOG7KLz5OjhBUPr3+EIHFKLNAAK53eADQhbEIyrYqWR/VRWo9kqFa56lMMQ2XqG9snSLbpLOHaiaSxxZNBQ+BDdc+M/Nlo1CG+BKwUTeP/PTywiZ2LLeTbr2vpt7HPQ0kJgjLYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 507BF1A1C27;
-	Wed, 17 Jul 2024 09:03:25 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 190061A1C1C;
-	Wed, 17 Jul 2024 09:03:25 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 15968183AD09;
-	Wed, 17 Jul 2024 15:03:24 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: lars@metafoo.de,
-	perex@perex.cz,
-	tiwai@suse.com,
-	broonie@kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	shengjiu.wang@gmail.com
-Subject: [PATCH] ALSA: pcm_dmaengine: Don't synchronize DMA channel when DMA is paused
-Date: Wed, 17 Jul 2024 14:44:53 +0800
-Message-Id: <1721198693-27636-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1721199841; c=relaxed/simple;
+	bh=9+u7VhpS0v0Ayu1qi7neh7YFfB4o2VEa2gNq7VOU6kM=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AwHFUdcUejzLcKCWBo8/TuO3q/8RzSIkbdfrgbRE+OD1B/uRhXVne5tEWS1sUOXfV5ny+imfGL9/Z7mZ3kMYiDBtvrJ1XacqGCRcjQzICRebVmGd9yZSB0KNzq55FJGtGfZ+7/VIwPJltspnQS8I4pPSyxCSEV1VaE6TPG4vcVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEIk/CNE; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEIk/CNE"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70b0e7f6f8bso5570314b3a.3;
+        Wed, 17 Jul 2024 00:03:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721199839; x=1721804639; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EBQVSX8cISMGMb/XotZL4r577Dyw3ahWCKqo1wIoGyA=;
+        b=JEIk/CNEDWdgqhUz0ZsYhuJ3q/MDz5SwUjjtofpa062hF/s+UJAK8VVuqMn3NTGHMz
+         VygGRtfGQT2+jTsiykSTsnMsuJfP8fR3C5hdK7zFCnI18i5wVu+gpgiNmRu89pcffCLP
+         kByfgW3lTvhmZeZLpXnPKiOF4tWGughz91hlasQ/ciNAQRCcJ2ZsBgDGWLPfMMp688Cl
+         ukFvbBd/DBuK6BRMLg8ZT+T3mYQdL1qRskTwNdvxI8or78vb68GMpcK0OLtf2ww7vzoy
+         6Bi5d1qgSO5s4KRFZag6JnZ7FfNgLKT+Dy4QotJ6BmVfdWf+GaRkyiF0kw7sQJg+nHVl
+         Ej+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721199839; x=1721804639;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EBQVSX8cISMGMb/XotZL4r577Dyw3ahWCKqo1wIoGyA=;
+        b=HG8N2Ycs7IGW6rtQOG01sIf6SX4ES/dW+Eyg7pqcdJxG1mBBMBzrHMU9Z3qQ9Tv8Bt
+         eWLce8fUEvpZNu11REUk0J0Q3pZaWMrNxGeTE4+BLbc5Vt+UCJHYjoDvZBTYUPCjShgn
+         31elxBgAx1nXFse9E/7SZodjV04yBEGvONlcxKk4hDKLCXCMQYtRvUOTy6on26hjTYzT
+         9Y2IcdarrlJo2LTxMjNlnFTYjKEre09VtHcTIKqTYuqRbpCCruqIFvc5MtfOd9IM8+QL
+         0nF/6m/LzL+DSBSx02qmU/9an9ISXpSUymzVjYg63ILsPRqnPuxzq7/d2HjxHGNAlpAG
+         +tpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5ci6SIVTj0S34CPJle0MtabZCEwO8r2SlHSQUtADzdlqqLkIjxZUFZTXAFm07jbBuvRsNsXF9E63XNro7ZcmP9mEe9W4C997j6+ckJXc+AtAPPcxYJaL0qZ8Wa7ugruvHsqPOq00=
+X-Gm-Message-State: AOJu0Yw8NKUWY3tVdu86FTb3laFqhXFuIVcRwDyKS9WfKrV21pu7gWVm
+	dT+410sPn7FNC4kINlUA+ZBAykOd60nU3csd6kCqIGRcTr+U6Swn
+X-Google-Smtp-Source: AGHT+IHjymBQBKqbE9v0z3JpgTA3UbRYXozd9N7g2aRJOa7OB/sK87AzoilQ9r/Nxvkd/59q5soL1Q==
+X-Received: by 2002:a05:6a00:23c1:b0:706:5d85:61a5 with SMTP id d2e1a72fcca58-70ce4f9003amr894285b3a.8.1721199838965;
+        Wed, 17 Jul 2024 00:03:58 -0700 (PDT)
+Received: from [198.18.0.1] ([2401:d9c0:2902::c2eb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7da19sm7437615b3a.133.2024.07.17.00.03.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 00:03:58 -0700 (PDT)
+From: Cryolitia PukNgae <cryolitia@gmail.com>
+X-Google-Original-From: Cryolitia PukNgae <Cryolitia@gmail.com>
+Message-ID: <8e5798c5-d539-4d4a-9d6c-9bb3ba69bb41@gmail.com>
+Date: Wed, 17 Jul 2024 15:03:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] hwmon: add GPD devices sensor driver
+To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-doc@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>,
+ =?UTF-8?Q?Marcin_Str=C4=85gowski?= <marcin@stragowski.com>
+References: <20240717-gpd_fan-v2-0-f7b7e6b9f21b@gmail.com>
+ <20240717-gpd_fan-v2-1-f7b7e6b9f21b@gmail.com>
+ <deca2345-0961-4d3a-9ab4-8d11c7d240f2@roeck-us.net>
+Content-Language: en-US
+In-Reply-To: <deca2345-0961-4d3a-9ab4-8d11c7d240f2@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-When suspended, the DMA channel may enter PAUSE state if dmaengine_pause()
-is supported by DMA.
-At this state, dmaengine_synchronize() should not be called, otherwise
-the DMA channel can't be resumed successfully.
 
-Fixes: e8343410ddf0 ("ALSA: dmaengine: Synchronize dma channel after drop()")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/core/pcm_dmaengine.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
-index b54336d4bffc..b134a51b3fd5 100644
---- a/sound/core/pcm_dmaengine.c
-+++ b/sound/core/pcm_dmaengine.c
-@@ -352,8 +352,12 @@ EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_open_request_chan);
- int snd_dmaengine_pcm_sync_stop(struct snd_pcm_substream *substream)
- {
- 	struct dmaengine_pcm_runtime_data *prtd = substream_to_prtd(substream);
-+	struct dma_tx_state state;
-+	enum dma_status status;
- 
--	dmaengine_synchronize(prtd->dma_chan);
-+	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
-+	if (status != DMA_PAUSED)
-+		dmaengine_synchronize(prtd->dma_chan);
- 
- 	return 0;
- }
--- 
-2.34.1
-
+On 2024/7/17 02:04, Guenter Roeck wrote:
+>> +            pr_warn("GPD Fan Driver do have the quirk for your 
+>> device, but it's not tested. Please tested carefully by model 
+>> parameter gpd_fan_model=%s and report.\n",
+>> +                match->model_name);
+>> +            match = NULL;
+>> +        }
+>> +    }
+>> +
+>> +    if (IS_ERR_OR_NULL(match)) {
+>
+> match is never an ERR_PTR.
+Sincerely thank you for your guidance, v3 has been sent: 
+https://lore.kernel.org/r/20240717-gpd_fan-v3-0-8d7efb1263b7@gmail.com
