@@ -1,100 +1,141 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5B717FF
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 02:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A063D69
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 02:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721181693; cv=none; b=qmEKRCaBHKuA8jXzMC6PvfIRn4fU/K3xyLcRIhRHCUyi0Y1cTbfcohWdUXctvMqv6NLli4FCgqRXdCtSBO5tG7d7EsAaiPpA7METLOUCNiV5CR4U4MlTiVQuCs+mdLmw5YNVZusIfidP8KZJ1PUOS2SGg9smFsplNtJJiweMrDM=
+	t=1721181696; cv=none; b=hlnljKfv679dX16ycznvd7ak2semVscMYvXl0SYPzIFbZmztjk3RpzJhylOV0P21xCnJjxpjOjVKyVN3OfrcjWiErkCmRBmCyh727+kf8v6/rrpPPjSrTwQ4qPnn1pkyw8pz8nXTn7ikOIdZMdepEdACya1yQnIYQzQoS+9XSIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721181693; c=relaxed/simple;
-	bh=H3fBaZeUehbLpe13DqgHBVr/k2QHLhtXPc2fQ747bHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=twi12Pjs/SPlJx3855KFO9KxJtdnma2xS4WuBXNWIRDwmDm9Y64+o/sEndLLbRGb+NawOfpunPa0bwdEGp9wmdMX3fLwCRPn0EreRMcJMmdsWee3ovuhcU9g0Te5ubw36zuWsRgAyTP5/lakMRzX7K8XGheH9V5PM57lpvkx6Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PODNTPg8; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1721181696; c=relaxed/simple;
+	bh=z6OqHAj52FhwkWGZ5tBGTOEYsGnl+ZAO9J0eQ9OVG4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UcKn7rboGsy9iS9m8srLsy/3l3bUr+1yLFZg096+Tsg0bOMqnMRmuvnZIvv0oYpd5kvAm3IyP6QXuS5Btms9KMPvk3LupumwGGnsiayjyfujfRA3IjKdECswRLHv2GAC4v5hqnuTNBKTBe+8fjdeXwhJ18JDv8JmJeqABKjYjsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hENozu5h; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PODNTPg8"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee920b0781so63236821fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 19:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1721181689; x=1721786489; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XYrqWZq1EqYPi9XpXV1CPlqkOEZcea5WhRbwHmUhz3Y=;
-        b=PODNTPg8j5lmJVBFoEwqYVaPKjeSUAg+tQ43p3CrPH/nrW0Qm58p3r/Jyd1KQg1M57
-         rXHVkrARCC1fiVxXsf0GAcOYzrn7xXywVws8mwG8tw5d1lDJnEjsFBlyCzYEGYGBrOJo
-         bYhYPP1EvkX9D53/dlNKt30yKMADo4TBm683g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721181689; x=1721786489;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XYrqWZq1EqYPi9XpXV1CPlqkOEZcea5WhRbwHmUhz3Y=;
-        b=FAfMZOtHBl4WScHPpjqB+O3cA9gqWsegjJtCucd9SveMxljA56CUNYSpxTKvSeZxa6
-         m8kdtoeHXBIpDM8w4NgXQM67TAcmPz5tmQmngfFIU2hekKrYfIVJMsjeXy9+wgTPkk7Q
-         iUB8TwKPhwUJDA+/x0NwzNEQQfV4+zfcoELA+euxan97Un9LVdjPBzigyUBqUWhd9IcT
-         TLvv1S/ttR+xDq9rbUCmD6W3ZL3j5FxcSJbFNdC0wzvZhWKtRivbfuzx1EFkJuF6yA6M
-         tVCSwVdmZFm0EIk+xLkGgMSsYJzLMqohbdl8KzWUVkkNkcBUxVAsHHwCIPCwSmBZp7pJ
-         LF2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV28wG5S3rpoJNE4aqhKK3v8oRYmC02yLAanAvMH64QaWRB62RvUzMNwUFtnJwM8HPFuxJX3z/NGcril+yCytOdibXlZiBDF1Itpdux
-X-Gm-Message-State: AOJu0YxlGRuSHURPU+5ztHF7noHqzZe6ievZzmUf+h0roKmSRD+vmi0i
-	PRr16Cwj4VKO5tAC0gxtBMxDgHAE8vSJ/MZG4bmX/qCig130yPjTr1ZoKwppk6PzPB/p/5udZO0
-	KvLl7lw==
-X-Google-Smtp-Source: AGHT+IEY9YjvZE6RGxx8i2iNvqOw2u2meXF71RRCmzUk4mBzMNKf2z3oJMdQz598t28hGi/F4Edwpw==
-X-Received: by 2002:a2e:beaa:0:b0:2ee:98c4:c2fe with SMTP id 38308e7fff4ca-2eefd138ee4mr2263651fa.31.1721181688948;
-        Tue, 16 Jul 2024 19:01:28 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59ff76e9851sm852389a12.46.2024.07.16.19.01.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 19:01:28 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-58ba3e37feeso7550825a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 19:01:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVjD43PJkKW812y6dMGpzFMei+C7gTI1dK4lXu3/WbyeEkP4K6whuQVyx4hTCwnujUgKjLs5jIZLqorntNDcjWgqNnsFNQsogcd812J
-X-Received: by 2002:a05:6402:40d5:b0:59e:a222:80f6 with SMTP id
- 4fb4d7f45d1cf-5a05d0efa3emr256034a12.27.1721181687614; Tue, 16 Jul 2024
- 19:01:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hENozu5h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721181695; x=1752717695;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=z6OqHAj52FhwkWGZ5tBGTOEYsGnl+ZAO9J0eQ9OVG4U=;
+  b=hENozu5hXukw4YAwT/eITGtrTCEIvRRuTaKI/ZbgZoa7gD224/14bwQb
+   byR3u+j9KckUrGaACW+VVvkb1u0onw9WN0UHAcNEMXNFhpusuaDm6LkmN
+   nJArXW2C0ynwDaqJFmsO2+tJiIJrLDEjzJwftkQu/gJOpD6Tz65UcuK5y
+   TwVgjFY9+27VBF9JYuri6t0aQRzIrlTrS9CU3f4/jaENY/ZaUnlSpyr83
+   3kmIx7tC4MkMip85Dfn+1F6WZVRRWyvftcnpZl/rRBOgXEIz/R6Qwkk36
+   z48IdoQh16LYDwX3xbWTW8YljS9eFBNh+NOPzsvKg3/3Vr5m1bjeGQx3G
+   A==;
+X-CSE-ConnectionGUID: BJmCkOP4Tk27S5L8G+xSkg==
+X-CSE-MsgGUID: KhVplIV4RJ6EcjtvJs7Zgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="12579919"
+X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
+   d="scan'208";a="12579919"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 19:01:34 -0700
+X-CSE-ConnectionGUID: O+0vVTB6TZuQZAevxZgOSg==
+X-CSE-MsgGUID: sK4sogZ5T5ynzVvUrrjqNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
+   d="scan'208";a="50131644"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 16 Jul 2024 19:01:32 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sTtyz-000fs8-33;
+	Wed, 17 Jul 2024 02:01:29 +0000
+Date: Wed, 17 Jul 2024 10:01:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
+Subject: include/linux/ftrace.h:138:9: error: call to undeclared function
+ 'arch_ftrace_get_regs'; ISO C99 and later do not support implicit function
+ declarations
+Message-ID: <202407170925.lEkB1ZZ7-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716143644.GA1827132@thelio-3990X> <CAHk-=whfQoTDCd=8DYfCiX0a2ndqM-mmoxDm1xA7Kud+WQ9T8w@mail.gmail.com>
- <CAHk-=whVPmZm=rMBf1qkJzfZeBx4Es15_w7VnPK1wEs=XYDUgg@mail.gmail.com> <20240717005346.GA516623@thelio-3990X>
-In-Reply-To: <20240717005346.GA516623@thelio-3990X>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 16 Jul 2024 19:01:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whxxhjocp7Q92g4vkN75w+VNCEvAS+qbC8aEpguxudMAA@mail.gmail.com>
-Message-ID: <CAHk-=whxxhjocp7Q92g4vkN75w+VNCEvAS+qbC8aEpguxudMAA@mail.gmail.com>
-Subject: Re: Crash when booting UML after e3c92e81711d14b46c3121d36bc8e152cb843923
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 16 Jul 2024 at 17:53, Nathan Chancellor <nathan@kernel.org> wrote:
->
-> Can confirm. I tried it initially and it did not seem to work but I
-> think I may have been using the wrong object folder or something.
+Hi Puranjay,
 
-I wonder if our dependency rules might not be confused by a new header
-file just showing up earlier in the search path.
+FYI, the error/warning still remains.
 
-So what might have happened for you is that it generated that new
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   0434dbe32053d07d658165be681505120c6b1abc
+commit: 7caa9765465f60b6d88e22264892cee12d971888 ftrace: riscv: move from REGS to ARGS
+date:   8 weeks ago
+config: riscv-randconfig-001-20240717 (https://download.01.org/0day-ci/archive/20240717/202407170925.lEkB1ZZ7-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project a0c6b8aef853eedaa0980f07c0a502a5a8a9740e)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240717/202407170925.lEkB1ZZ7-lkp@intel.com/reproduce)
 
-    arch/um/include/generated/runtime-const.h
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407170925.lEkB1ZZ7-lkp@intel.com/
 
-file thanks to the Kbuild rule, but then it didn't actually re-build
-the fs/dcache.o file, because the way our auto-dependency works is
-that it generates that list of all the other files it depends on, and
-it also depends on the exact build flags - but that would all miss the
-case of "there's a new file in the include path".
+All errors (new ones prefixed by >>):
 
-So that would explain your "it did not seem to work".
+   In file included from arch/riscv/kernel/asm-offsets.c:10:
+   In file included from include/linux/mm.h:2253:
+   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   In file included from arch/riscv/kernel/asm-offsets.c:12:
+>> include/linux/ftrace.h:138:9: error: call to undeclared function 'arch_ftrace_get_regs'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     138 |         return arch_ftrace_get_regs(fregs);
+         |                ^
+   include/linux/ftrace.h:138:9: note: did you mean 'ftrace_get_regs'?
+   include/linux/ftrace.h:133:40: note: 'ftrace_get_regs' declared here
+     133 | static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
+         |                                        ^
+     134 | {
+     135 |         if (!fregs)
+     136 |                 return NULL;
+     137 | 
+     138 |         return arch_ftrace_get_regs(fregs);
+         |                ~~~~~~~~~~~~~~~~~~~~
+         |                ftrace_get_regs
+>> include/linux/ftrace.h:138:9: error: incompatible integer to pointer conversion returning 'int' from a function with result type 'struct pt_regs *' [-Wint-conversion]
+     138 |         return arch_ftrace_get_regs(fregs);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning and 2 errors generated.
+   make[3]: *** [scripts/Makefile.build:117: arch/riscv/kernel/asm-offsets.s] Error 1 shuffle=1354650548
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1203: prepare0] Error 2 shuffle=1354650548
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2 shuffle=1354650548
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2 shuffle=1354650548
+   make: Target 'prepare' not remade because of errors.
 
-There's some handwaving here, but I do think that this is a case that
-our otherwise pretty good automatic dependency rules may fail at.
 
-              Linus
+vim +/arch_ftrace_get_regs +138 include/linux/ftrace.h
+
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  132) 
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  133) static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  134) {
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  135) 	if (!fregs)
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  136) 		return NULL;
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  137) 
+02a474ca266a47 Steven Rostedt (VMware  2020-10-27 @138) 	return arch_ftrace_get_regs(fregs);
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  139) }
+d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  140) 
+
+:::::: The code at line 138 was first introduced by commit
+:::::: 02a474ca266a47ea8f4d5a11f4ffa120f83730ad ftrace/x86: Allow for arguments to be passed in to ftrace_regs by default
+
+:::::: TO: Steven Rostedt (VMware) <rostedt@goodmis.org>
+:::::: CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
