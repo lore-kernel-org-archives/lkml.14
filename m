@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FBB6FB6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8338E7470
 	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 00:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721177351; cv=none; b=mWpBH3T5u+UgeC/CtKxqKWet1WLQyZ5GZcWIsSo/TQZStTmegTf1SLZ21K6YHKuXVZxaZiMzvaKU+prgOOIsu759e4hsDP/0X5qf36PSMTwJMQUtLsUir8N4lsuf8fWustOCjT7icwPs/1V45T42XpVZvnDDaCjM0hViCaexI5E=
+	t=1721177351; cv=none; b=ESo/J46cJEev1d3C0TvOUGq6a56lEQ9pHbvfKRCt5TaTsC8omhQhoV7TZm2X1dMBlMEKnTePzTPPbPuyVjAAEvhuIlRpdmMgr5MRBNIotB6raUOHtUocwHL57ZarwKNQVqVLNPRrYKuSKTdgo+4hUilde+7rff5ibwTydZp+CGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721177351; c=relaxed/simple;
-	bh=cREXXYPulkO1cGThsxai4+GUX+gKKEd4KDC3/O4CBaI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=JOsSWWBaeE7z6oPkLn4yetpbVqbVz8tcEqEw/Oq3wTJ5SCCgk+i+9qTq8ReY9MJ9ipzDOf4GlUw8b6j6b5/DsoItoA+u2nXGxsXUtlYLKH9+i5UpiM8RupFOD5TIiwLayt4Xo+7H+WxQ4qq98VuzUW4o/GqSweuAhjb63bBXE+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tx38u0Da; arc=none smtp.client-ip=10.30.226.201
+	bh=dNxnSKdpXqvfE8r9hVYVh8JagwGdSJ4M2f7GP3XBI4o=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ODQmFP4fm7QIc3FNNb5FvcN3la/OyPDYEyhpxb1ZToHMnOel7LNhGDtcbmmRhNSluJyaOd9/1HH3cgtf+88bK+9Y3FWrxgMuAD8EI0BkICFia1OoIWGXdjYWTvJS+G/LI0vO8nso4hr2WxyvCd9Ulepfn/h4oT/8E/xN1zowF4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZdBT4RA9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tx38u0Da"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 24E58C4AF0D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZdBT4RA9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 597F6C4AF11;
 	Wed, 17 Jul 2024 00:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721177351;
-	bh=cREXXYPulkO1cGThsxai4+GUX+gKKEd4KDC3/O4CBaI=;
+	bh=dNxnSKdpXqvfE8r9hVYVh8JagwGdSJ4M2f7GP3XBI4o=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Tx38u0DaPRJ9YkosqMUNE4nS/NJ3rcygIA8YY9XmKx4L0CCp0zYl6Xxl1m8lfy3of
-	 CPIFNx27XpHORnSvkyXSUhpMplvSZDzk3tdUYQXsLGhP7cY7BltTaJihj51lFXRdFF
-	 Cu4oKgYgqPdhWph1iDankaTfOr3P5VsJrkZvGi8B4h8G5/48Ycn6RSAca0JxmjchHe
-	 xXAAPoL1adEOAiU2yfi/OULc6KwuEtVRXyS5vOPztz5YTrwcBPiYpOXMENgQNHJOpR
-	 VkzCMPFMiewbr4QmGmPXJ9BZX0MSDwALzkr57EVfj5cfcJ0OY6SxH5eAPd4q21qI3I
-	 6Cz6r3Oy2RnjQ==
+	b=ZdBT4RA9hI/HYddZgzn09eoj798BBzOHext4bwrGZ8u5sic/Y4pLQy0UkyYUidQfB
+	 9LcQKzyZcK3mPHrgT1iA7wJ32pRuaFq6vLPHgZ5D2D/UcGN2kOxvuVgPMIMVId2Tmn
+	 e+egt0Bhg2Ny4UkHuJyWt9QBwgFe2iL2kFKI4qbZ20BFfB4ZSLYOsk6txP+yeq/uZj
+	 FdQYJJWwoMGNK3WOnYpvwD4RWgW+ot8jaV8KtAFIEQnccRzS4cioM984xAQNWu3o1S
+	 CXeQslehFDJNq87PFPaMXjF+z9V0FfbvY9BNgTt0Oz+acn2nEWnQ8HyXRe6d2tNAOQ
+	 H7HQWx3czKc7w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1B8AFC43445;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4C068C43443;
 	Wed, 17 Jul 2024 00:49:11 +0000 (UTC)
-Subject: Re: [GIT PULL] objtool changes for v6.11
+Subject: Re: [GIT PULL] Scheduler changes for v6.11
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZpWzZC-UyVjMYjlY@gmail.com>
-References: <ZpWzZC-UyVjMYjlY@gmail.com>
+In-Reply-To: <ZpW146UsrWo_leh0@gmail.com>
+References: <ZpW146UsrWo_leh0@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZpWzZC-UyVjMYjlY@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-core-2024-07-16
-X-PR-Tracked-Commit-Id: 8e366d83edce3065ff3372bedc281c5e217c0550
+X-PR-Tracked-Message-Id: <ZpW146UsrWo_leh0@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-2024-07-16
+X-PR-Tracked-Commit-Id: db43a609d01e8bf9b812d45dc2945c65b57dd793
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0c182ac2ebc5470a725632b08cee9a52065bbe71
-Message-Id: <172117735110.30434.997727950177637043.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 4a996d90b9e046c6d59845acf00a54d464c34ff3
+Message-Id: <172117735130.30434.11873846185042237747.pr-tracker-bot@kernel.org>
 Date: Wed, 17 Jul 2024 00:49:11 +0000
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Shrikanth Hegde <sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Tue, 16 Jul 2024 01:40:20 +0200:
+The pull request you sent on Tue, 16 Jul 2024 01:50:59 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-core-2024-07-16
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-2024-07-16
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0c182ac2ebc5470a725632b08cee9a52065bbe71
+https://git.kernel.org/torvalds/c/4a996d90b9e046c6d59845acf00a54d464c34ff3
 
 Thank you!
 
