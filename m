@@ -1,237 +1,76 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68230381DE
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F18181BA6;
+	Wed, 17 Jul 2024 15:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721229999; cv=none; b=MyZYlxh73VHEPsVq044Hrk8svJOPr6pogrh4+6y2egIAhxLVu6GZsGyVm/9Ms5AWrSC7O+Nfm0mpmr+ZIeyoNJfAKFzHehVge6oDHT+AG04vm08fOdqoYw9GUUwsMjw57i+9FB88KoVXYDWFNJSZBzEJohymGqFVSa0TqxrUeXk=
+	t=1721230020; cv=none; b=ssYU9MWmVIXdiAN6qcTrJ5yp3blR51sv1YJuxdcCswXSYTEmdoflmGm2uLoIaIutBuYji2DOaCw/k1PK9ZUSH4HS2zEEmHT8EZtrJLZ7pDTJzQ0uFRhtSXhqOKCKHtmPkCy/lF5NXLr7fFAVATpl+cnWJxPVO4wbyo+njOXIYw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721229999; c=relaxed/simple;
-	bh=7lCB5O765unyWodcWVIT5dK4EyCVBbPPeuSfODWjS5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dU9WW9ZNjkSGd5LFBi9lC8l1/cqQvW8ErDkEwMiuvnEeKpXR3o6SuXnQFcXQQg/qupINB3Vr6lpo9wTY5qSB+ISn9FzksG+QfhP4i4+zh8pTr4GT5TWx+hmbzlZ8pQHqpuTQ0HDD+WVNnFmUkHmBkhWfkZB0WmDUQ7O4+G8Jho8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fVT9UmCv; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1721230020; c=relaxed/simple;
+	bh=o6ksGgCZ4nXFQWa+KewLnEYozl+Ia2t1l93hAy52I+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O4eBK9T2dyIAZYwScdBjxQE9r9lJ1My2b2abAnqmJ4t/F8lsaPfR3h58Ph4txhlQTarInxsToVLEMSi0z4s9IFBW4JH55mxidRTRRtkmyycNlVQpGO10UHiouhPUPXgm4222vRX6ll4TqVkNWoIAKqGH531IU/auVqFhiCDeKrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCw3AXjB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fVT9UmCv"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-375f713a099so3953465ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:26:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1721229996; x=1721834796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A3IYj0mcY3LWRD4tcFWRixVHNuFKVrKsJ0yW1AlH93o=;
-        b=fVT9UmCvpL8nxezylNkXmPWV8f0Sje0rce6Jby0gBfUnXkC5et3FNpZFFk42Npdo87
-         RVp2kQiwv4NavIgv/d58EBdxT4oL/9WfFaM1n9OBhYmAsRqoo0zKKXsUdL0hdmccpqBQ
-         SyMVo/D4/uy1P8BPITUcBrIjdJbpG/rI2Jmu1d4bELFt0vf3D5gm4s5qtp9hsdFhBNmg
-         6RWF5VjK+AXennj/Rze98OP/TQjaH/fPZcL2HL6dX3MzyX43htBBh9dGFeqYkMj6mNhz
-         8fXTplkTz4nknoUTYk0x1TGWTFtshX4ebQqWdXMQOc1alj2KNJ9eR17HD8nFsUubnF9s
-         TQbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721229996; x=1721834796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A3IYj0mcY3LWRD4tcFWRixVHNuFKVrKsJ0yW1AlH93o=;
-        b=dMvuchnd79Pkvm67TAeJHD6a9nrY8wifzVh2/yS4/MlgCEc8Ub+SP6miDRTeL7vo8P
-         TtfhGr5shR5JauSF3N4cS3rP7yxkqLabs5s/C74Xpjpd30ihiohGrM1doGBjnCbmzhDD
-         z1C0di4u8e58Eax+Lr6J4jNG/lPMS1gBCrRNk7E+Me6Ga4UBgrDwV8rnjkuzhsrv9Dgv
-         muoAZTTcGK1gvxFJtN7La884lUj60ZDPkXRFpxFpKR+vW99qpFLxlSDpURn3M9/zWNUR
-         GT9YV8yG/uye/XTMdxw+eksdnwRHMZGgnsoY+diOuZ3jL0VIO8fslfT79dIOLTW/I0F0
-         EDDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLJYhUYMdhq7ZqTBxkh4wnTl1i9gcQeJU5POzx5EC/TCiPEiFRs3KWQOsvYlt5HfVrrWpxg1nP/jK6dnx3XmBa57lalYuCD76fS9zF
-X-Gm-Message-State: AOJu0YzvlnqBPSQ5t4LWNmr2uHvFzERd97vkWVHUOfIyqhz9Ia20QwVG
-	XwAhKdr2NwmWrQB5vYqENlDOdBJs2dYud3gNtVwS5jbqmCXKMguUGxwz5nOS4qM=
-X-Google-Smtp-Source: AGHT+IE74qL9aWvr7pO4zZ8GlXbVjhOQM4EkEMM/HmkWPWgiTKWMc7oa50ecxS2v9yQ02uIyjhPo4g==
-X-Received: by 2002:a05:6e02:13a9:b0:376:17db:6031 with SMTP id e9e14a558f8ab-39555cd26b4mr25647525ab.18.1721229996296;
-        Wed, 17 Jul 2024 08:26:36 -0700 (PDT)
-Received: from localhost ([140.82.166.162])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-39616a90121sm1345595ab.48.2024.07.17.08.26.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 08:26:35 -0700 (PDT)
-Date: Wed, 17 Jul 2024 10:26:34 -0500
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Andrea Parri <parri.andrea@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Leonardo Bras <leobras@redhat.com>, Guo Ren <guoren@kernel.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 03/11] riscv: Implement cmpxchg8/16() using Zabha
-Message-ID: <20240717-e7104dac172d9f2cbc25d9c6@orel>
-References: <20240717061957.140712-1-alexghiti@rivosinc.com>
- <20240717061957.140712-4-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCw3AXjB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59587C32782;
+	Wed, 17 Jul 2024 15:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721230020;
+	bh=o6ksGgCZ4nXFQWa+KewLnEYozl+Ia2t1l93hAy52I+U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eCw3AXjBH9ZKHo9zYkGygBQGDA2e1faiOs4ZG905SSfYCbRWMZb4k37mRpR5pFFYO
+	 hWVkTDSQIsN2cQFJCM7L56dd0D64lX9Yr/doEjbGs4iFVhAVVsqSRU2wjy/war0JES
+	 FQ0Fv+67aOqCg97ypyLxgs/4Zhl/LyFkK67vQVXuG/UfDpOWmckcHIbyKGuv60C5TR
+	 3eTD6ZJEErAcEmqlHq3ecMzRR+QLxTNTkKINLMNBru9HMVXGu+sq0tmgKSg7U7QRxi
+	 ErISQ+VIekaZJ5whNZf9mlaZuHMNNZwIdFZOQ6CWvJpRWvu9wyr/WWfW0casS/3qWA
+	 NUNfdCPJ5Dy/Q==
+Date: Wed, 17 Jul 2024 08:26:58 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
+ <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>, Marek =?UTF-8?B?QmVow7pu?=
+ <kabel@kernel.org>, Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>, Antoine Tenart
+ <atenart@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Romain Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next v17 00/14] Introduce PHY listing and
+ link_topology tracking
+Message-ID: <20240717082658.247939de@kernel.org>
+In-Reply-To: <20240716101626.3d54a95d@fedora-2.home>
+References: <20240709063039.2909536-1-maxime.chevallier@bootlin.com>
+	<20240715083106.479093a6@kernel.org>
+	<20240716101626.3d54a95d@fedora-2.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717061957.140712-4-alexghiti@rivosinc.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 17, 2024 at 08:19:49AM GMT, Alexandre Ghiti wrote:
-> This adds runtime support for Zabha in cmpxchg8/16() operations.
+On Tue, 16 Jul 2024 10:16:26 +0200 Maxime Chevallier wrote:
+> > I lack the confidence to take this during the merge window, without
+> > Russell's acks. So Deferred, sorry :(  
 > 
-> Note that in the absence of Zacas support in the toolchain, CAS
-> instructions from Zabha won't be used.
-> 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/Kconfig               | 17 ++++++++++++++++
->  arch/riscv/Makefile              |  3 +++
->  arch/riscv/include/asm/cmpxchg.h | 33 ++++++++++++++++++++++++++++++--
->  arch/riscv/include/asm/hwcap.h   |  1 +
->  arch/riscv/kernel/cpufeature.c   |  1 +
->  5 files changed, 53 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 1caaedec88c7..d3b0f92f92da 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -596,6 +596,23 @@ config RISCV_ISA_V_PREEMPTIVE
->  	  preemption. Enabling this config will result in higher memory
->  	  consumption due to the allocation of per-task's kernel Vector context.
->  
-> +config TOOLCHAIN_HAS_ZABHA
-> +	bool
-> +	default y
-> +	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zabha)
-> +	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zabha)
-> +	depends on AS_HAS_OPTION_ARCH
-> +
-> +config RISCV_ISA_ZABHA
-> +	bool "Zabha extension support for atomic byte/halfword operations"
-> +	depends on TOOLCHAIN_HAS_ZABHA
-> +	default y
-> +	help
-> +	  Enable the use of the Zabha ISA-extension to implement kernel
-> +	  byte/halfword atomic memory operations when it is detected at boot.
-> +
-> +	  If you don't know what to do here, say Y.
-> +
->  config TOOLCHAIN_HAS_ZACAS
->  	bool
->  	default y
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index 9fd13d7a9cc6..78dcaaeebf4e 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -88,6 +88,9 @@ riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE) := $(riscv-march-y)_zihintpause
->  # Check if the toolchain supports Zacas
->  riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZACAS) := $(riscv-march-y)_zacas
->  
-> +# Check if the toolchain supports Zabha
-> +riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZABHA) := $(riscv-march-y)_zabha
-> +
->  # Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
->  # matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
->  KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
-> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-> index 5d38153e2f13..c86722a101d0 100644
-> --- a/arch/riscv/include/asm/cmpxchg.h
-> +++ b/arch/riscv/include/asm/cmpxchg.h
-> @@ -105,8 +105,30 @@
->   * indicated by comparing RETURN with OLD.
->   */
->  
-> -#define __arch_cmpxchg_masked(sc_sfx, prepend, append, r, p, o, n)	\
-> +#define __arch_cmpxchg_masked(sc_sfx, cas_sfx, prepend, append, r, p, o, n)	\
->  ({									\
-> +	__label__ no_zabha_zacas, end;					\
-> +									\
-> +	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA) &&			\
-> +	    IS_ENABLED(CONFIG_RISCV_ISA_ZACAS)) {			\
-> +		asm goto(ALTERNATIVE("j %[no_zabha_zacas]", "nop", 0,	\
-> +				     RISCV_ISA_EXT_ZABHA, 1)		\
-> +			 : : : : no_zabha_zacas);			\
-> +		asm goto(ALTERNATIVE("j %[no_zabha_zacas]", "nop", 0,	\
-> +				     RISCV_ISA_EXT_ZACAS, 1)		\
-> +			 : : : : no_zabha_zacas);			\
+> Understood. Is there anything I can make next time to make that series
+> more digestable and easy to review ? I didn't want to split the netlink
+> part from the core part, as just the phy_link_topology alone doesn't
+> make much sense for now, but it that makes the lives of reviewers
+> easier I could submit these separately.
 
-I came late to the call, but I guess trying to get rid of these asm gotos
-was the topic of the discussion. The proposal was to try and use static
-branches, but keep in mind that we've had trouble with static branches
-inside macros in the past when those macros are used in many places[1]
-
-[1] commit 0b1d60d6dd9e ("riscv: Fix build with CONFIG_CC_OPTIMIZE_FOR_SIZE=y")
-
-> +									\
-> +		__asm__ __volatile__ (					\
-> +			prepend						\
-> +			"	amocas" cas_sfx " %0, %z2, %1\n"	\
-> +			append						\
-> +			: "+&r" (r), "+A" (*(p))			\
-> +			: "rJ" (n)					\
-> +			: "memory");					\
-> +		goto end;						\
-> +	}								\
-> +									\
-> +no_zabha_zacas:;							\
-
-unnecessary ;
-
->  	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
->  	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
->  	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
-> @@ -133,6 +155,8 @@
->  		: "memory");						\
->  									\
->  	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
-> +									\
-> +end:;									\
->  })
->  
->  #define __arch_cmpxchg(lr_sfx, sc_cas_sfx, prepend, append, r, p, co, o, n)	\
-> @@ -180,8 +204,13 @@ end:;									\
->  									\
->  	switch (sizeof(*__ptr)) {					\
->  	case 1:								\
-> +		__arch_cmpxchg_masked(sc_sfx, ".b" sc_sfx,		\
-> +					prepend, append,		\
-> +					__ret, __ptr, __old, __new);    \
-> +		break;							\
->  	case 2:								\
-> -		__arch_cmpxchg_masked(sc_sfx, prepend, append,		\
-> +		__arch_cmpxchg_masked(sc_sfx, ".h" sc_sfx,		\
-> +					prepend, append,		\
->  					__ret, __ptr, __old, __new);	\
->  		break;							\
->  	case 4:								\
-> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-> index e17d0078a651..f71ddd2ca163 100644
-> --- a/arch/riscv/include/asm/hwcap.h
-> +++ b/arch/riscv/include/asm/hwcap.h
-> @@ -81,6 +81,7 @@
->  #define RISCV_ISA_EXT_ZTSO		72
->  #define RISCV_ISA_EXT_ZACAS		73
->  #define RISCV_ISA_EXT_XANDESPMU		74
-> +#define RISCV_ISA_EXT_ZABHA		75
->  
->  #define RISCV_ISA_EXT_XLINUXENVCFG	127
->  
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index 5ef48cb20ee1..c125d82c894b 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -257,6 +257,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->  	__RISCV_ISA_EXT_DATA(zihintpause, RISCV_ISA_EXT_ZIHINTPAUSE),
->  	__RISCV_ISA_EXT_DATA(zihpm, RISCV_ISA_EXT_ZIHPM),
->  	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
-> +	__RISCV_ISA_EXT_DATA(zabha, RISCV_ISA_EXT_ZABHA),
->  	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
->  	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
->  	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
-> -- 
-> 2.39.2
->
-
-Thanks,
-drew
+TBH I can only review this from coding and netlink perspective, and 
+it looks solid. Folk who actually know PHYs and SFPs may have more
+meaningful feedback :(
