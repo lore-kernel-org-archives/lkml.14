@@ -1,293 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCC664A98;
-	Wed, 17 Jul 2024 22:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144D44685
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721255134; cv=none; b=Qoq6sYxtUU7GhmPkc7TkntUYTPUyXCo5a4J81FfF1sqYDhqJbCPFgsxwPFOLLGLNC3Or1MWcz1wuZq6vo0l4hf2xKQSL36KEXO1EwXbcOQnoZ2Nd1w0w70uW+Ww+LiE9g1ZJkA8Mn7MWDnDy9jbcTTeMgTieizpCk9TT0kzyQIE=
+	t=1721255509; cv=none; b=rLBn3K4Adc9dX/+Ux8nvrlRBFNQ5+GFEKw0mPVmj9YPy2QDeQrfhvA8AHQa+bVMJonq+zkaIBKm9qmwAVyXYKw2sELp8zG3wYQeGdpcUSGwNBkOjkDxymnihsnxi+naGN5U/P4N3iv9C4svq2o6R8qlZGcovjE0Uf46iQEfKzJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721255134; c=relaxed/simple;
-	bh=q6Wwch18E7w/rj6z/NtXtCgXxoq1cCuw2p/00HKzoug=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WDT8ubF8rwlKGWvQldcNmNhs38yqhCSpLKgj8VvKj98AXb3I4yBiTOG9eDiMXB53RVCqtDJbofkaBltz1MGTdxiLfUuf2FZrug8JsaGVmm+gw1+3RDugAXSYTS0rIUW83zeNyWlmH6x1Pp/L97fm985UjDLLeiMfMZH+lzCb+aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TU1wOqp3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721255509; c=relaxed/simple;
+	bh=ZeVb4NV1UtDsKj/hoB610U1gFo/rAq+Zrk+VLQva224=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fngkKY45ZG78ejqxqdljH9G92jj95TzpEVDyT2jLQME8t/mA15Pehde6BS/x7BnYQL1CvH7RawYsw0qGmlVv3ORsW59CTjnMmLFhzP1hRop65l2SYuFprX6LtG+j9AdxKa3fmhnUHtKsPRgg1OfafCe2HXkF4j47Ix8TBBYEYvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E/YEt22p; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TU1wOqp3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26296C2BD10;
-	Wed, 17 Jul 2024 22:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721255134;
-	bh=q6Wwch18E7w/rj6z/NtXtCgXxoq1cCuw2p/00HKzoug=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TU1wOqp3HqZeeURDJIDlL2o2KRjuK80l5lZxxJkdvvG3NwNrd7Bfoff7B0aGFzSUO
-	 E2PYgrbgVop0vwAH1xUIZSzOwQUQXuJcOkQ2e0qnGu880I6GQa2q0JK21PlRuHiMYA
-	 bOnJfK6tIytukZMFLd9eemS8pkTxH/B11b1tVA4VFj1q0VCg26IbJaXve/ZF+5gN/J
-	 8px0llDgAw7BQZa83S470IIiY4NJcGbTxJeTnDT8EqpKn0I7kxwUJZLihx5V5/z9ld
-	 ydzMi1RLJgJKO3gEZ4pE3ZbtysErMUiU0/ixJ7WnRr5VLOtJ1pXmrqn5bzaafI3LCe
-	 jlP/5Uc8Ghevg==
-From: Danilo Krummrich <dakr@kernel.org>
-To: cl@linux.com,
-	penberg@kernel.org,
-	rientjes@google.com,
-	iamjoonsoo.kim@lge.com,
-	akpm@linux-foundation.org,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	42.hyeyoo@gmail.com,
-	urezki@gmail.com,
-	hch@infradead.org,
-	kees@kernel.org,
-	ojeda@kernel.org,
-	wedsonaf@gmail.com,
-	mhocko@kernel.org,
-	mpe@ellerman.id.au,
-	chandan.babu@oracle.com,
-	christian.koenig@amd.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 2/2] mm: kvmalloc: align kvrealloc() with krealloc()
-Date: Thu, 18 Jul 2024 00:24:02 +0200
-Message-ID: <20240717222427.2211-3-dakr@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240717222427.2211-1-dakr@kernel.org>
-References: <20240717222427.2211-1-dakr@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/YEt22p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721255507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JBsCYjvHFqCofeJfqJ0FDpq4lR84OryByqZWEVkFAUs=;
+	b=E/YEt22prWZzu2ECYMGb9An6VXIMMSyX2/fVsZfr+goRiM+c2e95bDBxXy8nPVl9vQuOn7
+	0vIHrUoscdyULVQh8ss07TJ8JBAVGMQDrXrryTNQL4l7C4KhNl+d4XNrBtgdMhszJPYHHU
+	9Q9Fg5ECexuLyboiCnm2VdROHNZoZoc=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-490-s2j_lkfqOY2ewpokd66eEw-1; Wed, 17 Jul 2024 18:31:45 -0400
+X-MC-Unique: s2j_lkfqOY2ewpokd66eEw-1
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8152f0c4837so25813739f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:31:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721255505; x=1721860305;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JBsCYjvHFqCofeJfqJ0FDpq4lR84OryByqZWEVkFAUs=;
+        b=mbWnZkBMsM82vV9I5xtv/gx7nzeHlHyNTLJLlO1hO3mv6A52NyqCeGoblSWh6UxnRy
+         BQVW6lr2TYsU94+Vdj5r6yNVcznIpEvxtLTrMF3MD1CsR6ICq78YbBcmfsM0wlbgO2MB
+         IBPUCIMQ4x2278zvZfg3DCmXPugPp5K28cMzB2tvRBiAdCPot8gdNcZjv+qBznM/URvc
+         6FO7Wa526ENlkode+iu9GzQ0JQ+tDg8VO3o+qqdxRQ/IIAHeXm3Gl/eYKd0U89HNFPCj
+         Hjf9EZnSnkEOWsIDb5L+JBluyHW45J/rTwwiSJrBR7FlMrpabfEwfmY4qfZbPdINC8rN
+         uS6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXZHItImeJ90OIIgInbcR7+Onv6NE6Z6peVNIp7n9QSy5rCpqjThlXNxlv82YYQIxKAQ+J6QPp57qjJMxjNFBwUf6Mx9dHlbWw2xnl1
+X-Gm-Message-State: AOJu0Yw+HRaI0Mywla2QxeEEuIDHZRwhK3IZYbuvOMGAnPi8k40LKikL
+	J1TViNpgpxVgFk1V9q/uLLNGda2K+Pxghqalk0pP0g6dl0/5R9aN0YQw72QCniscsj8tF7Re+vE
+	Q+fWWOlfk/qWr/CQcUHiTwUoIzbok/WyrFCYKgFu2xjfQz5M/nkv/v8XeZMg6EQ==
+X-Received: by 2002:a05:6602:29c2:b0:806:2e60:d169 with SMTP id ca18e2360f4ac-817123e1c6fmr434707639f.17.1721255505088;
+        Wed, 17 Jul 2024 15:31:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGPb97hbNXON2ByzzRKRynxRHlbiYrD3yDjp2uo84hIKMI6iQ+GFeGYUQQkaZREiI+LQxB6iA==
+X-Received: by 2002:a05:6602:29c2:b0:806:2e60:d169 with SMTP id ca18e2360f4ac-817123e1c6fmr434705739f.17.1721255504742;
+        Wed, 17 Jul 2024 15:31:44 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-816c17c5044sm92133839f.19.2024.07.17.15.31.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 15:31:44 -0700 (PDT)
+Date: Wed, 17 Jul 2024 16:31:43 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Axel Rasmussen <axelrasmussen@google.com>
+Cc: stable@vger.kernel.org, Ankit Agrawal <ankita@nvidia.com>, Eric Auger
+ <eric.auger@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
+ <kevin.tian@intel.com>, Kunwu Chan <chentao@kylinos.cn>, Leah Rumancik
+ <leah.rumancik@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>, Stefan
+ Hajnoczi <stefanha@redhat.com>, Yi Liu <yi.l.liu@intel.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.6 0/3] Backport VFIO refactor to fix fork ordering bug
+Message-ID: <20240717163143.49b914cb.alex.williamson@redhat.com>
+In-Reply-To: <20240717222429.2011540-1-axelrasmussen@google.com>
+References: <20240717222429.2011540-1-axelrasmussen@google.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Besides the obvious (and desired) difference between krealloc() and
-kvrealloc(), there is some inconsistency in their function signatures
-and behavior:
+On Wed, 17 Jul 2024 15:24:26 -0700
+Axel Rasmussen <axelrasmussen@google.com> wrote:
 
- - krealloc() frees the memory when the requested size is zero, whereas
-   kvrealloc() simply returns a pointer to the existing allocation.
+> 35e351780fa9 ("fork: defer linking file vma until vma is fully initialized")
+> switched the ordering of vm_ops->open() and copy_page_range() on fork. This is a
+> bug for VFIO, because it causes two problems:
+> 
+> 1. Because open() is called before copy_page_range(), the range can conceivably
+>    have unmapped 'holes' in it. This causes the code underneath untrack_pfn() to
+>    WARN.
+> 
+> 2. More seriously, open() is trying to guarantee that the entire range is
+>    zapped, so any future accesses in the child will result in the VFIO fault
+>    handler being called. Because we copy_page_range() *after* open() (and
+>    therefore after zapping), this guarantee is violated.
+> 
+> We can't revert 35e351780fa9, because it fixes a real bug for hugetlbfs. The fix
+> is also not as simple as just reodering open() and copy_page_range(), as Miaohe
+> points out in [1]. So, although these patches are kind of large for stable, just
+> backport this refactoring which completely sidesteps the issue.
+> 
+> Note that patch 2 is the key one here which fixes the issue. Patch 1 is a
+> prerequisite required for patch 2 to build / work. This would almost be enough,
+> but we might see significantly regressed performance. Patch 3 fixes that up,
+> putting performance back on par with what it was before.
+> 
+> Note [1] also has a more full discussion justifying taking these backports.
+> 
+> I proposed the same backport for 6.9 [2], and now for 6.6. 6.6 is the oldest
+> kernel which needs the change: 35e351780fa9 was reverted for unrelated reasons
+> in 6.1, and was never backported to 5.15 or earlier.
 
- - krealloc() behaves like kmalloc() if a NULL pointer is passed, whereas
-   kvrealloc() does not accept a NULL pointer at all and, if passed,
-   would fault instead.
+AFAICT 35e351780fa9 was reverted in linux-6.6.y as well, so why isn't
+this one a 4-part series concluding with a new backport of that commit?
+I think without that, we don't need these in 6.6 either.  Thanks,
 
- - krealloc() is self-contained, whereas kvrealloc() relies on the caller
-   to provide the size of the previous allocation.
+Alex
 
-Inconsistent behavior throughout allocation APIs is error prone, hence make
-kvrealloc() behave like krealloc(), which seems superior in all mentioned
-aspects.
-
-Besides that, implementing kvrealloc() by making use of krealloc() and
-vrealloc() provides oppertunities to grow (and shrink) allocations more
-efficiently. For instance, vrealloc() could be optimized to extend the
-existing allocation if there is enough contiguous space left in the
-virtual address space at the end of the existing allocation.
-
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- arch/powerpc/platforms/pseries/papr-vpd.c |  5 +-
- drivers/gpu/drm/drm_exec.c                |  3 +-
- fs/xfs/xfs_log_recover.c                  |  2 +-
- include/linux/slab.h                      |  3 +-
- kernel/resource.c                         |  3 +-
- lib/fortify_kunit.c                       |  3 +-
- mm/util.c                                 | 72 ++++++++++++++++-------
- 7 files changed, 56 insertions(+), 35 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/papr-vpd.c b/arch/powerpc/platforms/pseries/papr-vpd.c
-index c29e85db5f35..1574176e3ffc 100644
---- a/arch/powerpc/platforms/pseries/papr-vpd.c
-+++ b/arch/powerpc/platforms/pseries/papr-vpd.c
-@@ -156,10 +156,7 @@ static int vpd_blob_extend(struct vpd_blob *blob, const char *data, size_t len)
- 	const char *old_ptr = blob->data;
- 	char *new_ptr;
- 
--	new_ptr = old_ptr ?
--		kvrealloc(old_ptr, old_len, new_len, GFP_KERNEL_ACCOUNT) :
--		kvmalloc(len, GFP_KERNEL_ACCOUNT);
--
-+	new_ptr = kvrealloc(old_ptr, new_len, GFP_KERNEL_ACCOUNT);
- 	if (!new_ptr)
- 		return -ENOMEM;
- 
-diff --git a/drivers/gpu/drm/drm_exec.c b/drivers/gpu/drm/drm_exec.c
-index 2da094bdf8a4..18e366cc4993 100644
---- a/drivers/gpu/drm/drm_exec.c
-+++ b/drivers/gpu/drm/drm_exec.c
-@@ -145,8 +145,7 @@ static int drm_exec_obj_locked(struct drm_exec *exec,
- 		size_t size = exec->max_objects * sizeof(void *);
- 		void *tmp;
- 
--		tmp = kvrealloc(exec->objects, size, size + PAGE_SIZE,
--				GFP_KERNEL);
-+		tmp = kvrealloc(exec->objects, size + PAGE_SIZE, GFP_KERNEL);
- 		if (!tmp)
- 			return -ENOMEM;
- 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 4fe627991e86..bbe5ecb2345b 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2132,7 +2132,7 @@ xlog_recover_add_to_cont_trans(
- 	old_ptr = item->ri_buf[item->ri_cnt-1].i_addr;
- 	old_len = item->ri_buf[item->ri_cnt-1].i_len;
- 
--	ptr = kvrealloc(old_ptr, old_len, len + old_len, GFP_KERNEL);
-+	ptr = kvrealloc(old_ptr, len + old_len, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
- 	memcpy(&ptr[old_len], dp, len);
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 7247e217e21b..41ede46d3bd2 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -808,8 +808,7 @@ kvmalloc_array_node_noprof(size_t n, size_t size, gfp_t flags, int node)
- #define kvcalloc_node(...)			alloc_hooks(kvcalloc_node_noprof(__VA_ARGS__))
- #define kvcalloc(...)				alloc_hooks(kvcalloc_noprof(__VA_ARGS__))
- 
--extern void *kvrealloc_noprof(const void *p, size_t oldsize, size_t newsize, gfp_t flags)
--		      __realloc_size(3);
-+extern void *kvrealloc_noprof(const void *p, size_t size, gfp_t flags) __realloc_size(2);
- #define kvrealloc(...)				alloc_hooks(kvrealloc_noprof(__VA_ARGS__))
- 
- extern void kvfree(const void *addr);
-diff --git a/kernel/resource.c b/kernel/resource.c
-index fcbca39dbc45..46e064c8dce2 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -458,8 +458,7 @@ int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
- 			/* re-alloc */
- 			struct resource *rams_new;
- 
--			rams_new = kvrealloc(rams, rams_size * sizeof(struct resource),
--					     (rams_size + 16) * sizeof(struct resource),
-+			rams_new = kvrealloc(rams, (rams_size + 16) * sizeof(struct resource),
- 					     GFP_KERNEL);
- 			if (!rams_new)
- 				goto out;
-diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-index 27ea8bf0252c..acbdc7855100 100644
---- a/lib/fortify_kunit.c
-+++ b/lib/fortify_kunit.c
-@@ -308,8 +308,7 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(vmalloc)
- 	orig = kvmalloc(prev_size, gfp);				\
- 	KUNIT_EXPECT_TRUE(test, orig != NULL);				\
- 	checker(((expected_pages) * PAGE_SIZE) * 2,			\
--		kvrealloc(orig, prev_size,				\
--			  ((alloc_pages) * PAGE_SIZE) * 2, gfp),	\
-+		kvrealloc(orig, ((alloc_pages) * PAGE_SIZE) * 2, gfp),	\
- 		kvfree(p));						\
- } while (0)
- DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
-diff --git a/mm/util.c b/mm/util.c
-index 983baf2bd675..6a4eb9c1d9b7 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -598,6 +598,21 @@ unsigned long vm_mmap(struct file *file, unsigned long addr,
- }
- EXPORT_SYMBOL(vm_mmap);
- 
-+static gfp_t to_kmalloc_flags(gfp_t flags, size_t size)
-+{
-+	if (size > PAGE_SIZE) {
-+		flags |= __GFP_NOWARN;
-+
-+		if (!(flags & __GFP_RETRY_MAYFAIL))
-+			flags |= __GFP_NORETRY;
-+
-+		/* nofail semantic is implemented by the vmalloc fallback */
-+		flags &= ~__GFP_NOFAIL;
-+	}
-+
-+	return flags;
-+}
-+
- /**
-  * kvmalloc_node - attempt to allocate physically contiguous memory, but upon
-  * failure, fall back to non-contiguous (vmalloc) allocation.
-@@ -616,7 +631,6 @@ EXPORT_SYMBOL(vm_mmap);
-  */
- void *kvmalloc_node_noprof(size_t size, gfp_t flags, int node)
- {
--	gfp_t kmalloc_flags = flags;
- 	void *ret;
- 
- 	/*
-@@ -626,17 +640,7 @@ void *kvmalloc_node_noprof(size_t size, gfp_t flags, int node)
- 	 * However make sure that larger requests are not too disruptive - no
- 	 * OOM killer and no allocation failure warnings as we have a fallback.
- 	 */
--	if (size > PAGE_SIZE) {
--		kmalloc_flags |= __GFP_NOWARN;
--
--		if (!(kmalloc_flags & __GFP_RETRY_MAYFAIL))
--			kmalloc_flags |= __GFP_NORETRY;
--
--		/* nofail semantic is implemented by the vmalloc fallback */
--		kmalloc_flags &= ~__GFP_NOFAIL;
--	}
--
--	ret = kmalloc_node_noprof(size, kmalloc_flags, node);
-+	ret = kmalloc_node_noprof(size, to_kmalloc_flags(flags, size), node);
- 
- 	/*
- 	 * It doesn't really make sense to fallback to vmalloc for sub page
-@@ -704,18 +708,42 @@ void kvfree_sensitive(const void *addr, size_t len)
- }
- EXPORT_SYMBOL(kvfree_sensitive);
- 
--void *kvrealloc_noprof(const void *p, size_t oldsize, size_t newsize, gfp_t flags)
-+/**
-+ * kvrealloc - reallocate memory; contents remain unchanged
-+ * @p: object to reallocate memory for
-+ * @size: the size to reallocate
-+ * @flags: the flags for the page level allocator
-+ *
-+ * The contents of the object pointed to are preserved up to the lesser of the
-+ * new and old size (__GFP_ZERO flag is effectively ignored).
-+ *
-+ * If @p is %NULL, kvrealloc() behaves exactly like kvmalloc(). If @size is 0
-+ * and @p is not a %NULL pointer, the object pointed to is freed.
-+ *
-+ * Return: pointer to the allocated memory or %NULL in case of error
-+ */
-+void *kvrealloc_noprof(const void *p, size_t size, gfp_t flags)
- {
--	void *newp;
-+	void *n;
-+
-+	if (is_vmalloc_addr(p))
-+		return vrealloc_noprof(p, size, flags);
-+
-+	n = krealloc_noprof(p, size, to_kmalloc_flags(flags, size));
-+	if (!n) {
-+		/* We failed to krealloc(), fall back to kvmalloc(). */
-+		n = kvmalloc_noprof(size, flags);
-+		if (!n)
-+			return NULL;
-+
-+		if (p) {
-+			/* We already know that `p` is not a vmalloc address. */
-+			memcpy(n, p, ksize(p));
-+			kfree(p);
-+		}
-+	}
- 
--	if (oldsize >= newsize)
--		return (void *)p;
--	newp = kvmalloc_noprof(newsize, flags);
--	if (!newp)
--		return NULL;
--	memcpy(newp, p, oldsize);
--	kvfree(p);
--	return newp;
-+	return n;
- }
- EXPORT_SYMBOL(kvrealloc_noprof);
- 
--- 
-2.45.2
+> 
+> [1]: https://lore.kernel.org/all/20240702042948.2629267-1-leah.rumancik@gmail.com/T/
+> [2]: https://lore.kernel.org/r/20240717213339.1921530-1-axelrasmussen@google.com
+> 
+> Alex Williamson (3):
+>   vfio: Create vfio_fs_type with inode per device
+>   vfio/pci: Use unmap_mapping_range()
+>   vfio/pci: Insert full vma on mmap'd MMIO fault
+> 
+>  drivers/vfio/device_cdev.c       |   7 +
+>  drivers/vfio/group.c             |   7 +
+>  drivers/vfio/pci/vfio_pci_core.c | 271 ++++++++-----------------------
+>  drivers/vfio/vfio_main.c         |  44 +++++
+>  include/linux/vfio.h             |   1 +
+>  include/linux/vfio_pci_core.h    |   2 -
+>  6 files changed, 125 insertions(+), 207 deletions(-)
+> 
+> --
+> 2.45.2.993.g49e7a77208-goog
+> 
 
