@@ -1,77 +1,70 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00055186E48;
-	Wed, 17 Jul 2024 21:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1111187868;
+	Wed, 17 Jul 2024 21:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721251567; cv=none; b=EC7uuDsUWGQ+jMfyCXl3HII4UCiQFRu5Kxow0MVCW2abxRmpOSxKqHYRsg1TzQPZqpxfPnwBAcEbc2ZK6s/BAfPl7EUZiHFajrlZXQdY0O0mOYLP6dP5LYm7/Pqo95JgX27NZKmWVwWmvJ1gf59Rir76S/NgxUqJMZs5XsLhZEY=
+	t=1721251576; cv=none; b=PCabPWFn6YG0XuYOC+KOFR71skpf2kpuutrk7puqPFvx88D345uY/qLCmgTqsQgA0iwGC8iJ9C7S4QjLe/D6tAX3DwkM5zHwHWi4u27AUHuwJKN2MBbDk+HjQLqJYy6naSPAV6hHBZXP03ztviwZdrF2Y/8ET+IUX+IjRjKYrMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721251567; c=relaxed/simple;
-	bh=OYZ4Lp+LsKfB963iUHxM1nUX0jbGE/poJifLj3btfQE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nG+sAPithfurUHNTfjHzwAatuP2kXUsMAakf5gsGHVowyuS7tzX9w7eNWMDJjHEC5BxTM/KEIUlD74vkya4Noisc8SrekO18yuPV7cQZ7WnvrJu4mGE9M00XoGqrydekL8dNHoBeeMy34lbWAME47pWKfqh761MRxTc9/8NRTbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bW6eKiP5; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1721251576; c=relaxed/simple;
+	bh=3wxaWTKVliSXE8imUAoRvdQqAtXh5NgmHDAI61GGMnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nI0Mvq5Ce4GUqUlmMNybD2OlpghgONQJQChFCByUhumH41cg5oaMQAIIKxcEC5QfVXnLc3JIXT3JhFgXBFs8LDfyWbIN9j1N7EEkyrE/T/YY2usIkVE8zLz+AKDqwpIC0u1AOuDtpFyN/6xaPNvLMsuMJHxVyVT3KL3BPDhaizc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eYg4XSAw; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bW6eKiP5"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-427b4c621b9so867645e9.1;
-        Wed, 17 Jul 2024 14:26:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYg4XSAw"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70b703eda27so62677b3a.3;
+        Wed, 17 Jul 2024 14:26:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721251564; x=1721856364; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HjTTLNALQlo0+Bax0fTOpezWlVszgVp9jzrNq2e7X+M=;
-        b=bW6eKiP5S+7NNsyBu5VQhtwI2qIEfHO+q8ldaUYY35VqV2huooipx58YXc0+1vSxH5
-         4ePvbqellPGdUhAnwSotXq/abC5p5oCj/y1/MC5xSuTB/0NnsSwXgcuO+J9ZxURfpZxg
-         estj4FrakZy52JVUwJZdU38fXubQrl89PA+OZe32jeHbz6JSKbGmTh8ObHA0Pbr6+N/0
-         YvFT8dIUNHeoCuawrSW5uHaSdMxXO7Qa1rwD4/YATugHQPvDEH5SBSFfzA/T+AvMbI18
-         JxM4hgjyMZDvQt1qtlDvxzwYUEGiJA6zXom49d223uQDhkSVBkO+Vh/u1qeymSPtRsOR
-         XyWQ==
+        d=gmail.com; s=20230601; t=1721251574; x=1721856374; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oHDdazCxqygEylnbc0is8b457A5vOnmJDWNO0vFogxo=;
+        b=eYg4XSAwvnQq0vXyIHp6ZwzLXnFhdvjZ9NyksimFH/kfidkmq/sug6PoyWWas4l81g
+         4xH+RAbonbJSVgZOmxuAXAdTB6W9aRyqR+nZ0e8r1ivOPkiZnvVSFeQHLSljaFbb5Co3
+         dqGuO0JbhxvLYJeDwiOl3ud8EICt57R2I8EgY9rsgHVfN3NBQTs/WgiLgbUuglssi1Ef
+         1gQmMHChicE5oLSS710g+kN2Ui1zTh2tpU+Law1MrpZ3xGi7l2NxukeIxtdXenq67NiO
+         VAE3lulg28xCvC2cwsfYBfVLhq6+OVWcULbkEPfIC2FaAvj8bnlOOKX7N9DEIFvbnnxn
+         WktQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721251564; x=1721856364;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HjTTLNALQlo0+Bax0fTOpezWlVszgVp9jzrNq2e7X+M=;
-        b=otIz2r+hDsVGhrFxwD9xXlngOcutIidK0m87CA/4qo0XgFqp85b3ETSsdn/uAoJwQK
-         xyAlSN2odOOW2f0Xy+vdkp8yGytEAlhLa6Ga38qDcd4gEwrOVUhOO8AJjNXZad7YvLl6
-         XhSb2bq9Iz7RrgU5DG36+SOlVdSqe4acVxuJ3KWptGTtlNuV7wmJfk4akHLkJbhVlruJ
-         L5idJJr/3IDl4PFQnsn+LbbKel8pUxKDuPhATM2l2AJRVjP1pkJ0qIis9x+/PM/zVJfN
-         J3aMZ4UpSnutAWCC+2hXR5iyYyHGX7DT0vc+bF60R1ljqSTI0YvpMtM/twJGyA4vN40s
-         wTxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW74Perpjhg6HcwZmyHRiu6r7V7Plpkq62VRb+LsgWAPRnYawR0a3ytUg/o2FT+kAJ7IMtFG6P+hDW6dgaWgmHI1IYPcUGV30FeLIWsAZx5qrR/IzEdDVIWzhiJAUALVs59Q6aV6gdw7dhL0CfKf0KklTIeS4Sqp5D/a1wcX0WbnOcG+g==
-X-Gm-Message-State: AOJu0YyeZeG8xyYX3SxRwnHeEgfH2dLrjrskCezvhw3mmxxiyG7WxM5w
-	QZcn2yQg/8lPWR/AZdtLviybj7zwzeVNnPEg79CChr9lP+RLNguV
-X-Google-Smtp-Source: AGHT+IHQVgh0uOb82kEziBzXJYj5fYIPt6ZSjzoHJBgc1tRu2d6lV/BbXSIrNGNIMO/2jiUKn2UJgg==
-X-Received: by 2002:a05:600c:4e90:b0:426:6617:ae4a with SMTP id 5b1f17b1804b1-427c2cbd731mr19414705e9.22.1721251564274;
-        Wed, 17 Jul 2024 14:26:04 -0700 (PDT)
-Received: from spiri.. ([86.124.123.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427c77b030bsm10532735e9.17.2024.07.17.14.26.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 14:26:03 -0700 (PDT)
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
-To: Alisa-Dariana Roman <alisa.roman@analog.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
+        d=1e100.net; s=20230601; t=1721251574; x=1721856374;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oHDdazCxqygEylnbc0is8b457A5vOnmJDWNO0vFogxo=;
+        b=QtHqjDXQZsg8zr57rekXg8ODUHFcR//seXoWLp1D/1kg7RSNPFdniHaEo8pxp34DYv
+         qSdDt6lXOUsjL5AJcmtm0ijFR/mNHsUdiOZAIINdlFg5JKWSTIgRsy4QO6u7Kox6gIDV
+         XXqyBk/OAswXzIYaaAWTPem87jq3DlwT7rz7cd7bg8X5G5/cAX2mAswVIw4P4FCX4Uka
+         PXwMQptwXTqi4RhzHBtVW7Y2Nd9uh0QfzYBrXwL3gyR+pSi8qKZDiWaTFCWvc+tb1WIN
+         cxMUCjBm9ZEFVdKPSILlQ5pJP3NoLA59+HaDZdwAtC2YLLsnElwbkawXT3enVTY0Oqq5
+         RDgw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4OfAc86rP5eRaJbYKJyybd/KPmmYtlDAazIwh5Xx4LNfReWdRt1Jlf8YfGcnWUF+03LUPDBgT22ORMoUHyM1MZmPtbGzyO6YzuiZFaVlmWok8KoDZ+CND7NGAjnZMKVEnWwWLW0+z1w==
+X-Gm-Message-State: AOJu0Yw9zMAiTJwre/5+Jo9UvmlGV19NAOp/74h+u2GZkKt/8m3ZqSJ7
+	OgpodpatXpyzMr5MOSoF0hvqOjGif1B3xo/AzE0E64sC0uh8//Hp
+X-Google-Smtp-Source: AGHT+IEBMNM1ghhaGLxVIu1EPgIpeLiMZNJmswGCmSESDeC0a1peELIGUYh/sQzwFA8uAkkTpdyMjA==
+X-Received: by 2002:a05:6a21:70cb:b0:1c3:ea28:3c01 with SMTP id adf61e73a8af0-1c3fdd5b00cmr3550236637.49.1721251574171;
+        Wed, 17 Jul 2024 14:26:14 -0700 (PDT)
+Received: from localhost.localdomain ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb60117e61sm424911a91.33.2024.07.17.14.26.11
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 17 Jul 2024 14:26:13 -0700 (PDT)
+From: Yunseong Kim <yskelg@gmail.com>
+To: Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Joel Granados <j.granados@samsung.com>,
+	MichelleJin <shjy180909@gmail.com>,
+	linux-s390@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: [PATCH v7 4/4] iio: adc: ad7192: Add clock provider
-Date: Thu, 18 Jul 2024 00:25:35 +0300
-Message-Id: <20240717212535.8348-5-alisa.roman@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240717212535.8348-1-alisa.roman@analog.com>
-References: <20240717212535.8348-1-alisa.roman@analog.com>
+Subject: [PATCH] s390/debug: optimize acquiring spinlock on failure in debug_info_copy()
+Date: Thu, 18 Jul 2024 06:18:57 +0900
+Message-ID: <20240717211857.4510-3-yskelg@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,139 +73,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Internal clock of AD719X devices can be made available on MCLK2 pin. Add
-clock provider to support this functionality when clock cells property
-is present.
+Optimize acquiring the spinlock once more and then exiting without any
+additional actions, when handling of debug_info_alloc() failed.
 
-Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+Fixes: 942eaabd5d77 ("[PATCH] s390: debug feature changes")
+Signed-off-by: Yunseong Kim <yskelg@gmail.com>
 ---
- drivers/iio/adc/ad7192.c | 92 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ arch/s390/kernel/debug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-index 042319f0c641..3f803b1eefcc 100644
---- a/drivers/iio/adc/ad7192.c
-+++ b/drivers/iio/adc/ad7192.c
-@@ -8,6 +8,7 @@
- #include <linux/interrupt.h>
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-@@ -201,6 +202,7 @@ struct ad7192_chip_info {
- struct ad7192_state {
- 	const struct ad7192_chip_info	*chip_info;
- 	struct clk			*mclk;
-+	struct clk_hw			int_clk_hw;
- 	u16				int_vref_mv;
- 	u32				aincom_mv;
- 	u32				fclk;
-@@ -406,6 +408,91 @@ static const char *const ad7192_clock_names[] = {
- 	"mclk"
- };
- 
-+static struct ad7192_state *clk_hw_to_ad7192(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct ad7192_state, int_clk_hw);
-+}
-+
-+static unsigned long ad7192_clk_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
-+{
-+	return AD7192_INT_FREQ_MHZ;
-+}
-+
-+static int ad7192_clk_output_is_enabled(struct clk_hw *hw)
-+{
-+	struct ad7192_state *st = clk_hw_to_ad7192(hw);
-+
-+	return st->clock_sel == AD7192_CLK_INT_CO;
-+}
-+
-+static int ad7192_clk_prepare(struct clk_hw *hw)
-+{
-+	struct ad7192_state *st = clk_hw_to_ad7192(hw);
-+	int ret;
-+
-+	st->mode &= ~AD7192_MODE_CLKSRC_MASK;
-+	st->mode |= AD7192_CLK_INT_CO;
-+
-+	ret = ad_sd_write_reg(&st->sd, AD7192_REG_MODE, 3, st->mode);
-+	if (ret)
-+		return ret;
-+
-+	st->clock_sel = AD7192_CLK_INT_CO;
-+
-+	return 0;
-+}
-+
-+static void ad7192_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct ad7192_state *st = clk_hw_to_ad7192(hw);
-+	int ret;
-+
-+	st->mode &= ~AD7192_MODE_CLKSRC_MASK;
-+	st->mode |= AD7192_CLK_INT;
-+
-+	ret = ad_sd_write_reg(&st->sd, AD7192_REG_MODE, 3, st->mode);
-+	if (ret)
-+		return;
-+
-+	st->clock_sel = AD7192_CLK_INT;
-+}
-+
-+static const struct clk_ops ad7192_int_clk_ops = {
-+	.recalc_rate = ad7192_clk_recalc_rate,
-+	.is_enabled = ad7192_clk_output_is_enabled,
-+	.prepare = ad7192_clk_prepare,
-+	.unprepare = ad7192_clk_unprepare,
-+};
-+
-+static int ad7192_register_clk_provider(struct ad7192_state *st)
-+{
-+	struct device *dev = &st->sd.spi->dev;
-+	struct clk_init_data init = {};
-+	int ret;
-+
-+	if (!device_property_present(dev, "#clock-cells"))
-+		return 0;
-+
-+	if (!IS_ENABLED(CONFIG_COMMON_CLK))
-+		return 0;
-+
-+	init.name = devm_kasprintf(dev, GFP_KERNEL, "%s-clk",
-+				   fwnode_get_name(dev_fwnode(dev)));
-+	if (!init.name)
-+		return -ENOMEM;
-+
-+	init.ops = &ad7192_int_clk_ops;
-+
-+	st->int_clk_hw.init = &init;
-+	ret = devm_clk_hw_register(dev, &st->int_clk_hw);
-+	if (ret)
-+		return ret;
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-+					   &st->int_clk_hw);
-+}
-+
- static int ad7192_clock_setup(struct ad7192_state *st)
- {
- 	struct device *dev = &st->sd.spi->dev;
-@@ -446,6 +533,11 @@ static int ad7192_clock_setup(struct ad7192_state *st)
- 	if (ret < 0) {
- 		st->clock_sel = AD7192_CLK_INT;
- 		st->fclk = AD7192_INT_FREQ_MHZ;
-+
-+		ret = ad7192_register_clk_provider(st);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "Failed to register clock provider\n");
- 		return 0;
- 	}
- 
+diff --git a/arch/s390/kernel/debug.c b/arch/s390/kernel/debug.c
+index 85328a0ef3b6..c64f17cc1ebe 100644
+--- a/arch/s390/kernel/debug.c
++++ b/arch/s390/kernel/debug.c
+@@ -333,9 +333,9 @@ static debug_info_t *debug_info_copy(debug_info_t *in, int mode)
+ 	do {
+ 		rc = debug_info_alloc(in->name, in->pages_per_area,
+ 			in->nr_areas, in->buf_size, in->level, mode);
+-		spin_lock_irqsave(&in->lock, flags);
+ 		if (!rc)
+-			goto out;
++			return rc;
++		spin_lock_irqsave(&in->lock, flags);
+ 		/* has something changed in the meantime ? */
+ 		if ((rc->pages_per_area == in->pages_per_area) &&
+ 		    (rc->nr_areas == in->nr_areas)) {
 -- 
-2.34.1
+2.45.2
 
