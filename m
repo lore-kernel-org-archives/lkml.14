@@ -1,99 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD5619A;
-	Wed, 17 Jul 2024 09:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEEC39FDD;
+	Wed, 17 Jul 2024 09:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721207193; cv=none; b=MyEd/BWUWX+iksAU2GnPbN3D0jNTOWb+815J9VYWZevIpkZV4APW3TyAA75vqzgiPwv/YbnpDKVOtj4PXyOvIOSmmZYMkgllgUnTdSuB274jTg6wdXPsyYpLs3U+2nO4HvR0xOIQUR6fxjlR0Yhx/U6O2PsTb+K8ISyIJ/1ZHS0=
+	t=1721207579; cv=none; b=EZ0bE6VRlgtPR3gN2s4Um6n/AAC5m6oiDFieT5C9gcHbdyOBrBqG9UNO5uSk6mMSXQ2cHIrq1bPlGBIbY55wKnKxU1j3+/zZZoBLddIMznwFmlyd3BYnsTRmsGHW7pkoKyyEvpXwJTe8JSdttXXxvPvVBRGM0BO0YnDx8JXuHgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721207193; c=relaxed/simple;
-	bh=aCkP98tzaPJDTU2f5HtwXZIffoFmGDNc1z4G6HVmcms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nS59uYZdz+u05UO975vY/A0ELkPbfV39+ukM9vKZbOMANnCwEgPRSIUgkq6I59GTfUP4xeCEETGw1wWmCuxraNsy+14H3yU8/fw8+asZcxq0A6+w+QPWlzXMPi3AvJ72KdW+dlH9UNIQqKrVaPwE/L0DyTdYcDHMzDRShHe3AYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RzmRRmDF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721207579; c=relaxed/simple;
+	bh=phCoYTj9KdTKXWG7P2xsi+PC5e2Zl52Z9SuZ9Navfmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZGO1wKFAWeeV6NtZLk/22l5e2+YQSWg7Tz1Sklp/Q1LLGbI5/kdax8Gp+8ayjupA6W2LZkFBm+z6lHbFXhFCsI0A1Uk6O0I7McJqpwiTF2zjIPP0A7PTifk3diC+coHFWHCkrNHd5xq6z5Fd6EcD3FuEW/Cp2BOpvt+bvguPeBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZX2yMU4A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RzmRRmDF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 646E1C32782;
-	Wed, 17 Jul 2024 09:06:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZX2yMU4A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6004EC32782;
+	Wed, 17 Jul 2024 09:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721207192;
-	bh=aCkP98tzaPJDTU2f5HtwXZIffoFmGDNc1z4G6HVmcms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RzmRRmDF4YQynkfQKi07+23BcK6iXtRGBnYGYhAAYB+5hphiTdVHwdmGegHHcBjVb
-	 1hOlmRIOY3oQTR99bWCXwYr3McfsbbhgMHHl36+Ih1eTZrZLzTB0DBpoKJr4IdUxPz
-	 yfG5oNcVDnwbjsDZkchCWq37Q1I6uVzaWwBq4nZRzprfb2Yl8dAsPOR7vyHJmdc5TP
-	 FB0L/S+t1aXo7sTeO7NvvWvrG8FzUtkms5N/rGkIjWISZjITyo0b1DM+9/5dHJBjvn
-	 dq8B1pn+7EJEdt+BH4yEaYKdG0xDpL0ab9iWI/pbtzjGXkgoJSHbIn7d0SqANbTFOV
-	 l9iYnDrRR/AmA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sU0cL-000000002zQ-2EQz;
-	Wed, 17 Jul 2024 11:06:34 +0200
-Date: Wed, 17 Jul 2024 11:06:33 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hansverk@cisco.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Milen Mitkov <quic_mmitkov@quicinc.com>,
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] media: qcom: camss: Remove use_count guard in
- stop_streaming
-Message-ID: <ZpeJmWTfZGUXsc7K@hovoldconsulting.com>
-References: <20240716-linux-next-24-07-13-camss-fixes-v2-0-e60c9f6742f2@linaro.org>
- <20240716-linux-next-24-07-13-camss-fixes-v2-1-e60c9f6742f2@linaro.org>
+	s=k20201202; t=1721207579;
+	bh=phCoYTj9KdTKXWG7P2xsi+PC5e2Zl52Z9SuZ9Navfmw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZX2yMU4AR19/U8h9qRTulF55tPIIFIT2clokImQ2FTmIxeyT2RdXTA+30/TlWA87R
+	 I5q8n9H6VGQ0rIYmLf85T8ZWvCjbVszn8k6YK8PKQ+Y9RZX9666mNoqe2h/4IB2bYE
+	 OWoWozDWha3M7jG3orBxKeRCs4O83euiVZtfgpJNt6uNH56oeeDKIZPowBpC2Ej0JQ
+	 MCtjez5mlo5jkFr351aN3Plm0MrNn36oo3VhMCZRbKrNgwwVf4hY9dQvS1k2iyKYki
+	 BpaTzvsk9Eje4S6azEgSV+SsDQ58VsjVZ5Fq681TeON9X/iNR0/+mZHDBQ2GB9jnf+
+	 /Y035VYr1Faeg==
+Message-ID: <aee6eff4-4421-4122-be97-f258cfaa9f43@kernel.org>
+Date: Wed, 17 Jul 2024 11:12:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240716-linux-next-24-07-13-camss-fixes-v2-1-e60c9f6742f2@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: sophgo,cv1800-thermal: Add
+ Sophgo CV1800 thermal
+To: Haylen Chu <heylenay@outlook.com>, Chen Wang <unicorn_wang@outlook.com>,
+ Conor Dooley <conor@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Inochi Amaoto <inochiama@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Jisheng Zhang <jszhang@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <SEYPR01MB422158B2766DA03728AD90CBD7A22@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+ <SEYPR01MB4221281561CCE511A5094D28D7A22@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+ <MA0P287MB2822445DD34485B94D22E7FFFEA22@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
+ <20240716-cloning-canopy-a6799dc7f3b9@spud>
+ <MA0P287MB28228BA5CC8B6F61A4C237E9FEA32@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
+ <SEYPR01MB4221940059E23BCD8BA75125D7A32@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <SEYPR01MB4221940059E23BCD8BA75125D7A32@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 16, 2024 at 11:13:24PM +0100, Bryan O'Donoghue wrote:
-> The use_count check was introduced so that multiple concurrent Raw Data
-> Interfaces RDIs could be driven by different virtual channels VCs on the
-> CSIPHY input driving the video pipeline.
+On 17/07/2024 07:19, Haylen Chu wrote:
+> On Wed, Jul 17, 2024 at 08:05:10AM +0800, Chen Wang wrote:
+>> Haylen, so you want a compatible that matches an actual SoC and use it
+>> everywhere?
+>>
+>> Or we can add ones for each SoC and have a fallback to cv1800.
 > 
-> This is an invalid use of use_count though as use_count pertains to the
-> number of times a video entity has been opened by user-space not the number
-> of active streams.
-> 
-> If use_count and stream-on count don't agree then stop_streaming() will
-> break as is currently the case and has become apparent when using CAMSS
-> with libcamera's released softisp 0.3.
-> 
-> The use of use_count like this is a bit hacky and right now breaks regular
-> usage of CAMSS for a single stream case. As an example the "qcam"
-> application in libcamera will fail with an -EBUSY result on stream stop and
-> cannot then subsequently be restarted.
+> I would prefer "sophgo,cv1800-thermal" and use it everywhere. I don't
+> see any difference on thermal sensors between cv18xx-series SoCs.
 
-No, stopping qcam results in the splat below, and then it cannot be
-started again and any attempts to do so fails with -EBUSY.
+Please use proper fallbacks - there is a very specific rule, repeated
+many times:
 
-> The kernel log for this fault looks like this:
-> 
-> [ 1265.509831] WARNING: CPU: 5 PID: 919 at drivers/media/common/videobuf2/videobuf2-core.c:2183 __vb2_queue_cancel+0x230/0x2c8 [videobuf2_common]
-> ...
-> [ 1265.510630] Call trace:
-> [ 1265.510636]  __vb2_queue_cancel+0x230/0x2c8 [videobuf2_common]
-> [ 1265.510648]  vb2_core_streamoff+0x24/0xcc [videobuf2_common]
-> [ 1265.510660]  vb2_ioctl_streamoff+0x5c/0xa8 [videobuf2_v4l2]
-> [ 1265.510673]  v4l_streamoff+0x24/0x30 [videodev]
-> [ 1265.510707]  __video_do_ioctl+0x190/0x3f4 [videodev]
-> [ 1265.510732]  video_usercopy+0x304/0x8c4 [videodev]
-> [ 1265.510757]  video_ioctl2+0x18/0x34 [videodev]
-> [ 1265.510782]  v4l2_ioctl+0x40/0x60 [videodev]
-> ...
-> [ 1265.510944] videobuf2_common: driver bug: stop_streaming operation is leaving buffer 0 in active state
-> [ 1265.511175] videobuf2_common: driver bug: stop_streaming operation is leaving buffer 1 in active state
-> [ 1265.511398] videobuf2_common: driver bug: stop_streaming operation is leaving buffer 2 in active st
+https://elixir.bootlin.com/linux/v6.10-rc1/source/Documentation/devicetree/bindings/writing-bindings.rst#L42
 
-Johan
+Best regards,
+Krzysztof
+
