@@ -1,262 +1,98 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7C81802CF;
-	Wed, 17 Jul 2024 13:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0341802A5
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 13:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721224076; cv=none; b=Jr6bRKOo9grdM7ZTyraHwT4rg0BvxOJXvdmKcdr0uVsXPvrVk+86k87i8nLcjeASI3Frltq1/dmycW1W+9+AaRu6R24/1bA2STON/bMIPuooKQWHF9QWCSJFA2AwrKmrXXk/qanubIhfo0b3e871gM5anDpd2+QuOlWBRJO/CpU=
+	t=1721224106; cv=none; b=NWEQtgdTSfc29KFgsiUsCMXQjz54eU2z18HTYkrRDtDStyBYFBnf+pxtnGcSgnNPsxw/LVqF75fFvxC3XMtc42jmLQFbjwdoJIjHh1czVTaSb6IZ0TpJCr+CcTA+98hqqsd7nBQ1NgUWeDVLj2csYKAZqYCIs+ymd7XU0/Ya0fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721224076; c=relaxed/simple;
-	bh=TK5CcCrQpoQwMuE1ZtzVEvqvCNUw1UJgh/OinqbaVnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aW0JRRnUVX9V4sb0jBxwWY89V0ECbUvtFUwj24a0T2eV7pVi13urGOFnXqfqQPPGQmCLNEqHZ7KCVN7/SmUnHOUsmGu0U2r667VcK1RyDVCBujIsrDMccb4MPyMmPS3bi+QW2jx7dH/BHZqfIPWEVbyBjF6seBvjo9e+sb2T7Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLm/ACed; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLm/ACed"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb05ac6b77so41059505ad.0;
-        Wed, 17 Jul 2024 06:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721224074; x=1721828874; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJiVjPpB17KuA/ZiRxr8+LU1A6kvrnOJUhTd7VpuBq0=;
-        b=dLm/ACedESzNmWSNa3Jhqr15BDf9AB3X+IV/OjK1SFIygnGrbQPpN8rBOuwvyjzULp
-         hzxogyMnRlL6tlcirQjSEw3Nmh+RdMW+JOSDOkBeTZv3QdyXWphAf4esAC7nOrOvSI6D
-         MpioZ2VAx2HQTegDPf2sItpB0dsrJ0y4Db28MW+Icj+UGmamOlJDTf7+QcflpRt+x4ks
-         JBA/ul7qdeL6gIJHLXSCr6CJYqSbfqEOUi5b1PiOKI3C2nIq5ZCZCIo2m1ARqm9BkrZO
-         vyZWbJVsrUcYdnsOWHXHioKeEET5KttO3i7R/YLZ6McgucfCkfjzUlY6Zb2d1jdJucxb
-         E8Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721224074; x=1721828874;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iJiVjPpB17KuA/ZiRxr8+LU1A6kvrnOJUhTd7VpuBq0=;
-        b=NlGldCr8OnkB6I/0A++u1+2+SmCfKCt3JcCmvjiAT1xRT9DPg1K94K+rKA7Ph0CfPY
-         K2PgbstTt1H2HfDsxjpI5gQpQeOR0Hn3sdyUiX8JZQA27fSEbRFNmuvET7EivRfoZ/vN
-         4wdLF9G4IDIrICl2ueWpebtAU6RVVurNHr5o+l2wGj5m9OEvVoj1HoDnChadYtaq049M
-         PBOjRvn3KQkc3H+ZF8+1WWaU1/trEXePaVAKj8uRVimJPmu0cvq6+1X3tmwO/37/3CU7
-         7KSW5+q+minrWfGt+tyYKGib+XbJR49ngqZqM97LzgzGPrn2bZkOT9FhAhKpKkLf1CgW
-         QtQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXZdW+ODXt+AWM98K/Jz1fbO7clM2U+IxD9jYqfT6NB432fs2TPE5FSnDD2AicYVU5HHw7RClEcOLBYl6vJ/i/6ETTAJ3xyeUYL1pxn+BFMezYh2SHLvw+Mxkb0myG+/uLrtITADlaKKfaUiKv0fhmAhpXDFVctw52Y7WR9T31M+xvGMTk
-X-Gm-Message-State: AOJu0YwoBiDgzj4oRKH5U5EAl2/9ro+YezUKmqd/Uis04JcEqh+6vabS
-	U7RKmyTkxjAO+INap5N3lLp3ev0cxb6m7oHDJ6UbdIcP6npqRsYU7Wu1iL01RPclig==
-X-Google-Smtp-Source: AGHT+IGrhV4IzgF4D3H6T1QQOr4+kF3oasP7TI0Bm4g2gxxwNjEehpGI6GoU8BEg0Nzbds/s4fcHJw==
-X-Received: by 2002:a17:902:e5c2:b0:1fb:6b94:66ee with SMTP id d9443c01a7336-1fc4e15280bmr16645435ad.26.1721224073640;
-        Wed, 17 Jul 2024 06:47:53 -0700 (PDT)
-Received: from localhost.localdomain ([115.240.194.54])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc516dasm75114775ad.288.2024.07.17.06.47.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 06:47:52 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: dt-bindings: ti,pcm512x: Convert to dtschema
-Date: Wed, 17 Jul 2024 19:17:21 +0530
-Message-ID: <20240717134729.51661-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1721224106; c=relaxed/simple;
+	bh=WNXsZ/OA49D2wMn7rHbOLQ0vu8l6tOxdGmDc0yYy8RM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gROtuJ1A/iseH4R/Z4wZKsLV/kSaP9cZ09ZX1owviBs2Gqfvoh+IXzjbZjhPOjAB32E79M47atplZkUd7b1fDhFzKMoR383QjuimamnK9NxvUWE7FYuf/1/AkJvuc7gdhv9cq8WYBpKQz4zMzGcdDneZ8XSBh3YLCQdWwPPaeSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from [2601:18c:9101:a8b6:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1sU50W-000000008VQ-1VFX;
+	Wed, 17 Jul 2024 09:47:48 -0400
+Message-ID: <93155b2ccafa43ed4845ae450451c6b8e27509cc.camel@surriel.com>
+Subject: Re: [RFC PATCH] nmi,printk: fix ABBA deadlock between nmi_backtrace
+ and dump_stack_lvl
+From: Rik van Riel <riel@surriel.com>
+To: John Ogness <john.ogness@linutronix.de>, Andrew Morton
+	 <akpm@linux-foundation.org>
+Cc: Omar Sandoval <osandov@meta.com>, linux-kernel@vger.kernel.org, Petr
+ Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, kernel-team <kernel-team@meta.com>
+Date: Wed, 17 Jul 2024 09:47:48 -0400
+In-Reply-To: <87plrcqyii.fsf@jogness.linutronix.de>
+References: <20240715232052.73eb7fb1@imladris.surriel.com>
+	 <87plrcqyii.fsf@jogness.linutronix.de>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33Aeo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdYdIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gUmllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986ogEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHVWjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE+BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTeg4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/j
+	ddPxKRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/NefO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0MmG1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tPokBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznnekoTE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44NcQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhIomYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0IpQrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkEc4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-Convert the PCM512x and TAS575x audio CODECs/amplifiers bindings to DT
-schema format. Add missing sound-dai-cells property.
+On Wed, 2024-07-17 at 09:22 +0206, John Ogness wrote:
+>=20
+> The purpose of printk_cpu_sync_get_irqsave() is to avoid having the
+> different backtraces being interleaved in the _ringbuffer_. It really
+> isn't necessary that they are printed in that context. And indeed,
+> there
+> is no guarantee that they will be printed in that context anyway.
+>=20
+> Perhaps a simple solution would be for printk_cpu_sync_get_irqsave()
+> to
+> call printk_deferred_enter/_exit. Something like the below patch.
+>=20
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+I think that would do the trick. The nmi_backtrace() printk is already
+deferred, because of the check for in_nmi() in vprintk(), and this
+change would put all the other users of printk_cpu_sync_get_irqsave()
+on the exact same footing as nmi_backtrace().
 
----
-Changes in v2:
-  - Defined pll-in and pll-out in top-level propertirs list (outside
-    conditional statements).
----
- .../devicetree/bindings/sound/pcm512x.txt     |  53 ---------
- .../devicetree/bindings/sound/ti,pcm512x.yaml | 101 ++++++++++++++++++
- 2 files changed, 101 insertions(+), 53 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/pcm512x.txt
- create mode 100644 Documentation/devicetree/bindings/sound/ti,pcm512x.yaml
+Combing through the code a little, it looks like that would remove
+the potential for this deadlock to happen again.
+>=20
+>=20
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 65c5184470f1..1a6f5aac28bf 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -315,8 +315,10 @@ extern void __printk_cpu_sync_put(void);
+> =C2=A0#define printk_cpu_sync_get_irqsave(flags)		\
+> =C2=A0	for (;;) {					\
+> =C2=A0		local_irq_save(flags);			\
+> +		printk_deferred_enter();		\
+> =C2=A0		if (__printk_cpu_sync_try_get())	\
+> =C2=A0			break;				\
+> +		printk_deferred_exit();			\
+> =C2=A0		local_irq_restore(flags);		\
+> =C2=A0		__printk_cpu_sync_wait();		\
+> =C2=A0	}
+> @@ -329,6 +331,7 @@ extern void __printk_cpu_sync_put(void);
+> =C2=A0#define printk_cpu_sync_put_irqrestore(flags)	\
+> =C2=A0	do {					\
+> =C2=A0		__printk_cpu_sync_put();	\
+> +		printk_deferred_exit();		\
+> =C2=A0		local_irq_restore(flags);	\
+> =C2=A0	} while (0)
+> =C2=A0
+>=20
 
-diff --git a/Documentation/devicetree/bindings/sound/pcm512x.txt b/Documentation/devicetree/bindings/sound/pcm512x.txt
-deleted file mode 100644
-index 47878a6df608..000000000000
---- a/Documentation/devicetree/bindings/sound/pcm512x.txt
-+++ /dev/null
-@@ -1,53 +0,0 @@
--PCM512x and TAS575x audio CODECs/amplifiers
--
--These devices support both I2C and SPI (configured with pin strapping
--on the board). The TAS575x devices only support I2C.
--
--Required properties:
--
--  - compatible : One of "ti,pcm5121", "ti,pcm5122", "ti,pcm5141",
--                 "ti,pcm5142", "ti,pcm5242", "ti,tas5754" or "ti,tas5756"
--
--  - reg : the I2C address of the device for I2C, the chip select
--          number for SPI.
--
--  - AVDD-supply, DVDD-supply, and CPVDD-supply : power supplies for the
--    device, as covered in bindings/regulator/regulator.txt
--
--Optional properties:
--
--  - clocks : A clock specifier for the clock connected as SCLK.  If this
--    is absent the device will be configured to clock from BCLK.  If pll-in
--    and pll-out are specified in addition to a clock, the device is
--    configured to accept clock input on a specified gpio pin.
--
--  - pll-in, pll-out : gpio pins used to connect the pll using <1>
--    through <6>.  The device will be configured for clock input on the
--    given pll-in pin and PLL output on the given pll-out pin.  An
--    external connection from the pll-out pin to the SCLK pin is assumed.
--    Caution: the TAS-desvices only support gpios 1,2 and 3
--
--Examples:
--
--	pcm5122: pcm5122@4c {
--		compatible = "ti,pcm5122";
--		reg = <0x4c>;
--
--		AVDD-supply = <&reg_3v3_analog>;
--		DVDD-supply = <&reg_1v8>;
--		CPVDD-supply = <&reg_3v3>;
--	};
--
--
--	pcm5142: pcm5142@4c {
--		compatible = "ti,pcm5142";
--		reg = <0x4c>;
--
--		AVDD-supply = <&reg_3v3_analog>;
--		DVDD-supply = <&reg_1v8>;
--		CPVDD-supply = <&reg_3v3>;
--
--		clocks = <&sck>;
--		pll-in = <3>;
--		pll-out = <6>;
--	};
-diff --git a/Documentation/devicetree/bindings/sound/ti,pcm512x.yaml b/Documentation/devicetree/bindings/sound/ti,pcm512x.yaml
-new file mode 100644
-index 000000000000..21ea9ff5a2bb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,pcm512x.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/ti,pcm512x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCM512x and TAS575x audio CODECs/amplifiers
-+
-+maintainers:
-+  - Animesh Agarwal <animeshagarwal28@gmail.com>
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,pcm5121
-+      - ti,pcm5122
-+      - ti,pcm5141
-+      - ti,pcm5142
-+      - ti,pcm5242
-+      - ti,tas5754
-+      - ti,tas5756
-+
-+  reg:
-+    maxItems: 1
-+
-+  AVDD-supply: true
-+
-+  DVDD-supply: true
-+
-+  CPVDD-supply: true
-+
-+  clocks:
-+    maxItems: 1
-+    description: A clock specifier for the clock connected as SCLK. If this is
-+      absent the device will be configured to clock from BCLK. If pll-in and
-+      pll-out are specified in addition to a clock, the device is configured to
-+      accept clock input on a specified gpio pin.
-+
-+  '#sound-dai-cells':
-+    const: 0
-+
-+  pll-in:
-+    description: GPIO pin used to connect the pll using <1> through <6>. The
-+      device will be configured for clock input on the given pll-in pin.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 6
-+
-+  pll-out:
-+    description: GPIO pin used to connect the pll using <1> through <6>. The
-+      device will be configured for PLL output on the given pll-out pin.  An
-+      external connection from the pll-out pin to the SCLK pin is assumed.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 6
-+
-+required:
-+  - compatible
-+  - reg
-+  - AVDD-supply
-+  - DVDD-supply
-+  - CPVDD-supply
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - ti,tas5754
-+          - ti,tas5756
-+
-+then:
-+  properties:
-+    pll-in:
-+      maximum: 3
-+
-+    pll-out:
-+      maximum: 3
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        codec@4c {
-+            compatible = "ti,pcm5142";
-+            reg = <0x4c>;
-+            AVDD-supply = <&reg_3v3_analog>;
-+            DVDD-supply = <&reg_1v8>;
-+            CPVDD-supply = <&reg_3v3>;
-+            #sound-dai-cells = <0>;
-+            clocks = <&sck>;
-+            pll-in = <3>;
-+            pll-out = <6>;
-+        };
-+    };
--- 
-2.45.2
-
+--=20
+All Rights Reversed.
