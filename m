@@ -1,93 +1,72 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D693438389
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E90210EC
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721202825; cv=none; b=XIme7E1M8nnCbbTFiTEbHN76UoizbegtriyjFmbDBzQb2/ksXTLYwT3Jyz6czGUSRzItGds72v/RXRSQEU9on6fiPdmflBrdgLdebDnQ2ppFjN/Ee5LTqr0srE5LGg9laq1r0cRvYFiNzceYi8vLSxamk/IRq8z/3SPi1ZpSE7U=
+	t=1721202844; cv=none; b=Enqa6n+FwmdnUTQSe1vkekJBXaRgeqA8nmmaO/QVj9ojPmuobqFAma0FVFuYF7HFL+QWA9JxJ/n3qSK/nCl/O8QjIyoPiG0WHNTP/GUIN9F5uQcpjQhDYKexyG97DjugFC7AD3Cvyt/4X0q82RkrBXCrDqFu3mzB2aotVes6MKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721202825; c=relaxed/simple;
-	bh=zK8ruUH07JehWZxI02iwHZoWOCkCvMR3iGwU0ScuYPg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vD8IZBsIl/1t7LmIQGMAph/sX4IGr2J6ze03Qq0K56dpIBuo0dif+hNNbrucCJnlHcWqYR9bGl2+UqIb8ry9EurwHhC7vOl6ytG1e5j6VPVCDid4uAwCQlv4IqE2xrOW3HOpy/bntLoHb9e9mzKJHNG85dMdQBYAHTWUq/QXP3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EMZOkiDj; arc=none smtp.client-ip=45.254.50.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EMZOkiDj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Mn+4O
-	ScY3XRHK3/oW8fy9rYRq32M1Cn4hjrpDWV3OS4=; b=EMZOkiDjvI4cASb49uHnK
-	E3PYiy/9fs7dix163PMbuAG+nu8ogaUxJoOZQyWgSA3nIADEZqczK01SQzF7NmcQ
-	mQ58D9GHy82U7UMj2JAXlbAv28panIPCY68n51TehLMcWyde2iZbBt8didDlEWYX
-	RRoMca36gnJzkmnqPi4hdU=
-Received: from localhost.localdomain (unknown [223.166.237.119])
-	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wD3f3ddeJdmTsbxAA--.36565S4;
-	Wed, 17 Jul 2024 15:53:17 +0800 (CST)
-From: Ping Gan <jacky_gam_2001@163.com>
-To: hare@suse.de,
-	sagi@grimberg.me,
-	hch@lst.de,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: ping.gan@dell.com,
-	Ping Gan <jacky_gam_2001@163.com>
-Subject: [PATCH 2/2] nvmet-rdma:  add unbound_wq support for nvmet-rdma
-Date: Wed, 17 Jul 2024 15:52:08 +0800
-Message-Id: <20240717075208.87324-3-jacky_gam_2001@163.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20240717075208.87324-1-jacky_gam_2001@163.com>
-References: <20240717075208.87324-1-jacky_gam_2001@163.com>
+	s=arc-20240116; t=1721202844; c=relaxed/simple;
+	bh=HTphJf/vtkaGyd9Fm9S2QENKL/UOHYmbtv2ZJ7xTSo0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Z04ZjLw4VT3MH+1qwyPwB6na9G9hlYkL2caNYkgZNd8UJgz0i5Qb0teXkjEHzA+zjvYbhwEFWaqSI64DgRKVXMhi1pl5Cd2eHKbvP6/U2ZFzoVz9ZwmMKtSimCIYHNHOQ/dVFfa5ntUDi7i4E+rPcfUFedKbwLy4Bm3G7aCrAbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7fb15d52c5cso110820539f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 00:54:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721202842; x=1721807642;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=459Wh7MzFQMVmI1CINvASqTLvP2mJWqT1PrLK1j8cWc=;
+        b=h27Uco3EtKI/X37uly+FEGsLq2RvG/aUPjy3+KOCm+IcvTNeNdqnQIpNkpumGUBQ2i
+         6cLi6RqEXxOuhslb0/4xSYYbp83eUIzKdQUt4+FE4gVMNkuD57Xg6u8oKtDOqFz2zDLu
+         +50UN79loE+Y7CLRavUpZiKlusARYCi3aiX+6q/i/EZt5PDff7t2csxHdt0NO+VQqygR
+         K/Y68BjJIQ2jmEkcc7U+6BYmTLaXzs67Ug5VSXJPgMke84cjiKLhc6RL9YrZIVp/h92N
+         gIZjdJCQJH+C+CF041SqaoJ45GbnFCojN/GqIz2qCEHF8HVvN9ZBLCjX/QvVqtnAmsSC
+         5fkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUievm8GDXJO1jsUCQcd0eRoSLILHZbSUUJMQ6W5lOpgF7dN3q3YlpwqUihWAJOAHmfz2MHuGIFxVgs1F6PioRO7ziw5yf2AB7TrCX
+X-Gm-Message-State: AOJu0Yzb4lubb5uJswxGMosHXMMNxixplsPJKfEyc94pM20mSfgp6eOl
+	VFxf4acRngRy8o/9oiZzJbpirCoVv4YPqWVp/YUmTFusqVk7d4tLsiACuu9URCYQT0LY5tY7jQg
+	1Dm3Nxxr7F4riU8wGoz0el3chL9yMmZpg6U4QcLAgE8YDiTj9sXfe+38=
+X-Google-Smtp-Source: AGHT+IFP0S3xxxWJCsw8bo32m8dJkh7cnYgUB+8eS65bkcveoWdI88X6R/Atwy8CYDB+GwzBKKs6Axosp7FG7bap07PJ/NNBpaja
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3f3ddeJdmTsbxAA--.36565S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CryDAw17XryruF45AFyDAwb_yoW8Wr1rp3
-	95CF17Z393KrW2ya98KF4DXan3u3yfuw4UCas3t34UWFnaqrZ3X3WDtry29rW8GF97Jr4x
-	Ja1DXr4kuF45WwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zirWrJUUUUU=
-X-CM-SenderInfo: 5mdfy55bjdzsisqqiqqrwthudrp/1tbiEA8fKWXAl+IiRAAAsf
+X-Received: by 2002:a05:6638:8717:b0:4b9:6f13:fb1a with SMTP id
+ 8926c6da1cb9f-4c215cc8f41mr33366173.4.1721202841758; Wed, 17 Jul 2024
+ 00:54:01 -0700 (PDT)
+Date: Wed, 17 Jul 2024 00:54:01 -0700
+In-Reply-To: <62834558-1286-4af2-ab6b-7d1ef309c793@paragon-software.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f83e76061d6cc375@google.com>
+Subject: Re: [syzbot] [ntfs3?] BUG: unable to handle kernel NULL pointer
+ dereference in attr_make_nonresident
+From: syzbot <syzbot+5b6ed16da1077f45bc8e@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-To define a module parameter use_unbound_wq to enable unbound
-workqueue to handle RDMA's IO of CQ.
+Hello,
 
-Signed-off-by: jackygam2001 <jacky_gam_2001@163.com>
----
- drivers/nvme/target/rdma.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-index 1eff8ca6a5f1..bfd7106316bc 100644
---- a/drivers/nvme/target/rdma.c
-+++ b/drivers/nvme/target/rdma.c
-@@ -155,6 +155,10 @@ static int nvmet_rdma_srq_size = 1024;
- module_param_cb(srq_size, &srq_size_ops, &nvmet_rdma_srq_size, 0644);
- MODULE_PARM_DESC(srq_size, "set Shared Receive Queue (SRQ) size, should >= 256 (default: 1024)");
- 
-+static bool use_unbound_wq;
-+module_param(use_unbound_wq, bool, 0444);
-+MODULE_PARM_DESC(use_unbound_wq, "use unbound workqueue to handle IO request: Default false");
-+
- static DEFINE_IDA(nvmet_rdma_queue_ida);
- static LIST_HEAD(nvmet_rdma_queue_list);
- static DEFINE_MUTEX(nvmet_rdma_queue_mutex);
-@@ -1259,7 +1263,11 @@ static int nvmet_rdma_create_queue_ib(struct nvmet_rdma_queue *queue)
- 	 */
- 	nr_cqe = queue->recv_queue_size + 2 * queue->send_queue_size;
- 
--	queue->cq = ib_cq_pool_get(ndev->device, nr_cqe + 1,
-+	if (use_unbound_wq)
-+		queue->cq = ib_cq_pool_get(ndev->device, nr_cqe + 1,
-+				   queue->comp_vector, IB_POLL_UNBOUND_WORKQUEUE);
-+	else
-+		queue->cq = ib_cq_pool_get(ndev->device, nr_cqe + 1,
- 				   queue->comp_vector, IB_POLL_WORKQUEUE);
- 	if (IS_ERR(queue->cq)) {
- 		ret = PTR_ERR(queue->cq);
--- 
-2.26.2
+Reported-and-tested-by: syzbot+5b6ed16da1077f45bc8e@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         562d060b ntfs3: Convert attr_make_nonresident to use a..
+git tree:       https://github.com/Paragon-Software-Group/linux-ntfs3.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=16d54f31980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bc26ad11927ab7fa
+dashboard link: https://syzkaller.appspot.com/bug?extid=5b6ed16da1077f45bc8e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
