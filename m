@@ -1,158 +1,339 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDBC181CE0
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748321CF8A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721233932; cv=none; b=mdsRNeRkxH+N7lU6zC/F+cRVQ9YhUc9SS1ViylkAIs7uTS0p+e6jdrkar64ZNplnmU2MqTkw/UqiWEqkObbbda1LO+do6eUDlVNylcXWxfYKNpvxNvtqXDeK/kx/sAl4UZ1uQD0n7OJHylA4A2au1SadmF2XNjL+5Y6hDtyLflk=
+	t=1721233950; cv=none; b=UZgDeTHHk6MJPTzeHf6KfRyapFMoGEa9BAEzY6oHBWD7pUkmEaTRVM4axhK5tr6xXEd+btoF2lAVPMauKQYzQmyWkn7n9RBSuasPHJpkT62yehiFnc2ZiqGmwZvv9h8D/96zQyrRw47IlDHeMwtB7BYjfQRLrpS9mbTNvKgkTDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721233932; c=relaxed/simple;
-	bh=73K2xRtqY3Nln6+UM0JEOaTcIjOkCtD5pqhnOfr5LQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tTOAxeTJruwyGKE7hw+rI7JZomIc8oeZ/4Se5AWct2QU9x0zFAbNf7HL/L1wI4kY61Rq9emCBkdm0cO/vlY3EDogMFbhj/hJHVPuOmC7EqEgyEzGhufraTFkAkJS1dHsi4prjsXU92vfBuP5PXakbGSjrS769mu0DqpogM0p65c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CksABRJy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721233950; c=relaxed/simple;
+	bh=NtEQHw6icc+eZOOGYuBEMREz5cq3XA+8Vsjrg/wANXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gOsiVEkcWPqubC9e+uNptLOn9wGIIeg4B11APw0EISLK1ZSgtmhCg3hGz+XScthnq6Tsn2rol/7Jcau05BNe/CSDQnzQCzcJzQiqewyRZRT09OwR/fh+5OUKM8mvjIwK+QD6fMQS2+FFI2yCQO7Ka8ylcnnYrBDtdqPpTbU+O0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dcILhm9T; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CksABRJy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721233930;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hnxAS6PAMG/JPjT49d2/ZBaQs0kLMgqkYQmz0i2NWDQ=;
-	b=CksABRJyBUHKYNAph+HqXCQFz+aAqCBrsOaM+tNmRJY4tYEXaEUWV6DRvVIm+rPPptV+4L
-	e6rQ3epvL1H2XK1USPQR+aMke2d+D/6Czg7RZZi2iKq5BV7ypstexznr+H5TRkrxayxQqL
-	LeEBSWpUCsT9kqPJRh3XGFwSKqbLBHM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-271-uh0herbpNE6hA3A-5Fq16Q-1; Wed, 17 Jul 2024 12:32:08 -0400
-X-MC-Unique: uh0herbpNE6hA3A-5Fq16Q-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-426624f4ce3so46237035e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:32:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dcILhm9T"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a77d85f7fa3so184488166b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:32:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721233947; x=1721838747; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=n8xVRfMJ7abYq0IMMhEbnwpXyZd3kKKex3fs0rUVCOA=;
+        b=dcILhm9TGFdkXGjdq50vUMbAiNHriBhWgZixBDXvv1fafwROoDwomGgyOMDCJQhrhX
+         cRlCy0VrvQUgewoGFceQ4ZwXDd/945oRxh2Y5FgLpaB6Y9yFR4cYxlf7T4HRCluJDgDt
+         wjpp4/dt3nI93np0ZkhlnsoF3WNDhVURQIbgAEMViBgV0JxP3zS4eU29bGFFa6AmfjnT
+         UYVGj9OCb0/sJIzKstvw8ClEYMDvWWN5bgihVhSKoZ9NLSgLT4Ekqr1GFfQJPc9xq2cY
+         F/Ezt9KWp3tNUOLyCyu+NQWAtAP7AkylLRk8qu9YZ6GvJq+m3+kxCsIorfmQfxabV6Db
+         aJ4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721233928; x=1721838728;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hnxAS6PAMG/JPjT49d2/ZBaQs0kLMgqkYQmz0i2NWDQ=;
-        b=AU0c3d+qLl/BbH10Ve4hAorX5wuVLh9DLO2wBbwLzLqwBQLUD49yWCh0JAsnW32U2s
-         3AUraRUVc8t5WqnV33HqevksYp573ALY7nfZ2J5XaRROsZ4bqoBltt8+n0syDiDsHtut
-         yw6PG4SPixX5kLt7iAe4ZRuDVuXLYq7np9f4WbJIY6ejYhs8/H5K82R6woO1NiH9BX7M
-         gLyWma3FyquO2bNan4X5BKPAyVVM/iEIispirgWZUhQC+GkkgJDYubOUyRactVW88Fz4
-         xnqKer+w81sB5eRLKMHlOFjQIyrX5sV0VDbce/DBGGRdiiUdll+W35/+4N6ULAK77TZv
-         sO/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVHGKe7jwmS/s3FTz6rT9R4SfbNPEDJ/w+I+y57IEB9NZumEfrpDeGLx+jifZmDnIuRNsqDnKJxG9QjMh9ft7zgUTMx36MfxIUb2ZZU
-X-Gm-Message-State: AOJu0Yxfgwin3CNKm5vt2EESd6KOdQrsDbrCcVMaDW1PcjmFFL7Qk6k+
-	pyymTBHeKaF4vY/8g0wH/x1nQn0CDZcK4K29v2T1s4VwTt6ZB7D2ZR8Mzwp3uBMdL30/E+KaUcC
-	NKVQWSSMP1smBiGsYlTML9WhZmWxA0Wz8s8cjvE/t7Mb27FGxL1/opSdpndMHaA==
-X-Received: by 2002:a05:600c:4f08:b0:426:6320:225e with SMTP id 5b1f17b1804b1-427c2ca5745mr19169005e9.6.1721233927774;
-        Wed, 17 Jul 2024 09:32:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHaAfkTbUnckuX3Xe6WknrcYTW6KiO7jFjSDLFgKDCcj/AhDeEf14NW6t9EhsKqWa2OmfzhDw==
-X-Received: by 2002:a05:600c:4f08:b0:426:6320:225e with SMTP id 5b1f17b1804b1-427c2ca5745mr19168685e9.6.1721233927313;
-        Wed, 17 Jul 2024 09:32:07 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c714:c00:b08b:a871:ce99:dfde? (p200300cbc7140c00b08ba871ce99dfde.dip0.t-ipconnect.de. [2003:cb:c714:c00:b08b:a871:ce99:dfde])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427c7859125sm3548635e9.43.2024.07.17.09.32.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 09:32:06 -0700 (PDT)
-Message-ID: <1dc7cf79-4c01-4b1e-be33-49eb2bdb9238@redhat.com>
-Date: Wed, 17 Jul 2024 18:32:05 +0200
+        d=1e100.net; s=20230601; t=1721233947; x=1721838747;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n8xVRfMJ7abYq0IMMhEbnwpXyZd3kKKex3fs0rUVCOA=;
+        b=vBLVGZJ3jEmhfqcLhrf2GM3CPb6S95LpjopUZy9wsc6AKE2cb7e+837t0PfVwKHpIb
+         1ZEZdOzE3fDL5Zcsi3lXvXRe+K3dKEn6DUHfAbVlzegjfUcPz8x+zzylVfL8cQAbSj+l
+         zlcrxOAm6lI9mxrVEfCPFPZMgXuN9IfNgKJyWS7bmn+oCCuZL5okpsoAiqhrfALcvgfN
+         OjzAJAny12s/0+aU3mUr4a6r/EtJPIwxCsPquAro6FBJ3aJBvRYyfSFbBg6EHnLHHHHd
+         kSsB+ff4vRlRmmTarUssFYCOmkYgZAncrSp/54dmeQMjCueVRQtqis4P5TzhT+1MIrw5
+         yFvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhqKFTQFY4LORCrz8MC1Mr+O2XrUX8zqLyzgvSMuXKouIvBItoCAiRQo6FyrpZZKWiI8VhVAQvWvVpNIuUiWpUUYNn6n5JqFpAXFsx
+X-Gm-Message-State: AOJu0Ywxofgcrjwmpkq1GzmtctHr4SuorADew6GxxiQ/dbCYFANAFnU0
+	mAYUC/fgTyT3aRUe0HQKYftRIez1aYbOzqslNjMMY9EnPujEGdKMpgqSKR2wlqcoFNIc40ibdK6
+	2VBIvA9+0AaGzEF2olKjE5N5582RiZ+2HcwhX
+X-Google-Smtp-Source: AGHT+IHG5R+9vUC0pxg3o2S6hutLWKPft4fiUKe+vWmBY5Soqw+9Q4/c+7zXX5r5yN16r1FkY4xe/DpCTZx2CcRMxrk=
+X-Received: by 2002:a17:906:c0c7:b0:a77:cc93:ae02 with SMTP id
+ a640c23a62f3a-a7a0f75e206mr15786166b.28.1721233946078; Wed, 17 Jul 2024
+ 09:32:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/x86/pat: Only untrack the pfn range if unmap region
-To: Peter Xu <peterx@redhat.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Al Viro <viro@zeniv.linux.org.uk>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "Kirill A . Shutemov"
- <kirill@shutemov.name>, "x86@kernel.org" <x86@kernel.org>,
- "Tian, Kevin" <kevin.tian@intel.com>, Pei Li <peili.dev@gmail.com>,
- David Wang <00107082@163.com>, Bert Karwatzki <spasswolf@web.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>
-References: <20240712144244.3090089-1-peterx@redhat.com>
- <ZpTLCscCFGtsrEjC@yzhao56-desk> <ZpUyZ9bH1-f5y5XG@x1n>
- <ZpY5uU2NyOoMVu5A@yzhao56-desk> <ZpbDnoQxGubegtu-@x1n>
- <116ca902-103d-47cb-baf0-905983baf9bb@redhat.com> <Zpfxm_Nj9ULA0Tx6@x1n>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Zpfxm_Nj9ULA0Tx6@x1n>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <172070450139.2992819.13210624094367257881.stgit@firesoul>
+ <CAJD7tkYFwz_=kxCk-Tp4QfwKgK0C26+QzZQvbVxkAx8m9CLSFg@mail.gmail.com> <8c123882-a5c5-409a-938b-cb5aec9b9ab5@kernel.org>
+In-Reply-To: <8c123882-a5c5-409a-938b-cb5aec9b9ab5@kernel.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Wed, 17 Jul 2024 09:31:48 -0700
+Message-ID: <CAJD7tkbFPt-eTHkqtLxuOoV59eaqauodz008btEECT--x3VcBA@mail.gmail.com>
+Subject: Re: [PATCH V7 1/2] cgroup/rstat: Avoid thundering herd problem by
+ kswapd across NUMA nodes
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: tj@kernel.org, cgroups@vger.kernel.org, shakeel.butt@linux.dev, 
+	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
+	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 17.07.24 18:30, Peter Xu wrote:
-> On Wed, Jul 17, 2024 at 04:17:12PM +0200, David Hildenbrand wrote:
->> I'd be curious how a previous truncation on a file can tear down a PFNMAP
->> mapping -- and if there are simple ways to forbid that (if possible).
-> 
-> Unfortunately, forbiding it may not work for vfio, as vfio would like to
-> allow none (or partial) mapping on the bars.. at least so far that's the
-> plan.
+[..]
+>
+> I agree that description should be updated as patch have evolved, and
+> you suggestions make sense, thanks.
+>
+> But I'm not sure we are finished evolving this patch, because the scheme
+> of allowing all sub-cgroups to become the ongoing flusher (and only
+> avoiding lock-spinning when cgroup_is_descendant), is causing issues in
+> production.
 
-I think vfio should handle that memtype reservation manually, as you 
-proposed. So that shouldn't block that IIUC.
+Sure, I just wanted to point out the the commit log should be updated
+going forward, not implying that we are done here :)
 
--- 
-Cheers,
+>
+> We are using cadvisor in production for collecting metrics, which walks
+> all the cgroups reading stat files e.g. io.stat, cpu.stat , memory.stat
+> (doing 3 flushes of same cgroup in short timespan), but individual
+> cgroups don't overlap much to benefit from ongoing_flusher scheme.
+>
+> Below is (1 sec) production data, where cadvisor and kswapd collide:
+>
+>  > 02:01:33 @ongoing_flusher_cnt[kworker/u395:14]: 1
+>  > @ongoing_flusher_cnt[kswapd5]: 3
+>  > @ongoing_flusher_cnt[kswapd7]: 4
+>  > @ongoing_flusher_cnt[kswapd6]: 4
+>  > @ongoing_flusher_cnt[kswapd8]: 4
+>  > @ongoing_flusher_cnt[kswapd9]: 5
+>  > @ongoing_flusher_cnt[kswapd2]: 5
+>  > @ongoing_flusher_cnt[kswapd10]: 5
+>  > @ongoing_flusher_cnt[kswapd3]: 5
+>  > @ongoing_flusher_cnt[kswapd11]: 5
+>  > @ongoing_flusher_cnt[kswapd0]: 5
+>  > @ongoing_flusher_cnt[kswapd4]: 6
+>  > @ongoing_flusher_cnt[kswapd1]: 7
+>  > @ongoing_flusher_cnt[cadvisor]: 9
+>
+> For cadvisor ongoing_flusher only helps 9 times to avoid flush.
+>
+>  > @ongoing_flusher_cnt[handled_race]: 18
+>  > @ongoing_flusher_cnt[all]: 61
+>
+> Our ongoing_flusher scheme detects overlap and avoid 61 out of 462 flushes.
+>
+>  > @cnt[tracepoint:cgroup:cgroup_ongoing_flusher_wait]: 61
+>  > @cnt[kfunc:vmlinux:cgroup_rstat_flush_locked]: 462
+>  > @cnt[tracepoint:cgroup:cgroup_rstat_lock_contended]: 9032
+>
+> This is bad: Lock is contended 9032 time within this 1 sec period.
+> Below, lock_contended cases is captured in more detail.
+>
+>  > @cnt[tracepoint:cgroup:cgroup_rstat_locked]: 9435
+>  > @lock_contended[normal, 4]: 1
+>  > @lock_contended[normal, 1]: 2
+>  > @lock_contended[normal, 3]: 6
+>  > @lock_contended[normal, 2]: 15
+>  > @lock_contended[yield, 4]: 49
+>  > @lock_contended[after_obtaining_lock, 4]: 49
+>  > @lock_contended[normal, 0]: 59
+>
+> The "normal" lock_contended for level 0,
+> meaning the cgroup root is contended 59 times within this 1 sec period.
+>
+>  > @lock_contended[after_obtaining_lock, 1]: 117
+>  > @lock_contended[yield, 1]: 118
+>  > @lock_contended[yield, 3]: 258
+>  > @lock_contended[after_obtaining_lock, 3]: 258
+>  > @lock_contended[after_obtaining_lock, 2]: 946
+>  > @lock_contended[yield, 2]: 946
+>
+> Lock contention for 'yielded' case for level 2.
+> Goes crazy with 946/sec.
+>
+>  > @lock_contended[yield, 0]: 7579
+>
+> Lock contention for 'yielded' case for level 0, the root.
+> Is really crazy with 7579/sec lock spin cases.
+>
+>  > @lock_contended[after_obtaining_lock, 0]: 7579
+>
+>
+> IMHO this shows that, due to lock yielding, the scheme of
+> ongoing_flusher for sub-trees only cause issues.
 
-David / dhildenb
+Just to make sure I understand correctly, allowing non-root to become
+ongoing_flushers is problematic because we only support a single
+ongoing_flusher, so if we have a subsequent root flush, it won't be
+the ongoing_flusher and we won't benefit from skipping other flushes.
+Correct?
 
+I honestly think the problem here is not that we support
+ongoing_flusher for subtrees, which imo is nice to have at a low
+additional cost, and does have its benefits (see below). I think the
+problem is that lock yielding means that we can have multiple ongoing
+flushers, while the current scheme only records one.
+
+What I think we should be doing is either supporting multiple
+ongoing_flushers (by replacing the global variable with a per-cgroup
+flag, perhaps), or biting the bullet and start using a mutex to drop
+lock yielding. If there aren't any concerns beyond priority inversion
+(raised by Shakeel), maybe adding a mutex_lock_timeout() variant as I
+suggested could fix this issue (and also put a bound on the flushing
+latency in general)?
+
+(I suppose the latter is preferrable)
+
+>
+> IMHO we should go back to only doing ongoing_flusher for root-cgroup.
+> There is really low chance of sub-trees flushes being concurrent enough
+> to benefit from this, and it cause issues and needs (ugly) race handling.
+>
+> Further more sub-tree flushing doesn't take as long time as level 0
+> flushing, which further lower the chance of concurrent flushes.
+
+I agree that the race handling is not pretty, and we can try to
+improve the implementation or handle the race in other ways. However,
+I think that skipping flushes for subtrees is valuable. I am not sure
+about the cgroup arrangement in your use case, but we do have cgroups
+with a lot of tasks in them (and/or child cgroups). If there is memory
+pressure (or hit the cgroup limit), they all may go into direct
+reclaim concurrently, so skipping flushes could really be beneficial.
+
+Of course, if the difference in complexity is not justified, we can go
+back to only supporting root cgroups for ongoing_flusher for now. But
+as I mentioned in the v4 email thread, some of the complexity may
+still remain anyway as we have multiple root cgroups in v1.
+
+>
+> Let's get some quick data on flush times from production, to support my
+> claim:
+
+Thanks for the data. I agree that in general root flushes will be a
+lot more expensive than subtree flushes, but keep in mind that the
+data may look really different depends on the cgroup setup. As I
+mentioned, I think we should still support subtree flushes unless the
+difference in complexity is not justified.
+
+>
+> The bpftrace onliner:
+>   sudo bpftrace -e '
+>    tracepoint:cgroup:cgroup_rstat_locked {
+>     if (args->cpu == -1) { @start[tid]=nsecs; }
+>     @cnt[probe]=count();
+>     if (args->contended) {
+>       @lock_contended["after_obtaining_lock", args->level]=count();
+>     }}
+>    tracepoint:cgroup:cgroup_rstat_unlock {
+>     if (args->cpu == -1) {
+>      $now=nsecs; $start=@start[tid]; $diff=$now-$start;
+>      @locked_time_level[args->level]=hist($diff);
+>     }
+>     @cnt[probe]=count()}
+>    kfunc:cgroup_rstat_flush_locked {@cnt[probe]=count()}
+>    interval:s:1 {time("%H:%M:%S ");
+>     print(@cnt);
+>     print(@lock_contended);
+>     print(@locked_time_level);
+>     clear (@cnt);
+>     clear (@lock_contended); }
+>    END {clear(@start)}'
+>
+> Time below is in nanosec.
+>
+> @locked_time_level[0]:
+> [4M, 8M)             623 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+>       |
+> [8M, 16M)            860
+> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+> [16M, 32M)           295 |@@@@@@@@@@@@@@@@@
+>       |
+> [32M, 64M)           275 |@@@@@@@@@@@@@@@@
+>       |
+>
+>
+> @locked_time_level[1]:
+> [4K, 8K)               6 |@@@@
+>       |
+> [8K, 16K)             65
+> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+> [16K, 32K)            52 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+>       |
+> [32K, 64K)            23 |@@@@@@@@@@@@@@@@@@
+>       |
+> [64K, 128K)           15 |@@@@@@@@@@@@
+>       |
+> [128K, 256K)          10 |@@@@@@@@
+>       |
+> [256K, 512K)           6 |@@@@
+>       |
+> [512K, 1M)            15 |@@@@@@@@@@@@
+>       |
+> [1M, 2M)               2 |@
+>       |
+> [2M, 4M)              14 |@@@@@@@@@@@
+>       |
+> [4M, 8M)               6 |@@@@
+>       |
+> [8M, 16M)              7 |@@@@@
+>       |
+> [16M, 32M)             1 |
+>       |
+>
+>
+> @locked_time_level[2]:
+> [2K, 4K)               1 |
+>       |
+> [4K, 8K)             160 |@@@@@@@@@
+>       |
+> [8K, 16K)            733 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+>       |
+> [16K, 32K)           901
+> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+> [32K, 64K)           191 |@@@@@@@@@@@
+>       |
+> [64K, 128K)          115 |@@@@@@
+>       |
+> [128K, 256K)          61 |@@@
+>       |
+> [256K, 512K)          70 |@@@@
+>       |
+> [512K, 1M)            59 |@@@
+>       |
+> [1M, 2M)              27 |@
+>       |
+> [2M, 4M)               9 |
+>       |
+>
+>
+> @locked_time_level[3]:
+> [1K, 2K)               3 |
+>       |
+> [2K, 4K)               2 |
+>       |
+> [4K, 8K)               5 |
+>       |
+> [8K, 16K)            147 |@@@@@@
+>       |
+> [16K, 32K)          1222
+> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+> [32K, 64K)           266 |@@@@@@@@@@@
+>       |
+> [64K, 128K)          199 |@@@@@@@@
+>       |
+> [128K, 256K)         146 |@@@@@@
+>       |
+> [256K, 512K)         124 |@@@@@
+>       |
+> [512K, 1M)            17 |
+>       |
+> [1M, 2M)               0 |
+>       |
+> [2M, 4M)               0 |
+>       |
+> [4M, 8M)               1 |
+>       |
+>
+>
+> @locked_time_level[4]:
+> [4K, 8K)               2 |@@
+>       |
+> [8K, 16K)             17 |@@@@@@@@@@@@@@@@@@@@@@
+>       |
+> [16K, 32K)            40
+> |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+> [32K, 64K)             4 |@@@@@
+>       |
+>
+> --Jesper
+>
