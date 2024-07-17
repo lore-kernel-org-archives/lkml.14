@@ -1,366 +1,120 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80EA181B8E
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EF7181BBA
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721228618; cv=none; b=RimY3OqviTVPmaO/+KAkJ5UP7bosTsHgL6Inpwg/olneOLpTUtU2FCSrQ1Ah4TkbtJGZ7igwK69rR6qFhfvivA6YND29W49u2bfO3oiQ0wLKDMShbIPlEus1vAzxq64E6XWM1cX1eFIifzYVItvXij84rHrJu+5hpYpK0o6PjUE=
+	t=1721228621; cv=none; b=gTifhDZ+vW1i7hrzmmd6yHRJoLwHqJhna/AyGFE7LRTrPzYlnFpgA2Ab+uWJqg7FEyoNgejo83XjKeDFwvcC6RUi8VsSnw86PvOtZ0Oma4yAf9+/u8oXO655qNgYoxNWmmlOsN7qPf12K6b6j0xoS+yuPxJxj2jQq511Z5d86zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721228618; c=relaxed/simple;
-	bh=9/txrxmvcZD0hOFDXVug4xU4avWggkx/guB2o+3YzpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G3A3xo42dI+PS6Q0mz3h8zRyEH6HMsmfnTCF2E/HdMREkjt+Aoa/l9PcfHl+FjYG+Y7dZYOPBRuwJPxvUPV1KIRy9a0B5XTe+Wni/X9yRE1EjFZvWRH1zEXD8w2tkihSVTw+yStQKLRnpVbTUuLR6/tHHzBZ0qoTTmq/7dqOATU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M44AQcym; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721228621; c=relaxed/simple;
+	bh=R+9iyAoZdzjTKBpBg1pnk8v4vy/Ji0I9UnK5On22/Z0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OsCpGasejRbtDnz9DxLMgvPBYoF+w41EEy40bQsBJExvOKSikbt8PlN22AfHNHSC0Bh59DybUazJGXHMR0nay8U7k+XoGy5yNHWbpyVvqtIXoFKBgAvm5d8PXnbcmVdnopcc2Gj/P2QlyFGzlAdNDSCm8l/RimVv9ByYQWB8O4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KuKjkDU2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M44AQcym"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70af8062039so4818426b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:03:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721228616; x=1721833416; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZcoK7o2Rnp82wtUESvQoFUIPlNvtP5r+CD4LpyTcl6c=;
-        b=M44AQcymApOjmL/ylKZ9JixhxccTdcLH6qusXgpa9ZE+ppvuGsNsUpkM3BWMehAwWQ
-         +uxWUdPMN29Ac7uLnxWITF1PZJIZ4uOeqvoPV3FMODZvwyQRHNUTn99I7NuTAv8/UclP
-         VvP2QBLZfhk127OHAW/uUrUW181eGYx0AmYiyXOsPvf7Z4OagQIB83asQGIIRUAVwUoD
-         bpcZwaG/oQkJmLmABEbLAPFHj+YnnnAwz/eVAF0AoaMkklK4btztnUsBdkgQv8kvuHHE
-         hfzFPos+Svn3XFL4eWTginZd9cgZ5p3ACmyz/Qx4xULEM9THOrSquzf8rt8zYUufsNA6
-         85hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721228616; x=1721833416;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZcoK7o2Rnp82wtUESvQoFUIPlNvtP5r+CD4LpyTcl6c=;
-        b=RFLWxeZeIhCYdgpRnhM9D9AB8BGZol3BY8PXkUoK1JTU8CSUdSb2kyxfuMbJOBeHeM
-         Jo/qU++r0hmIOkRnU0os/ttrmpx8i00wefc/y31mph8X1tdeqRGo6LTBVKGZ3rO9SBIp
-         r8/Vxseg9pu5gj6Tk6t3836pZ7VnhT/RZhT0h2XdB3i7sH+YVcCTu4qn7lgyHABpbH06
-         EafQIy7DM9HnuSGbdUOPrTjHg1Vb40kcOxgC5xXd/3ON37YV481KmqtwXvcA1VzZvuRL
-         uYizULLQNSelBYZAw8yANWQy77PZ0shJhNu4zf8XN4JwJbzE8Sf5Y57M9akos1D89rg4
-         6SaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjqr1EOIdTRTX63HlxqPxNdyFautV2l4HgjZ9DCm8PQkfkSFi3CuDT8xtc8Q1ncyOEIfowXuCwEbKAZXdJ2yvDvBsSnI2mVaef/XMd
-X-Gm-Message-State: AOJu0YylQ2V0uMWnWMwriTADBPD4EOLq9JaNoAga5B3qKFZrPlVt/TCo
-	xCcgs75C4pITWpt7cQqRTtsLHEktmfpsHejJQDjVBnaWH5RDbP4lzAQCmQsL514iYC+RHZgj224
-	KwWynEYtus3wBNS0f5nnmY5wLM+ZJHHue15KNlQ==
-X-Google-Smtp-Source: AGHT+IEn4CYlMMrmMtO8qc932JSOdkJ9HWLDn0QtopT8e3V63WWfZI6hWPy//Bcf5GHX6sEXZatG859VztAE1c9JLX4=
-X-Received: by 2002:a05:6a00:889:b0:705:9ddb:db6b with SMTP id
- d2e1a72fcca58-70ce4fa4a3bmr2041499b3a.13.1721228615834; Wed, 17 Jul 2024
- 08:03:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KuKjkDU2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89045C32782;
+	Wed, 17 Jul 2024 15:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1721228621;
+	bh=R+9iyAoZdzjTKBpBg1pnk8v4vy/Ji0I9UnK5On22/Z0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KuKjkDU2UuSidCkTfSxuXl7fhpob9ajwSL8dmB8cfN7KOfty+d37s6q7YJXfZtdSJ
+	 +j0L/zGAkCsDL3mdo+zGtgONhUiK7eiCPCWaymgepJSPiJZoDDSxGKPmcjUhv1lJt0
+	 QfK3IgfIP4ayyqfW/JWHRfCvsyaxkBV1R40upswo=
+Date: Wed, 17 Jul 2024 17:03:37 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Benjamin Thery <benjamin.thery@bull.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Greg Kroah-Hartman <gregkh@suse.de>, linux-kernel@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH] driver core: Fix error handling in driver API
+ device_rename()
+Message-ID: <2024071756-uproot-relieve-6e27@gregkh>
+References: <20240717-device_rename_fix-v1-1-54d85024518f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240712102029.3697965-1-james.clark@linaro.org> <20240712102029.3697965-15-james.clark@linaro.org>
-In-Reply-To: <20240712102029.3697965-15-james.clark@linaro.org>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Wed, 17 Jul 2024 16:03:24 +0100
-Message-ID: <CAJ9a7VguCUAnLsaGevnyrAk2JJO1eSDBMn7-geiNZi+TaLvgUA@mail.gmail.com>
-Subject: Re: [PATCH v5 14/17] coresight: Use per-sink trace ID maps for Perf sessions
-To: James Clark <james.clark@linaro.org>
-Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com, 
-	gankulkarni@os.amperecomputing.com, leo.yan@linux.dev, 
-	anshuman.khandual@arm.com, James Clark <james.clark@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240717-device_rename_fix-v1-1-54d85024518f@quicinc.com>
 
-On Fri, 12 Jul 2024 at 11:23, James Clark <james.clark@linaro.org> wrote:
->
-> From: James Clark <james.clark@arm.com>
->
-> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
-> as long as there are fewer than that many ETMs connected to each sink.
->
-> Each sink owns its own trace ID map, and any Perf session connecting to
-> that sink will allocate from it, even if the sink is currently in use by
-> other users. This is similar to the existing behavior where the dynamic
-> trace IDs are constant as long as there is any concurrent Perf session
-> active. It's not completely optimal because slightly more IDs will be
-> used than necessary, but the optimal solution involves tracking the PIDs
-> of each session and allocating ID maps based on the session owner. This
-> is difficult to do with the combination of per-thread and per-cpu modes
-> and some scheduling issues. The complexity of this isn't likely to worth
-> it because even with multiple users they'd just see a difference in the
-> ordering of ID allocations rather than hitting any limits (unless the
-> hardware does have too many ETMs connected to one sink).
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Signed-off-by: James Clark <james.clark@linaro.org>
+On Wed, Jul 17, 2024 at 10:50:05PM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+> Call failure of device_rename(@dev, @new_name) maybe unexpectedly change
+> link name within @dev's class directory to @new_name, fixed by correcting
+> error handling for the API.
+
+I'm sorry, but I don't understand the text here, what exactly are you
+doing?
+
+> Fixes: f349cf34731c ("driver core: Implement ns directory support for device classes.")
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 > ---
->  drivers/hwtracing/coresight/coresight-core.c      | 10 ++++++++++
->  drivers/hwtracing/coresight/coresight-dummy.c     |  3 ++-
->  drivers/hwtracing/coresight/coresight-etm-perf.c  | 15 ++++++++++-----
->  .../hwtracing/coresight/coresight-etm3x-core.c    |  9 +++++----
->  .../hwtracing/coresight/coresight-etm4x-core.c    |  9 +++++----
->  drivers/hwtracing/coresight/coresight-stm.c       |  3 ++-
->  drivers/hwtracing/coresight/coresight-sysfs.c     |  3 ++-
->  drivers/hwtracing/coresight/coresight-tpdm.c      |  3 ++-
->  include/linux/coresight.h                         |  3 ++-
->  9 files changed, 40 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-> index 9fc6f6b863e0..faf560ba8d64 100644
-> --- a/drivers/hwtracing/coresight/coresight-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> @@ -902,6 +902,7 @@ static void coresight_device_release(struct device *dev)
->         struct coresight_device *csdev = to_coresight_device(dev);
->
->         fwnode_handle_put(csdev->dev.fwnode);
-> +       free_percpu(csdev->perf_sink_id_map.cpu_map);
->         kfree(csdev);
->  }
->
-> @@ -1159,6 +1160,15 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
->         csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
->         dev_set_name(&csdev->dev, "%s", desc->name);
->
-> +       if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
-> +           csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
-> +               csdev->perf_sink_id_map.cpu_map = alloc_percpu(atomic_t);
-> +               if (!csdev->perf_sink_id_map.cpu_map) {
-> +                       kfree(csdev);
-> +                       ret = -ENOMEM;
-> +                       goto err_out;
-> +               }
-> +       }
->         /*
->          * Make sure the device registration and the connection fixup
->          * are synchronised, so that we don't see uninitialised devices
-> diff --git a/drivers/hwtracing/coresight/coresight-dummy.c b/drivers/hwtracing/coresight/coresight-dummy.c
-> index ac70c0b491be..1f1b9ad160f6 100644
-> --- a/drivers/hwtracing/coresight/coresight-dummy.c
-> +++ b/drivers/hwtracing/coresight/coresight-dummy.c
-> @@ -21,7 +21,8 @@ DEFINE_CORESIGHT_DEVLIST(source_devs, "dummy_source");
->  DEFINE_CORESIGHT_DEVLIST(sink_devs, "dummy_sink");
->
->  static int dummy_source_enable(struct coresight_device *csdev,
-> -                              struct perf_event *event, enum cs_mode mode)
-> +                              struct perf_event *event, enum cs_mode mode,
-> +                              __maybe_unused struct coresight_trace_id_map *id_map)
+>  drivers/base/core.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 2b4c0624b704..a05b7186cf33 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -4512,9 +4512,11 @@ EXPORT_SYMBOL_GPL(device_destroy);
+>   */
+>  int device_rename(struct device *dev, const char *new_name)
 >  {
->         dev_dbg(csdev->dev.parent, "Dummy source enabled\n");
->
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index c0c60e6a1703..7fb55dafb639 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -229,10 +229,13 @@ static void free_event_data(struct work_struct *work)
->                 struct list_head **ppath;
->
->                 ppath = etm_event_cpu_path_ptr(event_data, cpu);
-> -               if (!(IS_ERR_OR_NULL(*ppath)))
-> +               if (!(IS_ERR_OR_NULL(*ppath))) {
-> +                       struct coresight_device *sink = coresight_get_sink(*ppath);
+> +	struct subsys_private *sp = NULL;
+>  	struct kobject *kobj = &dev->kobj;
+>  	char *old_device_name = NULL;
+>  	int error;
+> +	bool is_link_renamed = false;
+>  
+>  	dev = get_device(dev);
+>  	if (!dev)
+> @@ -4529,7 +4531,7 @@ int device_rename(struct device *dev, const char *new_name)
+>  	}
+>  
+>  	if (dev->class) {
+> -		struct subsys_private *sp = class_to_subsys(dev->class);
+> +		sp = class_to_subsys(dev->class);
+>  
+>  		if (!sp) {
+>  			error = -EINVAL;
+> @@ -4537,17 +4539,20 @@ int device_rename(struct device *dev, const char *new_name)
+>  		}
+>  
+>  		error = sysfs_rename_link_ns(&sp->subsys.kobj, kobj, old_device_name,
+> -					     new_name, kobject_namespace(kobj));
+> -		subsys_put(sp);
+> +				new_name, kobject_namespace(kobj));
+
+Why did you change the indentation here?
+
+>  		if (error)
+>  			goto out;
 > +
-> +                       coresight_trace_id_put_cpu_id_map(cpu, &sink->perf_sink_id_map);
->                         coresight_release_path(*ppath);
-> +               }
->                 *ppath = NULL;
-> -               coresight_trace_id_put_cpu_id(cpu);
->         }
->
->         /* mark perf event as done for trace id allocator */
-> @@ -401,7 +404,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->                 }
->
->                 /* ensure we can allocate a trace ID for this CPU */
-> -               trace_id = coresight_trace_id_get_cpu_id(cpu);
-> +               trace_id = coresight_trace_id_get_cpu_id_map(cpu, &sink->perf_sink_id_map);
->                 if (!IS_VALID_CS_TRACE_ID(trace_id)) {
->                         cpumask_clear_cpu(cpu, mask);
->                         coresight_release_path(path);
-> @@ -495,7 +498,8 @@ static void etm_event_start(struct perf_event *event, int flags)
->                 goto fail_end_stop;
->
->         /* Finally enable the tracer */
-> -       if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
-> +       if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF,
-> +                                     &sink->perf_sink_id_map))
->                 goto fail_disable_path;
->
->         /*
-> @@ -507,7 +511,8 @@ static void etm_event_start(struct perf_event *event, int flags)
->                 hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
->                                    CS_AUX_HW_ID_CURR_VERSION);
->                 hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
-> -                                   coresight_trace_id_read_cpu_id(cpu));
-> +                                   coresight_trace_id_read_cpu_id_map(cpu,
-> +                                                                      &sink->perf_sink_id_map));
->                 perf_report_aux_output_id(event, hw_id);
->         }
->
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> index 8b362605d242..c103f4c70f5d 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> @@ -481,7 +481,8 @@ void etm_release_trace_id(struct etm_drvdata *drvdata)
->  }
->
->  static int etm_enable_perf(struct coresight_device *csdev,
-> -                          struct perf_event *event)
-> +                          struct perf_event *event,
-> +                          struct coresight_trace_id_map *id_map)
->  {
->         struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
->         int trace_id;
-> @@ -500,7 +501,7 @@ static int etm_enable_perf(struct coresight_device *csdev,
->          * with perf locks - we know the ID cannot change until perf shuts down
->          * the session
->          */
-> -       trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
-> +       trace_id = coresight_trace_id_read_cpu_id_map(drvdata->cpu, id_map);
->         if (!IS_VALID_CS_TRACE_ID(trace_id)) {
->                 dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
->                         dev_name(&drvdata->csdev->dev), drvdata->cpu);
-> @@ -553,7 +554,7 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
->  }
->
->  static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
-> -                     enum cs_mode mode)
-> +                     enum cs_mode mode, struct coresight_trace_id_map *id_map)
->  {
->         int ret;
->         struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> @@ -568,7 +569,7 @@ static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
->                 ret = etm_enable_sysfs(csdev);
->                 break;
->         case CS_MODE_PERF:
-> -               ret = etm_enable_perf(csdev, event);
-> +               ret = etm_enable_perf(csdev, event, id_map);
->                 break;
->         default:
->                 ret = -EINVAL;
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index bf01f01964cf..66d44a404ad0 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -752,7 +752,8 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
->  }
->
->  static int etm4_enable_perf(struct coresight_device *csdev,
-> -                           struct perf_event *event)
-> +                           struct perf_event *event,
-> +                           struct coresight_trace_id_map *id_map)
->  {
->         int ret = 0, trace_id;
->         struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> @@ -775,7 +776,7 @@ static int etm4_enable_perf(struct coresight_device *csdev,
->          * with perf locks - we know the ID cannot change until perf shuts down
->          * the session
->          */
-> -       trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
-> +       trace_id = coresight_trace_id_read_cpu_id_map(drvdata->cpu, id_map);
->         if (!IS_VALID_CS_TRACE_ID(trace_id)) {
->                 dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
->                         dev_name(&drvdata->csdev->dev), drvdata->cpu);
-> @@ -837,7 +838,7 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
->  }
->
->  static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
-> -                      enum cs_mode mode)
-> +                      enum cs_mode mode, struct coresight_trace_id_map *id_map)
->  {
->         int ret;
->
-> @@ -851,7 +852,7 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
->                 ret = etm4_enable_sysfs(csdev);
->                 break;
->         case CS_MODE_PERF:
-> -               ret = etm4_enable_perf(csdev, event);
-> +               ret = etm4_enable_perf(csdev, event, id_map);
->                 break;
->         default:
->                 ret = -EINVAL;
-> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> index 117dbb484543..cb3e04755c99 100644
-> --- a/drivers/hwtracing/coresight/coresight-stm.c
-> +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> @@ -194,7 +194,8 @@ static void stm_enable_hw(struct stm_drvdata *drvdata)
->  }
->
->  static int stm_enable(struct coresight_device *csdev, struct perf_event *event,
-> -                     enum cs_mode mode)
-> +                     enum cs_mode mode,
-> +                     __maybe_unused struct coresight_trace_id_map *trace_id)
->  {
->         struct stm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
->
-> diff --git a/drivers/hwtracing/coresight/coresight-sysfs.c b/drivers/hwtracing/coresight/coresight-sysfs.c
-> index 1e67cc7758d7..a01c9e54e2ed 100644
-> --- a/drivers/hwtracing/coresight/coresight-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-sysfs.c
-> @@ -9,6 +9,7 @@
->  #include <linux/kernel.h>
->
->  #include "coresight-priv.h"
-> +#include "coresight-trace-id.h"
->
->  /*
->   * Use IDR to map the hash of the source's device name
-> @@ -63,7 +64,7 @@ static int coresight_enable_source_sysfs(struct coresight_device *csdev,
->          */
->         lockdep_assert_held(&coresight_mutex);
->         if (coresight_get_mode(csdev) != CS_MODE_SYSFS) {
-> -               ret = source_ops(csdev)->enable(csdev, data, mode);
-> +               ret = source_ops(csdev)->enable(csdev, data, mode, NULL);
->                 if (ret)
->                         return ret;
->         }
-> diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
-> index 0726f8842552..0a5e20cf23e8 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpdm.c
-> +++ b/drivers/hwtracing/coresight/coresight-tpdm.c
-> @@ -439,7 +439,8 @@ static void __tpdm_enable(struct tpdm_drvdata *drvdata)
->  }
->
->  static int tpdm_enable(struct coresight_device *csdev, struct perf_event *event,
-> -                      enum cs_mode mode)
-> +                      enum cs_mode mode,
-> +                      __maybe_unused struct coresight_trace_id_map *id_map)
->  {
->         struct tpdm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
->
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 7d62b88bfb5c..9c3067e2e38b 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -290,6 +290,7 @@ struct coresight_device {
->         bool sysfs_sink_activated;
->         struct dev_ext_attribute *ea;
->         struct coresight_device *def_sink;
-> +       struct coresight_trace_id_map perf_sink_id_map;
->         /* sysfs links between components */
->         int nr_links;
->         bool has_conns_grp;
-> @@ -384,7 +385,7 @@ struct coresight_ops_link {
->  struct coresight_ops_source {
->         int (*cpu_id)(struct coresight_device *csdev);
->         int (*enable)(struct coresight_device *csdev, struct perf_event *event,
-> -                     enum cs_mode mode);
-> +                     enum cs_mode mode, struct coresight_trace_id_map *id_map);
->         void (*disable)(struct coresight_device *csdev,
->                         struct perf_event *event);
->  };
-> --
-> 2.34.1
->
+> +		is_link_renamed = true;
+>  	}
+>  
+>  	error = kobject_rename(kobj, new_name);
+> -	if (error)
+> -		goto out;
+> -
+>  out:
+> +	if (error && is_link_renamed)
+> +		sysfs_rename_link_ns(&sp->subsys.kobj, kobj, new_name,
+> +				old_device_name, kobject_namespace(kobj));
+> +	subsys_put(sp);
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+How was this found?  What in-kernel code causes this problem?  And how
+was this tested?
 
+thanks,
 
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+greg k-h
