@@ -1,107 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC7D1CF8A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8166FB9
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 16:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721233828; cv=none; b=rVBCHCM10PTTu27xlNpl5CuMzIM1xoO5UeY3DX+S0DgyZzayobFx9dlWMbMHSJfqNDHeZzDA25+CdZLDsDJML4r3CA49sgdRe1QDZFcwEmxbRW5AQdVlb/qoI68XWhgrECgwHpHJ70F223OrqVaeBKx6zHtSQfjsv+hZssixTZM=
+	t=1721233861; cv=none; b=IreyDZhzv7nK+vEhPvlUlXJHmgtSKyToIu4yn8fEo+KZAYvXxCfpkKQCFd6sGrpwZP+4z41BWdos9u7nEspRq7glSbTf0MnuwXnj+AjIM162YgnQNjXdQ56c+J5zF2S/axn/VwmZ6iSIpykWPyRTlC+o3kP83PT6zidFTrEIqWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721233828; c=relaxed/simple;
-	bh=w2n3Vgmvps7jjndE3MWCxj/E3tyGzjZJwg1FQN0vKk0=;
+	s=arc-20240116; t=1721233861; c=relaxed/simple;
+	bh=nU+9r4Mm3q+d080XAjsGcioPnv0813i4qpKKRyNwTzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=clzz8ncO6U2qdAVWY36iuSsRIQXT5UDHICX5u5kooR/65lBMefGgCeGph8UT/WAh7ZaKEZJeM4tvirKfoJLvD+UwDXfxYFWZaZhAHtoMwfpiDlqgh8Z+If8ZgMOS3e02YYahcPN7EcS7++i4hRWMS6ENy+024HloYLnVfL3f+kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jUVrYDJk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TmEVTR4mE6wh5XSpS9rgqmn1S/MyMsxnh9eI3OmZfa5xVy0uF9STHhCBtyzlDjoiJHnQNEOPmcx8Vix94Rqrd83lPftTH97qXhKuNZJyhpurcRqkSG3FY5HpT71pie0k6FAdI/qq4FAQoJUfuPZBOBe4JHWNmbGZ8Da4A+Z4I+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lB952U6G; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jUVrYDJk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721233826;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3oN/JgUpAeNpSBhsnKTF40nLK+IG9euM6Vd2RnlyDAU=;
-	b=jUVrYDJkw1GBpFRBb2/8B57V4kw72kR8VtcABOi5baGQiQHyRchH/WmszzCbr9NRQjRPrV
-	AFv4x4nDU8dWkX0LLjiadKL/lxWqghaKlr/RR/l+UU1qBCMVPHpqAdeXb/yX8kXw4KmXsE
-	jMKS7gyPdGKaqqzIktPCH3pMkUAaScA=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-107-95RBWAKPPfq6TtEWGkEZqg-1; Wed, 17 Jul 2024 12:30:24 -0400
-X-MC-Unique: 95RBWAKPPfq6TtEWGkEZqg-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-79f1764e192so32216085a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:30:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lB952U6G"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fb3e9e32ffso38164615ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721233860; x=1721838660; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fZhsh+wnWjt6cLcXDiRXnrrVDVKDoWotCT7UNQJ5Bng=;
+        b=lB952U6G6/gIKamCkECj6Mz5b1VWDUUXP0nq72L4BR5dJ6hnkCdAGuwAVO4CU5euRv
+         +f56QonWRZJDgxNtVrN6oZVgGv47EtbsYKO5kVe2BmHPiFbQvAqHqMWFgu7r4P9XyZnq
+         mD5s4oVirurCjyWugw3weyBwbCAwe1YQ6yplC2GRgxY5X3qJbprtobeE8+7Msvzvll4S
+         Lu7UOjSb/O4vruiRUKFz6rNmIs0kVihp7HTXjbXk1qSHJE0bV4DJfRMZ9e0H6SfDHHKC
+         fpyF5I1UlFisYR5YXkCPQO/qAX7LHP79oVguJE5hAW8vrOrkBgK85u/XIaaPglzF4iyC
+         W0oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721233824; x=1721838624;
+        d=1e100.net; s=20230601; t=1721233860; x=1721838660;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3oN/JgUpAeNpSBhsnKTF40nLK+IG9euM6Vd2RnlyDAU=;
-        b=h5liyrGP+M5wZxQgsjy03C1PFmZwkG9DVaT9zlEz1m63NNVEPCLbVriRycQ0sSMSr2
-         1ZJWuRTWeAuvWqBsVtYtfzk/L1+bdKMOvUt6ROI6mdOlW0pgS8PMYSTv3bNn7rgMWtBB
-         fTh0JqF1P36aPuDAa33UIFw+/ttl58gcVzPNbFn0GDobKBl8FnzfLfybR+boEWcsrGIA
-         vwzxDs9/OkKqlJU1yh5apez9H8h5sLnXkcBiX6tb+GZ71Qv5/cAyz21ySoW5aZj5AhZ5
-         RjZ2hAHFKaOhfns/mk4mhVQDuAFq1/gyKwu9674wOSs1nNSZ2GJRQ6rszYH5EUPA1R9u
-         LPEg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0cKlaVi3J0bjs/Uljv0drpHc8tc2SG+SktxtsOy1ssrpDV6/2NXVTQY1DrA8x3YhdGuQbk3F0J5ga/9RxfjjGj+lFYoa7haGMu3lx
-X-Gm-Message-State: AOJu0YwsgVOdM6L08FoChKsiTq/vElN7Wo+4L5M6vrSKv+Lm+xRQHl9w
-	SCi/HfFOidAqsJTaVm/2IpxHeizbTpyJIkSl2GFAczDkOcCbchhwx7h6bZL0I4cLQj6LolphXI/
-	c6yI9qFkNVXEA+ZtQE/pFwJ0PBL7TbVceFIZWHtaIjeKtKg+vEwgx825PEXSteFYP0anZKA==
-X-Received: by 2002:a05:620a:3915:b0:79f:78a:f7d6 with SMTP id af79cd13be357-7a1873fd9f6mr164211085a.1.1721233823783;
-        Wed, 17 Jul 2024 09:30:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZhiVPRZh1L8OYuav3xxhQDxfwMVfDLy2Xc6dLe0gwbayV0cYW4eoXe7iXRBoQX0xhvyBaCQ==
-X-Received: by 2002:a05:620a:3915:b0:79f:78a:f7d6 with SMTP id af79cd13be357-7a1873fd9f6mr164207985a.1.1721233823214;
-        Wed, 17 Jul 2024 09:30:23 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a160be5e7csm419700685a.63.2024.07.17.09.30.21
+        bh=fZhsh+wnWjt6cLcXDiRXnrrVDVKDoWotCT7UNQJ5Bng=;
+        b=iVhmviJTW5+0uMXe80YUMqjLgcFkQDu/uHHVkZ8VnSHTnqEqCmgfQDAeU4t2pivmSL
+         VC4vWzOsHDih15C/5NJnafqK4DQMB6WirzWR3v+oBaS0wnbJqswOlwK4EaZiGy5+oaPy
+         2gdiy04drd8Pi59/1879IGJDi+CsRmOX5PsGHkL9v39TpYy/dP/lzuXLE9qDfu5RYbCQ
+         AeaNdmGgqPX1zlDWlyAVyqkFVI5Bg41NE70Tl5RcFHCvQcdI10lRkaeZh+D961jr2Rv+
+         Y/UGhYv7hlZdJ+sNxTSEnxUMkAUkM7rY+YxPwvQIBpA5HP4DF2W9ZKyxOcUP6bb/PT1B
+         i9gw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDDpBFpUZTQmprUL/wpUwFDTXKn/p5o5QatB4yKYpR5jLLkQc1A3fSeMTCfx4IwOI8qMfQbvQ0DnAq0kf8d97UHX8hEhswR2CDTN8T
+X-Gm-Message-State: AOJu0YzkpluFrySojYV/uWf4Oe8ThiwZ008o0l1ArlOAv7rYJsWjetMr
+	BHBAIebGJnVacq01uHzpW5bjZUJysYX3Q/Q/uUdNAiltHtIG8SBq
+X-Google-Smtp-Source: AGHT+IGxeqX0fUugMvXSq1rVpJvLlkHouZdSRo4dovsKIrcHqbTZYwptDD/VOC3M9svMeLtuDbRMoQ==
+X-Received: by 2002:a17:902:6841:b0:1f9:c508:acd5 with SMTP id d9443c01a7336-1fc4e105dcdmr13989135ad.5.1721233859603;
+        Wed, 17 Jul 2024 09:30:59 -0700 (PDT)
+Received: from embed-PC.myguest.virtualbox.org ([117.98.155.77])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc2733asm77343535ad.162.2024.07.17.09.30.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 09:30:22 -0700 (PDT)
-Date: Wed, 17 Jul 2024 12:30:19 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"Tian, Kevin" <kevin.tian@intel.com>, Pei Li <peili.dev@gmail.com>,
-	David Wang <00107082@163.com>, Bert Karwatzki <spasswolf@web.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH] mm/x86/pat: Only untrack the pfn range if unmap region
-Message-ID: <Zpfxm_Nj9ULA0Tx6@x1n>
-References: <20240712144244.3090089-1-peterx@redhat.com>
- <ZpTLCscCFGtsrEjC@yzhao56-desk>
- <ZpUyZ9bH1-f5y5XG@x1n>
- <ZpY5uU2NyOoMVu5A@yzhao56-desk>
- <ZpbDnoQxGubegtu-@x1n>
- <116ca902-103d-47cb-baf0-905983baf9bb@redhat.com>
+        Wed, 17 Jul 2024 09:30:59 -0700 (PDT)
+Date: Wed, 17 Jul 2024 22:00:49 +0530
+From: Abhishek Tamboli <abhishektamboli9@gmail.com>
+To: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Cc: airlied@gmail.com, daniel@ffwll.ch, harry.wentland@amd.com,
+	sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com,
+	alexander.deucher@amd.com, christian.koenig@amd.com,
+	Xinhui.Pan@amd.com, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, rbmarliere@gmail.com,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] drm: Fix documentation warning for read_mpcc_state in
+ mpc.h
+Message-ID: <ZpfxuUXAjmPJvLgR@embed-PC.myguest.virtualbox.org>
+References: <20240712174510.70467-1-abhishektamboli9@gmail.com>
+ <fb2b106e-aa51-4108-9d61-ba71935fba00@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <116ca902-103d-47cb-baf0-905983baf9bb@redhat.com>
+In-Reply-To: <fb2b106e-aa51-4108-9d61-ba71935fba00@amd.com>
 
-On Wed, Jul 17, 2024 at 04:17:12PM +0200, David Hildenbrand wrote:
-> I'd be curious how a previous truncation on a file can tear down a PFNMAP
-> mapping -- and if there are simple ways to forbid that (if possible).
+On Mon, Jul 15, 2024 at 05:46:38PM -0400, Aurabindo Pillai wrote:
+> 
+> 
+> On 7/12/24 1:45 PM, Abhishek Tamboli wrote:
+> > Add detail description for the read_mpcc_state function in the
+> > mpc_funcs struct to resolve the documentation warning.
+> > 
+> > A kernel-doc warning was addressed:
+> > ./drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:547: warning:
+> > Function parameter or struct member 'read_mpcc_state' not
+> > described in 'mpc_funcs'.
+> > 
+> > Signed-off-by: Abhishek Tamboli <abhishektamboli9@gmail.com>
+> > ---
+> >   drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h | 16 ++++++++++++++++
+> >   1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
+> > index 34a398f23fc6..9e65ecf1d3b0 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
+> > +++ b/drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h
+> > @@ -282,6 +282,22 @@ struct mpcc_state {
+> >    * struct mpc_funcs - funcs
+> >    */
+> >   struct mpc_funcs {
+> > +	/**
+> > +	 * @read_mpcc_state:
+> > +	 *
+> > +	 * Reads the state of a given MPCC instance.
+> > +	 *
+> > +	 * Parameters:
+> > +	 *
+> > +	 * - [in/out] mpc - MPC context.
+> > +	 * - [in] mpcc_inst - MPCC Instance whose state is to be read.
+> > +	 * - [out] mpcc_state - MPCC state structure where the state
+> > +	 *                    of the MPCC instance will be stored.
+> > +	 *
+> > +	 * Return:
+> > +	 *
+> > +	 * void
+> > +	 */
+> >   	void (*read_mpcc_state)(
+> >   			struct mpc *mpc,
+> >   			int mpcc_inst,
+> 
+> Looks like fix for this has been already merged via a195f08636f9d7
+> drm/amd/display: fix documentation warnings for mpc.h
+> 
+Thanks Aurabindo for pointing this out.
 
-Unfortunately, forbiding it may not work for vfio, as vfio would like to
-allow none (or partial) mapping on the bars.. at least so far that's the
-plan.
-
--- 
-Peter Xu
-
+Regards,
+Abhishek 	
+> --
+> 
+> Thanks & Regards,
+> Aurabindo Pillai
