@@ -1,125 +1,95 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02BE17721
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04D718C3D;
+	Wed, 17 Jul 2024 07:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721199619; cv=none; b=UoMVr4IJUejqt9dqS4XbzTKe722EzBkeSu8hPu+QxYroN0r+RlYCn91KkntpXES5DgYJnKp4QnGA4hOW80/FFh962CBgvyLUoSr7g+KRjkdTfUubI28dob0TMF3w0rLz/uO9Mw5TxpNSTimuKQeOQiadblMcws3PqFcqncZUiL4=
+	t=1721199668; cv=none; b=Q4EmqMWGzNM8xMpcGB1Iz6MDaNvx33om8kqLRlli2695va1Pg8BlVpPGEdeblrend10YQg/2Vc9elCu7/JbZ1ZJbW77ffxAqoNnQC2aSMk7cs8QRzq5y6pvttwrkfI7Yg140S4VHWz2iQinIobJvF/VpTodk7pK6rBpzTccOO/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721199619; c=relaxed/simple;
-	bh=EqwiWs+iOpk7g0tuP/hjx3eQs5pRF88hGkWdz2xsbZA=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=u0ybek1fuunGbqTWqaQxyjdG7IiO7O4z+BGl/lDTdl52cxQvVUW4KYZUPzXRee3abWz++epvSwZJx5WYvgGRYxyezPCUPdOBbIEqEamQBatrEtfANRizdB4IlGBV/9DPjKYL+eQnxJqR9iiiBcPtcQKbFptecOeheDKxWLgKHJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bzMbEJxh; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1721199668; c=relaxed/simple;
+	bh=wPGh9hJ8L6n603K4RwjKOCoJ+c13U2nvAWtRYtfi6t4=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=unhjgCfedmvmSmZJee+qRAgvRzJsbQRNjabTTvg5cdrDj3sA5ZI+sK37Tz0Vibs2UUfNkWxb8+Eu8c+R3Ekjrw1SKRBE5K+jo6e5G4bG3rwqux6Ka51Fpts4cEye+G77QlYNcCQR6yYWZFCodYfaLehtzOqplVCBBKoHyhi5NgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HVAf+0XX; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bzMbEJxh"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240717070014euoutp020c01430d07c880e040fe99e75f2ba31e~i7e4r3d8T2476324763euoutp02-
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:00:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240717070014euoutp020c01430d07c880e040fe99e75f2ba31e~i7e4r3d8T2476324763euoutp02-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1721199614;
-	bh=BqQmvxngJh/jUxT0xcjtnge0rHXvJkSYChxldhCU0eE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=bzMbEJxhp/nKl9JiIt1VulHwaX0xk/a+NqGGLgkmlJArTfxQMXwQ+0QEyxxXDu6Zl
-	 KwL0YewYMXgKIElqESXKkRypynA04juO0lqYOoiU0ORbMAzTXpfipQuVp4OKzLPrTJ
-	 ziuZGp9j8T1/8coqRlH5obralGAiumC93PGRPa5o=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240717070014eucas1p25a69ebd8b04ffeac75fccbfe6ebde1db~i7e4dkgr91989919899eucas1p2h;
-	Wed, 17 Jul 2024 07:00:14 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 67.C0.09620.EFB67966; Wed, 17
-	Jul 2024 08:00:14 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240717070014eucas1p26bc42b2b532e6e40210ec5bc57c827ec~i7e4F6f9b2430324303eucas1p2D;
-	Wed, 17 Jul 2024 07:00:14 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240717070014eusmtrp2210e51f611f3db51d99c7c885c1d6852~i7e3914lb0570805708eusmtrp2k;
-	Wed, 17 Jul 2024 07:00:14 +0000 (GMT)
-X-AuditID: cbfec7f5-d1bff70000002594-26-66976bfe3f1a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id D5.28.09010.DFB67966; Wed, 17
-	Jul 2024 08:00:13 +0100 (BST)
-Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240717070013eusmtip270865bcd1140da1f214f4a2c2fca5523~i7e3u-c_71582415824eusmtip2D;
-	Wed, 17 Jul 2024 07:00:13 +0000 (GMT)
-Received: from localhost (106.210.248.174) by CAMSVWEXC01.scsc.local
-	(2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Wed, 17 Jul 2024 08:00:13 +0100
-Date: Wed, 17 Jul 2024 09:00:09 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-CC: <kernel-janitors@vger.kernel.org>, <cocci@inria.fr>, LKML
-	<linux-kernel@vger.kernel.org>, Arjan van de Ven <arjan@linux.intel.com>
-Subject: Re: latencytop: Use seq_putc() in lstats_show()
-Message-ID: <20240717070009.g33selzj27lqg44n@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVAf+0XX"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70af3d9169bso4410019b3a.1;
+        Wed, 17 Jul 2024 00:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721199667; x=1721804467; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BIqvVG1aJAwtJPezD7HsgM4ZWhFFBG5im4HLCUicOoA=;
+        b=HVAf+0XXPyy+0Mh0W4xl17hgi0shosm2GUN2xOBUvTmQciGJmPsLN0V11SGHOWucEI
+         uDvT2PSV0COn8Xvihm2D7JmQxLpAjcPYpfCtWbD/KeDhdlQLSSpF26rHvkbOQKsMKxqC
+         0IlcXjr5jwEqYOEo6ykhIPXWUZH6nRS6b68IFyqCf7Pk2R9nK/IfV/UyKpTA6R+lQz6s
+         a1g2fMp2pa6JQxAFNLwqyKR16obruNP1pb+s7B/SzbnmKg1qZ/C/nbrcs/01p0SFBORw
+         ClaOFDcICVJkUP3kCQ5FRu9j+tI9HfLA38Dz6wyFuoMK5rNd8s52IiB8TlFMrjKbIb7N
+         bKxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721199667; x=1721804467;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BIqvVG1aJAwtJPezD7HsgM4ZWhFFBG5im4HLCUicOoA=;
+        b=knxDfvjTiaBXJwDHAOTRzbTz4NJkH8E5h4iqWG6jgGW8CJCEyRSqLK0AlsDO9sJJHz
+         03bmYV5gO7fczErCdQpenNst18EhoaiCYsk7DDMsiqZQlHDSaOZ1AAO1OqGrEDMyXXp1
+         FJjOpcW19iJv1Zbp/lMAq7N6Z6u4XO1BfT96puELymPhCOgM8H5vBeXnaGr0fI4M/b+S
+         i27FrDvH3u0xPosqYUDt+CmgUjRK2ojmAzxK64ukPX3/ho1WBK1TzgMzsXM9t27bkwz7
+         MEIPDU1AYv0Zc+HS2uTnwDbqBX46jC79NmC1bOdrVBWAwDpVUYWH9AS4uXEXtaBNiSLL
+         iGcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ72u46js9a3+yHqno4VPDIWjqsaFE1Zm5ZDtai+JBuGii+EFVTKgfHjTfTXZGvSKnzBxtTf60VBu/T152ssBtD9gf/beOMnBRxrhZImzdBn/C9IVT3oJDwy+SrEPxOTCjcDDXCqw=
+X-Gm-Message-State: AOJu0Yx8nbYnsHkO+ccrmOMkteCJpQg9W5yei/BlKfjbmmhtJKZXDkkv
+	ysD/CFXMvsgal4UL126TZix6l21XsMZ3I++pXoIZF7XUYrtSNhvF
+X-Google-Smtp-Source: AGHT+IHeC7UoR6Xe/1y11RPhs3xLhOgqwGTrjo3HScfLmJhEpAjYaBUYzHDOGtnSHPWasj2S3Hzveg==
+X-Received: by 2002:a05:6a00:3a0f:b0:706:b10c:548a with SMTP id d2e1a72fcca58-70ce507da1emr886883b3a.22.1721199666651;
+        Wed, 17 Jul 2024 00:01:06 -0700 (PDT)
+Received: from [198.18.0.1] ([2401:d9c0:2902::c2eb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7d2b1sm7461162b3a.108.2024.07.17.00.01.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 00:01:06 -0700 (PDT)
+From: Cryolitia PukNgae <cryolitia@gmail.com>
+X-Google-Original-From: Cryolitia PukNgae <Cryolitia@gmail.com>
+Message-ID: <fd9423c0-8c2b-4aef-9d76-cb7def3e2344@gmail.com>
+Date: Wed, 17 Jul 2024 15:01:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] hwmon: add GPD devices sensor driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-doc@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>,
+ =?UTF-8?Q?Marcin_Str=C4=85gowski?= <marcin@stragowski.com>
+References: <20240717-gpd_fan-v2-0-f7b7e6b9f21b@gmail.com>
+ <20240717-gpd_fan-v2-1-f7b7e6b9f21b@gmail.com>
+ <7e4e45e1-9a77-4780-a5bd-ac44cd7c6cdd@kernel.org>
+Content-Language: en-US
+In-Reply-To: <7e4e45e1-9a77-4780-a5bd-ac44cd7c6cdd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a1b7f067-efa9-4550-8351-8923a71826fa@web.de>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupileLIzCtJLcpLzFFi42LZduzned1/2dPTDJ6/kLP4/mABu8XLS62s
-	FltvSVtc3jWHzeL/rOesDqwek14cYvGYdzLQ4/MmOY/bz7axBLBEcdmkpOZklqUW6dslcGW8
-	2XCRraCPqeLx7FVMDYw3GLsYOTkkBEwkLndfYO9i5OIQEljBKNGxfQUThPOFUeLc6y1QzmdG
-	iXm9W4BaOMBaHt5zhYgvZ5Q4PLGdHa7o/r+brBDOVkaJGc2X2EE6WARUJd58dQLZxyagI3H+
-	zR1mkLCIgJbE08cmIOXMAh2MEg1zH7CA1AgLWEhMvg9Sw8nBK+AgMW32ViYIW1Di5MwnLCC9
-	zAKaEut36UOY0hLL/3GAVDALyEs0b50N1skpYCVxZmU/K8SXyhLvH+xjgbBrJdYeOwN2soTA
-	HQ6JAxNWQYPCReLh/SaoImGJV8e3sEPYMhL/d85ngmiYzCix/98HqO7VjBLLGr8yQVRZS7Rc
-	ecIOCSFHibn7IiBMPokbbwUhjuOTmLRtOjNEmFeio01oAqPKLCSPzUJ4bBbCY7OQPLaAkWUV
-	o3hqaXFuemqxcV5quV5xYm5xaV66XnJ+7iZGYHI5/e/41x2MK1591DvEyMTBeIhRgoNZSYR3
-	AuO0NCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8qinyqUIC6YklqdmpqQWpRTBZJg5OqQYmcQbP
-	1De7p/NU/zvNuTzd65Ps1YWPWO133DDLu/kndAebykNHRo3fq45kpAau9Tr04raa19OF997/
-	FVkSzXJQfOoE8ZMnp0+bVKB69tdNth0TfJ/tee5gd7BFYe3DqXEVl1lX9RvzRczgFooP/von
-	uj371eMpMoyrDgrFeYm0rv89v2GTOM/Ela5bG5X/n/Df8e6a0BKR2Nmtk2QzrJ+yLZWdJDnt
-	VHBm6q8JEdLNGeUdr0//e2ux//VppyzntKk77ry8brz7U4rY3GjXMJG0iz5FyiHsbxk2LSqR
-	Y3m72kjHMkxr+2SPKd2r3rS8njHbm/OfpOVUvv/x94RPXI86f3CWrfeWNLsfxT0COVd99yqx
-	FGckGmoxFxUnAgCbnA9nnQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsVy+t/xe7p/s6enGfxqMrf4/mABu8XLS62s
-	FltvSVtc3jWHzeL/rOesDqwek14cYvGYdzLQ4/MmOY/bz7axBLBE6dkU5ZeWpCpk5BeX2CpF
-	G1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GW82XCRraCPqeLx7FVMDYw3GLsY
-	OTgkBEwkHt5z7WLk4hASWMoocXrJGvYuRk6guIzExi9XWSFsYYk/17rYIIo+MkrM2XSfCcLZ
-	yiixo/0QM8gkFgFViTdfnUAa2AR0JM6/uQMWFhHQknj62ASknFmgg1GiYe4DFpAaYQELicn3
-	QWo4OXgFHCSmzd4KNfMLo8TGPz1sEAlBiZMzn7CADGIW0JRYv0sfwpSWWP6PA6SCWUBeonnr
-	bLAxnAJWEmdW9kPdrCzx/sE+Fgi7VuLV/d2MExhFZiEZOgth6CyEobOQDF3AyLKKUSS1tDg3
-	PbfYSK84Mbe4NC9dLzk/dxMjMPa2Hfu5ZQfjylcf9Q4xMnEwHmKU4GBWEuGdwDgtTYg3JbGy
-	KrUoP76oNCe1+BCjKTB8JjJLiSbnA6M/ryTe0MzA1NDEzNLA1NLMWEmc17OgI1FIID2xJDU7
-	NbUgtQimj4mDU6qBad8ZVkPWRYEzl6p07V8kv3au22MDL5HglX/uL9F8xTbN8kWL/XNW3y39
-	xwVTLMrqpLWsY86ys3pt90ypvvkgzWWbz6ttF0JOS/M9tVzYeUHk81IrC65pG0+HFmmuW2Uf
-	een3acUI9tcq/Jcs4wqvzzf2FX456Y/ye6aHMl9z728QcahVPBO+cuZnww3F2zy7vvM+Ud/B
-	/Tno/f7QM2KGj2u/2DRtOn7bc69Q+sbOTcXGq01qXsifulB5K9buhV3eC88ZDRUqbsycNVo/
-	ZqdkmSeedJ2Uv3DrEzY29XeNEjN2qE/iTpKwlxI+8pRz889wE4sjeQsYjOyjHvvUKseUnf/A
-	6qPJIf6G/6uT/nFjJZbijERDLeai4kQArV/QQ0YDAAA=
-X-CMS-MailID: 20240717070014eucas1p26bc42b2b532e6e40210ec5bc57c827ec
-X-Msg-Generator: CA
-X-RootMTR: 20240714100031eucas1p16b701d3e5852ccb40305a73bdb2a2759
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240714100031eucas1p16b701d3e5852ccb40305a73bdb2a2759
-References: <CGME20240714100031eucas1p16b701d3e5852ccb40305a73bdb2a2759@eucas1p1.samsung.com>
-	<19c77c4d-7f81-4980-a124-d6a8e14675d9@web.de>
-	<20240716154520.vtlqv4jxlihy2h7r@joelS2.panther.com>
-	<a1b7f067-efa9-4550-8351-8923a71826fa@web.de>
 
-On Tue, Jul 16, 2024 at 07:06:06PM +0200, Markus Elfring wrote:
-> > Not sure why this got forwarded to me.
-> 
-> The script “get_maintainer.pl” pointed your recent contribution out.
-Makes sense. I'll still defer to arjan@linux.intel.com.
 
--- 
+On 2024/7/17 03:28, Krzysztof Kozlowski wrote:
+> Why would you add here untested models?
+The manufacturer GPD  sent me these quirks and reg addresses, and they 
+used them to write their Windows user space driver. They are unlikely to 
+have problems. It was fully tested by several people on WIn Max 2 2023 
+and Win 4, and there's only little address difference with other model.
+> static, so how do you support more than one device?
 
-Joel Granados
+The device will have and only have one EC controller, I use 
+platform_device just for easier alloc and release resources.
+
+Sincerely thank you for your guidance, v3 has been sent: 
+https://lore.kernel.org/r/20240717-gpd_fan-v3-0-8d7efb1263b7@gmail.com
+
+
