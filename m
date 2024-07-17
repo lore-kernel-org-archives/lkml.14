@@ -1,93 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58106FB9;
-	Wed, 17 Jul 2024 16:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843AB6FB9;
+	Wed, 17 Jul 2024 16:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721233927; cv=none; b=gHQSQ3ceO6jfgENbxFIF4T5nqHQVF6wSHfKS3BbUNOjO+CZVBHhyctikj81/RgLrAYTkR3I7Q/c159web32UWZ10n1YTaZBRcSrlh0V8vHfF64Oj01pAM4hqiHJ8SSIq0GGLtOkpqJyVx5wlV4fsIbHRyTfhUk9ewLTuVUbgRjI=
+	t=1721233932; cv=none; b=tMTC4d3TnpLUoGQUBq2QI6GKd35eT0AkBPfoxHkLdAwUF32SogGyLvnXq7qEandoj8dofIziEHmAPJYACPpPu7H1VrXyfr2jSqeu6CHbOyerQHOY5eXFhtMCuUA6eOf0utmPONKMaAUfghGWcqCY/BWMZBYGwEg1EM7mpZK05Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721233927; c=relaxed/simple;
-	bh=AysrhcFQKXmU9df2+6yZVMuPFvWFYo9EP+aTXRoSoJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=He3pY2VPOkWDHzhtOS7xbU26RvrRgjiP2MCaCqvq8h6gtqslP+1K19STDhdNWhMUlTc9UM3y/P55OFzELA/t26FoTYIV4HGXZJbt5cFwOyXcvK6smd6Dy0PHWs1jw2QuFBAPRiz33X+hgkElzYkKD+QI6Zp1Ba4x6gaahHBwAJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CC1C32782;
-	Wed, 17 Jul 2024 16:32:00 +0000 (UTC)
-Date: Wed, 17 Jul 2024 12:31:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Guilherme Amadio <amadio@gentoo.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Ian Rogers <irogers@google.com>, Thorsten Leemhuis
- <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>,
- linux-perf-users@vger.kernel.org, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] perf build: libtraceevent, libtracefs feature
- check with pkg-config
-Message-ID: <20240717123147.17169873@rorschach.local.home>
-In-Reply-To: <CAM9d7cgG5WvyEu1ECNht1z=bZ7MSsrPyBjokcY95SXmxgnzwsA@mail.gmail.com>
-References: <CAM9d7ciLGP_w9YYOb-2U2ESg8kQx_knQXuB6_2JZVZ2ktL+bzg@mail.gmail.com>
-	<20240712194511.3973899-1-amadio@gentoo.org>
-	<CAM9d7cgG5WvyEu1ECNht1z=bZ7MSsrPyBjokcY95SXmxgnzwsA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1721233932; c=relaxed/simple;
+	bh=3fUCNNaJXzS7JuiTOKDc4frw9Riwja6uOzB2OgTupcs=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=pk5cO9vEp3qciwHTH5h1pRfM6XGsK0MttQk63Arqfyh5y1Q+s2+2+IxVJRL0DUYeovQnRTHxdar13wGMhlriszsJF57z+2oXyN/+Q3pA0yWe7N0E9CCBHyj+pLu9EfldfnUgBpW3Sdo2fmVI0fvcfi1CT98Nxz6JR+WYTnp3PZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ttkm+dh5; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ttkm+dh5"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7a05b4fa525so84084085a.1;
+        Wed, 17 Jul 2024 09:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721233929; x=1721838729; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tmMW3QotAs6Her4vmCKKRFApsHyxNhbddH+wP64vdF4=;
+        b=Ttkm+dh576N/85bgOm2jVXyfwDlfZBslSU5CAq0ha6plNDdcAlG9M+nOdeN+yAIeJt
+         xnBbdiEHKRHBXu6ECk+3+0u3Dmm7On8joa9FwdYiY/CWfXDVCvfk06aHh06e94kNo5km
+         Lwy5ljz3Eyka+R9Gxm0AVMGqCdZ/D1rX8yS5+hoKESvhBtYwc4fYHunWrndswuzFPt08
+         E61sEFVGJ5dI+j6Y9jrLQvz8O8pHByoFo56M4wC8mzk6dvq+KXW83QyeufPh2xw3UgeS
+         CK2mg97jI7GHhualOCoSEwSCd+nx9vdTT5YuCysfWTDsjuHcgfFW2eTiXCZdlEjhwmIe
+         TAEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721233929; x=1721838729;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tmMW3QotAs6Her4vmCKKRFApsHyxNhbddH+wP64vdF4=;
+        b=Wqq8BcZe+RS8TojqOyuiK+ZziSI0BYLuNwoHM8ICz08aFTO6jj9V+5MtILhild21Hs
+         +V0EC7okyR6TSWDhPio/ofmWK+xqSasQ5JBKaFSSUrl8QmJrSUaMeRC86eWsPvxjvuWs
+         r4wvL8C17Y2vTmgVGIWcF3cola7IDYjrD7HUsULojFf2iq7u67Lfwv45j1DpuRwtHn9N
+         5ybqoIA7mGDA3+7noi3Jg1maR+JxvOU1UjpcIe34ArouEK1lrizoSctxGF0VAjP+BC/H
+         tYU3WPLI6Php7mR+4T4W6tTUtCWeitzKfouQ/rfkqH4MeYaYDJ4FeYnoMRH9KFoa+Yti
+         DqWw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2Cw1OFBTCUk8f6XMRjeXQ+BbPUI10dB9ht2FbaSqOSGW3olzrKPQjusEcLxti7QtiKuUFHs8SHwppPATbptNSgg0KFSVTvBDtQAmPcsRBQDmDP1T7m4x6oVeARxB9j3TDgFev
+X-Gm-Message-State: AOJu0Yy5wpex+sysxykUXdPR+LZ9KBtCQYOW0c3//lLrPQX4G5Pfkar5
+	VvZfaEXT0Q9x6lLSocRsrBV+AHvBtGn8/g184dl0vMmlIt4QmVxV
+X-Google-Smtp-Source: AGHT+IEWVMngP8w6cNex5dWAr9Yp33iJOatF0vo2y029Lbb3iYHvJwJf5hFjDKhq5B+bjXSSb99uWw==
+X-Received: by 2002:a05:620a:858:b0:79d:554d:731f with SMTP id af79cd13be357-7a18dc06099mr26838685a.29.1721233929273;
+        Wed, 17 Jul 2024 09:32:09 -0700 (PDT)
+Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a160b9c31dsm418156485a.20.2024.07.17.09.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 09:32:08 -0700 (PDT)
+Date: Wed, 17 Jul 2024 12:32:08 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Fred Li <dracodingfly@gmail.com>, 
+ pabeni@redhat.com, 
+ willemdebruijn.kernel@gmail.com, 
+ herbert@gondor.apana.org.au
+Cc: bpf@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ ast@kernel.org, 
+ daniel@iogearbox.net, 
+ andrii@kernel.org, 
+ song@kernel.org, 
+ yonghong.song@linux.dev, 
+ john.fastabend@gmail.com, 
+ kpsingh@kernel.org, 
+ Fred Li <dracodingfly@gmail.com>
+Message-ID: <6697f20876b11_34277329417@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240717053540.2438-1-dracodingfly@gmail.com>
+References: <6689541517901_12869e29412@willemb.c.googlers.com.notmuch>
+ <20240717053540.2438-1-dracodingfly@gmail.com>
+Subject: Re: [PATCH v3] net: linearizing skb when downgrade gso_size
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 17 Jul 2024 09:27:58 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
+Fred Li wrote:
+> Linearizing skb when downgrade gso_size because it may
+> trigger the BUG_ON when segment skb as described in [1].
+> 
+> v3 changes:
+>   linearize skb if having frag_list as Willem de Bruijn suggested[2].
+> 
+> [1] https://lore.kernel.org/all/20240626065555.35460-2-dracodingfly@gmail.com/
+> [2] https://lore.kernel.org/all/668d5cf1ec330_1c18c32947@willemb.c.googlers.com.notmuch/
+> 
+> Signed-off-by: Fred Li <dracodingfly@gmail.com>
 
-> Hello,
->=20
-> On Fri, Jul 12, 2024 at 12:45=E2=80=AFPM Guilherme Amadio <amadio@gentoo.=
-org> wrote:
-> >
-> > Hi Namhyung, Arnaldo,
-> >
-> > Here is version 3 of the patchset. I see the change to send output to d=
-evnull
-> > has already been applied, so I am submitting the remaining work only.
-> >
-> > The difference with previous changes is that in v3 rather than add test=
-s with
-> > pkg-config to check if dependencies are actually installed, we just set=
- the
-> > flags and send any warning to devnull. The change that remains in this =
-patchset
-> > is the fix for the other tools, which were inadvertently broken when th=
-e include
-> > for libtracefs changed from #include <tracefs/tracefs.h> to #include <t=
-racefs.h>
-> > since the flags for the feature check are not set in the other tools Ma=
-kefiles,
-> > it currently only works for perf. I recommend to either take at least p=
-atch 2/5
-> > that moves setting the flags to tools/build/Makefile.feature or to reve=
-rt the two
-> > patches that have been applied. You can easily test the fix with the co=
-mmands below:
-> >
-> > make -B -C tools/verification/rv VF=3D1
-> > make -B -C tools/tracing/latency VF=3D1
-> > make -B -C tools/tracing/rtla VF=3D1
-> >
-> > from the root of the repository. Only after the feature check flags are=
- moved to
-> > Makefile.feature that it also fixes the other tools. Apologies for the =
-breakage
-> > there. =20
->=20
-> Steve, are you ok with having this patchset in the perf-tools tree?
->=20
+A fix needs a Fixed tag.
 
-I don't know as this is the first I've seen it. If you could have this
-resend with me Cc'd and/or Cc linux-trace-devel@vger.kernel.org then I
-can review and possibly ack it.
+This might be the original commit that introduced gso_size adjustment,
+commit 6578171a7ff0c ("bpf: add bpf_skb_change_proto helper")
 
--- Steve
+Unless support for frag_list came later.
+
+> ---
+>  net/core/filter.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index df4578219e82..70919b532d68 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -3525,13 +3525,21 @@ static int bpf_skb_net_grow(struct sk_buff *skb, u32 off, u32 len_diff,
+>  	if (skb_is_gso(skb)) {
+>  		struct skb_shared_info *shinfo = skb_shinfo(skb);
+>  
+> -		/* Due to header grow, MSS needs to be downgraded. */
+> -		if (!(flags & BPF_F_ADJ_ROOM_FIXED_GSO))
+> -			skb_decrease_gso_size(shinfo, len_diff);
+> -
+>  		/* Header must be checked, and gso_segs recomputed. */
+>  		shinfo->gso_type |= gso_type;
+>  		shinfo->gso_segs = 0;
+> +
+> +		/* Due to header grow, MSS needs to be downgraded.
+> +		 * There is BUG_ON When segment the frag_list with
+> +		 * head_frag true so linearize skb after downgrade
+> +		 * the MSS.
+> +		 */
+
+Super tiny nit: no capitalization of When in the middle of a sentence.
+
+> +		if (!(flags & BPF_F_ADJ_ROOM_FIXED_GSO)) {
+> +			skb_decrease_gso_size(shinfo, len_diff);
+> +			if (shinfo->frag_list)
+> +				return skb_linearize(skb);
+
+I previously asked whether it was safe to call pskb_expand_head from
+within a BPF external function. There are actually plenty of existing
+examples of this, so this is fine.
+
+> +		}
+> +
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.33.0
+> 
+
 
