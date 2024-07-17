@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61CD1836C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9997218306C;
 	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721235795; cv=none; b=GS2gjcMP4fvejwoAvz7LtBlon7uwk/iJlFd4QOiRAwUM07q3Tfpjpy8hBjnG16RcvplgVA3zkPHECsGWGU3pbn+ILfqjj7oCKs7+P8qjuPVKciLzt+J6hG7gcdFQQRp1U3vEybFxEh35a75nV+L6FXSoRlaea0bas1SPgC16D7A=
+	t=1721235795; cv=none; b=ggJIlWnqrqx26OauD8uBujO0wqnk/InlUXqvlzW3/4OZdpOfbp/HCsklymzRy7Hg0Uz3+WZylQ1xtC0XR/d8Y1RsG7c6T9Ny41qgc485SgsskGOGMc7qkAzlyHpF95xiNFrPBrM69Z1vnZaoMv+QOGopkaoYD76I87bIGLAnikw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721235795; c=relaxed/simple;
-	bh=gpFkVvbXM7bCqPYW+aDVZ3Ody8SHFkjq1FkAoOcZ9yQ=;
+	bh=YFMeGAfhyM9bHtPXFygVWmHaeqfsPIqirTRI+ZUhVcY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=drbfdYIaufz2gUx0fsHU3EIAxM9nDVuBzhjzyGG0M+mmxJTKuEJbKRPQbvhqzWocJB2q2QOM6+A79nVsYBmrcYZpfyfb5Q0awo/Xn3qeBRjpbqRVPajWEnBR0V1Zgr1U6pKS1wZZDiJgSDXmxxAYx5wfeY44DC1Man1HLe7oiew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5k/ff+k; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=JpzDHs3dn/rCIXsb/Ym4wHXXSVNtjFtSHcFlOELxE5If6y2dx146SySAQuwhM54HKzTOkEVNJCJG9cpfmkXHqi4tgMaZJfFNCV61h7kkDVGsxhg/WehHH0a+3pL4iMJbnSKYhkjQxsCliDdxVYDRSl5VBb+9XMlLzyb2m6byaow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azMpTza3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5k/ff+k"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6A0E0C4DDF1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azMpTza3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 292FFC4AF0C;
 	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721235795;
-	bh=gpFkVvbXM7bCqPYW+aDVZ3Ody8SHFkjq1FkAoOcZ9yQ=;
+	bh=YFMeGAfhyM9bHtPXFygVWmHaeqfsPIqirTRI+ZUhVcY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=A5k/ff+kojrUZicsQxusOfefvYvGscS7lPv2v7Btk8GNADzwviJQnlO9b5EbAFGep
-	 OLY5ssSp/wSouPRV8zhw1cNRi7ceLQhdoHSxPBe0GZuXDatG0Z59CRv24R1MLGs/Nl
-	 e+YIpU9ezcc7iPmZhYPx++PDUQuygADS/vPi012h/3OibcqG0SiNbXWfn9yHHQMrek
-	 XzdHPys5y7SR7zlwl4snG+sLlf3VZHhXgLYi5Vw+apMotj6iSZMJSJwGoj9xeGz+X7
-	 Y6hKx2t3OadPhX55UgPKPgVzaD6cIupMtRDkXyE7w3bG0+YULulXiA5VvENvDKI8GG
-	 Vtc/8N9wwWYvA==
+	b=azMpTza3Ty1tTGFDoJG4XsKQEBVFUwl2xAqtbqrAG5DF1ggqC1vg5NVFVl7Zyql0C
+	 s8BDiiu+JlhTFplD+CXftTXoQ9E0ru/d48DtO+0eBknkRW0mix2MF0E0LE/LwgnUrU
+	 rA6jZP9QQEb+5KHf1Pgk4m9zGF0WIQSOe3WGj29RaNFEA/e32kE/6agXy7OAxEhFtC
+	 i61HFotX2oYXZocdAaLL37xcvw2d5u4yWXAc+feC1ed6qLX7FLcLqt/PCpqxMcAEyK
+	 VoOk08G/QgR9U8GQZrqkC6kzasKwCv6vdkZ2qYLvdFzOsDVqs/InOwdi3URnNOsQ6V
+	 ApQWZm5Zhb+9Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6065EC3DA60;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD72C3DA63;
 	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Wed, 17 Jul 2024 22:33:15 +0530
-Subject: [PATCH v2 10/13] dt-bindings: PCI: qcom: Add 'global' interrupt
+Date: Wed, 17 Jul 2024 22:33:11 +0530
+Subject: [PATCH v2 06/13] PCI: qcom-ep: Modify 'global_irq' and 'perst_irq'
+ IRQ device names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240717-pci-qcom-hotplug-v2-10-71d304b817f8@linaro.org>
+Message-Id: <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
 References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
 In-Reply-To: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -55,16 +56,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1044;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2451;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=UnqChimHBG0jtzlN6KxFR0yebxEqg1erfRRq9qEP0p0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBml/lPbog6HMzM14ffuorA6JAroE66s8hMQxxvS
- 6uDBQeGfSmJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpf5TwAKCRBVnxHm/pHO
- 9ZBDB/97pJk0fM/DxV2aQn2c/+/glj5xjJYHG8hLSjWp1JoZDbXyZjRhn9+JeFUtLzdcyc3uuQe
- DuCPTNpiADDPM9WQqJOlVW01Iq3gBDvWePUubjNax4+ug+4BJUiRKTPttTTYqP6362OUQV2UaZE
- xCAm4n0Jz9DafsHpQ9ALN4l+fpCVjL43IkzSoGji/SomcdWQ8bK7o2z97Sbh8THFydl1pG/XxR8
- G0Cr2r/EJdoFEjAo2NHb6jyQ5gXP98gCjPCSlgvRRHFGc7xi9RhRVPkPCWZ6E4aRQ+VqFqVCSFM
- B/ff6u6YIQVrhI7HlTK+GvLGaSE/xkwfcbQRe8wrRh3sy2+D
+ bh=OLDTA2u7a/IhWC3MtFf6Stnx+Z4B5OLjl/uildv1v/c=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBml/lOI08j7Wv5M424aLdNTgYCTZGLtQ2VGQxDP
+ 0fiBGevU7OJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpf5TgAKCRBVnxHm/pHO
+ 9TDNB/9vDbfXwQESIcTjCcZVnQergPptI/QsVRlGP8dFnXeKhn/nkuGPUhKAMZL81Y/c6dAbdRT
+ abrX1cbyoNPdSzclS68FG7yBmUHB+qFoBOkCBwYgId8Asxi3iM9hSOyWkM+mO+SJuAsIisIkNKz
+ +uBrO4RVoAUi2x+W7JL86PyqSlW9kwJGpi/aZFQTIJ4FUrtsr4fllIEf2vJjD8qghREegIdmLGp
+ +alvir5UiGeWiSBR7zVvy889TAWf5nCUW2ZOGiRdlBaTb76D2l2AemIgBqRDTd96rD5KN3RURGI
+ GYx+37itzRcFPJUuqNlFkHtsDAOpTGFwWl6YMFtL4vlDZKAq
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -74,35 +75,68 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
-to the host CPU. This interrupt can be used by the device driver to
-identify events such as PCIe link specific events, safety events, etc...
+Currently, the IRQ device name for both of these IRQs doesn't have Qcom
+specific prefix and PCIe domain number. This causes 2 issues:
 
-Hence, document it in the binding along with the existing MSI interrupts.
+1. Pollutes the global IRQ namespace since 'global' is a common name.
+2. When more than one EP controller instance is present in the SoC, naming
+conflict will occur.
+
+Hence, add 'qcom_pcie_ep_' prefix and PCIe domain number suffix to the IRQ
+names to uniquely identify the IRQs and also to fix the above mentioned
+issues.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-index 0a39bbfcb28b..704c0f58eea5 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-@@ -21,11 +21,11 @@ properties:
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 0bb0a056dd8f..d0a27fa6fdc8 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -711,8 +711,15 @@ static irqreturn_t qcom_pcie_ep_perst_irq_thread(int irq, void *data)
+ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
+ 					     struct qcom_pcie_ep *pcie_ep)
+ {
++	struct device *dev = pcie_ep->pci.dev;
++	char *name;
+ 	int ret;
  
-   interrupts:
-     minItems: 1
--    maxItems: 8
-+    maxItems: 9
++	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_ep_global_irq%d",
++			      pcie_ep->pci.ep.epc->domain_nr);
++	if (!name)
++		return -ENOMEM;
++
+ 	pcie_ep->global_irq = platform_get_irq_byname(pdev, "global");
+ 	if (pcie_ep->global_irq < 0)
+ 		return pcie_ep->global_irq;
+@@ -720,18 +727,23 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
+ 	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->global_irq, NULL,
+ 					qcom_pcie_ep_global_irq_thread,
+ 					IRQF_ONESHOT,
+-					"global_irq", pcie_ep);
++					name, pcie_ep);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request Global IRQ\n");
+ 		return ret;
+ 	}
  
-   interrupt-names:
-     minItems: 1
--    maxItems: 8
-+    maxItems: 9
- 
-   iommu-map:
-     minItems: 1
++	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_ep_perst_irq%d",
++			      pcie_ep->pci.ep.epc->domain_nr);
++	if (!name)
++		return -ENOMEM;
++
+ 	pcie_ep->perst_irq = gpiod_to_irq(pcie_ep->reset);
+ 	irq_set_status_flags(pcie_ep->perst_irq, IRQ_NOAUTOEN);
+ 	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->perst_irq, NULL,
+ 					qcom_pcie_ep_perst_irq_thread,
+ 					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+-					"perst_irq", pcie_ep);
++					name, pcie_ep);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request PERST IRQ\n");
+ 		disable_irq(pcie_ep->global_irq);
 
 -- 
 2.25.1
