@@ -1,185 +1,135 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE3F36134
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 09:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDF2719A;
+	Wed, 17 Jul 2024 09:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721210301; cv=none; b=L94Wwld7fG4s+Q2uMlqd/QxN1Cdd/sYvkGgV1UCxGLuKYs2e+Oys7ELR38EQbh+PQTF9z/woqBLwfgwZ2WVLseEH4UXRokIUbE9DcUID82wSOKVCuB/JuO+x3ONBbW3Gt6xSZ342guuCyC+uugW1CenELms7OPrLxh9A8PNqN7A=
+	t=1721210376; cv=none; b=GvP1hGsF/uz87FCm4Suu+4Q0bm4R+aYwwpHgXwzZUI3OufRT/DKWUVq+NcxtJtJ8i2Kll1Bo4CEtDNrDP8uN7tI7LaGpKD7JJk01t+FxPjCQbVHuu50HdUd7VHSqe2+cT23jTnRXt7k8vbIHznexPY+XeOKfsyVqfrifoj24RSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721210301; c=relaxed/simple;
-	bh=WdpJmIpDPJ/VygoU7Bxc4nOdSXY4ypscxsKOOgIR+TA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OJfgQh5JRoczyUUYJBZqUXAyqqDImo0EB6jEbbKgloGqim+4d7QtjkMAymq8rqoX+GMudQh2M/0VrNKUCexKDRYRL2fnjYnlJJgVKizr3D+97Po3l+Q9s2jXfqYTy/uB9h1pIOcCEGDLmQXnr71PFfwoK+jn/bGIuRIAPZ68CZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=a3eyEo7X; arc=none smtp.client-ip=45.254.50.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="a3eyEo7X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=5noMy
-	VEH65r+MCncRbdXscdedw7+GqbdcN8kOZsWqGk=; b=a3eyEo7XO0VLl6Jbca8dj
-	1NZ5TG9qVGamJ9RGy6Tfmw1acgngz+aAoVcH0y1z2REp8CI6hzuypCj56CqJREgd
-	bYDJpfZGypDb0r3iild1YcVAE1RCFn/pu3UFeoOODRJ0JkC6OU3zgPHdxvvywXhh
-	Dwtp9kxPnJ6tPtLcz7SRbU=
-Received: from localhost.localdomain (unknown [111.48.69.245])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wDXPnNZlZdm+MncDA--.62596S2;
-	Wed, 17 Jul 2024 17:56:42 +0800 (CST)
-From: wangdicheng <wangdich9700@163.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-arm-kernel@lists.infradead.org,
-	wangdicheng <wangdich9700@163.com>,
-	wangdicheng <wangdicheng@kylinos.cn>
-Subject: [PATCH] ALSA: usb-audio: Fix microphone sound on HD webcam.
-Date: Wed, 17 Jul 2024 17:56:38 +0800
-Message-Id: <20240717095638.13264-1-wangdich9700@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1721210376; c=relaxed/simple;
+	bh=OMc0681OodzRyuBATwyzchVTnV9Bh1GaBTsOg5XlF1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mTxvFFnFgM77dScHbmukQvkouIk56kPDJW9GbbF2iMkQ9WROlFqWJ+IOfyvxHx0OC60XPncqkMCuSfnVrvvEWKI6ZbabsiS3uSFV8g+fFg5Am+unb8SdMIutsa4oFKG6df7nDcNdPp0RJFVFxvCzfL8LnPjOSxOfSMRzX/pdV3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4301C1063;
+	Wed, 17 Jul 2024 02:59:59 -0700 (PDT)
+Received: from [10.57.77.222] (unknown [10.57.77.222])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D19213F73F;
+	Wed, 17 Jul 2024 02:59:29 -0700 (PDT)
+Message-ID: <61806152-3450-4a4f-b81f-acc6c6aeed29@arm.com>
+Date: Wed, 17 Jul 2024 10:59:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXPnNZlZdm+MncDA--.62596S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXw43JFy5tFyrCF45Xw13urg_yoWrCw15pr
-	1Iya97Jryktr17Xr48CayUu3yrXws2y398Ca4qkwnI9ryfK34rta47t39rAFWakrWrC34j
-	qryjy3yqg3y5Gw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pim9aDUUUUU=
-X-CM-SenderInfo: pzdqwv5lfkmliqq6il2tof0z/1tbiNRwfT2V4IpRruAAAsB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 01/10] fs: Allow fine-grained control of folio sizes
+Content-Language: en-GB
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ Matthew Wilcox <willy@infradead.org>
+Cc: david@fromorbit.com, chandan.babu@oracle.com, djwong@kernel.org,
+ brauner@kernel.org, akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ yang@os.amperecomputing.com, linux-mm@kvack.org, john.g.garry@oracle.com,
+ linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
+ mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
+ linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <ziy@nvidia.com>
+References: <20240715094457.452836-1-kernel@pankajraghav.com>
+ <20240715094457.452836-2-kernel@pankajraghav.com>
+ <ZpaRElX0HyikQ1ER@casper.infradead.org>
+ <20240717094621.fdobfk7coyirg5e5@quentin>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240717094621.fdobfk7coyirg5e5@quentin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-I own an external usb Webcam, HD webcam, which had low mic volume and
-inconsistent sound quality. Video works as expected.
+On 17/07/2024 10:46, Pankaj Raghav (Samsung) wrote:
+> On Tue, Jul 16, 2024 at 04:26:10PM +0100, Matthew Wilcox wrote:
+>> On Mon, Jul 15, 2024 at 11:44:48AM +0200, Pankaj Raghav (Samsung) wrote:
+>>> +/*
+>>> + * mapping_max_folio_size_supported() - Check the max folio size supported
+>>> + *
+>>> + * The filesystem should call this function at mount time if there is a
+>>> + * requirement on the folio mapping size in the page cache.
+>>> + */
+>>> +static inline size_t mapping_max_folio_size_supported(void)
+>>> +{
+>>> +	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
+>>> +		return 1U << (PAGE_SHIFT + MAX_PAGECACHE_ORDER);
+>>> +	return PAGE_SIZE;
+>>> +}
+>>
+>> There's no need for this to be part of this patch.  I've removed stuff
+>> from this patch before that's not needed, please stop adding unnecessary
+>> functions.  This would logically be part of patch 10.
+> 
+> That makes sense. I will move it to the last patch.
+> 
+>>
+>>> +static inline void mapping_set_folio_order_range(struct address_space *mapping,
+>>> +						 unsigned int min,
+>>> +						 unsigned int max)
+>>> +{
+>>> +	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
+>>> +		return;
+>>> +
+>>> +	if (min > MAX_PAGECACHE_ORDER) {
+>>> +		VM_WARN_ONCE(1,
+>>> +	"min order > MAX_PAGECACHE_ORDER. Setting min_order to MAX_PAGECACHE_ORDER");
+>>> +		min = MAX_PAGECACHE_ORDER;
+>>> +	}
+>>
+>> This is really too much.  It's something that will never happen.  Just
+>> delete the message.
+>>
+>>> +	if (max > MAX_PAGECACHE_ORDER) {
+>>> +		VM_WARN_ONCE(1,
+>>> +	"max order > MAX_PAGECACHE_ORDER. Setting max_order to MAX_PAGECACHE_ORDER");
+>>> +		max = MAX_PAGECACHE_ORDER;
+>>
+>> Absolutely not.  If the filesystem declares it can support a block size
+>> of 4TB, then good for it.  We just silently clamp it.
+> 
+> Hmm, but you raised the point about clamping in the previous patches[1]
+> after Ryan pointed out that we should not silently clamp the order.
+> 
+> ```
+>> It seems strange to silently clamp these? Presumably for the bs>ps usecase,
+>> whatever values are passed in are a hard requirement? So wouldn't want them to
+>> be silently reduced. (Especially given the recent change to reduce the size of
+>> MAX_PAGECACHE_ORDER to less then PMD size in some cases).
+> 
+> Hm, yes.  We should probably make this return an errno.  Including
+> returning an errno for !IS_ENABLED() and min > 0.
+> ```
+> 
+> It was not clear from the conversation in the previous patches that we
+> decided to just clamp the order (like it was done before).
+> 
+> So let's just stick with how it was done before where we clamp the
+> values if min and max > MAX_PAGECACHE_ORDER?
+> 
+> [1] https://lore.kernel.org/linux-fsdevel/Zoa9rQbEUam467-q@casper.infradead.org/
 
-(snip)
-[   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
-[   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
-[   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
-[   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
-[   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
-[   96.092610][ 2] [ T3680] usb 5-2.2: Warning! Unlikely big volume range (=4096), cval->res is probably wrong.
-[   96.102436][ 2] [ T3680] usb 5-2.2: [5] FU [Mic Capture Volume] ch = 1, val = 0/4096/1
+The way I see it, there are 2 approaches we could take:
 
-Set up quirk cval->res to 16 for 256 levels,
-Set GET_SAMPLE_RATE quirk flag to stop trying to get the sample rate.
-Confirmed that happened anyway later due to the backoff mechanism,
-After 3 failures.
+1. Implement mapping_max_folio_size_supported(), write a headerdoc for
+mapping_set_folio_order_range() that says min must be lte max, max must be lte
+mapping_max_folio_size_supported(). Then emit VM_WARN() in
+mapping_set_folio_order_range() if the constraints are violated, and clamp to
+make it safe (from page cache's perspective). The VM_WARN()s can just be inline
+in the if statements to keep them clean. The FS is responsible for checking
+mapping_max_folio_size_supported() and ensuring min and max meet requirements.
 
-All audio stream on device interfaces share the same values,
-apart from wMaxPacketSize and tSamFreq :
+2. Return an error from mapping_set_folio_order_range() (and the other functions
+that set min/max). No need for warning. No state changed if error is returned.
+FS can emit warning on error if it wants.
 
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        3
-      bAlternateSetting       4
-      bNumEndpoints           1
-      bInterfaceClass         1 Audio
+Personally I prefer option 2, but 1 is definitely less churn.
 
-Interface Descriptor:
-  bLength                 9
-  bDescriptorType         4
-  bInterfaceNumber        3
-  bAlternateSetting       4
-  bNumEndpoints           1
-  bInterfaceClass         1 Audio
-  bInterfaceSubClass      2 Streaming
-  bInterfaceProtocol      0
-  iInterface              0
-  AudioStreaming Interface Descriptor:
-    bLength                 7
-    bDescriptorType        36
-    bDescriptorSubtype      1 (AS_GENERAL)
-    bTerminalLink           3
-    bDelay                  1 frames
-    wFormatTag         0x0001 PCM
-  AudioStreaming Interface Descriptor:
-    bLength                11
-    bDescriptorType        36
-    bDescriptorSubtype      2 (FORMAT_TYPE)
-    bFormatType             1 (FORMAT_TYPE_I)
-    bNrChannels             1
-    bSubframeSize           2
-    bBitResolution         16
-    bSamFreqType            1 Discrete
-    tSamFreq[ 0]        48000
-  Endpoint Descriptor:
-    bLength                 9
-    bDescriptorType         5
-    bEndpointAddress     0x86  EP 6 IN
-    bmAttributes            5
-      Transfer Type            Isochronous
-      Synch Type               Asynchronous
-      Usage Type               Data
-    wMaxPacketSize     0x0064  1x 100 bytes
-    bInterval               4
-    bRefresh                0
-    bSynchAddress           0
-    AudioStreaming Endpoint Descriptor:
-      bLength                 7
-      bDescriptorType        37
-      bDescriptorSubtype      1 (EP_GENERAL)
-      bmAttributes         0x01
-        Sampling Frequency
-      bLockDelayUnits         0 Undefined
-      wLockDelay         0x0000
-(snip)
-
-Testing patch provides consistent good sound recording quality and volume range.
-
-(snip)
-[   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
-[   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
-[   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
-[   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
-[   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
-[   96.110630][ 3] [ T3680] usbcore: registered new interface driver snd-usb-audio
-[   96.114329][ 7] [ T3677] usb 5-2.2: Found UVC 1.00 device HD webcam (1bcf:2281)
-[   96.167555][ 7] [ T3677] usbcore: registered new interface driver uvcvideo
-
-Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
----
-v2 -> v3: Update code to v6.8-rc3,and make modifications based on it
-V1 -> V2: align the space
----
- sound/usb/mixer.c  | 7 +++++++
- sound/usb/quirks.c | 2 ++
- 2 files changed, 9 insertions(+)
-
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 409fc1164694..d1bdb0b93bda 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1211,6 +1211,13 @@ static void volume_control_quirks(struct usb_mixer_elem_info *cval,
- 			cval->res = 16;
- 		}
- 		break;
-+	case USB_ID(0x1bcf, 0x2281): /* HD Webcam */
-+		if (!strcmp(kctl->id.name, "Mic Capture Volume")) {
-+			usb_audio_info(chip,
-+				"set resolution quirk: cval->res = 16\n");
-+			cval->res = 16;
-+		}
-+		break;
- 	}
- }
- 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 09712e61c606..f222532d4d43 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -2185,6 +2185,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
- 		   QUIRK_FLAG_ALIGN_TRANSFER),
- 	DEVICE_FLG(0x534d, 0x2109, /* MacroSilicon MS2109 */
- 		   QUIRK_FLAG_ALIGN_TRANSFER),
-+	DEVICE_FLG(0x1bcf, 0x2281, /* HD Webcam */
-+		   QUIRK_FLAG_GET_SAMPLE_RATE),
- 
- 	/* Vendor matches */
- 	VENDOR_FLG(0x045e, /* MS Lifecam */
--- 
-2.25.1
+Thanks,
+Ryan
 
