@@ -1,166 +1,228 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D5B1B947
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BF0168BD;
+	Wed, 17 Jul 2024 06:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721199205; cv=none; b=X6jrERfu2k0oPTR80DoU7mpiTakYks9u/3K91WgT5/Io16Tlv/T2cmokDCBoMDV22ujo8od0OhgNXWs8O39NBoJQ+4Kg+kXmwEq8qSqQOleZhut7yI14Ir83MQXybtQM9HX5/kF1J2Gsa5VZ5wOgwJx+zDeNzt9kaIfaw1dzL60=
+	t=1721199293; cv=none; b=ugsDiJXYSuCPgbf9192HVOnAWa80cfXJ1+jAFs9gMDAusFJ17BqXDpEIotPJikURghfd8Spf/Q2XBBLjgwsPTbcvxylwqR217cegbtm5SrnUPUTNCcsaddJuJITdruz6QC3w6xwu7wzgT3iFMhmCGceyoGwHiAnGdz73uQlj8RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721199205; c=relaxed/simple;
-	bh=uic/llVqAcebDBQyOtbh1hqN6xjJJmHzOFUf5hsJaeY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y0dNtmvWz3O8rxYknj/Ht9MwMiHELXrR6PiFgZtx9ib9jT7HG2De/SFgc52nujs3QH7PYXDkUdyFfkzBlm8yYaqZUJAQp63qIcEvZQxNANFJAPyBGoxnso3cA1Zsiigv2VxYfwrRX1cCIlW2XKAtKL/45EWz5zxL8gQiZuwwII0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XEyzfCwt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721199293; c=relaxed/simple;
+	bh=aZklrWcoYImMd5kjD1t8jhqUQuG8Fa38mz4PaWKoCrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=C58JhUTKRvTS/lkDC0WEjunV9/XQQv5EKyQdmVkYuIt3O/wTXMWjxET6oP/IYR4njS555i4nFhQDVAAFde5/bZDRQloannr8GHq4xFNTI5TSn3yrA32/KWZzgwSZ4VBSKea8lH8d36HtsxK0OssxN4qUW4Gg98OscnaCrn3oEB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DgbIyhPo; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XEyzfCwt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721199202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F3wUHZxtL7ge8mhgj3gN0VcPUpLkTBbNSymS6wzbPTc=;
-	b=XEyzfCwts3AtCWQSgCr6+CjZq/ALBveraoMOsAE3VcodSTrorfmJXPo12TujiEttGSwY/L
-	fKJwQqbekZ7r2tg6KmJE2YJQYdNLos7aYFP5yvA3La8ciJXP+uBxoaKRM1etVBhtijNaVd
-	a1/6QHN1XO4OldMMWf+ujhmY8xbnodA=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-MamatOTCOcqWqLC1hzIiXw-1; Wed, 17 Jul 2024 02:53:20 -0400
-X-MC-Unique: MamatOTCOcqWqLC1hzIiXw-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2c96e73c888so6849717a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:53:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgbIyhPo"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3679df4cb4cso249478f8f.0;
+        Tue, 16 Jul 2024 23:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721199290; x=1721804090; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V1YLJ3TkKT1Wj1ZfoVOPP08uP5BHh14hFdEYt5ZtLHM=;
+        b=DgbIyhPojnLSuao+wWw/59zSFRQkwrEIx//168Qkyo6p6/ZmCVAt4Phyr2Mwb/4xNb
+         pghKcfi/q/M/gdhzFgJ5SXrFIQvbWZCwDgaQLaGSAvRoHTibmVdanEgpuWhFIqfXwCb2
+         sJ1w4E8rSuzuS+k4PplZ1KkUSfghfUSVtrbN3vQ9xVvt5/2MZacCl0fyE4GGQqQWRCDu
+         7gzTh6AZBYVIgBrgnAbZBPi0Agz6B8UiF+XihOA1HjDxVKNApiIyk+UExouKICdGT4qs
+         DqCNp2pYKRFF6LSONRYLRx5OfUa+w+6OkGzRCx4wyA9cGeQ/e2nKHX6JDprRzdYR9X7U
+         3Paw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721199199; x=1721803999;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F3wUHZxtL7ge8mhgj3gN0VcPUpLkTBbNSymS6wzbPTc=;
-        b=ayof85Nr+wAcFU5JiS18RCchAaTG17zCdqXfge++bkTI4eomaJtixXrSmU1gWHkZmj
-         CBmI0Nii1hSNCiI/BvcSU1x4pDLl3qk2afeViyV4/Tl7d4WPq6FHKwrveHWQBytYh8uk
-         6iCfLbyfVIPYpIUKsw3tFc8qhXCAQ5RIWuVRu905L8+bbu4oANrcnXdc+bKzgPGgEp7v
-         vYU5P4rYXfp9ClMSS7vaTdGgfgB5A1zd7FV5A0oAW4r3o6WjTO/t+KqQUBv9KYHiaD6z
-         MuPKC1mmmjHdO7pqJ1W8ffi7K31ZaN8xlynZuSImj3FL3Qaewliek2nM2F9zElbkCaXZ
-         vCBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCjaj4j204GkSKeFmh392CHDwhLEZOV8EuO0DoqcouwlWkuPdmI6vZ2neKH/3Vbk8MweGoCdv4vmKaDZd7v8/FgPCPu1ojZsPGrglu
-X-Gm-Message-State: AOJu0Yz1qZBy0/YqFDp66Gxc6KWYsKYPgkohiycoGEFlx9KWNgVXJ8ak
-	xsExsSYYxeZMK5ORdHt2K7fBRIMengVvf4CcyWXS4ckiT3G7ouIuXGj8bfqpOoq1p3oGxpHfBTU
-	IUmqZEaOP4emf0Ggw5PmE7xsQO1Ji0WioVnJAKz4P2BjQ5hUuWbcl4I05SGg55JoSzRzDlmDrB6
-	Yf2FJezUbKKP3/bVQon9ae5HlyGRDac6hrNRtZ
-X-Received: by 2002:a17:90b:1403:b0:2ca:d1dc:47e2 with SMTP id 98e67ed59e1d1-2cb52932383mr569035a91.33.1721199199374;
-        Tue, 16 Jul 2024 23:53:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8jCLQ6um85ikfqpsMh6S5Hr0/9SWrMBmLpya6//pJpEdr011a67n7T3S3/Qgfa2EU+bKqVpScjxBtk7rsJA0=
-X-Received: by 2002:a17:90b:1403:b0:2ca:d1dc:47e2 with SMTP id
- 98e67ed59e1d1-2cb52932383mr569015a91.33.1721199198891; Tue, 16 Jul 2024
- 23:53:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721199290; x=1721804090;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V1YLJ3TkKT1Wj1ZfoVOPP08uP5BHh14hFdEYt5ZtLHM=;
+        b=QCmt8fEnb0zmZLBcK9aeGQsdac/s5+Qs6Z6Asn/z7y2cdnP6l94JVERsmAoZHkM+o3
+         iGujh/SFoiiVFab9ZMiMmOYXgmQVedY6YNXsNMyKEJA7o3k+OuihCkK4FmCCFqIaJfBK
+         cXEcEv+15Nyvw47Zpi84RU3i1Jku93+TSBGI0/BEqGjibqYWhzCsrwC8sZmaumRztjUz
+         ZL7Eezz1JObWvUPuyIyUtK1PETtOr+GUMzre6xcYbBoOP3mr4CQ8StT4lzqZ6+OFdQxS
+         ZxGr912iCKsP+jpawfAS4wy9mpbqOWMm7ENzMqVvqY4dw1avTPJjHaJzs68c+tZIuETC
+         NbrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcfeIxeMGjcS5tae7fHIpBstJgwsmnS4bPcDYxK/d1TrfYcFHXeyxubuUW/5oTMC6dqVbTdB8RKgzreVpqyQic7BrQCqn+yk6SNBlB
+X-Gm-Message-State: AOJu0YyvimegBmUd2ULzjM21nH+wr3Ne5p1mGgAYAsJMRFgPX5UlzHsb
+	PC1QEb4iUlCag2l1XwIB4jxfHx8xTPrHL25RJhsc95MVkGtQY1NV
+X-Google-Smtp-Source: AGHT+IHYRN49xMaQSXNqYQxFEVZnNVg9yuFeY/RwsZ0FYGX7WwHG5A8Kr0s8tnPF9SJJRk1ILQnDtA==
+X-Received: by 2002:a05:6000:4021:b0:366:e308:f9a1 with SMTP id ffacd0b85a97d-36831670e44mr473294f8f.23.1721199289683;
+        Tue, 16 Jul 2024 23:54:49 -0700 (PDT)
+Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dabf20dsm10918921f8f.38.2024.07.16.23.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 23:54:49 -0700 (PDT)
+Date: Wed, 17 Jul 2024 08:54:47 +0200
+From: Stanislav Jakubek <stano.jakubek@gmail.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Baolin Wang <baolin.wang7@gmail.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Yanxin Huang <yanxin.huang@unisoc.com>,
+	huang yanxin <yanxin.huang07@gmail.com>,
+	Wenming Wu <wenming.wu@unisoc.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: nvmem: sprd,sc2731-efuse: convert to YAML
+Message-ID: <9fba73ce66f1f3b7b2a8f46e7c21f60cff5a85f0.1721199034.git.stano.jakubek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709080214.9790-1-jasowang@redhat.com> <20240709080214.9790-4-jasowang@redhat.com>
- <20240709090743-mutt-send-email-mst@kernel.org> <CACGkMEv4CVK4YdOvHEbMY3dLc3cxF_tPN8H4YO=0rvFLaK-Upw@mail.gmail.com>
- <CACGkMEvDiQHfLaBRoaFtpYJHKTqicqbrpeZWzat43YveTa9Wyg@mail.gmail.com> <20240717015904-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240717015904-mutt-send-email-mst@kernel.org>
-From: Jason Wang <jasowang@redhat.com>
-Date: Wed, 17 Jul 2024 14:53:00 +0800
-Message-ID: <CACGkMEtntsAyddgrtxrbQe407dZkitac4ogC7cASF=iYgsum_A@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 3/3] virtio-net: synchronize operstate with
- admin state on up/down
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>, 
-	Gia-Khanh Nguyen <gia-khanh.nguyen@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Jul 17, 2024 at 2:00=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
- wrote:
->
-> On Wed, Jul 17, 2024 at 09:19:02AM +0800, Jason Wang wrote:
-> > On Wed, Jul 10, 2024 at 11:03=E2=80=AFAM Jason Wang <jasowang@redhat.co=
-m> wrote:
-> > >
-> > > On Tue, Jul 9, 2024 at 9:28=E2=80=AFPM Michael S. Tsirkin <mst@redhat=
-.com> wrote:
-> > > >
-> > > > On Tue, Jul 09, 2024 at 04:02:14PM +0800, Jason Wang wrote:
-> > > > > This patch synchronize operstate with admin state per RFC2863.
-> > > > >
-> > > > > This is done by trying to toggle the carrier upon open/close and
-> > > > > synchronize with the config change work. This allows propagate st=
-atus
-> > > > > correctly to stacked devices like:
-> > > > >
-> > > > > ip link add link enp0s3 macvlan0 type macvlan
-> > > > > ip link set link enp0s3 down
-> > > > > ip link show
-> > > > >
-> > > > > Before this patch:
-> > > > >
-> > > > > 3: enp0s3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state =
-DOWN mode DEFAULT group default qlen 1000
-> > > > >     link/ether 00:00:05:00:00:09 brd ff:ff:ff:ff:ff:ff
-> > > > > ......
-> > > > > 5: macvlan0@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu =
-1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
-> > > > >     link/ether b2:a9:c5:04:da:53 brd ff:ff:ff:ff:ff:ff
-> > > > >
-> > > > > After this patch:
-> > > > >
-> > > > > 3: enp0s3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state =
-DOWN mode DEFAULT group default qlen 1000
-> > > > >     link/ether 00:00:05:00:00:09 brd ff:ff:ff:ff:ff:ff
-> > > > > ...
-> > > > > 5: macvlan0@enp0s3: <NO-CARRIER,BROADCAST,MULTICAST,UP,M-DOWN> mt=
-u 1500 qdisc noqueue state LOWERLAYERDOWN mode DEFAULT group default qlen 1=
-000
-> > > > >     link/ether b2:a9:c5:04:da:53 brd ff:ff:ff:ff:ff:ff
-> > > >
-> > > > I think that the commit log is confusing. It seems to say that
-> > > > the issue fixed is synchronizing state with hardware
-> > > > config change.
-> > > > But your example does not show any
-> > > > hardware change. Isn't this example really just
-> > > > a side effect of setting carrier off on close?
-> > >
-> > > The main goal for this patch is to make virtio-net follow RFC2863. Th=
-e
-> > > main thing that is missed is to synchronize the operstate with admin
-> > > state, if we do this, we get several good results, one of the obvious
-> > > one is to allow virtio-net to propagate status to the upper layer, fo=
-r
-> > > example if the admin state of the lower virtio-net is down it should
-> > > be propagated to the macvlan on top, so I give the example of using a
-> > > stacked device. I'm not we had others but the commit log is probably
-> > > too small to say all of it.
-> >
-> > Michael, any more comments on this?
-> >
-> > Thans
->
->
-> Still don't get it, sorry.
-> > > > > This is done by trying to toggle the carrier upon open/close and
-> > > > > synchronize with the config change work.
-> What does this sentence mean? What is not synchronized with config
-> change that needs to be?
+Convert the Spreadtrum SC27XX eFuse bindings to DT schema.
+Rename the file after the only in-tree user, SC2731.
 
-I meant,
+Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+---
+Changes in V2:
+  - don't merge both SPRD eFuse bindings into one
+    (ums312 now has separate bindings, see patch 2)
+  - drop now unused clocks, clock-names
 
-1) maclvan depends on the linkwatch to transfer operstate from the
-lower device to itself.
-2) ndo_open()/close() will not trigger the linkwatch so we need to do
-it by ourselves in virtio-net to make sure macvlan get the correct
-opersate
-3) consider config change work can change the state so ndo_close()
-needs to synchronize with it
+ .../bindings/nvmem/sc27xx-efuse.txt           | 52 --------------
+ .../bindings/nvmem/sprd,sc2731-efuse.yaml     | 68 +++++++++++++++++++
+ 2 files changed, 68 insertions(+), 52 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/nvmem/sc27xx-efuse.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/sprd,sc2731-efuse.yaml
 
-Thanks
+diff --git a/Documentation/devicetree/bindings/nvmem/sc27xx-efuse.txt b/Documentation/devicetree/bindings/nvmem/sc27xx-efuse.txt
+deleted file mode 100644
+index 586c08286aa9..000000000000
+--- a/Documentation/devicetree/bindings/nvmem/sc27xx-efuse.txt
++++ /dev/null
+@@ -1,52 +0,0 @@
+-= Spreadtrum SC27XX PMIC eFuse device tree bindings =
+-
+-Required properties:
+-- compatible: Should be one of the following.
+-	"sprd,sc2720-efuse"
+-	"sprd,sc2721-efuse"
+-	"sprd,sc2723-efuse"
+-	"sprd,sc2730-efuse"
+-	"sprd,sc2731-efuse"
+-- reg: Specify the address offset of efuse controller.
+-- hwlocks: Reference to a phandle of a hwlock provider node.
+-
+-= Data cells =
+-Are child nodes of eFuse, bindings of which as described in
+-bindings/nvmem/nvmem.txt
+-
+-Example:
+-
+-	sc2731_pmic: pmic@0 {
+-		compatible = "sprd,sc2731";
+-		reg = <0>;
+-		spi-max-frequency = <26000000>;
+-		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		efuse@380 {
+-			compatible = "sprd,sc2731-efuse";
+-			reg = <0x380>;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			hwlocks = <&hwlock 12>;
+-
+-			/* Data cells */
+-			thermal_calib: calib@10 {
+-				reg = <0x10 0x2>;
+-			};
+-		};
+-	};
+-
+-= Data consumers =
+-Are device nodes which consume nvmem data cells.
+-
+-Example:
+-
+-	thermal {
+-		...
+-		nvmem-cells = <&thermal_calib>;
+-		nvmem-cell-names = "calibration";
+-	};
+diff --git a/Documentation/devicetree/bindings/nvmem/sprd,sc2731-efuse.yaml b/Documentation/devicetree/bindings/nvmem/sprd,sc2731-efuse.yaml
+new file mode 100644
+index 000000000000..dc25fe3d1841
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/sprd,sc2731-efuse.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/nvmem/sprd,sc2731-efuse.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Spreadtrum SC27XX PMIC eFuse
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    enum:
++      - sprd,sc2720-efuse
++      - sprd,sc2721-efuse
++      - sprd,sc2723-efuse
++      - sprd,sc2730-efuse
++      - sprd,sc2731-efuse
++
++  reg:
++    maxItems: 1
++
++  hwlocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - hwlocks
++
++allOf:
++  - $ref: nvmem.yaml#
++  - $ref: nvmem-deprecated-cells.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    pmic {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      efuse@380 {
++        compatible = "sprd,sc2731-efuse";
++        reg = <0x380>;
++        hwlocks = <&hwlock 12>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        /* Data cells */
++        fgu_calib: calib@6 {
++          reg = <0x6 0x2>;
++          bits = <0 9>;
++        };
++
++        adc_big_scale: calib@24 {
++          reg = <0x24 0x2>;
++        };
++
++        adc_small_scale: calib@26 {
++          reg = <0x26 0x2>;
++        };
++      };
++    };
++...
+-- 
+2.34.1
 
