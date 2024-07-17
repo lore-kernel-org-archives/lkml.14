@@ -1,63 +1,66 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A03A48CCC
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F9B558B6
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721255078; cv=none; b=UpP1EPHJi1ZyKLlrmKxUN4yMYaL3HhshdC4PPyt/JdFq6MDGphZ/dAM7/oIWq7SkbVLhaAyfWxwK6QT5hj7ru6mXo2vntlVOeoBYs0qltYcJQc1Hd5mjiRC3vTYBMbdK69uL1s2kWYBxcWxPvuXgLNmPTR7Gnto3vSSbKOMWoDY=
+	t=1721255079; cv=none; b=TKbe+uqBGDZHU+curczr1rnMia3EyLlV4/2WjW5eFa/oPRxK3vMJddxWju/jfmBJiGl0HY+XBFfqMIr8//inZL41jzXQi6mYPGQXtbLOWqyG8TdhMzMboA8DcfNY6pGfHBA0YRDlFaw7YeooEKHKMQrFMRl15Q/ylO9/Zu+nJzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721255078; c=relaxed/simple;
-	bh=Ntl9tRnYPr/zJHNKvphgoIXwclc8AMU5292YrLEeLMg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Z4XzOwe9UDubsfCx/IujfcYP6BVYashXrygAzLdGXY5+jNpUYO2jg6FRhUEvtByeyryKwOW8gaCBc8t6LBMcbCdQ2vaxtyg0gFw+EiAMCXnIV1RfUocGTsPktHAQq9KoYm4rBFNUSpuHGDXRh1Q43KT3yspauuSEWiu42tvQR6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Trx5I8WJ; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1721255079; c=relaxed/simple;
+	bh=kMqdRxWNiI9YiTgGPD1e6dunxlUyzqetxFSiKFvNiPI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CO0ZZ9LjtW8CS0LEws3iJEbP9AyZhzyvXNdipTZPVT9oUNgmUEVIuqpHZDmBUONY8JVBSbpYDHvXt/bdnfhPg+5olT0zC7WVIaTYe8PDAkmaQkiNRfDRS++AeITL9hjJmQ3x9G2/aZZFy3Ju9aNrmMKyGBfvV/4kjtFXJNWVCB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ipDKW34L; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Trx5I8WJ"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e05f9611400so391510276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:24:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ipDKW34L"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-65fabcd336fso4296687b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:24:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721255072; x=1721859872; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MezEZvDkvM+1W/zRjucz+iEQh8YeOxqZVDK0/PzLMrI=;
-        b=Trx5I8WJWSde4ZXTL+SX1MKXfpd8aEEjLHqkVa5LYd994J6dWBmChwK9QssfVILCOT
-         lVYy0v4DHdbkarhzeNQsK2p6wWZFTg24cALYe5rpsllEv23MqCPnp/IvS6xhlPyo2iMw
-         3HzJbMTDKk0PmVHxio8MGH1qdP/IudTrjziBCP43rBYpkwyl7Z1N/6f1tdq3yFOhAR/8
-         6VOC2WAMDylcK+YlmDOP5BU9hwo7zNkEDB0+73yqG6Gfkxh1MDCNHd0GIcKOnoq9imqW
-         qNTwCAqzV1+NChDcDGiO7ie0ZDbVwgUfiB/kQRFHfR5aa0JILFppfra4R7tRcCT7QIwC
-         EBjA==
+        d=google.com; s=20230601; t=1721255077; x=1721859877; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sdMf+ufr3mRNGP33DXF0RnpzY+vpJ6GjjPw/JpyYHhE=;
+        b=ipDKW34LDXjO8jvBw0bPwF8/fNk4EqV5BGvo9qg0sVImlHjWi1b9PmeFX59ArGeq+G
+         +i92H6fx9Zom8toZlHZ9HQF5vhCiO1RQYmS6YLDnVQI2wGn+lq0odiF3k6V8ZJZbtcLr
+         0LiqXaebg4WO/L6OdwhPdoVLCiQJBX2plUpgQ166DwNFAr9oJkRL1DkBp1M2g7DTyRxg
+         TsBuG+pcUM4oVi7Chgdl8gb02CoLdpd3ksTFQuvOm/piV4JTADM2ueoReE4JYuHAbNR2
+         Vp8XB1S2nK1Iu4hZD6iO6qPbwdttkv+vRU+IqIGfJ6DO7WdRbqqqSHJ2b3PDp0XbmXh1
+         t69Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721255072; x=1721859872;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MezEZvDkvM+1W/zRjucz+iEQh8YeOxqZVDK0/PzLMrI=;
-        b=uybZdoEdrG5f51Rr+nSIZDSuImFVnSxKJUV2iRyLItoB70l/dNEDhvwU8u/Wy3GERp
-         bWLfZv2ffZqUduCok/ZLm3rlp5X2jTIicKAzpQNneG5Ba+ijF24PL0Uk5DsiJLU9h1nu
-         ortIgA5ohwHQbNu4VRBE+WMAx5oecfg3P9ayOaIGU9eilYoA3RuXhQhqmSQZYrj7Ulk7
-         CKsHI+O1AjnlyCb7z4oBkPOoQjzN06VnE1Yvm9rAA5q4zVtJ3UcF7KdQnwqetoIkTzfb
-         yXZ7bSzDj3k8iqKlb+ihgQ6R2EQ3kRQR+6DRltyz0O/Rf4aBJ10Wm8ooY96Zv6D5Ik10
-         R/bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXp4b5S7AeimL42fSE7iB9hHBz0mCihW2N3RKyxGiKhSH5kFcKwFeEUPIv7AxFdIbix0Wp/xgH+12EXERHdmgaM2lY0sVFw3fourA1o
-X-Gm-Message-State: AOJu0Ywt22uRI9UV4GodAuHy06PexPxzK13mQXOwFKFTPVo6QW8ts3w0
-	rOKnYgvf/PBB/WecKemElNGIfAgFBLe9ccr+JxerNpShqSQA0Wmln5u9QQI27hTY4eADwwYUXd+
-	hEua+s3HRXwOGbuOjkctwPn5jfI8eSQ==
-X-Google-Smtp-Source: AGHT+IG3+vxstPdTJZp8jxDQlLO2DBDeon/AfyXaM8QcDfmGpsUe4BCC7qLioU+mUNebeDuzOmN7MsFB77LhWaaMobJI
+        d=1e100.net; s=20230601; t=1721255077; x=1721859877;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sdMf+ufr3mRNGP33DXF0RnpzY+vpJ6GjjPw/JpyYHhE=;
+        b=V5f5BRsL6nB4uNxJGx1Z9Z8Q8VKXyl4AlLaBnRSaYVjgS6u0YzMdEalL+32A9g3dX7
+         FChqL8G3BucjKV54j4jGqYYAgPhlyX9wwoQy8oLyCempotWp6NwdvYxc5QEwUJaPdmFJ
+         GTjlZzb1ux0ITPnx6sRwj2ZiJbymIHbC6t6PPyWGpnKKhlaXjAxuLVwmFNFsWVLTtcqv
+         HYH0pmg10/NpXj1nrecE6fXHgfbbjL8BQQoJwhjB8rd7he/1lGk+H9z/6k9FfDYfAZhy
+         jvWsgNjuJKQA/VNtYvx9R/8H2SSmuNxrApfpllKa8izdpfbSsTqCHIdcpzUkPvRwpjE0
+         a8Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZcqYNsqY12NeHlTZESAOYngA/rmtEMVeP51+FyYkJRX/dFlP7i+9fLJUHbw0uRcW9asVmhu1zXe0syhGGWgMUc4R6pSvd5cXj6bL9
+X-Gm-Message-State: AOJu0Yx4bIYKkRB2EzGhZ1wIt/Unn43tJ9q7UBesIpZPb1uGtcKCI9Pl
+	NLq26bmaDJfDny7cGwjVk76rM2FSX49IpJKkxJPwWSiQ+0jM3U0mQWQzezWn3UDKL8Iv+NZZeAB
+	1+g6OyabgBWgWYTUBAqJX3WjrnokolA==
+X-Google-Smtp-Source: AGHT+IEV6mYusUj8ULHke+1RPPJco+bwaOOORCvPCTttFeFfrfUKPgZ9QPG4zLl9wVzK07pSlcLnXXgBKQS8++ePE95q
 X-Received: from axel.svl.corp.google.com ([2620:15c:2a3:200:a503:d697:557b:840c])
- (user=axelrasmussen job=sendgmr) by 2002:a05:6902:c03:b0:e05:fc91:8935 with
- SMTP id 3f1490d57ef6-e05feb62eebmr2039276.3.1721255072045; Wed, 17 Jul 2024
- 15:24:32 -0700 (PDT)
-Date: Wed, 17 Jul 2024 15:24:26 -0700
+ (user=axelrasmussen job=sendgmr) by 2002:a05:690c:f94:b0:64a:e220:bfb5 with
+ SMTP id 00721157ae682-666015f1508mr450367b3.1.1721255076965; Wed, 17 Jul 2024
+ 15:24:36 -0700 (PDT)
+Date: Wed, 17 Jul 2024 15:24:29 -0700
+In-Reply-To: <20240717222429.2011540-1-axelrasmussen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240717222429.2011540-1-axelrasmussen@google.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Message-ID: <20240717222429.2011540-1-axelrasmussen@google.com>
-Subject: [PATCH 6.6 0/3] Backport VFIO refactor to fix fork ordering bug
+Message-ID: <20240717222429.2011540-4-axelrasmussen@google.com>
+Subject: [PATCH 6.6 3/3] vfio/pci: Insert full vma on mmap'd MMIO fault
 From: Axel Rasmussen <axelrasmussen@google.com>
 To: stable@vger.kernel.org
 Cc: Alex Williamson <alex.williamson@redhat.com>, Ankit Agrawal <ankita@nvidia.com>, 
@@ -65,54 +68,74 @@ Cc: Alex Williamson <alex.williamson@redhat.com>, Ankit Agrawal <ankita@nvidia.c
 	Kunwu Chan <chentao@kylinos.cn>, Leah Rumancik <leah.rumancik@gmail.com>, 
 	Miaohe Lin <linmiaohe@huawei.com>, Stefan Hajnoczi <stefanha@redhat.com>, Yi Liu <yi.l.liu@intel.com>, 
 	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Axel Rasmussen <axelrasmussen@google.com>
+	Yan Zhao <yan.y.zhao@intel.com>, Axel Rasmussen <axelrasmussen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-35e351780fa9 ("fork: defer linking file vma until vma is fully initialized")
-switched the ordering of vm_ops->open() and copy_page_range() on fork. This is a
-bug for VFIO, because it causes two problems:
+From: Alex Williamson <alex.williamson@redhat.com>
 
-1. Because open() is called before copy_page_range(), the range can conceivably
-   have unmapped 'holes' in it. This causes the code underneath untrack_pfn() to
-   WARN.
+commit d71a989cf5d961989c273093cdff2550acdde314 upstream.
 
-2. More seriously, open() is trying to guarantee that the entire range is
-   zapped, so any future accesses in the child will result in the VFIO fault
-   handler being called. Because we copy_page_range() *after* open() (and
-   therefore after zapping), this guarantee is violated.
+In order to improve performance of typical scenarios we can try to insert
+the entire vma on fault.  This accelerates typical cases, such as when
+the MMIO region is DMA mapped by QEMU.  The vfio_iommu_type1 driver will
+fault in the entire DMA mapped range through fixup_user_fault().
 
-We can't revert 35e351780fa9, because it fixes a real bug for hugetlbfs. The fix
-is also not as simple as just reodering open() and copy_page_range(), as Miaohe
-points out in [1]. So, although these patches are kind of large for stable, just
-backport this refactoring which completely sidesteps the issue.
+In synthetic testing, this improves the time required to walk a PCI BAR
+mapping from userspace by roughly 1/3rd.
 
-Note that patch 2 is the key one here which fixes the issue. Patch 1 is a
-prerequisite required for patch 2 to build / work. This would almost be enough,
-but we might see significantly regressed performance. Patch 3 fixes that up,
-putting performance back on par with what it was before.
+This is likely an interim solution until vmf_insert_pfn_{pmd,pud}() gain
+support for pfnmaps.
 
-Note [1] also has a more full discussion justifying taking these backports.
+Suggested-by: Yan Zhao <yan.y.zhao@intel.com>
+Link: https://lore.kernel.org/all/Zl6XdUkt%2FzMMGOLF@yzhao56-desk.sh.intel.com/
+Reviewed-by: Yan Zhao <yan.y.zhao@intel.com>
+Link: https://lore.kernel.org/r/20240607035213.2054226-1-alex.williamson@redhat.com
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Axel Rasmussen <axelrasmussen@google.com>
+---
+ drivers/vfio/pci/vfio_pci_core.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-I proposed the same backport for 6.9 [2], and now for 6.6. 6.6 is the oldest
-kernel which needs the change: 35e351780fa9 was reverted for unrelated reasons
-in 6.1, and was never backported to 5.15 or earlier.
-
-[1]: https://lore.kernel.org/all/20240702042948.2629267-1-leah.rumancik@gmail.com/T/
-[2]: https://lore.kernel.org/r/20240717213339.1921530-1-axelrasmussen@google.com
-
-Alex Williamson (3):
-  vfio: Create vfio_fs_type with inode per device
-  vfio/pci: Use unmap_mapping_range()
-  vfio/pci: Insert full vma on mmap'd MMIO fault
-
- drivers/vfio/device_cdev.c       |   7 +
- drivers/vfio/group.c             |   7 +
- drivers/vfio/pci/vfio_pci_core.c | 271 ++++++++-----------------------
- drivers/vfio/vfio_main.c         |  44 +++++
- include/linux/vfio.h             |   1 +
- include/linux/vfio_pci_core.h    |   2 -
- 6 files changed, 125 insertions(+), 207 deletions(-)
-
---
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index 7b74c71a3169..b16678d186d3 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -1659,6 +1659,7 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+ 	struct vm_area_struct *vma = vmf->vma;
+ 	struct vfio_pci_core_device *vdev = vma->vm_private_data;
+ 	unsigned long pfn, pgoff = vmf->pgoff - vma->vm_pgoff;
++	unsigned long addr = vma->vm_start;
+ 	vm_fault_t ret = VM_FAULT_SIGBUS;
+ 
+ 	pfn = vma_to_pfn(vma);
+@@ -1666,11 +1667,25 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+ 	down_read(&vdev->memory_lock);
+ 
+ 	if (vdev->pm_runtime_engaged || !__vfio_pci_memory_enabled(vdev))
+-		goto out_disabled;
++		goto out_unlock;
+ 
+ 	ret = vmf_insert_pfn(vma, vmf->address, pfn + pgoff);
++	if (ret & VM_FAULT_ERROR)
++		goto out_unlock;
+ 
+-out_disabled:
++	/*
++	 * Pre-fault the remainder of the vma, abort further insertions and
++	 * supress error if fault is encountered during pre-fault.
++	 */
++	for (; addr < vma->vm_end; addr += PAGE_SIZE, pfn++) {
++		if (addr == vmf->address)
++			continue;
++
++		if (vmf_insert_pfn(vma, addr, pfn) & VM_FAULT_ERROR)
++			break;
++	}
++
++out_unlock:
+ 	up_read(&vdev->memory_lock);
+ 
+ 	return ret;
+-- 
 2.45.2.993.g49e7a77208-goog
 
