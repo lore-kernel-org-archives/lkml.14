@@ -1,162 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8841138396;
-	Wed, 17 Jul 2024 08:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454FE38385;
+	Wed, 17 Jul 2024 08:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721205611; cv=none; b=h0+DseTGEln3YFwCaLj27jVl90XgE1hd4QQiSW1yW+M7+cUGY6BWAIVKCXkk0NwQBeB5NQgda16IZSrxYpihT2iVskRE8r0cXWyBp9KHfObmEeg195ocijn2qOkY8VehAnVu3Z74TtiNLUKIl/R0JcbAEP7+jkYQ6ftY03wVMGk=
+	t=1721205662; cv=none; b=cz17EZK4LOxRh0KPoOOtZGVR95W5n7TyhMeDcb4nMX3GgWftn9XiXQW46cCCRVmgdVwTIRK/zORDPP4+UVupxe73QEWbUVyT0++6fs0fvF7WEnmdKo1+wH3a42SRWG8VFjXZyAOEpogkuExc3LTeRiEsQ7ByJDIRuIt2+wGVkcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721205611; c=relaxed/simple;
-	bh=8xefbxae26ImZXEFu8mWeuTLfw1+nQRCp2j3fD277D4=;
+	s=arc-20240116; t=1721205662; c=relaxed/simple;
+	bh=6IPB7gYcVncufg+zOK7BDYfLxdMVnopJpWdlwVuPnN8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyCDyrVz1cLJaq/ijPfgZuoGnrgfoBBSpMr/0VPWw+w0Lq9iTaOKmBXTssgmAjTy0ngOW36inGxgOCAh1IBzh6wuPj253Ww6vTiQdhW3sjzrYB4NW0pM3EgRJeYo2EIJVYQszFErvJdrYQ/cNR9kNmzzTJWlmLM/UxuTCwhiJZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ci+gn/eb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RK65G2b1av+BNfLv6m7fiZaE3eXElOLUYJfTmM8M+WVto3eNOVLS7zI5UXHmrS6J5lz5zcI3r6OyWjcS0NRYomfEO5TZ5KPElyXCGz3aBGZFUTz1/j1rmmo+J/uIzJbUrQt8Bog6dkwI7tp/spQSZ/9BgEcpMKNjC7+J7zA2Jow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Epe7CK3T; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ci+gn/eb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02103C32782;
-	Wed, 17 Jul 2024 08:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721205611;
-	bh=8xefbxae26ImZXEFu8mWeuTLfw1+nQRCp2j3fD277D4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ci+gn/ebvzbBXsdHGmIliOqvlXvt3Gsa4m+7NDuIlTvbeR5XCkPryS77LKm9EG1tX
-	 qBF4rAYV+x6aNaoYph7R/AzrOpYPlC0mx2GiDfuKh7OSwDujv+uGsbP3FwKezQoxcM
-	 8vjnvyptb8L6ridPVSfNesI1iKn9ki9jGcz4HqoXLUPXIjoOpmruYr83XLJarDnQKJ
-	 29higQw9BPUlvec8fB6Wp49ojrZerrhJGsnbb4JfhJCDn5+ZYeEhXE1/q1mKQpTwrg
-	 yYeFlP33pwbKFRR+l7Q2ELeZ5G082zrvW8oegq1HTnYIT17WK6xrLl9lMcTVD/YImu
-	 rdQPniiEGIMOg==
-Date: Wed, 17 Jul 2024 14:10:03 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Sricharan R <quic_srichara@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
-	manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devi priya <quic_devipriy@quicinc.com>
-Subject: Re: [PATCH V6 1/4] dt-bindings: PCI: qcom: Document the IPQ9574 PCIe
- controller.
-Message-ID: <20240717084003.GE2574@thinkpad>
-References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
- <20240716092347.2177153-2-quic_srichara@quicinc.com>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Epe7CK3T"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id ED9BF1F9B1;
+	Wed, 17 Jul 2024 10:40:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1721205657;
+	bh=2vLQkWxKCU/zWL/g9egpluNEz//HSDrSJQGosY4MSSw=; h=From:To:Subject;
+	b=Epe7CK3T133MVxfNq4MOlYE8Z0uXWIzx8vpPHkRVtil05pbwOJyItTtKvgKJHVs0B
+	 smIML1YCIuA20a6rl1dsfH1fa4SENYtP2Lopuo1b4lmfDNJpg05YUBUTUXs2bZzHCD
+	 Ay0jhwquBufcDohj6qwELIQ5VUNYWckgC+thVJ44fgl3B9tfreZNYCHmBa4wfmlUGD
+	 wUbk5vMiemuoHnqDh6qtAijkkAmnUXVyEb+tzptwCUH0DeCeLPe55xYwPek+0ZZTo9
+	 1kzL4kDoMH/tpf2v+gW/z09W/1tkgsZ0tiKco9j7zpVlmTzHYJxO222Ri8gL2N18Wt
+	 hOBiO8TdprLiQ==
+Date: Wed, 17 Jul 2024 10:40:54 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] wifi: mwifiex: simplify WPA flags setting
+Message-ID: <20240717084054.GD3312@francesco-nb>
+References: <20240717-mwifiex-wpa-psk-sha256-v2-0-eb53d5082b62@pengutronix.de>
+ <20240717-mwifiex-wpa-psk-sha256-v2-1-eb53d5082b62@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240716092347.2177153-2-quic_srichara@quicinc.com>
+In-Reply-To: <20240717-mwifiex-wpa-psk-sha256-v2-1-eb53d5082b62@pengutronix.de>
 
-On Tue, Jul 16, 2024 at 02:53:44PM +0530, Sricharan R wrote:
-> From: devi priya <quic_devipriy@quicinc.com>
+On Wed, Jul 17, 2024 at 10:30:07AM +0200, Sascha Hauer wrote:
+> The WPA flags setting only depends on the wpa_versions bitfield and not
+> on the AKM suite, so move it out of the switch/case to simplify the code
+> a bit. Also set bss_config->protocol to zero explicitly. This is done
+> only to make the code clearer, bss_config has been zero alloced by the
+> caller, so should be zero already. No functional change intended.
 > 
-> Document the PCIe controller on IPQ9574 platform.
-> 
-> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-- Mani
-
-> ---
->  [V6] Fixed the clocks order and dropped unnessecary names as per
->       Krzysztof's comments.
->       Changed the interrupt numbers/msi to '8'.
-> 
->  .../devicetree/bindings/pci/qcom,pcie.yaml    | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index f867746b1ae5..2d61fb9f206d 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -26,6 +26,7 @@ properties:
->            - qcom,pcie-ipq8064-v2
->            - qcom,pcie-ipq8074
->            - qcom,pcie-ipq8074-gen3
-> +          - qcom,pcie-ipq9574
->            - qcom,pcie-msm8996
->            - qcom,pcie-qcs404
->            - qcom,pcie-sdm845
-> @@ -161,6 +162,7 @@ allOf:
->              enum:
->                - qcom,pcie-ipq6018
->                - qcom,pcie-ipq8074-gen3
-> +              - qcom,pcie-ipq9574
->      then:
->        properties:
->          reg:
-> @@ -397,6 +399,53 @@ allOf:
->              - const: axi_m_sticky # AXI Master Sticky reset
->              - const: axi_s_sticky # AXI Slave Sticky reset
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,pcie-ipq9574
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 6
-> +          maxItems: 6
-> +        clock-names:
-> +          items:
-> +            - const: axi_m # AXI Master clock
-> +            - const: axi_s # AXI Slave clock
-> +            - const: axi_bridge
-> +            - const: rchng
-> +            - const: ahb
-> +            - const: aux
-> +
-> +        resets:
-> +          minItems: 8
-> +          maxItems: 8
-> +        reset-names:
-> +          items:
-> +            - const: pipe # PIPE reset
-> +            - const: sticky # Core Sticky reset
-> +            - const: axi_s_sticky # AXI Slave Sticky reset
-> +            - const: axi_s # AXI Slave reset
-> +            - const: axi_m_sticky # AXI Master Sticky reset
-> +            - const: axi_m # AXI Master reset
-> +            - const: aux # AUX Reset
-> +            - const: ahb # AHB Reset
-> +
-> +        interrupts:
-> +          minItems: 8
-> +        interrupt-names:
-> +          items:
-> +            - const: msi0
-> +            - const: msi1
-> +            - const: msi2
-> +            - const: msi3
-> +            - const: msi4
-> +            - const: msi5
-> +            - const: msi6
-> +            - const: msi7
-> +
->    - if:
->        properties:
->          compatible:
-> @@ -507,6 +556,7 @@ allOf:
->                  - qcom,pcie-ipq8064v2
->                  - qcom,pcie-ipq8074
->                  - qcom,pcie-ipq8074-gen3
-> +                - qcom,pcie-ipq9574
->                  - qcom,pcie-qcs404
->      then:
->        required:
-> -- 
-> 2.34.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
