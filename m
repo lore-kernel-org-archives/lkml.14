@@ -1,118 +1,108 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B591802A3;
-	Wed, 17 Jul 2024 13:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134231E487
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 13:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721222080; cv=none; b=GcXAx93xgrPQZ1Yd3Kr96jGq1Sj4mezmilMEzv9obywrK4Xz8GRmU02MBQuj3rfnrsy3RaDu/vu2VZ81sgbxEdbbcxyatCgl4oxzdA1n2vT6BWFaNBgE+ho67LsMDEqADAQr2pqcHcYgmhWv9lo5HqXzmx1RTCi+Go8dUTPC2mc=
+	t=1721222144; cv=none; b=sf/8+G6Xj9jCE/Ie0N3FWCNjk8CAI0cTtL3NVMEOodJjWHvV2w3hT/5FKwA5ptVv6Z194SZys/p5olc/ecbqW7yE0jBwttfwz346/QEgORW8lxyH3J7Ts7+3WqA7y4zIcFIlxsjIgy1pnlZ3qf7iOJQ/uoKA5rogaGzd3dl7z+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721222080; c=relaxed/simple;
-	bh=kzYMEzDjxTpW5eugXBBcAXl8xSootQ7RO2p3jTHcEPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NBWYhKr/1m/jQV9U9K8+gyNBgJEnnz/ELjgCD/4MdgGYiHgTE5ZKZmgCWPHjUh2CeOE94q2m76g5Mb/DlF6z5/SpFMl53wm9eBPXcLIYcytvcBjdHlo3fa8MLvRtb6zdmIMgLlQwsNotjK4E4ffOuKa4vXGqfvvyql0Jtex8Rng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KprwIjDA; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1721222144; c=relaxed/simple;
+	bh=w3lM3QxgiIO2XloHLHUAuPqr2I7Bak5yf/pxxvSHH54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=harkq3t/ALhADOpQanxVsTs7ZkJEaFkKl8APugJYozvTzqHHMyLsWnRgrEKEDL+XKsXxgBfwIpF1ZBdl/Zhl47vfV6uZs3EN3EfWkIA11oFU1lxcahrfJkIdgUyj+IDh+iGwJj94hlaJvduX1VMvx2BGz+vh/dQoCxFimaH+XWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=pCn679AA; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KprwIjDA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1721222077;
-	bh=kzYMEzDjxTpW5eugXBBcAXl8xSootQ7RO2p3jTHcEPo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KprwIjDAbCnWZr1IXmzM3UqQ9WkQESnjzRG7FJR5PktXGypvOjhq7X8o0wo75cIPB
-	 aK9JiGlvcOtdkKzZypIIvup9GMb7pRUKIq6/EaBwRjdY1DO5JIFteWi2Zq9S/xMNnS
-	 foL3U0BqE7dI56Bj/NIHVwyVlZS5SmNmVD3dD/hXXP5SlWluDx9l4Ldpxxh6FHFQeH
-	 gdpZEE60Fya5g3aBEpT43tuGBK2K0qfkPPOu1HWx+i7uo5ujdgrA6VdMvVFXz1HOO8
-	 /RwRtzi0GCbDkAEJS9aKTQriWI2+R501UPO3mksX2edBd/l/23WVdaipnZuV/+Jgl4
-	 tHS0CS+Msolkw==
-Received: from benjamin-XPS-13-9310.. (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5A2803781167;
-	Wed, 17 Jul 2024 13:14:37 +0000 (UTC)
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-To: mchehab@kernel.org,
-	ezequiel@vanguardiasur.com.ar,
-	hverkuil-cisco@xs4all.nl
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	kernel@collabora.com,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v4 2/2] media: verisilicon: Use V4L2_FMT_FLAG_ENUM_ALL_FORMATS flag
-Date: Wed, 17 Jul 2024 15:14:30 +0200
-Message-ID: <20240717131430.159727-3-benjamin.gaignard@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240717131430.159727-1-benjamin.gaignard@collabora.com>
-References: <20240717131430.159727-1-benjamin.gaignard@collabora.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="pCn679AA"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7f70a708f54so50416939f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1721222141; x=1721826941; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nfyN59SqKKWvXLU3CmJIUvS3Qc0ugEMt32zK3kDXEnU=;
+        b=pCn679AAqbmQ8aEZ0gMkxczOAnX6RI3DGskk2a67QuSwJJmQ/LVcSQDD4BQ+7G758U
+         Zazq2hfQl/h0iYjfJOutzc9mHP9KeXIGb0X3+XCkoDkZd1yBDghfwBBwtVPjhENR0RQY
+         c/I3z29/8ElRq6es6qhON0x/X6AKbPeqMvItG2ModEdzAhnX65nom1gGKvjsH4fqJeC8
+         lfayo+Xbxm4+cfVxIpqxpB1XsgPnprQGPRASbCAm7dlFuWLr9CcSAoShnJAorkFRtg04
+         aXcOMQfex2KWDt+Ru2+tgeNYg/YMTVb0r+h/BZjWr/p2/53jYW1OqByr/h1tWXkz+glU
+         jqDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721222141; x=1721826941;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nfyN59SqKKWvXLU3CmJIUvS3Qc0ugEMt32zK3kDXEnU=;
+        b=gFVGBHNCB928RbcxIge8x78fm0GgrmpYLavVlV2yO0ac3WDRqgf8vMBmK83RM5RwJ4
+         WNAnKSO1PgyaxQvj8hFMbiAsKLmk6NKs+CqEZ4logsicvTgZH7Tdw7UiRQln15bQ5oLd
+         7j4OfCmJOZItzVIh8PD9LuosWw50MCLoVLznw4EwN7qChUzn/wNsex7sXJ8w8geecDLZ
+         lfQ/IKJArhG0CzIPoHFiFQjRmsgjZtQtnFICTuOEylgxP7iqwbb2cRRpzj/OlBhEi9fW
+         ZNt5e+OJvrpoMEFDR8712eOfj62cPzbNWrdu7x2WefobIoadXyJ3HdGPQlrQMFq2zXiT
+         2XqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPuimcVGZqJz7/7gZLEKglPLDhe+fLDZUIih/IhB39l0Zg3Wq2v7HQbdoOepqg5u8GzNplT7+IhBxOgJZYy/YVbF0L5+ZWyZo3CGsV
+X-Gm-Message-State: AOJu0Yw1dOk4IlIHTWMC3URchp6qRhlaeVQmNdpqdeDqr/VSDNkQjaV8
+	W03rl4mefswmDYH3E1VxIeKgX+B6DZTRZmM8QzMtqbCumdPSJF+p9BRvqujfSD4=
+X-Google-Smtp-Source: AGHT+IGqABt+N2by4fsdmIqsdoYWgZufcwOnrxKz5lnVlQ+PsNG/iBjeIJbo82SPl4wG/8emOYWz6A==
+X-Received: by 2002:a05:6602:1406:b0:7f9:1b3b:8465 with SMTP id ca18e2360f4ac-817109e76cbmr216963839f.11.1721222141068;
+        Wed, 17 Jul 2024 06:15:41 -0700 (PDT)
+Received: from localhost ([140.82.166.162])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c210f21be4sm658490173.91.2024.07.17.06.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 06:15:40 -0700 (PDT)
+Date: Wed, 17 Jul 2024 08:15:40 -0500
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Samuel Holland <samuel.holland@sifive.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, Pu Lehui <pulehui@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>, Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] riscv: patch: Remove redundant functions
+Message-ID: <20240717-515ffec38da9b1f5df03e42c@orel>
+References: <20240717084102.150914-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240717084102.150914-1-alexghiti@rivosinc.com>
 
-If V4L2_FMT_FLAG_ENUM_ALL_FORMATS flag has been set when calling
-VIDIOC_ENUM_FMT ignore depth match and returns all the
-hardware supported pixels formats. In this case all set
-V4L2_FMT_FLAG_ALL_FORMATS when returning the pixels formats.
+On Wed, Jul 17, 2024 at 10:41:02AM GMT, Alexandre Ghiti wrote:
+> Commit edf2d546bfd6f5c4 ("riscv: patch: Flush the icache right after
+> patching to avoid illegal insns") removed the last differences between
+> patch_text_set_nosync() and patch_insn_set(), and between
+> patch_text_nosync() and patch_insn_write().
+> 
+> So remove the redundant *_nosync() functions.
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Closes: https://lore.kernel.org/linux-riscv/CAMuHMdUwx=rU2MWhFTE6KhYHm64phxx2Y6u05-aBLGfeG5696A@mail.gmail.com/
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>  arch/riscv/errata/sifive/errata.c |  4 ++--
+>  arch/riscv/errata/thead/errata.c  |  2 +-
+>  arch/riscv/include/asm/patch.h    |  3 +--
+>  arch/riscv/kernel/alternative.c   |  4 ++--
+>  arch/riscv/kernel/cpufeature.c    |  2 +-
+>  arch/riscv/kernel/jump_label.c    |  2 +-
+>  arch/riscv/kernel/patch.c         | 24 +-----------------------
+>  arch/riscv/net/bpf_jit_core.c     |  4 ++--
+>  8 files changed, 11 insertions(+), 34 deletions(-)
+>
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
----
- drivers/media/platform/verisilicon/hantro_v4l2.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
-index df6f2536263b..b995ad31cddc 100644
---- a/drivers/media/platform/verisilicon/hantro_v4l2.c
-+++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
-@@ -201,7 +201,13 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
- 	struct hantro_ctx *ctx = fh_to_ctx(priv);
- 	const struct hantro_fmt *fmt, *formats;
- 	unsigned int num_fmts, i, j = 0;
--	bool skip_mode_none;
-+	bool skip_mode_none, ignore_depth_match;
-+
-+	/*
-+	 * If V4L2_FMT_FLAG_ALL_FORMATS flag is set, we want to enumerate all
-+	 * hardware supported pixels formats
-+	 */
-+	ignore_depth_match = !!(f->flags & V4L2_FMT_FLAG_ENUM_ALL_FORMATS);
- 
- 	/*
- 	 * When dealing with an encoder:
-@@ -222,10 +228,12 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
- 
- 		if (skip_mode_none == mode_none)
- 			continue;
--		if (!hantro_check_depth_match(fmt, ctx->bit_depth))
-+		if (!hantro_check_depth_match(fmt, ctx->bit_depth) && !ignore_depth_match)
- 			continue;
- 		if (j == f->index) {
- 			f->pixelformat = fmt->fourcc;
-+			if (ignore_depth_match)
-+				f->flags |= V4L2_FMT_FLAG_ALL_FORMATS;
- 			return 0;
- 		}
- 		++j;
-@@ -242,10 +250,12 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
- 	for (i = 0; i < num_fmts; i++) {
- 		fmt = &formats[i];
- 
--		if (!hantro_check_depth_match(fmt, ctx->bit_depth))
-+		if (!hantro_check_depth_match(fmt, ctx->bit_depth) && !ignore_depth_match)
- 			continue;
- 		if (j == f->index) {
- 			f->pixelformat = fmt->fourcc;
-+			if (ignore_depth_match)
-+				f->flags |= V4L2_FMT_FLAG_ALL_FORMATS;
- 			return 0;
- 		}
- 		++j;
--- 
-2.43.0
-
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
