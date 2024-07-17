@@ -1,348 +1,109 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7698725634;
-	Wed, 17 Jul 2024 07:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81661CAB1
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721202634; cv=none; b=DuP8wUpq1JU70ne9gAhfXq7xm6wlaZrxste4GcWDsxLMMZaBEGztWOg0n83DIoCm9Vi5JnRFypjiKeLY1UQWWholKQdjxehnAPCJhOYAVSKLtNhy3HtWTs54JZvgsDpD8p3jLuJFmLZpxSHxpS82V/cfNmd/l0t4lqOc4R/ps38=
+	t=1721202776; cv=none; b=OQV/4VxD3YSaaOMKA8BrbU21y2gbSNiwA6pgNrsPJsXprHwVrAYkngNsEp/SEsrBzoH1chDXuEf8yCkZ9BCG+A+6zQB6ZLL0l/hExEsSV1GmRNhyygWYD4/ju0JfaAZWEZR2pOwBuzn6VaLqMQHvxGDZ8VB0VtWWe4SBNVZqSzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721202634; c=relaxed/simple;
-	bh=4KWv2l4CvgBcU9eNV7vNVYutWXPBBRmGy3UjE3K375M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BRL9T5H6jj0Z1NqL67gpWQ/RpttqTqnsurkVyuLEeg5pW3POZE5zmouCcITjaCQZBNOYRBhAAuRizkU3E1qB0OZy3e6/HzOF66hH1HaICEmCZ1RSm5AoDJMVWxqXMWCmjfsOb/FcsuD9n3jvpoYnzQdEGGZNu+luhkOtyLxmiVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=08M6MQ2e; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1721202776; c=relaxed/simple;
+	bh=tmn7dZaZf/63VEF8gNjawg4siNTUl1KUDSGXNI8Zuqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rRsCaHpx9r4QMDBA6+nSC58EzPB63++MkKrFEWNA6vfjoQUn6zVceGEHVGnfpPTI/XWCC+UEhhaqzF8WYyBy4mRyXTQI4Edd6oztOteL6UQJk7TyOFnNQxqdWdW0lEpGwRzv2fHBggDh/IZLiYlazsgnLd7nCqRMHn5AUSNJ8mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CvxTVdSP; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="08M6MQ2e"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H5rBvP017894;
-	Wed, 17 Jul 2024 09:49:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	7lIvOl7Z+yxiHoXjClcNFTnVUdu50gq7Kge+8tZz4wU=; b=08M6MQ2e4FErg1Dc
-	B0SKVPN8THOjMMyUGCDSUlL1LAodibYcr5EC2iVaPe/8ODV+JTauCbg2pvlbdsER
-	D8CLF1QuTMROR21a1cGcDDX5iomPRBM3xQx+Oza1Wd5L8yPbomYUS0s+CvHmRR37
-	lIGhcD948jow5oBaj9yz+Zuo8S0nq8H6nxh9ElQ1Uv6M4rDrZZuTsnHF0U/uKiR+
-	TJAZSEaClNRdPBYKN7ToRM/eHffbpuTwfIJWUznl09lyQRPy+5EL2wrQbhts0Y2R
-	66YiDfmyLP1C5hVY+BUTxb8sJ2xCqe8GpfKJ7y5Rt0+ewDXQ8c6wy7ehLYsFsqai
-	t+nBkg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 40dwfma6ce-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 09:49:37 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1EB1D40046;
-	Wed, 17 Jul 2024 09:49:33 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6690724148C;
-	Wed, 17 Jul 2024 09:48:56 +0200 (CEST)
-Received: from localhost (10.48.86.111) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 17 Jul
- 2024 09:48:56 +0200
-From: Valentin Caron <valentin.caron@foss.st.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Valentin Caron
-	<valentin.caron@foss.st.com>
-Subject: [PATCH v2 3/4] rtc: stm32: add Low Speed Clock Output (LSCO) support
-Date: Wed, 17 Jul 2024 09:48:34 +0200
-Message-ID: <20240717074835.2210411-4-valentin.caron@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240717074835.2210411-1-valentin.caron@foss.st.com>
-References: <20240717074835.2210411-1-valentin.caron@foss.st.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CvxTVdSP"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4277a5ed48bso48244215e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 00:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1721202772; x=1721807572; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q7JxP1X9anMugApULpKE/NNH8t1wNvqt4dSmpMOS7bM=;
+        b=CvxTVdSPg81xHQ++BLKV3G/no2sn8ynpkd1R4m6I4nf/z6TlSlLGu8lqIiEKdANfgq
+         bUMrf7mOqShBWpFeQE04pYfQwqVQ6qsydKjkiqKcbGDfggmfFcL7V2fEQ+B4uGqHWO0Y
+         lbIT8RwIWcsZ8U0RtriyknzZhTudiA3+kSVyeU8CH9+OTpcC1kHLJi8kOpiv8ia1jP2O
+         P79JQtjlB9XKCCF+eVQKxLDrLEmQllwCypUMBv1BH7m8uC0i/3qBWIbPPLo/Rs0fBL7f
+         6MKC2BT6Jtpo0kn90HA2Zyqu7XsN6fUHy1frN5+ypQu8odbADkIXIB7knP5sI/O1uYHY
+         8Fzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721202772; x=1721807572;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q7JxP1X9anMugApULpKE/NNH8t1wNvqt4dSmpMOS7bM=;
+        b=OK7uuOkQU1Rze70O+Tr6Pb1qqk6GaXA1Q1CfUN+6rfQeXPYf+/TuKA/l4QYBlluIzD
+         LWcEEwUTQwq7Cs+p2pavKAL2YFNl3WTr9vm5ZfFNAsgHX0aJYhbb56CX3GNyTxSUM6bO
+         u14jlmt9E7aXdEK0WmH83GAiwiHNbMRDZT4UEykXrDKl9pj0XbfEr6nq2O6dndcHF/+I
+         wlu4u0/FJ/pboRJt9S8QcpuW0WFw0QzMNqfpiz5JDkkPwayNclF3XbxROIT7pE2Ndd3d
+         /iYJyekkKrdVJjiyvtPlsKAzrtxTq+efTlycJdpsj/6752LeeQB5aM6OIgVgmnB5nX2Z
+         sTuA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/icwgOtaZClYhZu/8+QRzpmUAjrZ+X5saTByvJkNfpThNvOxP+eFAJhy+oudEB4f+2kgU/XjYxibiXYlyHvZGybXqn8GDiPaFtWDF
+X-Gm-Message-State: AOJu0Yyq6hqMnEq8hCe0vBqA9mE7xOYU1ugE4odOA8QaZg7aTPdVFDUh
+	DWMxRyPENboF/MgayCzJqkS2/YNl3WcotTje/IJqJh2BNNxrNokKop3LrDj1lU8=
+X-Google-Smtp-Source: AGHT+IFTDDbi5O+/Lw8G4Rbx40psRglcjVnjshWdv+9mQbxcPrfb0y6tuYnBZuD00ssqlWOSynokpA==
+X-Received: by 2002:a5d:45d2:0:b0:367:83e9:b4a5 with SMTP id ffacd0b85a97d-368316fad85mr507737f8f.49.1721202771882;
+        Wed, 17 Jul 2024 00:52:51 -0700 (PDT)
+Received: from ?IPV6:2001:a61:137b:5001:be5a:c750:b487:ff1b? ([2001:a61:137b:5001:be5a:c750:b487:ff1b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db038dbsm10862882f8f.95.2024.07.17.00.52.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 00:52:51 -0700 (PDT)
+Message-ID: <991f7feb-a5bf-4eb4-9623-a13534a02b98@suse.com>
+Date: Wed, 17 Jul 2024 09:52:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_04,2024-07-16_02,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] usb: usbfs: Add reset_resume for usbfs
+To: Hongyu Xie <xy521521@gmail.com>, stern@rowland.harvard.edu,
+ oneukum@suse.com
+Cc: gregkh@linuxfoundation.org, brauner@kernel.org, jlayton@kernel.org,
+ jack@suse.cz, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ xiehongyu1@kylinos.cn
+References: <20240711084321.44916-1-xiehongyu1@kylinos.cn>
+ <527927b8-9475-47da-bf2b-7a5d9e81e470@suse.com>
+ <9ef72886-13b8-46cf-a0aa-54dad36102e9@rowland.harvard.edu>
+ <2a80d11d-029f-4e7e-9a8e-3abae1034add@suse.com>
+ <429eb27a-578a-4208-8ce1-89434b8d739f@rowland.harvard.edu>
+ <3073c8ce-1923-4816-a442-41b4cc333af9@suse.com>
+ <6419a4e9-e084-4eb6-8376-9202930ea8be@kylinos.cn>
+ <ee0a5160-233a-485c-a34b-99d4a1e046c5@rowland.harvard.edu>
+ <45b87923-d256-4c5e-8167-8ef764add1e9@kylinos.cn>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <45b87923-d256-4c5e-8167-8ef764add1e9@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-RTC is able to output on a pin the "LSE" internal clock.
+On 17.07.24 05:13, Hongyu Xie wrote:
+> From: Hongyu Xie <xiehongyu1@kylinos.cn>
 
-STM32 RTC is now registered as a clock provider.
-It provides rtc_lsco clock, that means RTC_LSCO is output on either
-RTC_OUT1 or RTC_OUT2_RMP, depending on pinmux DT property.
-The clock is marked as CLK_IGNORE_UNUSED and CLK_IS_CRITICAL because
-RTC_LSCO can be early required by devices needed it to init.
+> But I still think that there's no need to rebind for a USB device that was using usbfs.
 
-Add LSCO in pinmux functions.
+Technically you are correct. From a conceptual view point the only
+hard requirement we have is that the first operation after reset_resume()
+has to fail with an error code user space can interpret.
 
-Add "stm32_rtc_clean_outs" to disable LSCO. As RTC is part of "backup"
-power domain, it is not reset during shutdown or reboot. So force LSCO
-disable at probe.
+> Because rebinding doesn't fix settings lost. And it looks strange from user-space's perspective.
+> What do you think?
 
-Co-developed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
----
- drivers/rtc/Kconfig     |   1 +
- drivers/rtc/rtc-stm32.c | 101 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 102 insertions(+)
+Only user space can reapply the settings. The kernel, however, must notify
+user space of the need to do so and avoiding a race condition is tricky.
+However, it is the same race that also applies to a disconnected device and that
+problem is solved.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 9c88eb580209..52f5f9ec7e9f 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1924,6 +1924,7 @@ config RTC_DRV_STM32
- 	select REGMAP_MMIO
- 	select PINMUX
- 	select GENERIC_PINCONF
-+	select COMMON_CLK
- 	depends on ARCH_STM32 || COMPILE_TEST
- 	help
- 	   If you say yes here you get support for the STM32 On-Chip
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index 6dfd9dc07e2e..675860a13051 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -7,6 +7,7 @@
- #include <linux/bcd.h>
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/errno.h>
- #include <linux/iopoll.h>
- #include <linux/ioport.h>
-@@ -45,6 +46,10 @@
- #define STM32_RTC_CR_FMT		BIT(6)
- #define STM32_RTC_CR_ALRAE		BIT(8)
- #define STM32_RTC_CR_ALRAIE		BIT(12)
-+#define STM32_RTC_CR_OSEL		GENMASK(22, 21)
-+#define STM32_RTC_CR_COE		BIT(23)
-+#define STM32_RTC_CR_TAMPOE		BIT(26)
-+#define STM32_RTC_CR_OUT2EN		BIT(31)
- 
- /* STM32_RTC_ISR/STM32_RTC_ICSR bit fields */
- #define STM32_RTC_ISR_ALRAWF		BIT(0)
-@@ -81,6 +86,12 @@
- /* STM32_RTC_SR/_SCR bit fields */
- #define STM32_RTC_SR_ALRA		BIT(0)
- 
-+/* STM32_RTC_CFGR bit fields */
-+#define STM32_RTC_CFGR_OUT2_RMP		BIT(0)
-+#define STM32_RTC_CFGR_LSCOEN		GENMASK(2, 1)
-+#define STM32_RTC_CFGR_LSCOEN_OUT1	1
-+#define STM32_RTC_CFGR_LSCOEN_OUT2_RMP	2
-+
- /* STM32_RTC_VERR bit fields */
- #define STM32_RTC_VERR_MINREV_SHIFT	0
- #define STM32_RTC_VERR_MINREV		GENMASK(3, 0)
-@@ -130,6 +141,7 @@ struct stm32_rtc_registers {
- 	u16 wpr;
- 	u16 sr;
- 	u16 scr;
-+	u16 cfgr;
- 	u16 verr;
- };
- 
-@@ -145,6 +157,7 @@ struct stm32_rtc_data {
- 	bool need_dbp;
- 	bool need_accuracy;
- 	bool rif_protected;
-+	bool has_lsco;
- };
- 
- struct stm32_rtc {
-@@ -157,6 +170,7 @@ struct stm32_rtc {
- 	struct clk *rtc_ck;
- 	const struct stm32_rtc_data *data;
- 	int irq_alarm;
-+	struct clk *clk_lsco;
- };
- 
- struct stm32_rtc_rif_resource {
-@@ -231,7 +245,68 @@ struct stm32_rtc_pinmux_func {
- 	int (*action)(struct pinctrl_dev *pctl_dev, unsigned int pin);
- };
- 
-+static int stm32_rtc_pinmux_lsco_available(struct pinctrl_dev *pctldev, unsigned int pin)
-+{
-+	struct stm32_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
-+	struct stm32_rtc_registers regs = rtc->data->regs;
-+	unsigned int cr = readl_relaxed(rtc->base + regs.cr);
-+	unsigned int cfgr = readl_relaxed(rtc->base + regs.cfgr);
-+	unsigned int calib = STM32_RTC_CR_COE;
-+	unsigned int tampalrm = STM32_RTC_CR_TAMPOE | STM32_RTC_CR_OSEL;
-+
-+	switch (pin) {
-+	case OUT1:
-+		if ((!(cr & STM32_RTC_CR_OUT2EN) &&
-+		     ((cr & calib) || cr & tampalrm)) ||
-+		     ((cr & calib) && (cr & tampalrm)))
-+			return -EBUSY;
-+		break;
-+	case OUT2_RMP:
-+		if ((cr & STM32_RTC_CR_OUT2EN) &&
-+		    (cfgr & STM32_RTC_CFGR_OUT2_RMP) &&
-+		    ((cr & calib) || (cr & tampalrm)))
-+			return -EBUSY;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (clk_get_rate(rtc->rtc_ck) != 32768)
-+		return -ERANGE;
-+
-+	return 0;
-+}
-+
-+static int stm32_rtc_pinmux_action_lsco(struct pinctrl_dev *pctldev, unsigned int pin)
-+{
-+	struct stm32_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
-+	struct stm32_rtc_registers regs = rtc->data->regs;
-+	struct device *dev = rtc->rtc_dev->dev.parent;
-+	u8 lscoen;
-+	int ret;
-+
-+	if (!rtc->data->has_lsco)
-+		return -EPERM;
-+
-+	ret = stm32_rtc_pinmux_lsco_available(pctldev, pin);
-+	if (ret)
-+		return ret;
-+
-+	lscoen = (pin == OUT1) ? STM32_RTC_CFGR_LSCOEN_OUT1 : STM32_RTC_CFGR_LSCOEN_OUT2_RMP;
-+
-+	rtc->clk_lsco = clk_register_gate(dev, "rtc_lsco", __clk_get_name(rtc->rtc_ck),
-+					  CLK_IGNORE_UNUSED | CLK_IS_CRITICAL,
-+					  rtc->base + regs.cfgr, lscoen, 0, NULL);
-+	if (IS_ERR(rtc->clk_lsco))
-+		return PTR_ERR(rtc->clk_lsco);
-+
-+	of_clk_add_provider(dev->of_node, of_clk_src_simple_get, rtc->clk_lsco);
-+
-+	return 0;
-+}
-+
- static const struct stm32_rtc_pinmux_func stm32_rtc_pinmux_functions[] = {
-+	STM32_RTC_PINMUX("lsco", &stm32_rtc_pinmux_action_lsco, "out1", "out2_rmp"),
- };
- 
- static int stm32_rtc_pinmux_get_functions_count(struct pinctrl_dev *pctldev)
-@@ -687,6 +762,7 @@ static const struct stm32_rtc_data stm32_rtc_data = {
- 	.need_dbp = true,
- 	.need_accuracy = false,
- 	.rif_protected = false,
-+	.has_lsco = false,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -697,6 +773,7 @@ static const struct stm32_rtc_data stm32_rtc_data = {
- 		.wpr = 0x24,
- 		.sr = 0x0C, /* set to ISR offset to ease alarm management */
- 		.scr = UNDEF_REG,
-+		.cfgr = UNDEF_REG,
- 		.verr = UNDEF_REG,
- 	},
- 	.events = {
-@@ -710,6 +787,7 @@ static const struct stm32_rtc_data stm32h7_rtc_data = {
- 	.need_dbp = true,
- 	.need_accuracy = false,
- 	.rif_protected = false,
-+	.has_lsco = false,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -720,6 +798,7 @@ static const struct stm32_rtc_data stm32h7_rtc_data = {
- 		.wpr = 0x24,
- 		.sr = 0x0C, /* set to ISR offset to ease alarm management */
- 		.scr = UNDEF_REG,
-+		.cfgr = UNDEF_REG,
- 		.verr = UNDEF_REG,
- 	},
- 	.events = {
-@@ -742,6 +821,7 @@ static const struct stm32_rtc_data stm32mp1_data = {
- 	.need_dbp = false,
- 	.need_accuracy = true,
- 	.rif_protected = false,
-+	.has_lsco = true,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -752,6 +832,7 @@ static const struct stm32_rtc_data stm32mp1_data = {
- 		.wpr = 0x24,
- 		.sr = 0x50,
- 		.scr = 0x5C,
-+		.cfgr = 0x60,
- 		.verr = 0x3F4,
- 	},
- 	.events = {
-@@ -765,6 +846,7 @@ static const struct stm32_rtc_data stm32mp25_data = {
- 	.need_dbp = false,
- 	.need_accuracy = true,
- 	.rif_protected = true,
-+	.has_lsco = true,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -775,6 +857,7 @@ static const struct stm32_rtc_data stm32mp25_data = {
- 		.wpr = 0x24,
- 		.sr = 0x50,
- 		.scr = 0x5C,
-+		.cfgr = 0x60,
- 		.verr = 0x3F4,
- 	},
- 	.events = {
-@@ -792,6 +875,19 @@ static const struct of_device_id stm32_rtc_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, stm32_rtc_of_match);
- 
-+static void stm32_rtc_clean_outs(struct stm32_rtc *rtc)
-+{
-+	struct stm32_rtc_registers regs = rtc->data->regs;
-+
-+	if (regs.cfgr != UNDEF_REG) {
-+		unsigned int cfgr = readl_relaxed(rtc->base + regs.cfgr);
-+
-+		cfgr &= ~STM32_RTC_CFGR_LSCOEN;
-+		cfgr &= ~STM32_RTC_CFGR_OUT2_RMP;
-+		writel_relaxed(cfgr, rtc->base + regs.cfgr);
-+	}
-+}
-+
- static int stm32_rtc_check_rif(struct stm32_rtc *stm32_rtc,
- 			       struct stm32_rtc_rif_resource res)
- {
-@@ -1024,6 +1120,8 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
-+	stm32_rtc_clean_outs(rtc);
-+
- 	ret = devm_pinctrl_register_and_init(&pdev->dev, &stm32_rtc_pdesc, rtc, &pctl);
- 	if (ret)
- 		return dev_err_probe(&pdev->dev, ret, "pinctrl register failed");
-@@ -1070,6 +1168,9 @@ static void stm32_rtc_remove(struct platform_device *pdev)
- 	const struct stm32_rtc_registers *regs = &rtc->data->regs;
- 	unsigned int cr;
- 
-+	if (!IS_ERR_OR_NULL(rtc->clk_lsco))
-+		clk_unregister_gate(rtc->clk_lsco);
-+
- 	/* Disable interrupts */
- 	stm32_rtc_wpr_unlock(rtc);
- 	cr = readl_relaxed(rtc->base + regs->cr);
--- 
-2.25.1
+ENODEV clearly is an error that makes clear to user space that settings have
+been lost. User space has to be able to deal with a device being disconnected
+at any time, as we are talking about USB.
+Hence, where is the need to add a special case for reset_resume()?
+
+	HTH
+		Oliver
 
