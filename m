@@ -1,105 +1,141 @@
-Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FF918002A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE1A17FAB7
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721217001; cv=none; b=QZvrA/xpheIv1l3DheaELozDAWCtzGnOe9gFIos7PRr5txmDqWOJmljc3ABDdufAaFHhuQ7prJLxoZCQwBljR43eoGqaUVaWUlKtvYR6jgp9LVKZTWYLQy8EvWkHO33oF7UpHlN4T3QHnVgqLFVk1pvf7C1c+63TD8WLoFPKXSs=
+	t=1721217021; cv=none; b=SWDLyt/sw2H9ePXs6wVa66BuVUSJrE0lWywSWhTDw/X4BQ3fP2PNonVBnwE9KNGqm8CGi1d1LfMsSMOhiWMDMcGR3HTpDAQuOCQJPwLrcPqkdNfuWWsm+edxK3mMGFmVcaUS0dt81m1kVf04J6leNgwj4nNW4fr3UM1idlmHL14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721217001; c=relaxed/simple;
-	bh=JFIHfQ50RGZrVQnIeC5q5eayE9PE2BWVZpNlsYT8Bfw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=AdRSlJeYFravXiwBx54AlCPJoyx5ahVSHq4S+HXNH41pDSEUTkD8AQkAyifNQsT3cilVN5SRHbIzt7n13hTbSn64T57sKKpKx7hiFhqvhYVU6Nx5osRHLV5ag2AKBOmLFzwu5gJaIfXAjcjL0XmGOJsr9FLlQUXJ4WD+39D8ULQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=AwfCWxxZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X2bxGJsl; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1721217021; c=relaxed/simple;
+	bh=JVaK0J/PZCJIrlXBQZhWas1UEmJYDEVgENMBtAexwr8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YmssVCJDweGEBzURe8Qw+5uKuaILBnb2sCmOuGmi0NE3ofkq/NcsXJBGdwGpo0E9Bk8rJoPy+vRovm7oPuiZIh4xT173blXjFQaadF2gZla2Wka8Hn3JPYpMwCc1f6ahu1yCPkl5KAtJeUazDD7KHOQop/YDbt5sIX/BR+8ZFW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F6ugQwuJ; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="AwfCWxxZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X2bxGJsl"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 6D92C138008A;
-	Wed, 17 Jul 2024 07:49:58 -0400 (EDT)
-Received: from wimap26 ([10.202.2.86])
-  by compute6.internal (MEProxy); Wed, 17 Jul 2024 07:49:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1721216998; x=1721303398; bh=U1vlZOzFkY
-	ZM/mArph2LA6zESvl4iI1xFdrbO602QyQ=; b=AwfCWxxZYIVQBNYu07L6UMdbKj
-	NghjT7y6ETV/i206imKI8nT2UtcQ6UYkj6C5BeGnSNYRIa+rvK0VEfWzgeg6vYlt
-	jh7atohAsNA0W4acDNcytOWUNY7XltrUSc28qSkUEgWjiS58bBb1xapUi5UPQlBJ
-	nFiC/GAX0mJ8PXUX6fG0NogJCcundFK9zd5lR2XrVT16qLTyy00jgUq6HdCWUAWL
-	9ojR3V2GqkLGgpA+68VgfqlzVCdb0jG2+CysYsWQYMRCVpDvln9GwtIhsotEzFGN
-	2ruTqxSpPHUNZJ250TBijWKXNs/aLxJqSEKbVMmBkC0Zih+uzFjEoaxcZtbQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1721216998; x=1721303398; bh=U1vlZOzFkYZM/mArph2LA6zESvl4
-	iI1xFdrbO602QyQ=; b=X2bxGJslVUQzkO1LdeW4LE4WqDuWmu44XilCmTAHPXZO
-	VvNGzZKwQPVWuOmMQFimmyGeOIkkhFMtZh9lRS0MuXbcESVPp1jXYD0Mi6Gms9L6
-	7EFVdQtndJGDdQyr6Q23XozMOWGvUciaddntOoG/7nPN3N+VNSTM8M7FXauM6rq1
-	Zje5x43O1aYR94bp2Mc9w4Ct8kzYtf8KNMJwaWy4vZl10U+vHIO5bvgeRrTsLObZ
-	s3itnU1um8zZdg9Q/3jvZXSY9Jvx2IRoVmSTgOQ2zQvBjKFcYidkyZPSck009pRN
-	kjC/b/EOXuFzHdXd8Palggm3lOTi2jOGNCJq2GZ5hw==
-X-ME-Sender: <xms:5a-XZmIlY6bxLymo8tc0wqaboEDc8sj0m3IY75QQWOd-Uw3MIiQXkw>
-    <xme:5a-XZuISG6ZGI06XHV7h2LrAJHD4rOrYhzXkYU9JzNXMe7VNp9JJRtBat7bAdeSOt
-    3ZLmbX01gtXK6FwsOA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeigdeggecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:5a-XZmtuNmhI-PHpSFZZlxuB0hz3Mmi_fkngUE1wJryDTeOdviauIw>
-    <xmx:5a-XZraR6B8ZIdy7QQpl4OGiLoO3Rt3sUkcJkEyAHcx_w1H2MOfiZA>
-    <xmx:5a-XZtZS--zMAB-1kLN_owSilPjQOAofte5k4shDRu6ASQYUY_2ABg>
-    <xmx:5a-XZnAlnSWh--gWTB2gT_JXVJr696WNP8ja6OpTDn6rfHIUl1M0qw>
-    <xmx:5q-XZsWBjJMcw9DHe_Ezqi6zi6MCz3Qm0Xw_QeDLIXcxWifogmVkviz0>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 20D9119C005E; Wed, 17 Jul 2024 07:49:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6ugQwuJ"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-368313809a4so307459f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 04:50:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721217017; x=1721821817; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aZyWxxmZgO29JkoC4TRc4yeVnGhqHgmh3XgcrnySTFg=;
+        b=F6ugQwuJOdeG0ARoH3SHSCFh+s9LLZtbx9NlBDEoITFFtdwbXDn/Jqm9R4SKUalqth
+         C21Ogjq1TLvp7aRyxRRdKWZHTpht4DnekRBnAdj/l19TBQUHBnzCySFYFYsrE5AY8ffl
+         YG7vM7n4Q89QzlN/O7gsJ4WfVxlVOoAxyxTW9Qkh8+CVtvNB5jiIA4OUkR+v9LiMxgxt
+         bUBH2UA0DQmuvLZ3RPdui8Br8VZM9EeT+KIutN1wVx3OFbKpegeKUHaYqoxt5xBf7ofI
+         DrxgCocv1SB+VgvnI3CTF0qnL1vZBuR0/Ut5EYpa+T6SefKAi6RNPSqzZLAzvKgLh/4Y
+         VZ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721217017; x=1721821817;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aZyWxxmZgO29JkoC4TRc4yeVnGhqHgmh3XgcrnySTFg=;
+        b=wbJmxtc+BHdXfVcmkfa4AnHy0gttJQxbLGD8KXxjd5uAYLJIfEMEzw7IjM6usoJB7G
+         VwYlCgngNaH3HHV/O/RjbcejTle00fmn/A7TeMJbK2Xv+sJg9bKPKPG/cGBiq/D4bxIo
+         Nb6rjzlvj9nCXqgL7n6BwMBuo50IpzKp3vec7YOZ7Zpm3g8/DtzjCWiyKdg7IHrZGBYv
+         KkwNZr+PN+QS18b2WPQ9wqI/066B69PwJo4NnKPdRZi35jMCnl+4x85rTmFjlO0VZHx/
+         hzYItxvU1vBrikmfHICD9vR3+m3LdB+7nDmLuyDLOEUHd2/brTcbaRCvgPyIFBP/b59y
+         iIBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJMYZg34r03XkhURHAwhYgQL8Zw/KhFNorkf2nbFM6mfwqLftz/1Dtwuh6w8etoVjp0Z0WfLmOz9haRLgIZoPFQ1H/8aw2sA94zgYY
+X-Gm-Message-State: AOJu0Yzq0rsBC/1JsF4e1UpiiZWeFlcGTwr+sLZHOgTRHfa8FOCCNkf+
+	PrLgCPw+lSZuaBA0baQG5PCCuS0ZvP1kXcj1xZhfbQ7INZ+nHM4PPuZnXgvNArE=
+X-Google-Smtp-Source: AGHT+IEcgWXCyK0u5lje6xRBdygs3Cs0EZ635zARQLDVm418TfcKnE5nvtCxsO/FvQgIKp0ailMPiA==
+X-Received: by 2002:a05:6000:1848:b0:366:df35:b64f with SMTP id ffacd0b85a97d-36827357473mr5056741f8f.4.1721217016937;
+        Wed, 17 Jul 2024 04:50:16 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:c5b9:9b90:b1c4:1a1d? ([2a01:e0a:982:cbb0:c5b9:9b90:b1c4:1a1d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dab3ee4sm11596014f8f.7.2024.07.17.04.50.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 04:50:16 -0700 (PDT)
+Message-ID: <774f2efa-74c6-4cff-be14-e1a4a518404f@linaro.org>
+Date: Wed, 17 Jul 2024 13:50:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <024d85a1-6a4e-4552-a5dd-adebfb195be8@app.fastmail.com>
-In-Reply-To: 
- <SJ0PR18MB524672A30BAE8A7163FABECCA6A32@SJ0PR18MB5246.namprd18.prod.outlook.com>
-References: <20240717045225.138799-1-vattunuru@marvell.com>
- <2024071709-nephew-scooter-5c6b@gregkh>
- <MW4PR18MB5244DBBC231E986EDBEDD5BEA6A32@MW4PR18MB5244.namprd18.prod.outlook.com>
- <22bf9a24-b4db-4017-b5a9-1b03e6f20bff@app.fastmail.com>
- <SJ0PR18MB524672A30BAE8A7163FABECCA6A32@SJ0PR18MB5246.namprd18.prod.outlook.com>
-Date: Wed, 17 Jul 2024 13:49:36 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Vamsi Attunuru" <vattunuru@marvell.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Jeff Johnson" <quic_jjohnson@quicinc.com>
-Subject: Re: [EXTERNAL] Re: [PATCH] misc: mrvl-cn10k-dpi: resolve compilation issues on
- 32-bit ARM
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 4/7] clk: qcom: dispcc-sm8650: Update the GDSC flags
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240717-dispcc-sm8550-fixes-v2-0-5c4a3128c40b@linaro.org>
+ <20240717-dispcc-sm8550-fixes-v2-4-5c4a3128c40b@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240717-dispcc-sm8550-fixes-v2-4-5c4a3128c40b@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 17, 2024, at 13:45, Vamsi Krishna Attunuru wrote:
->
-> Neither of them worked in our case, HW folks also confirmed that only 
-> 64bit access work correctly.
-> I will just include the header that address the compilation errors with 
-> ARCH=arm, anyways nobody
-> will use this driver on 32-bit kernel.
-
-Please just use a Kconfig dependency then. If the device
-requires 64-bit register access, then the driver should not
-use the fallback.
-
-     Arnd
+On 17/07/2024 12:04, Dmitry Baryshkov wrote:
+> Add missing POLL_CFG_GDSCR to the MDSS GDSC flags.
+> 
+> Fixes: 90114ca11476 ("clk: qcom: add SM8550 DISPCC driver")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/clk/qcom/dispcc-sm8550.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/dispcc-sm8550.c b/drivers/clk/qcom/dispcc-sm8550.c
+> index 1604a6a4acdc..eebc4c2258d0 100644
+> --- a/drivers/clk/qcom/dispcc-sm8550.c
+> +++ b/drivers/clk/qcom/dispcc-sm8550.c
+> @@ -1611,7 +1611,7 @@ static struct gdsc mdss_gdsc = {
+>   		.name = "mdss_gdsc",
+>   	},
+>   	.pwrsts = PWRSTS_OFF_ON,
+> -	.flags = HW_CTRL | RETAIN_FF_ENABLE,
+> +	.flags = POLL_CFG_GDSCR | HW_CTRL | RETAIN_FF_ENABLE,
+>   };
+>   
+>   static struct gdsc mdss_int2_gdsc = {
+> @@ -1620,7 +1620,7 @@ static struct gdsc mdss_int2_gdsc = {
+>   		.name = "mdss_int2_gdsc",
+>   	},
+>   	.pwrsts = PWRSTS_OFF_ON,
+> -	.flags = HW_CTRL | RETAIN_FF_ENABLE,
+> +	.flags = POLL_CFG_GDSCR | HW_CTRL | RETAIN_FF_ENABLE,
+>   };
+>   
+>   static struct clk_regmap *disp_cc_sm8550_clocks[] = {
+> 
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
