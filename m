@@ -1,88 +1,110 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0E817F4FD
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 12:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9121F38385;
+	Wed, 17 Jul 2024 12:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721218250; cv=none; b=YF0dDV9j3mhurZ1RS3nueFBYCV8jDyWjpPa/b/lJ6pZMBH/WiFLag0DJvrBixMYLp7Jm1PxzIKP7HZf3RxFa7LKtjj4F0KPkIjoT2Rs8mOKlMt/yH0ZJVvaP0Pnkb8z7PE28G4rKrvDAjIWMEtkjrVgwjyzugyEfsBHaE4Vt6Hc=
+	t=1721218296; cv=none; b=tpe+I7S3gGdmxCLmJ7MqjQ1+SUE8pY/Qroxbpxmd3Jj+EID5cLSicqtDHBTAy7yzvTT4HzIQtNupBvjWQ+qfEkEkaPdNjPgJd6pPh7gCcvngfLjMBj7WVhRG3orAutkUkw+A2COUz1UsoT5pJh7wF+y9LXBFZW7hGN/2K3lbeLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721218250; c=relaxed/simple;
-	bh=tL2zO8sShVnMqsumwVetJoNc6QDlU07aXRYDJkCzAwA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iGcryCZgGDDVktkWdL2oJE88ml6FTZpmAKtvHWa4EV51pwbntU0qRhZAng3nuwlCb2p1c6SDz0j+XTThLszHdWa4TviO8ZdKQ/69+g9qZf3hC4b1AAJCsEXeHJNObCvNNRawOWYFp0+XCePuvg2KjlcABQupoW8//3FDQmD99Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Af+pHljf; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Af+pHljf"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46HBrFsc114994;
-	Wed, 17 Jul 2024 06:53:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1721217195;
-	bh=L7Y4bvkhhvsibrE1C4aidBkH3gAAnG2XmDY6RVwdt2w=;
-	h=From:To:CC:Subject:Date;
-	b=Af+pHljfiQeUImkzDHFjRXbJuK9Yv4Wt0Y9GARE1w3TXCc5u5UDryWiufQzMQK0HM
-	 qsTI3Qyw7Akid6KUsKHjRJ1uZjMw+4NFAvaE+cEFpTgo5rk+mvchkrFfk97eST4XM+
-	 TbEZKUyOU02FZgZHDI7sLgcztXCq6rX8z9GwVOdk=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46HBrFVT003347
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 17 Jul 2024 06:53:15 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 17
- Jul 2024 06:53:14 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 17 Jul 2024 06:53:14 -0500
-Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.243])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46HBr8n9112673;
-	Wed, 17 Jul 2024 06:53:09 -0500
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <broonie@kernel.org>
-CC: <andriy.shevchenko@linux.intel.com>, <lgirdwood@gmail.com>,
-        <perex@perex.cz>, <pierre-louis.bossart@linux.intel.com>,
-        <13564923607@139.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <liam.r.girdwood@intel.com>,
-        <bard.liao@intel.com>, <yung-chuan.liao@linux.intel.com>,
-        <cameron.berkenpas@gmail.com>, <tiwai@suse.de>, <baojun.xu@ti.com>,
-        <soyer@irl.hu>, <Baojun.Xu@fpt.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v1] ALSA: hda/tas2781: Add new quirk for Lenovo Hera2 Laptop
-Date: Wed, 17 Jul 2024 19:53:04 +0800
-Message-ID: <20240717115305.723-1-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+	s=arc-20240116; t=1721218296; c=relaxed/simple;
+	bh=Cc2J6wmh/RMwK6UDOtUfqKU3tK1CB6zpaXWCypDmyLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TCPU4hFr2Sm0sLbbbLijKMXQSkuP7F5ovA6qzXmvddd+GfuK10FpG1zU2trQcj07P01Bi4g/RCKNpIx/nrm5X1VBAZZsRW+6ConJqb3eYGnwlLSHDn5DFcMBQH5V4oT6HTIqAmahXgi7mCjDTS+8pek61tv7AfzIkSBxZYR+VmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B9611063;
+	Wed, 17 Jul 2024 05:11:59 -0700 (PDT)
+Received: from [10.162.43.24] (e116581.arm.com [10.162.43.24])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFF313F766;
+	Wed, 17 Jul 2024 05:11:30 -0700 (PDT)
+Message-ID: <3782befb-c317-4bb0-a279-c90adb2ec47b@arm.com>
+Date: Wed, 17 Jul 2024 17:41:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Skip test for non-LPA2 and non-LVA systems
+To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org, Anshuman.Khandual@arm.com, broonie@kernel.org
+References: <20240717111011.316037-1-dev.jain@arm.com>
+ <da0054f5-b84e-4635-ae81-9c72f2f25542@arm.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <da0054f5-b84e-4635-ae81-9c72f2f25542@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add new vendor_id and subsystem_id in quirk for Lenovo Hera2 Laptop.
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+On 7/17/24 17:27, Ryan Roberts wrote:
+> On 17/07/2024 12:10, Dev Jain wrote:
+>> Post my improvement of the test:
+>> https://lore.kernel.org/all/20240522070435.773918-3-dev.jain@arm.com/
+>> The test begins to fail on 4k and 16k pages, on non-LPA2 systems. To
+>> reduce noise in the CI systems, let us skip the test when higher address
+>> space is not implemented.
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>> The patch applies on linux-next.
+>>
+>>   tools/testing/selftests/mm/va_high_addr_switch.c | 14 +++++++++++++-
+>>   1 file changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/mm/va_high_addr_switch.c b/tools/testing/selftests/mm/va_high_addr_switch.c
+>> index fa7eabfaf841..c6040e1d6e53 100644
+>> --- a/tools/testing/selftests/mm/va_high_addr_switch.c
+>> +++ b/tools/testing/selftests/mm/va_high_addr_switch.c
+>> @@ -293,6 +293,18 @@ static int run_test(struct testcase *test, int count)
+>>   	return ret;
+>>   }
+>>   
+>> +/* Check if userspace VA > 48 bits */
+>> +static int high_address_present(void)
+>> +{
+>> +	void *ptr = mmap((void *)(1UL << 50), 1, PROT_READ | PROT_WRITE,
+>> +			 MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+> I think there is (very unlikely) possibility that something is already mapped at
+> this address so it will be replaced due to MAP_FIXED. That could break the test.
+> But the only way something could be already mapped is if ARM64_FORCE_52BIT is
+> set and in that case, the test will fail anyway, right? So I think this is fine.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 766f0b1d3e9d..bac68a84fd50 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10539,6 +10539,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x231a, "Thinkpad Z16 Gen2", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
- 	SND_PCI_QUIRK(0x17aa, 0x231e, "Thinkpad", ALC287_FIXUP_LENOVO_THKPAD_WH_ALC1318),
- 	SND_PCI_QUIRK(0x17aa, 0x231f, "Thinkpad", ALC287_FIXUP_LENOVO_THKPAD_WH_ALC1318),
-+	SND_PCI_QUIRK(0x17aa, 0x2326, "Hera2", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
--- 
-2.34.1
+The testcases already assume that high addresses must be empty. Yes, FORCE_52BIT
+is the only way something could already be mapped at high addresses, but in that
+case the test fails trivially.
 
+>
+>> +	if (ptr == MAP_FAILED)
+>> +		return 0;
+>> +
+>> +	munmap(ptr, 1);
+>> +	return 1;
+>> +}
+> I'm guessing this will cause a function-not-used warning on arches other than
+> arm64? Perhaps wrap it in `#ifdef __aarch64__`?
+
+Ah yes, I just checked and that is true. I shall post v2 in some time, shall
+wait if any more comments are there.
+
+>
+> Thanks,
+> Ryan
+>
+>> +
+>>   static int supported_arch(void)
+>>   {
+>>   #if defined(__powerpc64__)
+>> @@ -300,7 +312,7 @@ static int supported_arch(void)
+>>   #elif defined(__x86_64__)
+>>   	return 1;
+>>   #elif defined(__aarch64__)
+>> -	return 1;
+>> +	return high_address_present();
+>>   #else
+>>   	return 0;
+>>   #endif
