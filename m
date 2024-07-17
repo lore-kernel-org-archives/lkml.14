@@ -1,242 +1,405 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC1C10953
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39DB3A29A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721205382; cv=none; b=iWCXFaP5YQzW273MUOwIqGEt91ZLXGDTG7hFVTzD5JhM8BjlEXt9SZoy91FzHywdyD9ao9ZcKx28DPMnnyH76QF369iOnhc7qFhLPZmNj1lCIlveyFwS3jBMJRik3ySm1zeT66YrUFIFFwxfHcgbf/Y2xoQ3h8cnI9jfGAnRl2U=
+	t=1721205390; cv=none; b=CETJdZf8uktwuUgwWvZGm+dRwyAI0eZnv9Evx1RIHHfurM7uBq4xC1rK3mOfNloJADpazu5VOExJ15tV3A8MgI6h28bAq5lt/DE6V9i5TWvZRSA+v5sXZtAbCr75KjDIvcUWGnSmflPTtSbWAOWOALJeak7nHmxHoncVGW+vNro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721205382; c=relaxed/simple;
-	bh=rU8hrnUMFC5mTjGXwT69mTGZCmwGdQmcdTJONifb6RA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P7fbuyrV0uPGPPwjUASrxttFlRfzjCWSfaHPQloVS+JTI32loIilNVdfUFfqZO3SH/azahSbxRyyQR4uc9eG1ChHJStTk76sG2q2yUxFk6E+8+Ikdrix6BGM5qUleWSDauNTH1NXkJOYN6HBvfYOKUYwn+kbLiKYbBq43NUfSRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=boTGgg0K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aSgdXuRK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=boTGgg0K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aSgdXuRK; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1721205390; c=relaxed/simple;
+	bh=Vt84Nx3fmxgWFWh7DtODAWjYhbXeJWjjA/s6+2UFVOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ilZSCau6VXAOxEYi3qotXWRPwCrgr2VnNFApvNSzaYj26yQLLEUVNOpFyXRFwaYACVza5FXQ2GQdxVGzTZSYxFLCDZYrJHb2mDDgHeaoc8HO8Ta69oWZqAp8+rfGQSI0tKa9br4d0nQ4PFOW2/5BUXHn9ekOY9MZvhsh9s1UbZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=igNCwyUn; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="boTGgg0K";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aSgdXuRK";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="boTGgg0K";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aSgdXuRK"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9829221B85;
-	Wed, 17 Jul 2024 08:36:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721205378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="igNCwyUn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A2089240004;
+	Wed, 17 Jul 2024 08:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721205385;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
-	b=boTGgg0KSt6MO5Fa6epB7oYdSqc5p5DEanPLyaVB8xtpPnXnpllmronLtStuWEuyS7CbpD
-	kz6xYCAhms+JRk1dgXenuRW6a0geeGiIyPn8reV9rgmz/m71DqDXJiUDbguflafDVVovi+
-	RzwcH0YJvYCasQIX4LYEJ657P9BbGKM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721205378;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
-	b=aSgdXuRKdDmVT4ll2RhzQWpJ6yLKzDewOOGjdw19mqhhGpH5CNh60/1Z0VupI16+1Syy8h
-	5k66ejFhhBmPaSBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=boTGgg0K;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=aSgdXuRK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721205378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
-	b=boTGgg0KSt6MO5Fa6epB7oYdSqc5p5DEanPLyaVB8xtpPnXnpllmronLtStuWEuyS7CbpD
-	kz6xYCAhms+JRk1dgXenuRW6a0geeGiIyPn8reV9rgmz/m71DqDXJiUDbguflafDVVovi+
-	RzwcH0YJvYCasQIX4LYEJ657P9BbGKM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721205378;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WKgkHUOShYpcIArnsFP6wIH0whExRvHJmj2Dadz/tkA=;
-	b=aSgdXuRKdDmVT4ll2RhzQWpJ6yLKzDewOOGjdw19mqhhGpH5CNh60/1Z0VupI16+1Syy8h
-	5k66ejFhhBmPaSBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 512691368F;
-	Wed, 17 Jul 2024 08:36:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CMyOEoKCl2acFQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 17 Jul 2024 08:36:18 +0000
-Date: Wed, 17 Jul 2024 10:36:51 +0200
-Message-ID: <87zfqgxvmk.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: wangdicheng <wangdich9700@163.com>
-Cc: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-arm-kernel@lists.infradead.org,
-	wangdicheng <wangdicheng@kylinos.cn>
-Subject: Re: [PATCH] ALSA: usb-audio: Fix microphone sound on HD webcam.
-In-Reply-To: <20240717075149.6915-1-wangdich9700@163.com>
-References: <20240717075149.6915-1-wangdich9700@163.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	bh=i6ol4Bte/dLJMoc78J1RFMZuqxdHcs0gCbCQIiakg7o=;
+	b=igNCwyUn/7wJskLh2DTD+whtMcrLekNXwDt/yAmCT4SQ0yjIzzxblbIhAhguFtCFw5weMG
+	fSQeNslhVc2/6x02zvuK/ynmBxqbhNULKPFa+eipJmA0M0e0g9u2MESsWibnUE5Vj31tQf
+	46hnBU5MlDVea0X999DUKs+ZsUOQURgMBo1o3FURNdhNTLNfKqmUboElAbVnQypd97N+d2
+	wulwVQjtma7GXaZ8k6ejAOM3wi8oBZA49f6Ot8t2OpHkdQLdFT1cYmuM9aV77nnw0xdtCY
+	3aAGPt3n1VdBnQPynYQw6ouYjEBArOPOcWoTUwnqHSio2VfhOVw00fMvXSwwXA==
+Date: Wed, 17 Jul 2024 10:36:23 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Martin Kurbanov <mmkurbanov@salutedevices.com>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+ <vigneshr@ti.com>, Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>, Chia-Lin
+ Kao <acelan.kao@canonical.com>, Md Sadre Alam <quic_mdalam@quicinc.com>,
+ Ezra Buehler <ezra.buehler@husqvarnagroup.com>, Sridharan S N
+ <quic_sridsn@quicinc.com>, Frieder Schrempf <frieder.schrempf@kontron.de>,
+ Alexey Romanov <avromanov@salutedevices.com>,
+ <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+ <kernel@salutedevices.com>
+Subject: Re: [PATCH v1 2/5] mtd: spinand: add OTP support
+Message-ID: <20240717103623.6d6b63be@xps-13>
+In-Reply-To: <20240617133504.179705-3-mmkurbanov@salutedevices.com>
+References: <20240617133504.179705-1-mmkurbanov@salutedevices.com>
+	<20240617133504.179705-3-mmkurbanov@salutedevices.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[163.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[163.com,gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,perex.cz,suse.com,vger.kernel.org,alsa-project.org,lists.infradead.org,kylinos.cn];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.51
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 9829221B85
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, 17 Jul 2024 09:51:49 +0200,
-wangdicheng wrote:
-> 
-> From: wangdicheng <wangdicheng@kylinos.cn>
-> 
-> I own an external usb Webcam, HD webcam, which had low mic volume and
-> inconsistent sound quality. Video works as expected.
-> 
-> (snip)
-> [   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
-> [   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
-> [   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-> [   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
-> [   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
-> [   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
-> [   96.092610][ 2] [ T3680] usb 5-2.2: Warning! Unlikely big volume range (=4096), cval->res is probably wrong.
-> [   96.102436][ 2] [ T3680] usb 5-2.2: [5] FU [Mic Capture Volume] ch = 1, val = 0/4096/1
-> 
-> Set up quirk cval->res to 16 for 256 levels,
-> Set GET_SAMPLE_RATE quirk flag to stop trying to get the sample rate.
-> Confirmed that happened anyway later due to the backoff mechanism,
-> After 3 failures.
-> 
-> All audio stream on device interfaces share the same values,
-> apart from wMaxPacketSize and tSamFreq :
-> 
->       bLength                 9
->       bDescriptorType         4
->       bInterfaceNumber        3
->       bAlternateSetting       4
->       bNumEndpoints           1
->       bInterfaceClass         1 Audio
-> 
-> Interface Descriptor:
->   bLength                 9
->   bDescriptorType         4
->   bInterfaceNumber        3
->   bAlternateSetting       4
->   bNumEndpoints           1
->   bInterfaceClass         1 Audio
->   bInterfaceSubClass      2 Streaming
->   bInterfaceProtocol      0
->   iInterface              0
->   AudioStreaming Interface Descriptor:
->     bLength                 7
->     bDescriptorType        36
->     bDescriptorSubtype      1 (AS_GENERAL)
->     bTerminalLink           3
->     bDelay                  1 frames
->     wFormatTag         0x0001 PCM
->   AudioStreaming Interface Descriptor:
->     bLength                11
->     bDescriptorType        36
->     bDescriptorSubtype      2 (FORMAT_TYPE)
->     bFormatType             1 (FORMAT_TYPE_I)
->     bNrChannels             1
->     bSubframeSize           2
->     bBitResolution         16
->     bSamFreqType            1 Discrete
->     tSamFreq[ 0]        48000
->   Endpoint Descriptor:
->     bLength                 9
->     bDescriptorType         5
->     bEndpointAddress     0x86  EP 6 IN
->     bmAttributes            5
->       Transfer Type            Isochronous
->       Synch Type               Asynchronous
->       Usage Type               Data
->     wMaxPacketSize     0x0064  1x 100 bytes
->     bInterval               4
->     bRefresh                0
->     bSynchAddress           0
->     AudioStreaming Endpoint Descriptor:
->       bLength                 7
->       bDescriptorType        37
->       bDescriptorSubtype      1 (EP_GENERAL)
->       bmAttributes         0x01
->         Sampling Frequency
->       bLockDelayUnits         0 Undefined
->       wLockDelay         0x0000
-> (snip)
-> 
-> Testing patch provides consistent good sound recording quality and volume range.
-> 
-> (snip)
-> [   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
-> [   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
-> [   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-> [   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
-> [   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
-> [   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
-> [   96.110630][ 3] [ T3680] usbcore: registered new interface driver snd-usb-audio
-> [   96.114329][ 7] [ T3677] usb 5-2.2: Found UVC 1.00 device HD webcam (1bcf:2281)
-> [   96.167555][ 7] [ T3677] usbcore: registered new interface driver uvcvideo
-> 
-> Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
+Hi Martin,
 
-The patch can't be applied cleanly to the latest tree, as the table
-has been sorted.  Could you rebase and resubmit?  Also a nitpicking:
+mmkurbanov@salutedevices.com wrote on Mon, 17 Jun 2024 16:34:54 +0300:
 
-> --- a/sound/usb/quirks.c
-> +++ b/sound/usb/quirks.c
-> @@ -2179,6 +2179,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
->  		   QUIRK_FLAG_FIXED_RATE),
->  	DEVICE_FLG(0x1bcf, 0x2283, /* NexiGo N930AF FHD Webcam */
->  		   QUIRK_FLAG_GET_SAMPLE_RATE),
-> +	DEVICE_FLG(0x1bcf, 0x2281, /* FHD Webcam */
-> +			QUIRK_FLAG_GET_SAMPLE_RATE),
+> The MTD subsystem already supports accessing two OTP areas: user and
+> factory. User areas can be written by the user. This patch only adds
+> support for the user areas.
+>=20
+> In this patch the OTP_INFO macro is provided to add parameters to
+> spinand_info.
+> To implement OTP operations, the client (flash driver) is provided with
+> 5 callbacks: .read(), .write(), .info(), .lock(), .erase().
 
-Please try to align the space.
+Good job! Please find minor comments below.
+
+>=20
+> Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+> ---
+>  drivers/mtd/nand/spi/Makefile |   3 +-
+>  drivers/mtd/nand/spi/core.c   |   3 +
+>  drivers/mtd/nand/spi/otp.c    | 219 ++++++++++++++++++++++++++++++++++
+>  include/linux/mtd/spinand.h   |  56 +++++++++
+>  4 files changed, 280 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mtd/nand/spi/otp.c
+>=20
+> diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
+> index 19cc77288ebbc..60d2e830ffc6b 100644
+> --- a/drivers/mtd/nand/spi/Makefile
+> +++ b/drivers/mtd/nand/spi/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -spinand-objs :=3D core.o alliancememory.o ato.o esmt.o foresee.o gigadev=
+ice.o macronix.o
+> +spinand-objs :=3D core.o otp.o
+> +spinand-objs +=3D alliancememory.o ato.o esmt.o foresee.o gigadevice.o m=
+acronix.o
+>  spinand-objs +=3D micron.o paragon.o toshiba.o winbond.o xtx.o
+>  obj-$(CONFIG_MTD_SPI_NAND) +=3D spinand.o
+> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+> index 807c24b0c7c4f..2cb825edd49d0 100644
+> --- a/drivers/mtd/nand/spi/core.c
+> +++ b/drivers/mtd/nand/spi/core.c
+> @@ -1111,6 +1111,7 @@ int spinand_match_and_init(struct spinand_device *s=
+pinand,
+>  		spinand->flags =3D table[i].flags;
+>  		spinand->id.len =3D 1 + table[i].devid.len;
+>  		spinand->select_target =3D table[i].select_target;
+> +		spinand->otp =3D &table[i].otp;
+> =20
+>  		op =3D spinand_select_op_variant(spinand,
+>  					       info->op_variants.read_cache);
+> @@ -1292,6 +1293,8 @@ static int spinand_init(struct spinand_device *spin=
+and)
+>  	mtd->_max_bad_blocks =3D nanddev_mtd_max_bad_blocks;
+>  	mtd->_resume =3D spinand_mtd_resume;
+> =20
+> +	spinand_set_mtd_otp_ops(spinand);
+> +
+>  	if (nand->ecc.engine) {
+>  		ret =3D mtd_ooblayout_count_freebytes(mtd);
+>  		if (ret < 0)
+> diff --git a/drivers/mtd/nand/spi/otp.c b/drivers/mtd/nand/spi/otp.c
+> new file mode 100644
+> index 0000000000000..e1f96b1898dcb
+> --- /dev/null
+> +++ b/drivers/mtd/nand/spi/otp.c
+> @@ -0,0 +1,219 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
+> + *
+> + * Author: Martin Kurbanov <mmkurbanov@salutedevices.com>
+> + */
+> +
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/mtd/spinand.h>
+> +
+> +static size_t spinand_otp_size(struct spinand_device *spinand)
+> +{
+> +	struct nand_device *nand =3D spinand_to_nand(spinand);
+> +	size_t otp_pagesize =3D nanddev_page_size(nand) +
+> +			      nanddev_per_page_oobsize(nand);
+> +
+> +	return spinand->otp->layout.npages * otp_pagesize;
+> +}
+> +
+> +static unsigned int spinand_otp_npages(const struct spinand_device *spin=
+and)
+> +{
+> +	return spinand->otp->layout.npages;
+
+Maybe you can move this helper up and use it in spinand_otp_size().
+
+> +}
+> +
+
+...
+
+> +static int spinand_mtd_otp_rw(struct mtd_info *mtd, loff_t ofs, size_t l=
+en,
+> +			      size_t *retlen, u8 *buf, bool is_write)
+> +{
+> +	struct spinand_device *spinand =3D mtd_to_spinand(mtd);
+> +	const struct spinand_otp_ops *ops =3D spinand->otp->ops;
+> +	size_t total_len =3D len;
+> +	int ret;
+> +
+> +	if (ofs < 0 || ofs + len > spinand_otp_size(spinand))
+> +		return -EINVAL;
+> +
+
+Please just check if (!len) here
+
+> +	total_len =3D min_t(size_t, total_len, spinand_otp_size(spinand) - ofs);
+
+                                  len ^^^
+
+Here you can just compute the minimum and don't check the output. It
+will be simpler to understand.
+
+> +	if (!total_len)
+> +		return 0;
+> +
+> +	mutex_lock(&spinand->lock);
+> +
+> +	ret =3D spinand_upd_cfg(spinand, CFG_OTP_ENABLE, CFG_OTP_ENABLE);
+> +	if (ret)
+> +		goto out_unlock;
+> +
+> +	if (is_write)
+> +		ret =3D ops->write(spinand, ofs, len, buf, retlen);
+> +	else
+> +		ret =3D ops->read(spinand, ofs, len, buf, retlen);
+> +
+> +	if (spinand_upd_cfg(spinand, CFG_OTP_ENABLE, 0)) {
+> +		WARN(1, "Can not disable OTP mode\n");
+
+Please avoid WARN() statements like that. A normal pr_warn is enough.
+
+> +		ret =3D -EIO;
+> +	}
+> +
+> +out_unlock:
+> +	mutex_unlock(&spinand->lock);
+> +	return ret;
+> +}
+> +
+> +static int spinand_mtd_otp_read(struct mtd_info *mtd, loff_t from, size_=
+t len,
+
+Can you keep the naming consistent?                 ofs vs. from  ^
+
+> +				size_t *retlen, u8 *buf)
+> +{
+> +	return spinand_mtd_otp_rw(mtd, from, len, retlen, buf, false);
+> +}
+> +
+> +static int spinand_mtd_otp_write(struct mtd_info *mtd, loff_t to, size_t=
+ len,
+> +				 size_t *retlen, const u8 *buf)
+> +{
+> +	return spinand_mtd_otp_rw(mtd, to, len, retlen, (u8 *)buf, true);
+> +}
+> +
+> +static int spinand_mtd_otp_erase(struct mtd_info *mtd, loff_t from, size=
+_t len)
+> +{
+> +	struct spinand_device *spinand =3D mtd_to_spinand(mtd);
+> +	const struct spinand_otp_ops *ops =3D spinand->otp->ops;
+> +	int ret;
+> +
+> +	if (!ops->erase)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (!len)
+> +		return 0;
+
+This check seems sensible but is absent in the other helpers. Any
+reason? Please add it to _lock() and _rw()
+
+> +
+> +	if (from < 0 || (from + len) > spinand_otp_size(spinand))
+> +		return -EINVAL;
+
+And this is also repeated three times, it is probably worth factorizing
+out.
+
+> +
+> +	mutex_lock(&spinand->lock);
+> +	ret =3D ops->erase(spinand, from, len);
+> +	mutex_unlock(&spinand->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int spinand_mtd_otp_lock(struct mtd_info *mtd, loff_t from, size_=
+t len)
+> +{
+> +	struct spinand_device *spinand =3D mtd_to_spinand(mtd);
+> +	const struct spinand_otp_ops *ops =3D spinand->otp->ops;
+> +	int ret;
+> +
+> +	if (!ops->lock)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (from < 0 || (from + len) > spinand_otp_size(spinand))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&spinand->lock);
+> +	ret =3D ops->lock(spinand, from, len);
+> +	mutex_unlock(&spinand->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * spinand_set_mtd_otp_ops() - Set up OTP methods
+> + * @spinand: the spinand device
+> + *
+> + * Set up OTP methods.
+> + */
+> +void spinand_set_mtd_otp_ops(struct spinand_device *spinand)
+> +{
+> +	struct mtd_info *mtd =3D spinand_to_mtd(spinand);
+> +
+> +	if (!spinand->otp->ops)
+> +		return;
+> +
+> +	mtd->_get_user_prot_info =3D spinand_mtd_otp_info;
+> +	mtd->_read_user_prot_reg =3D spinand_mtd_otp_read;
+> +	mtd->_write_user_prot_reg =3D spinand_mtd_otp_write;
+> +	mtd->_lock_user_prot_reg =3D spinand_mtd_otp_lock;
+> +	mtd->_erase_user_prot_reg =3D spinand_mtd_otp_erase;
+> +}
+> diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+> index 555846517faf6..a0d42a9be333f 100644
+> --- a/include/linux/mtd/spinand.h
+> +++ b/include/linux/mtd/spinand.h
+> @@ -322,6 +322,43 @@ struct spinand_ondie_ecc_conf {
+>  	u8 status;
+>  };
+> =20
+> +/**
+> + * struct spinand_otp_layout - structure to describe the SPI NAND OTP ar=
+ea
+> + * @npages: number of pages in the OTP
+> + */
+> +struct spinand_otp_layout {
+> +	unsigned int npages;
+> +};
+> +
+> +/**
+> + * struct spinand_otp_ops - SPI NAND OTP methods
+> + * @info: Get the OTP area information
+> + * @lock: lock an OTP region
+> + * @erase: erase an OTP region
+> + * @read: read from the SPI NAND OTP area
+> + * @write: write to the SPI NAND OTP area
+> + */
+> +struct spinand_otp_ops {
+> +	int (*info)(struct spinand_device *spinand, size_t len,
+> +		    struct otp_info *buf, size_t *retlen);
+> +	int (*lock)(struct spinand_device *spinand, loff_t from, size_t len);
+> +	int (*erase)(struct spinand_device *spinand, loff_t from, size_t len);
+> +	int (*read)(struct spinand_device *spinand, loff_t from, size_t len,
+> +		    u8 *buf, size_t *retlen);
+> +	int (*write)(struct spinand_device *spinand, loff_t from, size_t len,
+> +		     const u8 *buf, size_t *retlen);
+> +};
+> +
+> +/**
+> + * struct spinand_otp - SPI NAND OTP grouping structure
+> + * @layout: OTP region layout
+> + * @ops: OTP access ops
+> + */
+> +struct spinand_otp {
+> +	const struct spinand_otp_layout layout;
+> +	const struct spinand_otp_ops *ops;
+> +};
+> +
+>  /**
+>   * struct spinand_info - Structure used to describe SPI NAND chips
+>   * @model: model name
+> @@ -354,6 +391,7 @@ struct spinand_info {
+>  	} op_variants;
+>  	int (*select_target)(struct spinand_device *spinand,
+>  			     unsigned int target);
+> +	struct spinand_otp otp;
+>  };
+> =20
+>  #define SPINAND_ID(__method, ...)					\
+> @@ -379,6 +417,14 @@ struct spinand_info {
+>  #define SPINAND_SELECT_TARGET(__func)					\
+>  	.select_target =3D __func,
+> =20
+> +#define SPINAND_OTP_INFO(__npages, __ops)				\
+> +	.otp =3D {							\
+> +		.layout =3D {						\
+> +			.npages =3D __npages,				\
+> +		},							\
+> +		.ops =3D __ops,						\
+> +	}
+> +
+>  #define SPINAND_INFO(__model, __id, __memorg, __eccreq, __op_variants,	\
+>  		     __flags, ...)					\
+>  	{								\
+> @@ -422,6 +468,7 @@ struct spinand_dirmap {
+>   *		passed in spi_mem_op be DMA-able, so we can't based the bufs on
+>   *		the stack
+>   * @manufacturer: SPI NAND manufacturer information
+> + * @otp: SPI NAND OTP info.
+>   * @priv: manufacturer private data
+>   */
+>  struct spinand_device {
+> @@ -450,6 +497,7 @@ struct spinand_device {
+>  	u8 *oobbuf;
+>  	u8 *scratchbuf;
+>  	const struct spinand_manufacturer *manufacturer;
+> +	const struct spinand_otp *otp;
+>  	void *priv;
+>  };
+> =20
+> @@ -525,4 +573,12 @@ int spinand_read_page(struct spinand_device *spinand,
+>  int spinand_write_page(struct spinand_device *spinand,
+>  		       const struct nand_page_io_req *req);
+> =20
+> +void spinand_set_mtd_otp_ops(struct spinand_device *spinand);
+> +
+> +int spinand_otp_read(struct spinand_device *spinand, loff_t from, size_t=
+ len,
+> +		     u8 *buf, size_t *retlen);
+> +
+> +int spinand_otp_write(struct spinand_device *spinand, loff_t from, size_=
+t len,
+> +		      const u8 *buf, size_t *retlen);
+> +
+
+Why exposing spinand_otp_read and spinand_otp_write ?
+
+>  #endif /* __LINUX_MTD_SPINAND_H */
 
 
-thanks,
-
-Takashi
+Thanks,
+Miqu=C3=A8l
