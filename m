@@ -1,84 +1,111 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B77180A99;
-	Wed, 17 Jul 2024 17:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC69181BBD;
+	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721235790; cv=none; b=EYHXnGIVsupH4O1/tmjj2O6AuwaeqpsPX4OWpqBqEacwqaphFbxNSsFkW/ksCkI8veo2b9h9Dwx0DYrIBV/vBq9WiD5yt26qCDkHedyce+IC8AS9JijMnBgERTwzR2U2dgmaGhDY/mrkL42ma9WDjl+nIaI8xlfEfWXCkAoWo2g=
+	t=1721235795; cv=none; b=n+hvSc1nPJzpbAc7VrQLMexi3IWki/ZIif09uRe6kJTgKw/sKCh+bBWeR+aG+G95ySNUkzFOc0qu3Ckw4qIHtu42X41QbfOkSZe0eMKPB+6UIB0jb/kjnSmKKuHYO+ucaWEHtvY+AUT9ogQ3k/RExRNCStd82DaVREacvARbhjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721235790; c=relaxed/simple;
-	bh=8/5dJrJ2+9Wk14cPx5nkHzMZuSV5tS8fq5+uo+286Ac=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TAPa7mTxUdUSrM9GcoRq7r23iNsx4qkUy/+/LO054cHlWQTkyfAfaQLjxfN1+/dt5R9PbuAQqNRowgJ008zqOCEI9oyO1Sb4s13qMax+BSifiZEREoFWzTAiDX7FI3oU7CdVDYVTgVMnXGqJM4kOMTyHyO7Nb8wLTOb41ApmEfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=4spTy3FP; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1721235795; c=relaxed/simple;
+	bh=wkgVf0vCUGHv6W2n+sOka0AmnpoDk4tVlRsVgJuMb+Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=evFgs4kLdaF/LNItO0+gi9PVYQpfbb7qEPdc1llL0kv9vsyr2i/PtGcs+L9pqOeLkt/9C9SqPcckdsdI741UqUSguG/MkRcbeARfZYIJTYNdMNEXVsUWw/19tdIrbIb9pCtB20LhQIfespsctTsn9NUgcnlgEYyjUKgC4JDD5mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7jyZa+w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="4spTy3FP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=btjX+x6cX8ZBL/5bFIlgNMCTbIAJLEehWyH8wcIpEtA=; b=4spTy3FPwrLHyxqFzvVKuk6IsZ
-	dWB88354/QeLzMTejtZXsLORI5PI06SASnDbophFtwoS/jmsYRzStFitTD4QQxFM+4Q34EYee4KrS
-	EwfERdLiKdeKKYApRpDYHcrfplLTCMNqnaGPurJACPcgfPOMpveONFMFsiIC2j1UQa9qj0DPaRpY1
-	zjCBvgds+6kDB+08OVrG96LOpkRnFlgAl3MT5L0xMk6dNdSMEE0gh5lJ/HX6CiEtddkeZTkKtXHLY
-	d9s7NAoSza++7qxIxMb0t1tdfTJ/3t9nFTFRjSJPZhrVeC108Wvk9LsjhGL+mvL7PkuEbhfBigQge
-	Mb9I9eww==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sU83U-0000000EQZG-0AYB;
-	Wed, 17 Jul 2024 17:03:04 +0000
-Date: Wed, 17 Jul 2024 10:03:03 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Huan Yang <link@vivo.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH 1/2] dma-buf: heaps: DMA_HEAP_IOCTL_ALLOC_READ_FILE
- framework
-Message-ID: <Zpf5R7fRZZmEwVuR@infradead.org>
-References: <20240711074221.459589-1-link@vivo.com>
- <20240711074221.459589-2-link@vivo.com>
- <5ccbe705-883c-4651-9e66-6b452c414c74@amd.com>
- <ZpTnzkdolpEwFbtu@phenom.ffwll.local>
- <99364176-a7f0-4a17-8889-75ff92d5694e@amd.com>
- <06713006-c5ce-4773-a1b3-ca3bea56ee45@vivo.com>
- <ZpY-CfcDdEhzWpxN@phenom.ffwll.local>
- <b18ad853-90e4-4ad7-b621-2ca8a8111708@vivo.com>
- <Zpff-8LmqK5AD-a8@phenom.ffwll.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7jyZa+w"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D045DC4AF0B;
+	Wed, 17 Jul 2024 17:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721235794;
+	bh=wkgVf0vCUGHv6W2n+sOka0AmnpoDk4tVlRsVgJuMb+Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=r7jyZa+wEaM5dgZsSrg9LTvDVxNojSyFtXugKwGUjrFvSKnCCQt6FkXFcdwIVj085
+	 1nI5mMCvpQ3QO5bImJhZyqeLGdSrku0RZ/oi1w/ItgUEzuMZMe8b+EvacNrKcpzm2Q
+	 QO46KD0BuDDNVZ8GkqqQ/d6wK1RsxxXWdg5hkoGfHe3KdwgQbj33/P1qXd/bmkspxY
+	 hsUGx6RXSCOK2OaXrA95BmCqQcuRLGUkPu7ZCoEbVRB3AinAA6Iar4wlUmema9Ui4v
+	 I/n44jAdZfoo9bEVB6y37HP2goX3fw99bhyTT2T0ZlxDMZXDtj24NrywgykVU3VAiX
+	 n8MGzEr4VtOyg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD070C3DA62;
+	Wed, 17 Jul 2024 17:03:14 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Date: Wed, 17 Jul 2024 22:33:06 +0530
+Subject: [PATCH v2 01/13] PCI: qcom-ep: Drop the redundant masking of
+ global IRQ events
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zpff-8LmqK5AD-a8@phenom.ffwll.local>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240717-pci-qcom-hotplug-v2-1-71d304b817f8@linaro.org>
+References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
+In-Reply-To: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1288;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=dIwxxT9MwJPav4RVeIZrg0i1F93yyMgBj6gEWSQjRyU=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBml/lMS8IeKnGvWYtg6R8/GQUOZIVLE+i/Y22Yi
+ EtANDfadNiJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpf5TAAKCRBVnxHm/pHO
+ 9Yy8CACM6ADfPk4VnUNZr4POA/dfxFciV3UUIFeQ9LBdFrZ6N8IJUY4nw1RLiCErYbcq6xbYNw1
+ lpfhuGQQwXNuhIyipHx3eJOsp9B+22AMN1+m6j8GueXmP3sPFYkCWYE23cJkoXvO0FHKV1pIX95
+ hA5FILdSh0KqP43CevDN9K/q93Ro/AdDGYypsjKIBFQBJf+TVc4VaAVoM/Qm8Cg8Vz9R1xuMRaO
+ PogwsRu5wPaJDmOy/FaH6V5NqetdmaUm/MQ0bXrkGdEzjth9RnOyYC3ZyfB9hfqXdtzsgvhZN6E
+ 1ZYf9LpMyMGkOM3w+xzwoq7OQiJ3F2SH8mmjyE6d4kEhxrfW
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-On Wed, Jul 17, 2024 at 05:15:07PM +0200, Daniel Vetter wrote:
-> I'm talking about memfd, not dma-buf here. I think copy_file_range to
-> dma-buf is as architecturally unsound as allowing O_DIRECT on the dma-buf
-> mmap.
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-copy_file_range only work inside the same file system anyway, so
-it is completely irrelevant here.
+Once the events are disabled in PARF_INT_ALL_MASK register, only the
+enabled events will generate global IRQ. So there is no need to do the
+masking again in the IRQ handler, drop it.
 
-What should work just fine is using sendfile (or splice if you like it
-complicated) to write TO the dma buf.  That just iterates over the page
-cache on the source file and calls ->write_iter from the page cache
-pages.  Of course that requires that you actually implement
-->write_iter, but given that dmabufs support mmaping there I can't
-see why you should not be able to write to it.
+If there are any spurious IRQs getting generated, they will be reported
+using the existing dev_err() in the handler.
 
-Reading FROM the dma buf in that fashion should also work if you provide
-a ->read_iter wire up ->splice_read to copy_splice_read so that it
-doesn't require any page cache.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 236229f66c80..972a90eba494 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -647,11 +647,9 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+ 	struct dw_pcie *pci = &pcie_ep->pci;
+ 	struct device *dev = pci->dev;
+ 	u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
+-	u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
+ 	u32 dstate, val;
+ 
+ 	writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
+-	status &= mask;
+ 
+ 	if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
+ 		dev_dbg(dev, "Received Linkdown event\n");
+
+-- 
+2.25.1
+
 
