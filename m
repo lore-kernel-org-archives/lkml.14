@@ -1,72 +1,82 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E90210EC
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496DC1CAB1
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721202844; cv=none; b=Enqa6n+FwmdnUTQSe1vkekJBXaRgeqA8nmmaO/QVj9ojPmuobqFAma0FVFuYF7HFL+QWA9JxJ/n3qSK/nCl/O8QjIyoPiG0WHNTP/GUIN9F5uQcpjQhDYKexyG97DjugFC7AD3Cvyt/4X0q82RkrBXCrDqFu3mzB2aotVes6MKY=
+	t=1721202994; cv=none; b=EDuPCHhTdZK9oRRz9GDJSLOXciIC81md0c5GITHMS9g3P+jzMCsjynwQFTsve0mQwODbD8/qy/TbireUYWw+8XIJ5nTqIviz7Dg0fHWh6nNgy9t4EHpj6r+/uJE4wjMKuwxNvAhFIuF0RtXOWIxuvN43bES2J8msrksNxfM+Bcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721202844; c=relaxed/simple;
-	bh=HTphJf/vtkaGyd9Fm9S2QENKL/UOHYmbtv2ZJ7xTSo0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Z04ZjLw4VT3MH+1qwyPwB6na9G9hlYkL2caNYkgZNd8UJgz0i5Qb0teXkjEHzA+zjvYbhwEFWaqSI64DgRKVXMhi1pl5Cd2eHKbvP6/U2ZFzoVz9ZwmMKtSimCIYHNHOQ/dVFfa5ntUDi7i4E+rPcfUFedKbwLy4Bm3G7aCrAbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7fb15d52c5cso110820539f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 00:54:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721202842; x=1721807642;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=459Wh7MzFQMVmI1CINvASqTLvP2mJWqT1PrLK1j8cWc=;
-        b=h27Uco3EtKI/X37uly+FEGsLq2RvG/aUPjy3+KOCm+IcvTNeNdqnQIpNkpumGUBQ2i
-         6cLi6RqEXxOuhslb0/4xSYYbp83eUIzKdQUt4+FE4gVMNkuD57Xg6u8oKtDOqFz2zDLu
-         +50UN79loE+Y7CLRavUpZiKlusARYCi3aiX+6q/i/EZt5PDff7t2csxHdt0NO+VQqygR
-         K/Y68BjJIQ2jmEkcc7U+6BYmTLaXzs67Ug5VSXJPgMke84cjiKLhc6RL9YrZIVp/h92N
-         gIZjdJCQJH+C+CF041SqaoJ45GbnFCojN/GqIz2qCEHF8HVvN9ZBLCjX/QvVqtnAmsSC
-         5fkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUievm8GDXJO1jsUCQcd0eRoSLILHZbSUUJMQ6W5lOpgF7dN3q3YlpwqUihWAJOAHmfz2MHuGIFxVgs1F6PioRO7ziw5yf2AB7TrCX
-X-Gm-Message-State: AOJu0Yzb4lubb5uJswxGMosHXMMNxixplsPJKfEyc94pM20mSfgp6eOl
-	VFxf4acRngRy8o/9oiZzJbpirCoVv4YPqWVp/YUmTFusqVk7d4tLsiACuu9URCYQT0LY5tY7jQg
-	1Dm3Nxxr7F4riU8wGoz0el3chL9yMmZpg6U4QcLAgE8YDiTj9sXfe+38=
-X-Google-Smtp-Source: AGHT+IFP0S3xxxWJCsw8bo32m8dJkh7cnYgUB+8eS65bkcveoWdI88X6R/Atwy8CYDB+GwzBKKs6Axosp7FG7bap07PJ/NNBpaja
+	s=arc-20240116; t=1721202994; c=relaxed/simple;
+	bh=urZJ1/84wIytql9BIcugNB1IyCTILe2NsmTy/SWnd4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o2ELjQBgUy7D3J8uN3o22QCWl1811ONv7G7metiYmHGEiud6+TxBWobBT2d8jzqv8VCAeijiicj+rKgEM+14OrbTNtR3ReuZ6bWMOjg91GfHXvb/WriqoTJvSxlTfZG4+jKSw0Dv0eepfkl+5HanGTm3KEGPikZMhDbEU80NUKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pxpGccyb; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pxpGccyb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 27C88C0002;
+	Wed, 17 Jul 2024 07:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721202989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=urZJ1/84wIytql9BIcugNB1IyCTILe2NsmTy/SWnd4M=;
+	b=pxpGccybf6wrT60Y6gYN4tEb20R8rqUM/wWxuNqafOpanLoLTBtCSy2kUcnKmkEUwI7yl5
+	SjNcy3cc/b2hvahovJe6IxQNE9G/Z6q89oma+DoHH/YbN97Q1i9+bKgIpNnjHG03iM/yyj
+	cuUkEPCR/Yk2k6HsxpfWH+QQQ9akby9ZorzJseYPe0jHm+AauVtKKbpDF9UIST39yD736Y
+	mmLebk0mk9fqvd7SH64kde7OdVNEQJP4VlZvwQ+wJs+0yF2vxPOGrpx4YENByPl/H13XcR
+	a6TOpN8CVvFo/KDHZDvQRHLNumVGW+ckZqTOnQbHMNXOcFnhP+DyeeM8CD0KoA==
+Date: Wed, 17 Jul 2024 09:56:26 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Conor Culhane <conor.culhane@silvaco.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, linux-i3c@lists.infradead.org (moderated
+ list:SILVACO I3C DUAL-ROLE MASTER), linux-kernel@vger.kernel.org (open
+ list), imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] i3c: master: svc: adjust SDR timing according to
+ i3c spec
+Message-ID: <20240717095626.278d6e62@xps-13>
+In-Reply-To: <20240712164602.3600659-1-Frank.Li@nxp.com>
+References: <20240712164602.3600659-1-Frank.Li@nxp.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8717:b0:4b9:6f13:fb1a with SMTP id
- 8926c6da1cb9f-4c215cc8f41mr33366173.4.1721202841758; Wed, 17 Jul 2024
- 00:54:01 -0700 (PDT)
-Date: Wed, 17 Jul 2024 00:54:01 -0700
-In-Reply-To: <62834558-1286-4af2-ab6b-7d1ef309c793@paragon-software.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f83e76061d6cc375@google.com>
-Subject: Re: [syzbot] [ntfs3?] BUG: unable to handle kernel NULL pointer
- dereference in attr_make_nonresident
-From: syzbot <syzbot+5b6ed16da1077f45bc8e@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hello,
+Hi Frank,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Frank.Li@nxp.com wrote on Fri, 12 Jul 2024 12:46:02 -0400:
 
-Reported-and-tested-by: syzbot+5b6ed16da1077f45bc8e@syzkaller.appspotmail.com
+> From: Carlos Song <carlos.song@nxp.com>
+>=20
+> According to I3C Specification(Version 1.1) 5.1.2.4 "Use of Clock
+> Speed to Prevent Legacy I2C Devices From Seeing I3C traffic", when
+> slow i2c devices(FM/FM+ rate i2c frequency without 50ns filter)
+> works on i3c bus, i3c SDR should work at FM/FM+ rate.
+>=20
+> Adjust timing for difference mode.
 
-Tested on:
+The calculations below look quite complex, but if you believe this is
+right, I'm fine with it.
 
-commit:         562d060b ntfs3: Convert attr_make_nonresident to use a..
-git tree:       https://github.com/Paragon-Software-Group/linux-ntfs3.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=16d54f31980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bc26ad11927ab7fa
-dashboard link: https://syzkaller.appspot.com/bug?extid=5b6ed16da1077f45bc8e
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+>=20
+> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> Signed-off-by: Carlos Song <carlos.song@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+
+Thanks,
+Miqu=C3=A8l
