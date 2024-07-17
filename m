@@ -1,94 +1,100 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09F418C3D;
-	Wed, 17 Jul 2024 07:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A1A18C3D
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721199841; cv=none; b=B/cK5OMLjqHXeS1ugMhb+1k0uE2U3x5cusfCBn8qyhxIZcfBpRCYOE1kI8+BwiUiZ9ffXbSejocVnCoIscAUAgsGPRQ7LKha8mwkDYhtclYkIalA4P1Z1YptAntRhWAuRgB6mAEVo+jbEt/60QM4W8KnOWTD7FUCjSQU9z3MbaE=
+	t=1721199863; cv=none; b=pN7NwV5OR1z0eKPzgPcDwkljBh2hd7iFhSFytQqLliP04Kjm/YGNMesUzue6NE8oMQ97xYepjovUGU+EgQ0w7UegrLt+0s7KEeO1Ean5X34EB60t9TaVLjW365EYn7bL9gehgeIIEVR4gDFldajj5m9qWsGqaxDViynHvtwpY10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721199841; c=relaxed/simple;
-	bh=9+u7VhpS0v0Ayu1qi7neh7YFfB4o2VEa2gNq7VOU6kM=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AwHFUdcUejzLcKCWBo8/TuO3q/8RzSIkbdfrgbRE+OD1B/uRhXVne5tEWS1sUOXfV5ny+imfGL9/Z7mZ3kMYiDBtvrJ1XacqGCRcjQzICRebVmGd9yZSB0KNzq55FJGtGfZ+7/VIwPJltspnQS8I4pPSyxCSEV1VaE6TPG4vcVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEIk/CNE; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEIk/CNE"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70b0e7f6f8bso5570314b3a.3;
-        Wed, 17 Jul 2024 00:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721199839; x=1721804639; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EBQVSX8cISMGMb/XotZL4r577Dyw3ahWCKqo1wIoGyA=;
-        b=JEIk/CNEDWdgqhUz0ZsYhuJ3q/MDz5SwUjjtofpa062hF/s+UJAK8VVuqMn3NTGHMz
-         VygGRtfGQT2+jTsiykSTsnMsuJfP8fR3C5hdK7zFCnI18i5wVu+gpgiNmRu89pcffCLP
-         kByfgW3lTvhmZeZLpXnPKiOF4tWGughz91hlasQ/ciNAQRCcJ2ZsBgDGWLPfMMp688Cl
-         ukFvbBd/DBuK6BRMLg8ZT+T3mYQdL1qRskTwNdvxI8or78vb68GMpcK0OLtf2ww7vzoy
-         6Bi5d1qgSO5s4KRFZag6JnZ7FfNgLKT+Dy4QotJ6BmVfdWf+GaRkyiF0kw7sQJg+nHVl
-         Ej+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721199839; x=1721804639;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EBQVSX8cISMGMb/XotZL4r577Dyw3ahWCKqo1wIoGyA=;
-        b=HG8N2Ycs7IGW6rtQOG01sIf6SX4ES/dW+Eyg7pqcdJxG1mBBMBzrHMU9Z3qQ9Tv8Bt
-         eWLce8fUEvpZNu11REUk0J0Q3pZaWMrNxGeTE4+BLbc5Vt+UCJHYjoDvZBTYUPCjShgn
-         31elxBgAx1nXFse9E/7SZodjV04yBEGvONlcxKk4hDKLCXCMQYtRvUOTy6on26hjTYzT
-         9Y2IcdarrlJo2LTxMjNlnFTYjKEre09VtHcTIKqTYuqRbpCCruqIFvc5MtfOd9IM8+QL
-         0nF/6m/LzL+DSBSx02qmU/9an9ISXpSUymzVjYg63ILsPRqnPuxzq7/d2HjxHGNAlpAG
-         +tpw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5ci6SIVTj0S34CPJle0MtabZCEwO8r2SlHSQUtADzdlqqLkIjxZUFZTXAFm07jbBuvRsNsXF9E63XNro7ZcmP9mEe9W4C997j6+ckJXc+AtAPPcxYJaL0qZ8Wa7ugruvHsqPOq00=
-X-Gm-Message-State: AOJu0Yw8NKUWY3tVdu86FTb3laFqhXFuIVcRwDyKS9WfKrV21pu7gWVm
-	dT+410sPn7FNC4kINlUA+ZBAykOd60nU3csd6kCqIGRcTr+U6Swn
-X-Google-Smtp-Source: AGHT+IHjymBQBKqbE9v0z3JpgTA3UbRYXozd9N7g2aRJOa7OB/sK87AzoilQ9r/Nxvkd/59q5soL1Q==
-X-Received: by 2002:a05:6a00:23c1:b0:706:5d85:61a5 with SMTP id d2e1a72fcca58-70ce4f9003amr894285b3a.8.1721199838965;
-        Wed, 17 Jul 2024 00:03:58 -0700 (PDT)
-Received: from [198.18.0.1] ([2401:d9c0:2902::c2eb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7da19sm7437615b3a.133.2024.07.17.00.03.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jul 2024 00:03:58 -0700 (PDT)
-From: Cryolitia PukNgae <cryolitia@gmail.com>
-X-Google-Original-From: Cryolitia PukNgae <Cryolitia@gmail.com>
-Message-ID: <8e5798c5-d539-4d4a-9d6c-9bb3ba69bb41@gmail.com>
-Date: Wed, 17 Jul 2024 15:03:54 +0800
+	s=arc-20240116; t=1721199863; c=relaxed/simple;
+	bh=I11NJ0Gbqwe9dWfknWF6VjfJ44JAxBnn7MH/gKrRGrU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fc2tul7pBdfOOCZ8nEyMGb9YSu0dVHFP3YpfJE7u+Igk6e4x5J61gVOC09DsiEijFZuaSl2Y7F9oF3n4CeC5FLdZiOaKY8WyWiPI8/dq5lwFSkgD7hHceN060q2Tlhx4LnB+TXlMVRxpYZLaMH+qteYjUFlsgFfZ5H988sc9Acs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WP6MF4lL3zdhck;
+	Wed, 17 Jul 2024 15:02:33 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5486718009B;
+	Wed, 17 Jul 2024 15:04:17 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 17 Jul
+ 2024 15:04:16 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<akpm@linux-foundation.org>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH -next] crash: fix x86_32 memory reserve dead loop retry bug at "high"
+Date: Wed, 17 Jul 2024 15:09:04 +0800
+Message-ID: <20240717070904.2671147-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] hwmon: add GPD devices sensor driver
-To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-doc@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>,
- =?UTF-8?Q?Marcin_Str=C4=85gowski?= <marcin@stragowski.com>
-References: <20240717-gpd_fan-v2-0-f7b7e6b9f21b@gmail.com>
- <20240717-gpd_fan-v2-1-f7b7e6b9f21b@gmail.com>
- <deca2345-0961-4d3a-9ab4-8d11c7d240f2@roeck-us.net>
-Content-Language: en-US
-In-Reply-To: <deca2345-0961-4d3a-9ab4-8d11c7d240f2@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
+Similar to commit 8f9dade5906a ("crash: fix x86_32 memory reserve dead loop
+retry bug") and in the symmetry case, on x86_32 Qemu machine with
+1GB memory, the cmdline "crashkernel=512M" will also cause system stall
+as below:
 
-On 2024/7/17 02:04, Guenter Roeck wrote:
->> +            pr_warn("GPD Fan Driver do have the quirk for your 
->> device, but it's not tested. Please tested carefully by model 
->> parameter gpd_fan_model=%s and report.\n",
->> +                match->model_name);
->> +            match = NULL;
->> +        }
->> +    }
->> +
->> +    if (IS_ERR_OR_NULL(match)) {
->
-> match is never an ERR_PTR.
-Sincerely thank you for your guidance, v3 has been sent: 
-https://lore.kernel.org/r/20240717-gpd_fan-v3-0-8d7efb1263b7@gmail.com
+	ACPI: Reserving FACP table memory at [mem 0x3ffe18b8-0x3ffe192b]
+	ACPI: Reserving DSDT table memory at [mem 0x3ffe0040-0x3ffe18b7]
+	ACPI: Reserving FACS table memory at [mem 0x3ffe0000-0x3ffe003f]
+	ACPI: Reserving APIC table memory at [mem 0x3ffe192c-0x3ffe19bb]
+	ACPI: Reserving HPET table memory at [mem 0x3ffe19bc-0x3ffe19f3]
+	ACPI: Reserving WAET table memory at [mem 0x3ffe19f4-0x3ffe1a1b]
+	143MB HIGHMEM available.
+	879MB LOWMEM available.
+	  mapped low ram: 0 - 36ffe000
+	  low ram: 0 - 36ffe000
+	  (stall here)
+
+The reason is that the CRASH_ADDR_LOW_MAX is equal to CRASH_ADDR_HIGH_MAX
+on x86_32, the first "low" crash kernel memory reservation for 512M fails,
+then it go into the "retry" loop and never came out as below (consider
+CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX = 512M):
+
+-> reserve_crashkernel_generic() and high is false
+   -> alloc at [0, 0x20000000] fail
+      -> alloc at [0x20000000, 0x20000000] fail and repeatedly
+      (because CRASH_ADDR_LOW_MAX = CRASH_ADDR_HIGH_MAX).
+
+Fix it by also changing the another out check condition, the fixed base
+situation has no problem because it warn out if it fail to alloc.
+
+After this patch, it prints:
+	cannot allocate crashkernel (size:0x20000000)
+
+Fixes: 9c08a2a139fe ("x86: kdump: use generic interface to simplify crashkernel reservation code")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ kernel/crash_reserve.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 03e455738e75..36c13cf942f4 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -409,7 +409,7 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ 		 * low memory, fall back to high memory, the minimum required
+ 		 * low memory will be reserved later.
+ 		 */
+-		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
++		if (!high && !search_base) {
+ 			search_end = CRASH_ADDR_HIGH_MAX;
+ 			search_base = CRASH_ADDR_LOW_MAX;
+ 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+-- 
+2.34.1
+
