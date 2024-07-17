@@ -1,49 +1,207 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC6A14F98
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62672C87A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721204513; cv=none; b=M7xNK8h5ukrwrQGfGReL223Pr2H7np/wV0zpkWNhzJ+4WzB/rzm+El/5FBy+reXBFLmmeuzxJglPDazepr5kqYIKggVyCU+KwaloH+gMUaZ4IN9MbyKow+ZChtNcNKQ7FnqOPjlHIhzEdPTLtRX3H5I1xaDa0sEOrSLiUT/EhBw=
+	t=1721204552; cv=none; b=Uem/RYkEoxqme19M09RIte7A1nSkivPqcQ1GG9pFhSHc/38/HD32WBcJQ8PDcBlr+k4ADOmC3srcBYTSC2c46ABrX/UxDJULe/Lu1Wq1ehTnGAG+GZeyK0JG686AYIZZvvqOY1nn9Jmhx5S+kEMBVheuq+vjnOij/FXNXkuWdlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721204513; c=relaxed/simple;
-	bh=wN/93LGWnVFroyKcwwqiAXd8mcDniEGCxiC4kmB+vyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m58J6Vg7X/j7kvAs2c6vQYdutKR3UdqmuFr9C0a9Yr+pkbudxlT65hiqkXarloXRsSUhyvmPqp8t/o3cSIyV3/cUkIPuvxq9kiYD7B5uPX4IIsYsDm9U+4XBh76PvsWYKNTxRuv9LiBVVFvRnVTnLCGXu4czNNyBRXgQ8ugLCN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 48CF068AA6; Wed, 17 Jul 2024 10:21:45 +0200 (CEST)
-Date: Wed, 17 Jul 2024 10:21:45 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v1 2/2] dma: Add IOMMU static calls with clear default
- ops
-Message-ID: <20240717082145.GA15484@lst.de>
-References: <cover.1721041611.git.leon@kernel.org> <7758cbe20bfd34506d943bb93097565b9c4dced4.1721041611.git.leon@kernel.org>
+	s=arc-20240116; t=1721204552; c=relaxed/simple;
+	bh=oRTuwk2ULwui6BBSGuKE3v3o38xqvUqsRiF9Oal7PV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U0by6yRN3M9kacLi0rkthPwfFtLId/AiPsLaNbYXlgg6KE952/QB35lRLiDB7CyzlL2RO9rGrxo7jqS3QDcj2FoqikoPN/csv7VMs9W7x3acw8kyZrZT5UESnbN93JRQGIkal20zDPNVvDUG8qjiVx56IpcrqPxXFb8/2Ccs5bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=e3qAKGB3; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="e3qAKGB3"
+X-Envelope-To: daniel@makrotopia.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1721204547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rAUzNecuguhHhXOE34sT/gCurnZLFtv5EJeb/sysESc=;
+	b=e3qAKGB3OvO0qdjIUqxpwobw/Esu0sBaD/uWAp4ZJi7rtc2/3tXMGswN+utA9BfqNaq6W8
+	2Z8FPwZSxyZdZcbOK5bZQc4xeXzUPXocC0zAgox6lutjIG8/YH3cjoOLNWYrQZBSuTez1C
+	7NT4nzpaNJZy2Wf6reikkSrEasLn9yQ/G51cTEV5E1kCTYi4XLz6hH/vIp3VvSEZqoJIOo
+	nirHJk0ICrrD487qCHknWkVCX5bHhQeeVPUoj+g/HvN0UN5UjenECc+VEcPXFmhHRtwS6h
+	6FJ5b6vaNyAqklU7m3vPYsoeYxtOS1vhkCVdxJfWtMRUAj6MhQsHRDu6aBzf3g==
+X-Envelope-To: wens@kernel.org
+X-Envelope-To: linux-rockchip@lists.infradead.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: conor+dt@kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: herbert@gondor.apana.org.au
+X-Envelope-To: martin@kaiser.cx
+X-Envelope-To: s.hauer@pengutronix.de
+X-Envelope-To: sebastian.reichel@collabora.com
+X-Envelope-To: ardb@kernel.org
+X-Envelope-To: ukleinek@debian.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: linux-crypto@vger.kernel.org
+X-Envelope-To: p.zabel@pengutronix.de
+X-Envelope-To: olivia@selenic.com
+X-Envelope-To: krzk+dt@kernel.org
+X-Envelope-To: dsimic@manjaro.org
+X-Envelope-To: aurelien@aurel32.net
+X-Envelope-To: heiko@sntech.de
+X-Envelope-To: linux.amoon@gmail.com
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Daniel Golle <daniel@makrotopia.org>, wens@kernel.org
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-kernel@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+ Martin Kaiser <martin@kaiser.cx>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <ukleinek@debian.org>,
+ devicetree@vger.kernel.org, linux-crypto@vger.kernel.org,
+ Philipp Zabel <p.zabel@pengutronix.de>, Olivia Mackall <olivia@selenic.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Dragan Simic <dsimic@manjaro.org>,
+ Aurelien Jarno <aurelien@aurel32.net>, Heiko Stuebner <heiko@sntech.de>,
+ Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v7 0/3] hwrng: add hwrng support for Rockchip RK3568
+Date: Wed, 17 Jul 2024 10:22:18 +0200
+Message-ID: <2451882.5D0I8gZW9r@bagend>
+Organization: Connecting Knowledge
+In-Reply-To:
+ <CAGb2v65Mm5s96asU7iaAC_sJnUk=Yuh+zMJJBbmSgETWrPLoFA@mail.gmail.com>
+References:
+ <cover.1720969799.git.daniel@makrotopia.org>
+ <ZpcrdwZBNFu-YlZt@makrotopia.org>
+ <CAGb2v65Mm5s96asU7iaAC_sJnUk=Yuh+zMJJBbmSgETWrPLoFA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7758cbe20bfd34506d943bb93097565b9c4dced4.1721041611.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/signed; boundary="nextPart5141436.0Oyvhfi1xj";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-Migadu-Flow: FLOW_OUT
 
-dma_is_default_iommu still looks a bit odd to me - basically we have
-the ops structure just to say to bypass it.  Why not add a single-bit
-dma_iommu field to struct device next to dma_ops_bypass to skip it?
-Then IOMMU_DMA also does not need to select DMA_OPS any more, which
-would be kinda silly with the direct calls.
+--nextPart5141436.0Oyvhfi1xj
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Daniel Golle <daniel@makrotopia.org>, wens@kernel.org
+Date: Wed, 17 Jul 2024 10:22:18 +0200
+Message-ID: <2451882.5D0I8gZW9r@bagend>
+Organization: Connecting Knowledge
+MIME-Version: 1.0
+
+On Wednesday, 17 July 2024 04:58:51 CEST Chen-Yu Tsai wrote:
+> On Wed, Jul 17, 2024 at 10:25=E2=80=AFAM Daniel Golle <daniel@makrotopia.=
+org> wrote:
+> > On Tue, Jul 16, 2024 at 07:19:35PM +0200, Diederik de Haas wrote:
+> > > On Tuesday, 16 July 2024 18:53:43 CEST Diederik de Haas wrote:
+> > > > rngtest: FIPS 140-2(2001-10-10) Long run: 0
+> > >=20
+> > > I don't know if it means something, but I noticed that I have
+> > > ``Long run: 0`` with all my poor results,
+> > > while Chen-Yu had ``Long run: 1``.
+> > >=20
+> > > Different SoC (RK3399), but Anand had ``Long run: 0`` too on their
+> > > very poor result (100% failure):
+> > > https://lore.kernel.org/linux-rockchip/CANAwSgTTzZOwBaR9zjJ5VMpxm5Byd=
+tW6
+> > > rB2S7jg+dnoX8hAoWg@mail.gmail.com/>=20
+> > The conclusions I draw from that rather ugly situation are:
+> >  - The hwrng should not be enabled by default, but it should by done
+> > =20
+> >    for each board on which it is known to work well.
+> > =20
+> >  - RK_RNG_SAMPLE_CNT as well as the assumed rng quality should be
+> > =20
+> >    defined in DT for each board:
+> >    * introduce new 'rochchip,rng-sample-count' property
+> >    * read 'quality' property already used for timeriomem_rng
+> >=20
+> > I will prepare a follow-up patch taking those conclusions into account.
+> >=20
+> > Just for completeness, here my test result on the NanoPi R5C:
+> > root@OpenWrt:~# cat /dev/hwrng | rngtest -c 1000
+> > rngtest 6.15
+> > Copyright (c) 2004 by Henrique de Moraes Holschuh
+> > This is free software; see the source for copying conditions.  There is=
+ NO
+> > warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR
+> > PURPOSE.
+> >=20
+> > rngtest: starting FIPS tests...
+> > rngtest: bits received from input: 20000032
+> > rngtest: FIPS 140-2 successes: 875
+> > rngtest: FIPS 140-2 failures: 125
+> > rngtest: FIPS 140-2(2001-10-10) Monobit: 123
+> > rngtest: FIPS 140-2(2001-10-10) Poker: 5
+> > rngtest: FIPS 140-2(2001-10-10) Runs: 4
+> > rngtest: FIPS 140-2(2001-10-10) Long run: 0
+> > rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+> > rngtest: input channel speed: (min=3D85.171; avg=3D141.102;
+> > max=3D4882812.500)Kibits/s rngtest: FIPS tests speed: (min=3D17.809;
+> > avg=3D19.494; max=3D60.169)Mibits/s rngtest: Program run time: 139628605
+> > microseconds
+>=20
+> I doubt this is per-board. The RNG is inside the SoC, so it could be a ch=
+ip
+> quality thing.=20
+
+I agree with ChenYu (and others) that this is isn't a per-board level thing.
+I'd even go further: 's/I doubt/It can't be that/' (for the same reason=20
+though; this is inside the SoC).
+
+Before I saw these latest emails, I was going to suggest:
+1. Enable it only on RK3568 for now. I would be fine if this would be accep=
+ted=20
+by the maintainer
+
+2. Ask that you make a special version (for me) where I could play with the=
+=20
+params without having to compile a new kernel for each variant (it generall=
+y=20
+takes me more then 24h on my Q64-A). Either through kernel module propertie=
+s=20
+or properties defined in the DeviceTree is fine with me.
+
+3. Based on the results make  a choice to not enable it on rk3566 at all or=
+=20
+(indeed) introduce DT properties to configure it differently per SoC.
+
+4. Hope/Ask for more test results
+
+> On the RK3399 we also saw wildly varying results.
+
+On my Rock64('s) (RK3328) it doesn't work at all:
+
+```
+root@cs21:~# cat /dev/hwrng | rngtest -c 1000
+rngtest 5
+=2E..
+rngtest: starting FIPS tests...
+cat: /dev/hwrng: No such device
+rngtest: entropy source drained
+```
+
+Cheers,
+  Diederik
+--nextPart5141436.0Oyvhfi1xj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZpd/OgAKCRDXblvOeH7b
+bhTtAQDxHeJWjtzhQ0VzdaAQLgyOGDnjBZPN2vk0valdx2h02AD7BIHY/gdTcnTT
+NP49+SbIyYyteDbeJFPD23ms28eyYgw=
+=7pQO
+-----END PGP SIGNATURE-----
+
+--nextPart5141436.0Oyvhfi1xj--
+
+
 
