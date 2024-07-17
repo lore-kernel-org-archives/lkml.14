@@ -1,191 +1,137 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083521171D
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C997A11712;
+	Wed, 17 Jul 2024 06:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721196098; cv=none; b=CxEUQ+/kxDljfFhNuYDLDm87N2Dw0OF++u0VGJ6Od6ks2ekE7OTphc+EfHAX3j3Fl1mZpoJuT6FQiXrcBWoaQY44vF4Ll8cZQO7FtQN5+66lgP2fcfntzmomGthbu3z1E4ULaCGz5lANIzwNO84AeOSsWq5EC4HOYkjIt/j2pEg=
+	t=1721196128; cv=none; b=mTnueleeKqnK1VoAGdf62pU82ateQr+NV6lFBgh6GweBHs2lHHoWddQ32uH+EWYuVBvyy9Om7rlfuc8nKobBzVTtdSRSkKmgx6dJonrV+7k888FdiGfrKIoIaORwmqvOgJjTXIvBCC4TIy5ijoiYyzk6A23Tvd5t3tGdglxS4j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721196098; c=relaxed/simple;
-	bh=ggCA6FExsWNy9ux8ROSvJ6hLW/Bn0fTX6rd24x8KzmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NMU7X7pKvccY9Td/Cxby/uxjwZU+MwsA0q8IE8VN4yCEtGdacWIXc1PG3AF2mbwitHIv69n1tCQU6WksBGCcijjVJjLLhN8IzgyYwF45bztjbfhqb1AduibS58qdxijLrmUdIQpTvp2o1L3g6Oo53vfmolI/5kQptLtzqWsJif4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=RMSrfWGq; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1721196128; c=relaxed/simple;
+	bh=f+RmEIUQ9VSi19cek3Sz+RL9dW4upJpc7vO2wruJXm4=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=gVrXA0Ge1GI4Ac2TaXlFd16s5/07KBWNCRXCgTyILoRSCcuJU7U472ol+qMATuUrE/TBWdZQN+yrcAcmxs6Bl3m4SCgtoLyIZ8Sbq5gkhdmwkGiEcA8d4J658qQwL0h8v1qxAcJV7IWZn+YcfnB5QoUxRc0qA7qzPhFaIKTQLi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TxdDuVHB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iy57Shj+; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="RMSrfWGq"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52e9f863c46so7050668e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:01:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721196094; x=1721800894; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pl3L0FVYFNGhFKHk1JJU6PwaolSCChVISQJkZ5aIzzI=;
-        b=RMSrfWGq3xe/GEMfVemP25KJFYRVqb2TaeIHhxMSZMlWv/xHsjImNbJ11mw0Um8KL/
-         1Ny1rxHhzyIu3lbDLkyTSV8l0d1yyDcThNJZjdFysQFR3IyD/4ZPhc1y8BaGwV27sMw4
-         uvR4gVDUP4xXbAV/cXFdJEXvey8Daxv7Nm2XTU2AAUTAWJn1Cf5lGeoDsPA8x8HYpiE0
-         fhg/DqbDVaxbqVKst/LWrRNlxaE9j3DvmuxKhghRwY/bVFdF3HBi4CkguE5x13AyMKDu
-         0emrXph/nyP8Mxmj8z1xVpdqMUbmIbxs7qXpmjyCoY7T+3nMu2h8MEPnXLJ3OM9VDBNk
-         89HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721196094; x=1721800894;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pl3L0FVYFNGhFKHk1JJU6PwaolSCChVISQJkZ5aIzzI=;
-        b=huhqqlDzalr3WMpjZB5tNvFMBjwnfP8vx3rbbCcAump5e0cukGxPFXfMo5Rhq+7/ZU
-         Y/wUH5z9YWUO9piXdY/H0WB9aKVZoE4IKD6Mr9k37crVdsTEZbSUJVaMJiTlQKE9NF+J
-         sZUV6XIZ8/5JmfhKJMQxzI7gd88dLjIG6fjVmeV9IE2mPYrnECC9a/tXtmT0kZLEvG4p
-         UqbgKyf16Z3HCgzjq0B/u8tLBSPUcO5QMTt3bB/hqxF1A6/v7rtcRimfWvelgY8hOPxL
-         +N3yTomIWnxMLW/x0d2BVBngRiiPD8eXMEb2ThjZN0AzSjgJ23/YT7vGVZtuo3zohdw1
-         nC0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXVXtISYu6BP1dRUgKW5dxYqVyEg2efTMa2SXl1OVmJE+qqc4xf8QYOJdUUPz9mN87GFBUQK9hiRQztLlM7HS86L9yEARW2VChpKUGb
-X-Gm-Message-State: AOJu0Ywu6G40NLoNISBgJjxvja8CVHgOKruHatttcntaEJxJQeI96CMi
-	nibbu/Pnr3/BsUm+v6izPdbMwKjKJvrTiyutqBEzuQU8+WcEZj3kq8a/JbmjPpc=
-X-Google-Smtp-Source: AGHT+IGTWlMHonD8VGH1O7WD0Yggp5hmzzpiSRuP4gthch3y8dFycbjmh4esQgOV2+4OGbeLMAp6Ag==
-X-Received: by 2002:a05:6512:b82:b0:52e:bdd4:610b with SMTP id 2adb3069b0e04-52ee53a573fmr514590e87.4.1721196093903;
-        Tue, 16 Jul 2024 23:01:33 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f23a000sm193895315e9.5.2024.07.16.23.01.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 23:01:33 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Ved Shanbhogue <ved@rivosinc.com>,
-	Matt Evans <mev@rivosinc.com>,
-	yunhui cui <cuiyunhui@bytedance.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v4 0/4] Svvptc extension to remove preventive sfence.vma
-Date: Wed, 17 Jul 2024 08:01:21 +0200
-Message-Id: <20240717060125.139416-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TxdDuVHB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iy57Shj+"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.nyi.internal (Postfix) with ESMTP id EC27B1380273;
+	Wed, 17 Jul 2024 02:02:05 -0400 (EDT)
+Received: from wimap26 ([10.202.2.86])
+  by compute6.internal (MEProxy); Wed, 17 Jul 2024 02:02:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1721196125; x=1721282525; bh=s7KuyIqvIg
+	I/k+6qXPqK6+K+0ILQ6zny5br217rA/cg=; b=TxdDuVHBA6pP2KAS6CIrwvUNlj
+	eXMZnKZ+s+Gn8e+mTrnqEfd3NAq531VmO+spYY4WHFjdYiG+C0y2Cv1oulqJJRug
+	McSGhGS+vxIisP70kd+QUSRlOB3S7ek2fTIWs26QCd6BMdXbSLv+ACLWaWgMuw0G
+	LLGbDHxb+ODAv+sDkOn9aqHsW2iNr2Lg+ZEcGzXMoHYcKhlqYp15tK7N4Hc1WaXR
+	gUIVDRnOtEp1qc7NJQGQGSR5Li0/mw5cJod3ROR2NZN0Cei1VvlkD1lENVdytYKu
+	FbMTlh3kfQkKWZHXITUqcAXJJut8/x4bfsLPIQUDM4oKNeI7lRlbfHal+eDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1721196125; x=1721282525; bh=s7KuyIqvIgI/k+6qXPqK6+K+0ILQ
+	6zny5br217rA/cg=; b=iy57Shj+rMMq0tgL8F/b4GYe9Nu5PqrGYSCT/PbD9M5/
+	0KhYhe473tb02Gs5inSJPVoB4lIH9FVQdHR1oyz4lo2upKFXmc4nYOYa4teAaq3V
+	R07LkGrhuYforttrNu0XCLMZSeUNJEpz/k4KREfn6ajhuNuibkmPzv43lt8VN0fT
+	i1/a+8BEL5wXsZXK+ilbEO3bXZ1UMllWfAeWH0prDPs6T94pwOc3Z0fIUcrsW9vV
+	tcGWgiFRSV016P+CaygIErZsVUq2BBziw/u7gEZ+YeJzlA6fIwJf89RcGeh12UkR
+	uuW2Y+5Jhls8ywPxJYPKGMpaYqjhZJXvBZsbUWZFag==
+X-ME-Sender: <xms:XF6XZhASZKRtrx88hvmEqjeC4Joes9NXX9VPo9GyHKgpJNnVSx266Q>
+    <xme:XF6XZvgsjLXz3zi9oGV7g2tyYzXvEQ3w8lyegGX3eEuUoarepzwpZNoCIqdAKQySy
+    3eS9905O-rjWOG_Zq8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeehgddutdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:XF6XZslNFrl7P2PNLVmEzkv4YrLUeV64nc8FBVEyYKCWGTO9AQBDRw>
+    <xmx:XF6XZrwgkSDQ7vjyFVOvY8HBHZdrHUnFS9hU3NzLrC3z-S7q4FAgYQ>
+    <xmx:XF6XZmScx7LJyMWu_IbYlUK4h8k_-ZMJQyTixDgUXprSjJv-cP9rag>
+    <xmx:XF6XZuYKltr-lNPOmRWTppGpWmh6NWQqxBsewHtt7h0sujRWIzzZRg>
+    <xmx:XV6XZn_oX9nmRr2w04j_4ZetEq37mOqIJ60LsUeH07ay06T4PzvAJjt_>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 83D2419C005D; Wed, 17 Jul 2024 02:02:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <2b6336d1-34e0-48dd-b901-7b5208045597@app.fastmail.com>
+In-Reply-To: 
+ <CAHk-=wjqr_ahprUjddSBdQfSXUtg3Y2dCxHre=-Wa4VGdi7wuw@mail.gmail.com>
+References: <a662962e-e650-4d99-bed2-aa45f0b2cf19@app.fastmail.com>
+ <CAHk-=wibB7SvXnUftBgAt+4-3vEKRpvEgBeDEH=i=j2GvDitoA@mail.gmail.com>
+ <d7d6854b-e10d-473f-90c8-5e67cc5d540a@app.fastmail.com>
+ <CAHk-=wir5og_Pd6MBSDFS+dL-bxoBix03QyGheySeeWPX82SDw@mail.gmail.com>
+ <CAHk-=wjqr_ahprUjddSBdQfSXUtg3Y2dCxHre=-Wa4VGdi7wuw@mail.gmail.com>
+Date: Wed, 17 Jul 2024 08:01:43 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: "Masahiro Yamada" <masahiroy@kernel.org>, linux-kernel@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ linux-snps-arc@lists.infradead.org
+Subject: Re: [GIT PULL] asm-generic updates for 6.11
+Content-Type: text/plain
 
-In RISC-V, after a new mapping is established, a sfence.vma needs to be
-emitted for different reasons:
+On Wed, Jul 17, 2024, at 07:08, Linus Torvalds wrote:
+> On Tue, 16 Jul 2024 at 21:57, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> Note, it really might be just 'allmodconfig'. We've had things that
+>> depend on config entries in the past, eg the whole
+>> CONFIG_HEADERS_INSTALL etc could affect things.
 
-- if the uarch caches invalid entries, we need to invalidate it otherwise
-  we would trap on this invalid entry,
-- if the uarch does not cache invalid entries, a reordered access could fail
-  to see the new mapping and then trap (sfence.vma acts as a fence).
+I had tried a partial allmodconfig build earlier to save time,
+did a full build again now, still nothing:
 
-We can actually avoid emitting those (mostly) useless and costly sfence.vma
-by handling the traps instead:
+arnd@studio:~/arm-soc/bisect$ make allmodconfig -sj20
+arnd@studio:~/arm-soc/bisect$ make -sj20
+arnd@studio:~/arm-soc/bisect$ touch .config
+arnd@studio:~/arm-soc/bisect$ make allmodconfig -sj20
+arnd@studio:~/arm-soc/bisect$ make -j20
+  SYNC    include/config/auto.conf.cmd
+  CALL    scripts/checksyscalls.sh
+  CHK     kernel/kheaders_data.tar.xz
+arnd@studio:~/arm-soc/bisect$ find . -newer .config
+.
+./arch/arm64/kvm
+./include/config
+./include/config/auto.conf.cmd
+./include/config/auto.conf
+./include/generated
+./include/generated/uapi/linux
+./include/generated/autoconf.h
+./include/generated/rustc_cfg
+./init
+./kernel
+./lib
+./scripts/mod
+./.missing-syscalls.d
 
-- for new kernel mappings: only vmalloc mappings need to be taken care of,
-  other new mapping are rare and already emit the required sfence.vma if
-  needed.
-  That must be achieved very early in the exception path as explained in
-  patch 3, and this also fixes our fragile way of dealing with vmalloc faults.
+This is in a fresh worktree, doing a native arm64 build
+in the source directory. In case the problem is related to
+changes in high-resolution timestamping, I am running
+a slightly older kernel (still 6.8) and I'm using btrfs
+with relatime for the build here. I also tried on tmpfs
+now, same results. ccache is disabled.
 
-- for new user mappings: Svvptc makes update_mmu_cache() a no-op but we can
-  take some gratuitous page faults (which are very unlikely though).
-
-Patch 1 and 2 introduce Svvptc extension probing.
-
-On our uarch that does not cache invalid entries and a 6.5 kernel, the
-gains are measurable:
-
-* Kernel boot:                  6%
-* ltp - mmapstress01:           8%
-* lmbench - lat_pagefault:      20%
-* lmbench - lat_mmap:           5%
-
-Here are the corresponding numbers of sfence.vma emitted:
-
-* Ubuntu boot to login:
-Before: ~630k sfence.vma
-After:  ~200k sfence.vma
-
-* ltp - mmapstress01
-Before: ~45k
-After:  ~6.3k
-
-* lmbench - lat_pagefault
-Before: ~665k
-After:   832 (!)
-
-* lmbench - lat_mmap
-Before: ~546k
-After:   718 (!)
-
-Thanks to Ved and Matt Evans for triggering the discussion that led to
-this patchset!
-
-Any feedback, test or relevant benchmark are welcome 🙂
-
-v3: https://lore.kernel.org/linux-riscv/20240702085034.48395-1-alexghiti@rivosinc.com/
-v2: https://lore.kernel.org/linux-riscv/20240131155929.169961-1-alexghiti@rivosinc.com/
-v1: https://lore.kernel.org/linux-riscv/20231207150348.82096-1-alexghiti@rivosinc.com/
-
-Changes in v4:
-- Fix rv32 (Anup)
-- Fix amoswap.w using amoswap.d (Anup)
-- Save only needed registers (Yunhui)
-- Fix build issue on llvm by adding a ; after a label (kernel test robot)
-
-Changes in v3:
-- Rebase on top of 6.10
-- Remove the comment about xRET acting as a fence which is not part of
-  the ratified specification
-- Add #sfence.vma to the cover letter (Andrea)
-- Remove the RFC as svvptc was ratified the 28th of June 2024
-
-Changes in v2:
-- Rebase on top of 6.8-rc1
-- Remove patch with runtime detection of tlb caching and debugfs patch
-- Add patch that probes Svvptc
-- Add patch that defines the new Svvptc dt-binding
-- Leave the behaviour as-is for uarchs that cache invalid TLB entries since
-  I don't have any good perf numbers
-- Address comments from Christoph on v1
-- Fix a race condition in new_vmalloc update:
-
-       ld      a2, 0(a0) <= this could load something which is != -1
-       not     a1, a1    <= here or in the instruction after, flush_cache_vmap()
-                            could make the whole bitmap to 1
-       and     a1, a2, a1
-       sd      a1, 0(a0) <= here we would clear bits that should not be cleared!
-
-   Instead, replace the whole sequence with:
-       amoxor.w        a0, a1, (a0)
-
-Alexandre Ghiti (4):
-  riscv: Add ISA extension parsing for Svvptc
-  dt-bindings: riscv: Add Svvptc ISA extension description
-  riscv: Stop emitting preventive sfence.vma for new vmalloc mappings
-  riscv: Stop emitting preventive sfence.vma for new userspace mappings
-    with Svvptc
-
- .../devicetree/bindings/riscv/extensions.yaml |  7 ++
- arch/riscv/include/asm/cacheflush.h           | 18 +++-
- arch/riscv/include/asm/hwcap.h                |  1 +
- arch/riscv/include/asm/pgtable.h              | 16 +++-
- arch/riscv/include/asm/thread_info.h          |  7 ++
- arch/riscv/kernel/asm-offsets.c               |  7 ++
- arch/riscv/kernel/cpufeature.c                |  1 +
- arch/riscv/kernel/entry.S                     | 87 +++++++++++++++++++
- arch/riscv/mm/init.c                          |  2 +
- arch/riscv/mm/pgtable.c                       | 13 +++
- 10 files changed, 157 insertions(+), 2 deletions(-)
-
--- 
-2.39.2
-
+      Arnd
