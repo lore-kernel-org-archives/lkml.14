@@ -1,230 +1,125 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515B4125DE
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77D117997;
+	Wed, 17 Jul 2024 06:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721197195; cv=none; b=dUpNwL/H7aJTaxS4yUp4KfOAz6a198R49ZdETVRfXxbqSBIXcphj6U8c2z8k+Y8fcP8yhZsMO/KTbQet1/vcS3C9vaSCMCfHcbxfJlHh3ukDUyxTojuKQQBFI7mhSB69HZgR3GZg7E0g9kaA0wyLShkvJRj3qJ9Zm/nbmxCvLyY=
+	t=1721197201; cv=none; b=eOmdRuvcQKJIieAAD64nK0PO7TXUmQwEJ1Y2khxHSUWIna1IYsa14uSCyTaN0Os8w+5ScQhlR0qM2Ug580TAAwGsdCU6WKcybUHr7FA9swc33hS7luv162obZegQYEIo5kp/eAENkAisQpPJuH2Y0s3Eqwvza9qXDlEK/PCLzrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721197195; c=relaxed/simple;
-	bh=+Sn6Vf/bipEMI9l0v7K5QZbcuQASnNZtDyvbVvWM/qk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hjfm+0WITUkbe6w6/BFs5egPsy7iKorVHCfvq5m7YbQSxAxYpGXF3rL0GdfwFqKGYwzwT7AnwzUwbZAxd1YUVKTiGy2fCytyBTpVZImixhfFlRae/I4Jk3Cb2QrDqacadPvYqt4x4hekR/hUyWGKHRyYsDfPfxML1xaYInQbSI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=UthKgIQG; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1721197201; c=relaxed/simple;
+	bh=Zv7me/dhmNwVa0EWGTIEKotNgKNQUhTpmUPyej9vY1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lb1R2i8npbw8ADLOvzpZpQHAB2c3KV2m6UvSM9y+H+XiUuuhHKPcgjqR54fyNlLcWGFusHvcNJ3MFF82q2S9I4DYQjj6xi7lCTA36dtP7FeocFil+1Dut1Fb8ELBayF7stZk23JCbQqzq2WFVKU3ntiEc+oAhLbspJYnjUgm14o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=EnkJrJUL; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="UthKgIQG"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a77abe5c709so754702566b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721197192; x=1721801992; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=731iNxkRio1CVh7O96GIueitOfVCcVF5gDjduzXxip0=;
-        b=UthKgIQGzhFxxtKf1ND1Iuj/gp2QWIpMxmG9CynONm63b6SDtdRrmC5VdG4SIH6xqG
-         /u0lzYUhzHPAexVVlCxH9FOINA1FsWC4AECymuQ4Cxr1iKLah29a85hUv95c7pbWyF14
-         QFxpBUJR1d9IN+VcguasKdrGJvsv8J7uo5ESACnOP0QsK+4gsxbBYXVJS45iRLaJzGUl
-         EtsNvn1zI5+bpZSPFfQi7Byhgz8+TCqevvowiOSK31Nr0kNTii6Trj+YzKOQPLfvkTlI
-         xg+BR9atnAMUQUTLPhr+JdLKRYP/daGmEIok8FKIf5LeuBbTbbrqzyI7E5Tmo8VS+qDF
-         8OJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721197192; x=1721801992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=731iNxkRio1CVh7O96GIueitOfVCcVF5gDjduzXxip0=;
-        b=DFpV69b5gNHHh2Z8zYR5ZRkOBAHwxGmjhodeCPd+doMrrAtkGBumNxFfXcn6j/0zTe
-         SpDmpkNLYS0NMqsyiWwPrhc/4nC4BfzHUm5iZglA1JYoMhaji7jp1dQF6SJK6QxQFvUw
-         m86TLJmm5/kA3ft/mi1HueOzy86NZa23t0Vh+KvlRkh9Y+IzrGuAW0eGQ1ABHGllxSx0
-         fbT6ajDc2ll8y3X2UmwHYvC/LqLwMZsNsqcqx+dFUTESzGUmigNFmG90rJv/wJN9rQRF
-         M9Dz4Z8Coc3K/iFnTrZ39p2O7hDJRIcgyUd3MXFxqNRiYkgDXnd8CH+gz9fgEi19QBRg
-         kj5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUuzvuMV30DcqCwA5oOB5+n6hOUHFnPUlPyuOZpocN4FOYAJ1BhSljg3vF70K0yhFe0HtHZ7zci0/ERxYB+L3E1Pz2/AjMbGm/8pnRC
-X-Gm-Message-State: AOJu0YxXhlJmdEQbj0San45FL4c0aLv9CuX5TeVZMLQ8cDUukc7bOMc9
-	Gy68GgFDqyx8ejrFWDsYksuZqG6phDR1jzyRXsU7k40kUpwT9RqaBXMhduSvzcFPM5Ww70IMjQm
-	oXNat6ih7FxTjiNTBkO+AkiJGL6EruCtoqZNIEg==
-X-Google-Smtp-Source: AGHT+IGmCAjPv7zwB8K75fubJVOq5OlXEphacZcFqc1Ig0qaFbGDPSRSsM3ncZkf/6nf74oTzNfnAo1WxpGDhcAy0Fs=
-X-Received: by 2002:a17:906:d297:b0:a77:9d57:97ad with SMTP id
- a640c23a62f3a-a7a011cbfa5mr48554866b.40.1721197191549; Tue, 16 Jul 2024
- 23:19:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EnkJrJUL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1721197195;
+	bh=M3tSIjcmh7g/IM3TEvPm5kACdNWJvZr4ZQQWw4tj0Kc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EnkJrJUL9vmI/Mc6mL/mCdoxbDEa0dZ8/wSKZ+s6o3v2oV7qgyMan4wj5Z/tNClxA
+	 IitYMAXzZCsN6W8QRy6k1f6Pe3+uNwhCp+wlZeLqgesrYtcDfDb4AE5le0Xt4+kFLv
+	 bQxGfExNQa0A4zUVCBi+xW5iPw18CklRvLxH5NBotonFNLQwl7ReBTwxG4LjURn/HJ
+	 Afzjw7BY+krT9PEPA/tBveZNkqZvUwQSAUo6glfnjDkRuyk44Fe66pMSzHQaV+pUz0
+	 j64awjKIfa6aQUPTcdVBfVHe6oo4QaXeAE8lCvlpyr6Y15tH0Rw42vgk9zoHE1/kXk
+	 9WeDXDVm2d/Wg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WP5Q32hyyz4w2S;
+	Wed, 17 Jul 2024 16:19:54 +1000 (AEST)
+Date: Wed, 17 Jul 2024 16:19:51 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the loongarch tree with the
+ asm-generic tree
+Message-ID: <20240717161951.01e4737d@canb.auug.org.au>
+In-Reply-To: <20240709100154.0b4b1372@canb.auug.org.au>
+References: <20240709100154.0b4b1372@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626130347.520750-1-alexghiti@rivosinc.com>
- <20240626130347.520750-11-alexghiti@rivosinc.com> <CAJF2gTSG7HzV7mgZpkWLbSBNn2dRv_NaSmCimd+kRdU=EZrmmg@mail.gmail.com>
- <CAHVXubizLq=qZgVQ2vBFe5zVuLRP0DGw=UN4U_Wkx2P2xsP3Mw@mail.gmail.com>
- <a096151c-c349-455f-8939-3b739d73f016@redhat.com> <CAJF2gTRrZwVk2xyhF_PsJGKCfkvun-rifG8MjDBcGDt3YBuhPg@mail.gmail.com>
- <CAHVXubh00OyazGP2C6sg0N2=kWqV-HXpzEiZCDdex8hcmLEM2g@mail.gmail.com> <CAJF2gTRpXBS-YotgEO=cPGnwjYiUyda_wk_fQfA6j_QqdYHoQw@mail.gmail.com>
-In-Reply-To: <CAJF2gTRpXBS-YotgEO=cPGnwjYiUyda_wk_fQfA6j_QqdYHoQw@mail.gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Wed, 17 Jul 2024 08:19:40 +0200
-Message-ID: <CAHVXubia24OTad=NGAjcvYpPqJFutyZCy7KCH09R_=R3PAEanA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/10] riscv: Add qspinlock support based on Zabha extension
-To: Guo Ren <guoren@kernel.org>
-Cc: Waiman Long <longman@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Andrea Parri <parri.andrea@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Leonardo Bras <leobras@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/gHwLOmNioCdigJhn9+oy0YW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/gHwLOmNioCdigJhn9+oy0YW
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 16, 2024 at 10:31=E2=80=AFAM Guo Ren <guoren@kernel.org> wrote:
->
-> On Tue, Jul 16, 2024 at 2:43=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosi=
-nc.com> wrote:
-> >
-> > Hi Guo, Waiman,
-> >
-> > On Tue, Jul 16, 2024 at 3:05=E2=80=AFAM Guo Ren <guoren@kernel.org> wro=
-te:
-> > >
-> > > On Tue, Jul 16, 2024 at 3:30=E2=80=AFAM Waiman Long <longman@redhat.c=
-om> wrote:
-> > > >
-> > > > On 7/15/24 03:27, Alexandre Ghiti wrote:
-> > > > > Hi Guo,
-> > > > >
-> > > > > On Sun, Jul 7, 2024 at 4:20=E2=80=AFAM Guo Ren <guoren@kernel.org=
-> wrote:
-> > > > >> On Wed, Jun 26, 2024 at 9:14=E2=80=AFPM Alexandre Ghiti <alexghi=
-ti@rivosinc.com> wrote:
-> > > > >>> In order to produce a generic kernel, a user can select
-> > > > >>> CONFIG_COMBO_SPINLOCKS which will fallback at runtime to the ti=
-cket
-> > > > >>> spinlock implementation if Zabha is not present.
-> > > > >>>
-> > > > >>> Note that we can't use alternatives here because the discovery =
-of
-> > > > >>> extensions is done too late and we need to start with the qspin=
-lock
-> > > > >> That's not true; we treat spinlock as qspinlock at first.
-> > > > > That's what I said: we have to use the qspinlock implementation a=
-t
-> > > > > first *because* we can't discover the extensions soon enough to u=
-se
-> > > > > the right spinlock implementation before the kernel uses a spinlo=
-ck.
-> > > > > And since the spinlocks are used *before* the discovery of the
-> > > > > extensions, we cannot use the current alternative mechanism or we=
-'d
-> > > > > need to extend it to add an "initial" value which does not depend=
- on
-> > > > > the available extensions.
-> > > >
-> > > > With qspinlock, the lock remains zero after a lock/unlock sequence.=
- That
-> > > > is not the case with ticket lock. Assuming that all the discovery w=
-ill
-> > > > be done before SMP boot, the qspinlock slowpath won't be activated =
-and
-> > > > so we don't need the presence of any extension. I believe that is t=
-he
-> > > > main reason why qspinlock is used as the initial default and not ti=
-cket
-> > > > lock.
-> > > Thx Waiman,
-> > > Yes, qspinlock is a clean guy, but ticket lock is a dirty one.
-> >
-> > Guys, we all agree on that, that's why I kept this behaviour in this pa=
-tchset.
-> >
-> > >
-> > > Hi Alexandre,
-> > > Therefore, the switch point(before reset_init()) is late enough to
-> > > change the lock mechanism, and this satisfies the requirements of
-> > > apply_boot_alternatives(), apply_early_boot_alternatives(), and
-> > > apply_module_alternatives().
-> >
-> > I can't find reset_init().
-> Sorry for the typo, rest_init()
-> >
-> > The discovery of the extensions is done in riscv_fill_hwcap() called
-> > from setup_arch()
-> > https://elixir.bootlin.com/linux/latest/source/arch/riscv/kernel/setup.=
-c#L288.
-> > So *before* this point, we have no knowledge of the available
-> > extensions on the platform.  Let's imagine now that we use an
-> > alternative for the qspinlock implementation, it will look like this
-> > (I use only zabha here, that's an example):
-> >
-> > --- a/arch/riscv/include/asm/spinlock.h
-> > +++ b/arch/riscv/include/asm/spinlock.h
-> > @@ -16,8 +16,12 @@ DECLARE_STATIC_KEY_TRUE(qspinlock_key);
-> >  #define SPINLOCK_BASE_DECLARE(op, type, type_lock)                    =
- \
-> >  static __always_inline type arch_spin_##op(type_lock lock)            =
- \
-> >  {                                                                     =
- \
-> > -       if (static_branch_unlikely(&qspinlock_key))                    =
- \
-> > -               return queued_spin_##op(lock);                         =
- \
-> > +       asm goto(ALTERNATIVE("j %[no_zabha]", "nop", 0,                =
- \
-> > +                                     RISCV_ISA_EXT_ZABHA, 1)          =
-  \
-> > +                         : : : : no_zabha);                           =
- \
-> > +                                                                      =
- \
-> > +       return queued_spin_##op(lock);                                 =
- \
-> > +no_zabha:                                                             =
- \
-> >         return ticket_spin_##op(lock);                                 =
- \
-> >  }
-> >
-> > apply_early_boot_alternatives() can't be used to patch the above
-> > alternative since it is called from setup_vm(), way before we know the
-> > available extensions.
-> > apply_boot_alternatives(), instead, is called after riscv_fill_hwcap()
-> > and then will be able to patch the alternatives correctly
-> > https://elixir.bootlin.com/linux/latest/source/arch/riscv/kernel/setup.=
-c#L290.
-> >
-> > But then, before apply_boot_alternatives(), any use of a spinlock
-> > (printk does so) will use a ticket spinlock implementation, and not
-> > the qspinlock implementation. How do you fix that?
-> Why "before apply_boot_alternatives(), any use of a spinlock (printk
-> does so) will use a ticket spinlock implementation" ?
-> We treat qspinlock as the initial spinlock forever, so there is only
-> qspinlock -> ticket_lock direction and no reverse.
+Hi all,
 
-Can you please provide an implementation of what you suggest using the
-current alternatives tools? I'm about to send the v3 of this series,
-you can use this as a base.
+On Tue, 9 Jul 2024 10:01:54 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> Today's linux-next merge of the loongarch tree got a conflict in:
+>=20
+>   arch/loongarch/include/uapi/asm/unistd.h
+>=20
+> between commits:
+>=20
+>   13aa27ce8de0 ("clone3: drop __ARCH_WANT_SYS_CLONE3 macro")
+>   1d7b98ec5d78 ("loongarch: convert to generic syscall table")
+>=20
+> from the asm-generic tree and commit:
+>=20
+>   a5d43e6d87c0 ("LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h")
+>=20
+> from the loongarch tree.
+>=20
+> I fixed it up (I think - see below) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc arch/loongarch/include/uapi/asm/unistd.h
+> index 1f01980f9c94,b344b1f91715..000000000000
+> --- a/arch/loongarch/include/uapi/asm/unistd.h
+> +++ b/arch/loongarch/include/uapi/asm/unistd.h
+> @@@ -1,3 -1,6 +1,4 @@@
+>   /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> + #define __ARCH_WANT_NEW_STAT
+>  -#define __ARCH_WANT_SYS_CLONE
+>  -#define __ARCH_WANT_SYS_CLONE3
+>  =20
+>  -#include <asm-generic/unistd.h>
+>  +#include <asm/unistd_64.h>
 
-Thanks,
+This is now a conflict between the loongarch tree and Linus' tree.
 
-Alex
+--=20
+Cheers,
+Stephen Rothwell
 
->
-> >
-> > >
-> > > >
-> > > > Cheers,
-> > > > Longman
-> > > >
-> > >
-> > >
-> > > --
-> > > Best Regards
-> > >  Guo Ren
->
->
->
-> --
-> Best Regards
->  Guo Ren
+--Sig_/gHwLOmNioCdigJhn9+oy0YW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaXYocACgkQAVBC80lX
+0GybIggAg2UbraYP86Rp21D68x6f1xsAy98VJOrKTPRfLmZz+z0r2QxOjphLLgH+
+u5sdha9rDGAok5jPFvRS5Ncd7wkR8kKoC4IQe1vyXSUqT2+hZYZDFnMcwqErwuqT
+pnOEiA6alCJ/Ti+4b4rITy+ErOsnxYoqBsxMSvIIIQdtY5CzacRiAJcdAS4ecZ2L
+T3wLx91TXfZ2Kjc8F3rDU3ar1745oO+Hhf5H1N5yxz1IcucfG8huOLrsjbKrFdJw
+HdlAH1S11EPX3PX3NJFIJBibapRtkSx/pQrunW/kdkSPoEaXXfCKbKuQn95aFhDT
+qxALREGe/tqHpgtMxTQLes5wKOrcZw==
+=53GI
+-----END PGP SIGNATURE-----
+
+--Sig_/gHwLOmNioCdigJhn9+oy0YW--
