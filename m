@@ -1,78 +1,110 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025D518EB1
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD4E1C680
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721200386; cv=none; b=rgZqL39t1Xg09LctH0rFQ7VGRzRv6+oYu9RlwJDcd/CugNr0cbGWl3IbmFLSDOB32Y/EnNOYCsg1fw6zhHo/nyKA421RVtTsDXG79WtzfMYtUkkcTuXi2OKh9f5Qpb3cYg4ALbYnK3nJ444j41HRsp7TxE4X9/Wg79BhQ4Bs7qw=
+	t=1721200389; cv=none; b=MebMdGUDdu/hT8rA5XVNCEMtOXECC34HZz8ahydPHke1ucjMN4NBuUqWVZ5n11K+kXiVVVJ2YUtJQaWtGjR91DJFewZ6ytUtrCJIELMmUwshRCqvdBD6d+NXMvTgq0oShAM9BZJFgk6Baf67evMPTykjaDQeP9iqd0q90i24M8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721200386; c=relaxed/simple;
-	bh=7iE1cPVpc8Rfetpz5YFYDXwzbGn+DbT5iB1qawTdko4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=MCow/hMS+5erhNZmf4Bf8M2dth+Tqwfx72s/rq0woMHzhUsJle/6G/IxWnkNr5F38YTeYnJHRIrXa45//XGzqjgvjBiC+xTvBAE8Aqv3fBqw8oZocpBfd/3CGHZuj0XC96tG1Vh9/MbIM1iLW8ECqd6rsVUVtmlw87QuJUBbp3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7fb15d52c5cso106412239f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 00:13:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721200384; x=1721805184;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ViRurahp3YZwL58fWiClcK2PtH3by/OEm5V9oi/OEME=;
-        b=Ry4f0NfXyw+1bzpRaYbzP32I3UETl4Jp9ac5CVWdmHne5x98Y7IJPQUb3UMaMTDzhN
-         eMpwqPCGt+r4e030BtvOHUwE1KTLeiMvgdfFSHpAihvRVTEG5Sneja21jaPxWjiPR4LI
-         o3ZoNs80nyAfgHch/P+4eq2WjUgiCKN9wR/zpSpqDGEfMcjm9+NUnm1KJROVp7mKy6Nu
-         AkNLir00ZhXioUYnq+ZJuxU8+Ck2N0cnpEWavV9JbeHPABi+A+yKiyjRnrM7uBw1PhnI
-         btryCfjGIS4nMMholYyE+nN8b620HN3XvgJQ/0mON8llZVxfTTdg5F+hkTioLzZ9pHcu
-         pt9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWIBa151OckIBzTLL4G6rDN4LNgU4EsJHldDF3Z7x7TJYF1ma0LvPS97RVcnyKWm2zvmvcTtGBF2kb++HRHJkP+Uc8es+s/lcXSLlgb
-X-Gm-Message-State: AOJu0YwhQ1ykzpQjck1ImRjXldP6xvGxI0h14YmeJVwmRRF3yfPhN/84
-	d4UfRoZp64Ul4y1/crNkPO75NOWZjnP54guaVFOi0clzMyWTdVQzgPzFdTbwnGZlmI7zlwd7+g4
-	XAydiMvudR+8tvuzxoBNYiihcRZx0WYtTWAkucIldqKIgYE7hXowtV8k=
-X-Google-Smtp-Source: AGHT+IEJuKOpD2Pe6mHiL7V6ckpBT4Nsuw1TsP85/x7sJiZtZLHAS/WYO2OWcDbD3K4i7Pca1MQlsXHv4XDv0UxRHC7eMhscKqZ7
+	s=arc-20240116; t=1721200389; c=relaxed/simple;
+	bh=vS8OBRzRP/QrYMlLYVEMa8fWcFRYY54ETbzZs9LEcrE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cq0zxwkqc8oXTUMdBxKmPf5OE8mAYV7t70miD2qDea+RrDb4UWF520pqKwr8OH1xHa/cOf7wjjJjO/5MoPTkkXe3F+6h7+btUNrxoeoFUW727GkpGReXy+Y+jW8JRiX2vUxfcbYbbPkBN1h7BbzIoof/FUcOcP7fqJV6VuVBjSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 431ED1063;
+	Wed, 17 Jul 2024 00:13:32 -0700 (PDT)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 402523F762;
+	Wed, 17 Jul 2024 00:13:05 -0700 (PDT)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	Lance Yang <ioworker0@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Pankaj Raghav <kernel@pankajraghav.com>,
+	Daniel Gomez <da.gomez@samsung.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [RFC PATCH v1 0/4] Control folio sizes used for page cache memory
+Date: Wed, 17 Jul 2024 08:12:52 +0100
+Message-ID: <20240717071257.4141363-1-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1690:b0:4b7:c9b5:675c with SMTP id
- 8926c6da1cb9f-4c215d2578cmr49258173.6.1721200384198; Wed, 17 Jul 2024
- 00:13:04 -0700 (PDT)
-Date: Wed, 17 Jul 2024 00:13:04 -0700
-In-Reply-To: <c2d1b569-9b50-42db-991e-a295b3e304bc@paragon-software.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007cdbe0061d6c315a@google.com>
-Subject: Re: [syzbot] [ntfs3?] possible deadlock in attr_data_get_block
-From: syzbot <syzbot+36bb70085ef6edc2ebb9@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi All,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-SYZFAIL: write(/proc/sys/fs/binfmt_misc/register) failed
+This series is an RFC that adds sysfs and kernel cmdline controls to configure
+the set of allowed large folio sizes that can be used when allocating
+file-memory for the page cache. As part of the control mechanism, it provides
+for a special-case "preferred folio size for executable mappings" marker.
 
-2024/07/17 07:12:44 parsed 1 programs
-2024/07/17 07:12:44 [FATAL] failed to run ["./syz-executor" "setup" "fault" "binfmt_misc" "usb" "802154" "swap"]: exit status 67
-mkdir(/syzcgroup) failed: 17
-mount(binfmt_misc) failed: 16
-write(/proc/sys/fs/binfmt_misc/register) failed: 17
-SYZFAIL: write(/proc/sys/fs/binfmt_misc/register) failed
- (errno 17: File exists)
+I'm trying to solve 2 separate problems with this series:
 
+1. Reduce pressure in iTLB and improve performance on arm64: This is a modified
+approach for the change at [1]. Instead of hardcoding the preferred executable
+folio size into the arch, user space can now select it. This decouples the arch
+code and also makes the mechanism more generic; it can be bypassed (the default)
+or any folio size can be set. For my use case, 64K is preferred, but I've also
+heard from Willy of a use case where putting all text into 2M PMD-sized folios
+is preferred. This approach avoids the need for synchonous MADV_COLLAPSE (and
+therefore faulting in all text ahead of time) to achieve that.
 
-Tested on:
+2. Reduce memory fragmentation in systems under high memory pressure (e.g.
+Android): The theory goes that if all folios are 64K, then failure to allocate a
+64K folio should become unlikely. But if the page cache is allocating lots of
+different orders, with most allocations having an order below 64K (as is the
+case today) then ability to allocate 64K folios diminishes. By providing control
+over the allowed set of folio sizes, we can tune to avoid crucial 64K folio
+allocation failure. Additionally I've heard (second hand) of the need to disable
+large folios in the page cache entirely due to latency concerns in some
+settings. These controls allow all of this without kernel changes.
 
-commit:         d57431c6 fs/ntfs3: Do copy_to_user out of run_lock
-git tree:       https://github.com/Paragon-Software-Group/linux-ntfs3.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1570832d980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=47d282ddffae809f
-dashboard link: https://syzkaller.appspot.com/bug?extid=36bb70085ef6edc2ebb9
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+The value of (1) is clear and the performance improvements are documented in
+patch 2. I don't yet have any data demonstrating the theory for (2) since I
+can't reproduce the setup that Barry had at [2]. But my view is that by adding
+these controls we will enable the community to explore further, in the same way
+that the anon mTHP controls helped harden the understanding for anonymous
+memory.
 
-Note: no patches were applied.
+---
+This series depends on the "mTHP allocation stats for file-backed memory" series
+at [3], which itself applies on top of yesterday's mm-unstable (650b6752c8a3). All
+mm selftests have been run; no regressions were observed.
+
+[1] https://lore.kernel.org/linux-mm/20240215154059.2863126-1-ryan.roberts@arm.com/
+[2] https://www.youtube.com/watch?v=ht7eGWqwmNs&list=PLbzoR-pLrL6oj1rVTXLnV7cOuetvjKn9q&index=4
+[3] https://lore.kernel.org/linux-mm/20240716135907.4047689-1-ryan.roberts@arm.com/
+
+Thanks,
+Ryan
+
+Ryan Roberts (4):
+  mm: mTHP user controls to configure pagecache large folio sizes
+  mm: Introduce "always+exec" for mTHP file_enabled control
+  mm: Override mTHP "enabled" defaults at kernel cmdline
+  mm: Override mTHP "file_enabled" defaults at kernel cmdline
+
+ .../admin-guide/kernel-parameters.txt         |  16 ++
+ Documentation/admin-guide/mm/transhuge.rst    |  66 +++++++-
+ include/linux/huge_mm.h                       |  61 ++++---
+ mm/filemap.c                                  |  26 ++-
+ mm/huge_memory.c                              | 158 +++++++++++++++++-
+ mm/readahead.c                                |  43 ++++-
+ 6 files changed, 329 insertions(+), 41 deletions(-)
+
+--
+2.43.0
+
