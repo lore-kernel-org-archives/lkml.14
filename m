@@ -1,83 +1,130 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5102519A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 03:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5153FC2;
+	Wed, 17 Jul 2024 03:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721187164; cv=none; b=ba9cMsPoICa7lt7kj3DKCgTvIQvwOs17GK7+N2xfmeq1Ygpt+0GIbgcwdZjMALysIyxWh9e178uG9CEv9gGiKhyQvcSf26GytE9nSHcN9ADZETHV35/oIFIERh25CEDqeupnQpRA+xBaaQgWxARFxlgzEe0xprC8Oje2s1FVJeY=
+	t=1721187288; cv=none; b=kE0LzjUTY8OoWwfkP5GOXO8zW3VJq7QrJcqcEn77ilAoQp5x18C9OgT37GvOoNGD15ymYYJVkiKz78ICqq5ssTQWwLldbSoeNkMxS4qZOlqCSWag/48oPVl5egsiSJcTvJCwK5HEbTujDs6MW5+V6xuYt2C2c9vJuYLRel1QvsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721187164; c=relaxed/simple;
-	bh=D+rQdq7saURwnRscJ2/+YDkMyHgtBaUFB+rvXbbHMec=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b2w8Zz2vsURY64XfozC01UYSiSWII3whcSs8eUcL7pdtjqDyNnSJkz1MCmNOMd6VaIUFkvWNWtUVf1YXM5yQX5CP6Xm4Q5kno67UsH2/dl2rCEoeu/GjE8p/q1h4YCwJzWexv1ZlNoCJ5qb/fZbqpTVJ2KlKYB9Cfy0UrSPLNXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=cwTycDiK; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1721187288; c=relaxed/simple;
+	bh=revVXqJxO5Mf0DgXjmCC7hn/x0r6Xkl1oGS5IVp/IUc=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=qZeO3T9hB6vcaNalHD5LmkJOSgK0By0r7ChytqdpL+KBMCRgXtjVFSfW/qH1d6NfyXEzODTFfmoci0kwszP7FmNnvAOSyKRtbvXlo+LPw8RL55gwNFiIpQnXIHIj0FvRI7TT4x0yeatUNvomZwOTU22PRiV54mztOTpeUUo39l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=p+uAR7xB; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="cwTycDiK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1721186815;
-	bh=D+rQdq7saURwnRscJ2/+YDkMyHgtBaUFB+rvXbbHMec=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cwTycDiKaboJnqoXqwPWjsiRJrmVMfgoLFnIvcU8mtGcSDRVguTGblpRSJhu5OyGF
-	 544x1HYcGcUehPhAYEBiyfby4XK5cqkI29JvdULxDqDIfZAVR94bRU9OdVyFB81AIb
-	 EsSJaCuW3RRGmT0AAmfkK4rfwwQlKvYxv1ty2LK8=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 9E2E066D08;
-	Tue, 16 Jul 2024 23:26:42 -0400 (EDT)
-Message-ID: <a754294a55b0b11578e34301eacd6badd133eb09.camel@xry111.site>
-Subject: Re: [PATCH v10 1/2] x86/mm: Don't disable PCID if "incomplete
- Global INVLPG flushes" is fixed by microcode
-From: Xi Ruoyao <xry111@xry111.site>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Dave Hansen
-	 <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, Michael Kelley
- <mhklinux@outlook.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin"
- <hpa@zytor.com>, x86@kernel.org, linux-kernel@vger.kernel.org, Sean
- Christopherson <seanjc@google.com>, Andrew Cooper
- <andrew.cooper3@citrix.com>
-Date: Wed, 17 Jul 2024 11:26:19 +0800
-In-Reply-To: <20240626171541.eeisf66vhuyspv4j@desk>
-References: <20240522020625.69418-1-xry111@xry111.site>
-	 <b901776293d19271a34bb14f79639c4b574b6174.camel@xry111.site>
-	 <e2cb23a6-60d4-49b1-ba48-1ded846e5292@intel.com>
-	 <20240626171541.eeisf66vhuyspv4j@desk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="p+uAR7xB"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1721187282;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=COav+P6D8Thnl7OBoNjZIZeMCNp9srdIVybeCzhIGtw=;
+	b=p+uAR7xBEblapW+azWLMXCG+GlZoxItPsx4n3sxBTD9eM28VtYID7izMfpBrQ93U+mSe5g
+	AyVN4JdqCDWKTFevB7ghr/0mO0mldYbt1uxNpflIz+sH2j0CgNAzRAxGwisOlkHsh2BT41
+	bQu1ZYP9aPsC8D05iVs9m9Iyu/idZ55crhrM5AZJCBQuIU/EQKhk8Zd9l9w3teEncZ4tv+
+	bTbujhtjVzgwXpumwXmNj6BoGgO4W41fNiKdLD5lFD2okBhjmtEdIZogiAQ769cURmHoi/
+	bZjsEDNFJ0w4g8HENPBdES9LUTvMTwROcAhwrFamJVLRW0fZnXUrn2L65nbpCA==
+Date: Wed, 17 Jul 2024 05:34:41 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: wens@kernel.org
+Cc: Daniel Golle <daniel@makrotopia.org>, Diederik de Haas
+ <didi.debian@cknow.org>, linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, Herbert Xu
+ <herbert@gondor.apana.org.au>, Martin Kaiser <martin@kaiser.cx>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Sebastian Reichel
+ <sebastian.reichel@collabora.com>, Ard Biesheuvel <ardb@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+ devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, Philipp Zabel
+ <p.zabel@pengutronix.de>, Olivia Mackall <olivia@selenic.com>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Aurelien Jarno <aurelien@aurel32.net>, Heiko
+ Stuebner <heiko@sntech.de>, Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v7 0/3] hwrng: add hwrng support for Rockchip RK3568
+In-Reply-To: <CAGb2v65Mm5s96asU7iaAC_sJnUk=Yuh+zMJJBbmSgETWrPLoFA@mail.gmail.com>
+References: <cover.1720969799.git.daniel@makrotopia.org>
+ <CAGb2v67zxs03xScN8OfWXR1gf8tddJciXrjw3FQZcL7pR3ocxA@mail.gmail.com>
+ <3190961.CRkYR5qTbq@bagend> <3220752.Q7WYUMVHaa@bagend>
+ <ZpcrdwZBNFu-YlZt@makrotopia.org>
+ <CAGb2v65Mm5s96asU7iaAC_sJnUk=Yuh+zMJJBbmSgETWrPLoFA@mail.gmail.com>
+Message-ID: <d5071401e8032af610c01a9d5887f186@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Wed, 2024-06-26 at 10:15 -0700, Pawan Gupta wrote:
-> On Wed, Jun 26, 2024 at 09:50:39AM -0700, Dave Hansen wrote:
-> > On 6/26/24 06:10, Xi Ruoyao wrote:
-> > > Ping.
-> > >=20
-> > > Ok to queue these two into some branch for integration?
-> >=20
-> > Please don't top post, and please trim your replies.
-> >=20
-> > The code looks fine, but this has zero acks and I can't find any public
-> > documentation of which microcode versions fix the errata.
->=20
-> Based on an internal document, I provided the microcode versions used in
-> this patch.
->=20
-> Acked-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Hello Chen-Yu,
 
-I hope this can catch 6.11...
+On 2024-07-17 04:58, Chen-Yu Tsai wrote:
+> On Wed, Jul 17, 2024 at 10:25 AM Daniel Golle <daniel@makrotopia.org> 
+> wrote:
+>> 
+>> On Tue, Jul 16, 2024 at 07:19:35PM +0200, Diederik de Haas wrote:
+>> > On Tuesday, 16 July 2024 18:53:43 CEST Diederik de Haas wrote:
+>> > > rngtest: FIPS 140-2(2001-10-10) Long run: 0
+>> >
+>> > I don't know if it means something, but I noticed that I have
+>> > ``Long run: 0`` with all my poor results,
+>> > while Chen-Yu had ``Long run: 1``.
+>> >
+>> > Different SoC (RK3399), but Anand had ``Long run: 0`` too on their
+>> > very poor result (100% failure):
+>> > https://lore.kernel.org/linux-rockchip/CANAwSgTTzZOwBaR9zjJ5VMpxm5BydtW6rB2S7jg+dnoX8hAoWg@mail.gmail.com/
+>> 
+>> The conclusions I draw from that rather ugly situation are:
+>>  - The hwrng should not be enabled by default, but it should by done
+>>    for each board on which it is known to work well.
+>>  - RK_RNG_SAMPLE_CNT as well as the assumed rng quality should be
+>>    defined in DT for each board:
+>>    * introduce new 'rochchip,rng-sample-count' property
+>>    * read 'quality' property already used for timeriomem_rng
+>> 
+>> I will prepare a follow-up patch taking those conclusions into 
+>> account.
+>> 
+>> Just for completeness, here my test result on the NanoPi R5C:
+>> root@OpenWrt:~# cat /dev/hwrng | rngtest -c 1000
+>> rngtest 6.15
+>> Copyright (c) 2004 by Henrique de Moraes Holschuh
+>> This is free software; see the source for copying conditions.  There 
+>> is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A 
+>> PARTICULAR PURPOSE.
+>> 
+>> rngtest: starting FIPS tests...
+>> rngtest: bits received from input: 20000032
+>> rngtest: FIPS 140-2 successes: 875
+>> rngtest: FIPS 140-2 failures: 125
+>> rngtest: FIPS 140-2(2001-10-10) Monobit: 123
+>> rngtest: FIPS 140-2(2001-10-10) Poker: 5
+>> rngtest: FIPS 140-2(2001-10-10) Runs: 4
+>> rngtest: FIPS 140-2(2001-10-10) Long run: 0
+>> rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+>> rngtest: input channel speed: (min=85.171; avg=141.102; 
+>> max=4882812.500)Kibits/s
+>> rngtest: FIPS tests speed: (min=17.809; avg=19.494; 
+>> max=60.169)Mibits/s
+>> rngtest: Program run time: 139628605 microseconds
+> 
+> I doubt this is per-board. The RNG is inside the SoC, so it
+> could be a chip quality thing.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Totally agreed.  I see no way how a board design could affect the
+HWRNGs built into Rockchip SoCs.  I even checked the RK3399 and
+RK3566 Hardware Design Guides to be extra sure.
+
+> On the RK3399 we also saw wildly varying results.
+
+In my opinion, that qualifies the RK3399's HWRNG as unsuitable for
+general use.  Having a HWRNG that fails to pass the tests on _some_
+units is simply not acceptable from the security standpoint.
