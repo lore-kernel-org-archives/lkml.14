@@ -1,499 +1,246 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FCE1F95E;
-	Wed, 17 Jul 2024 03:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC913171D2;
+	Wed, 17 Jul 2024 03:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721187678; cv=none; b=at8UJIww+1KWHrGByEfXOTKL8J9xcIt6/YDyIE0TMprFthHmwthFGjb9jOk3r+4ICBoFbWbktvsjdKYWGdz3AUtsg3Mzmjx0T7R6COdHRPClf3iUgOTk7ybP7hC3U4lrs1oeDbURn3GoIdkgsunzolTMd8qJ1Arc5SUhqPvs6uY=
+	t=1721187710; cv=none; b=XmlT72IEcw15sd+yZZH/oNrE7UoUK5Mz4fn5dBJWNljkPAWqBhnQ1hHlAKMGkdoAXF8XZiNpNTH8aRKITFaQCGtMH3ocKKEJHY5bl+jf6a9PFC7yI+CNJc10QYNUCr3M04SUmy8XRIyTYRNKNT2oW4aLpNd43qick1B/x32sUj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721187678; c=relaxed/simple;
-	bh=omsHwj0X7BH66iJj+RL2DFUqA8reoIN6AdLHNWLvsRw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=avh6KTgcbS/qfvDM80LXFNLmUN5zuwURCRBc/ggesSrAYkTvUFAF/I8UqGWs1ki8eJfeDS3D8a2y6Xiu0DXRdMZu39dMmrG6BeeCcguouH3TdXn4cAFfNmpTKQtRwYLloz93c26tu1Z9EyqBHYPGVrr74+AJ9DVtQTOeFWiQ2Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WaFLygsM; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721187710; c=relaxed/simple;
+	bh=3uyrqz1alUlw4poJ0OBNKJJ4qzSemtXp4wiR3+zC594=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SwRVJvLgf95xS2KZYhMoNAYz4r1+1y6A2b1pEK+swPiIUB7x9C7XhrqOfGeQBK8ysqHDK6rv13RfKR11532ROkgY44EwaXC8GNA2Vm4uRYchnzu8KjBOcmw3KpouoUh26E/wRYkCAjnJ0FXac6k29aLQLYelwskrhisyY8/TSdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D64EzZVc; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WaFLygsM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D64EzZVc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721187676; x=1752723676;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=omsHwj0X7BH66iJj+RL2DFUqA8reoIN6AdLHNWLvsRw=;
-  b=WaFLygsMyeydIK9iLoFUbOL1XuQAnpWkn8+6rOnI7H2t4YW6x92n4oFR
-   pFuT15jZocYAOJM27o/3QZbYy/+ntYQoo1dPUtxeu67W+OzAYYCaVg6P7
-   VWq6MgRuDKx/axNli9f4pSCaE6RUS5D0QzzckfRO0FWkxuGqhljY94HeY
-   7FNl+3wJPtRvQyGC4gDJ3qfzmCluBH+4Vot2GZwR4EnufPUC0Ed1aIcuk
-   UL6wqTsD9yOijbkycRjFEvlvyNg4nOKnyxAhDGENPsjQmwL/5LWY2Scod
-   yz15e/UQ3dMMdxj/6fEN7JkotOsZTohGk9bdRkRlGlnG7dgUV+j/5IGIg
-   g==;
-X-CSE-ConnectionGUID: JxzjbWgMQFmmRqCPVvf8zw==
-X-CSE-MsgGUID: mzm8C8NZT6S6InORlIflAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18512474"
+  t=1721187709; x=1752723709;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3uyrqz1alUlw4poJ0OBNKJJ4qzSemtXp4wiR3+zC594=;
+  b=D64EzZVc4892/3G1hXvW/XeK9amDw7u7qa11U9o+h+YHBr2pqMOH5W23
+   U2WzTG1yiPA0c8q1qqiZTgG68D/8DbdBdwwC9e0g/tHKUs/hikE36NMxm
+   G3ujg2P9MEr9BwzLTT9PbbuSrJehfmcAnnMwVk374ocXrxVWgV0nIs6fV
+   vSuWVeSEuKAV8UazVd/r9JI/foHe26exLmGRLEM7XOyzujdup4MjcbzpK
+   z7vNAha+ciHwYT+M7dOh/6Y9XGN43/RD/R2z+b0s8sSz2EbYlxfq0ghw+
+   FChIX6xRZIKJ/+lFsY8yGFaXvAuPZxOKuJO9F9pukNSFf1Pl9/GFP+PS8
+   A==;
+X-CSE-ConnectionGUID: qDrFWewLQqOmHkcXuN9rHw==
+X-CSE-MsgGUID: BTct0Ot1SLiyt7C8EheKEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18802231"
 X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
-   d="scan'208";a="18512474"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:12 -0700
-X-CSE-ConnectionGUID: gxPOXPLGQr29jWYrcj8eEw==
-X-CSE-MsgGUID: qHP3OpFoQOy3t8WyKmUqZA==
+   d="scan'208";a="18802231"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:48 -0700
+X-CSE-ConnectionGUID: pmYYkXZHTu28mUHSAcIjfg==
+X-CSE-MsgGUID: G0MhwxbaTfeH+jG0+kU1rQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
-   d="scan'208";a="54566766"
-Received: from rfrazer-mobl3.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.222.184])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:07 -0700
-From: Kai Huang <kai.huang@intel.com>
-To: dave.hansen@intel.com,
-	kirill.shutemov@linux.intel.com,
-	bp@alien8.de,
-	tglx@linutronix.de,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	hpa@zytor.com,
-	seanjc@google.com,
-	pbonzini@redhat.com,
-	dan.j.williams@intel.com
-Cc: x86@kernel.org,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rick.p.edgecombe@intel.com,
-	isaku.yamahata@intel.com,
-	chao.gao@intel.com,
-	binbin.wu@linux.intel.com,
-	kai.huang@intel.com
-Subject: [PATCH v2 09/10] x86/virt/tdx: Reduce TDMR's reserved areas by using CMRs to find memory holes
-Date: Wed, 17 Jul 2024 15:40:16 +1200
-Message-ID: <39c7ffb3a6d5d4075017a1c0931f85486d64e9f7.1721186590.git.kai.huang@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1721186590.git.kai.huang@intel.com>
-References: <cover.1721186590.git.kai.huang@intel.com>
+   d="scan'208";a="81286038"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:44 -0700
+Message-ID: <cc68401c-4551-4395-943e-0e4a69565dcb@linux.intel.com>
+Date: Wed, 17 Jul 2024 11:41:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
+ state for Intel CPU
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Kan Liang <kan.liang@linux.intel.com>, maobibo <maobibo@loongson.cn>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
+ peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
+ <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
+ <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
+ <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
+ <Zikeh2eGjwzDbytu@google.com>
+ <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
+ <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
+ <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
+ <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
+ <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
+ <ZirPGnSDUzD-iWwc@google.com>
+ <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
+ <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A TDX module initialization failure was reported on a Emerald Rapids
-platform:
 
-  virt/tdx: initialization failed: TDMR [0x0, 0x80000000): reserved areas exhausted.
-  virt/tdx: module initialization failed (-28)
+On 4/26/2024 11:12 AM, Mingwei Zhang wrote:
+> On Thu, Apr 25, 2024 at 6:46 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 4/26/2024 5:46 AM, Sean Christopherson wrote:
+>>> On Thu, Apr 25, 2024, Kan Liang wrote:
+>>>> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
+>>>>> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>> It should not happen. For the current implementation, perf rejects all
+>>>>>> the !exclude_guest system-wide event creation if a guest with the vPMU
+>>>>>> is running.
+>>>>>> However, it's possible to create an exclude_guest system-wide event at
+>>>>>> any time. KVM cannot use the information from the VM-entry to decide if
+>>>>>> there will be active perf events in the VM-exit.
+>>>>> Hmm, why not? If there is any exclude_guest system-wide event,
+>>>>> perf_guest_enter() can return something to tell KVM "hey, some active
+>>>>> host events are swapped out. they are originally in counter #2 and
+>>>>> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
+>>>>> that and keep it in its pmu data structure.
+>>>> I think it's possible that someone creates !exclude_guest event after
+>>> I assume you mean an exclude_guest=1 event?  Because perf should be in a state
+>>> where it rejects exclude_guest=0 events.
+>> Suppose should be exclude_guest=1 event, the perf event without
+>> exclude_guest attribute would be blocked to create in the v2 patches
+>> which we are working on.
+>>
+>>
+>>>> the perf_guest_enter(). The stale information is saved in the KVM. Perf
+>>>> will schedule the event in the next perf_guest_exit(). KVM will not know it.
+>>> Ya, the creation of an event on a CPU that currently has guest PMU state loaded
+>>> is what I had in mind when I suggested a callback in my sketch:
+>>>
+>>>   :  D. Add a perf callback that is invoked from IRQ context when perf wants to
+>>>   :     configure a new PMU-based events, *before* actually programming the MSRs,
+>>>   :     and have KVM's callback put the guest PMU state
+>>
+>> when host creates a perf event with exclude_guest attribute which is
+>> used to profile KVM/VMM user space, the vCPU process could work at three
+>> places.
+>>
+>> 1. in guest state (non-root mode)
+>>
+>> 2. inside vcpu-loop
+>>
+>> 3. outside vcpu-loop
+>>
+>> Since the PMU state has already been switched to host state, we don't
+>> need to consider the case 3 and only care about cases 1 and 2.
+>>
+>> when host creates a perf event with exclude_guest attribute to profile
+>> KVM/VMM user space,  an IPI is triggered to enable the perf event
+>> eventually like the following code shows.
+>>
+>> event_function_call(event, __perf_event_enable, NULL);
+>>
+>> For case 1,  a vm-exit is triggered and KVM starts to process the
+>> vm-exit and then run IPI irq handler, exactly speaking
+>> __perf_event_enable() to enable the perf event.
+>>
+>> For case 2, the IPI irq handler would preempt the vcpu-loop and call
+>> __perf_event_enable() to enable the perf event.
+>>
+>> So IMO KVM just needs to provide a callback to switch guest/host PMU
+>> state, and __perf_event_enable() calls this callback before really
+>> touching PMU MSRs.
+> ok, in this case, do we still need KVM to query perf if there are
+> active exclude_guest events? yes? Because there is an ordering issue.
+> The above suggests that the host-level perf profiling comes when a VM
+> is already running, there is an IPI that can invoke the callback and
+> trigger preemption. In this case, KVM should switch the context from
+> guest to host. What if it is the other way around, ie., host-level
+> profiling runs first and then VM runs?
+>
+> In this case, just before entering the vcpu loop, kvm should check
+> whether there is an active host event and save that into a pmu data
+> structure. If none, do the context switch early (so that KVM saves a
+> huge amount of unnecessary PMU context switches in the future).
+> Otherwise, keep the host PMU context until vm-enter. At the time of
+> vm-exit, do the check again using the data stored in pmu structure. If
+> there is an active event do the context switch to the host PMU,
+> otherwise defer that until exiting the vcpu loop. Of course, in the
+> meantime, if there is any perf profiling started causing the IPI, the
+> irq handler calls the callback, preempting the guest PMU context. If
+> that happens, at the time of exiting the vcpu boundary, PMU context
+> switch is skipped since it is already done. Of course, note that the
+> irq could come at any time, so the PMU context switch in all 4
+> locations need to check the state flag (and skip the context switch if
+> needed).
+>
+> So this requires vcpu->pmu has two pieces of state information: 1) the
+> flag similar to TIF_NEED_FPU_LOAD; 2) host perf context info (phase #1
+> just a boolean; phase #2, bitmap of occupied counters).
+>
+> This is a non-trivial optimization on the PMU context switch. I am
+> thinking about splitting them into the following phases:
+>
+> 1) lazy PMU context switch, i.e., wait until the guest touches PMU MSR
+> for the 1st time.
+> 2) fast PMU context switch on KVM side, i.e., KVM checking event
+> selector value (enable/disable) and selectively switch PMU state
+> (reducing rd/wr msrs)
+> 3) dynamic PMU context boundary, ie., KVM can dynamically choose PMU
+> context switch boundary depending on existing active host-level
+> events.
+> 3.1) more accurate dynamic PMU context switch, ie., KVM checking
+> host-level counter position and further reduces the number of msr
+> accesses.
+> 4) guest PMU context preemption, i.e., any new host-level perf
+> profiling can immediately preempt the guest PMU in the vcpu loop
+> (instead of waiting for the next PMU context switch in KVM).
 
-As part of initializing the TDX module, the kernel informs the TDX
-module of all "TDX-usable memory regions" using an array of TDX defined
-structure "TD Memory Region" (TDMR).  Each TDMR must be in 1GB aligned
-and in 1GB granularity, and all "non-TDX-usable memory holes" within a
-given TDMR must be marked as "reserved areas".  The TDX module reports a
-maximum number of reserved areas that can be supported per TDMR.
+Sorry to recall this discussion again. I want to update some latest
+progress on it.
 
-Currently, the kernel finds those "non-TDX-usable memory holes" within a
-given TDMR by walking over a list of "TDX-usable memory regions", which
-essentially reflects the "usable" regions in the e820 table (w/o memory
-hotplug operations precisely, but this is not relevant here).
+I have implemented a draft code for the optimization step 1 & 2 and done
+some basic tests, but found there could be some security risks on the
+optimization.
 
-As shown above, the root cause of this failure is when the kernel tries
-to construct a TDMR to cover address range [0x0, 0x80000000), there
-are too many memory holes within that range and the number of memory
-holes exceeds the maximum number of reserved areas.
+The initial proposal is sample, a counter bitmap 'pmc_bitmap64' is
+introduced to dynamically record the guest using PMU counters. Only guest
+using counters would be saved/cleared and restored at VM-Exit and VM-Entry.
+This would reduce the overhead from MSR reading/writing.
 
-The E820 table of that platform (see [1] below) reflects this: the
-number of memory holes among e820 "usable" entries exceeds 16, which is
-the maximum number of reserved areas TDX module supports in practice.
+But this introduces potential security risks. Since only partial MSRs are
+save/restored to guest values. Malicious guest could get some host
+sensitive information or attack host by reading or writing these counters
+which guest doesn't use but host uses.
 
-=== Fix ===
+To mitigate these security risks, our initial thought is to change the
+static interception configuration of PMU at vCPU creation to dynamic
+interception configuration for per PMU counter before VM-entry. This can
+mitigate the security risks from rdmsr/wrmsr instructions. But it still
+can't address the security issue from rdpmc instruction as long as rdpmc is
+set to passthrough mode. Malicious guest still can read the host sensitive
+information by rdpmc instruction.
 
-There are two options to fix this: 1) reduce the number of memory holes
-when constructing a TDMR to save "reserved areas"; 2) reduce the TDMR's
-size to cover fewer memory regions, thus fewer memory holes.
+Possible solution could be
 
-Option 1) is possible, and in fact is easier and preferable:
+a. disable rdpmc passthrough
 
-TDX actually has a concept of "Convertible Memory Regions" (CMRs).  TDX
-reports a list of CMRs that meet TDX's security requirements on memory.
-TDX requires all the "TDX-usable memory regions" that the kernel passes
-to the module via TDMRs, a.k.a, all the "non-reserved regions in TDMRs",
-must be convertible memory.
+    This can solve the security hole, but rdpmc interception would bring
+heavy performance overhead.
 
-In other words, if a memory hole is indeed CMR, then it's not mandatory
-for the kernel to add it to the reserved areas.  By doing so, the number
-of consumed reserved areas can be reduced w/o having any functional
-impact.  The kernel still allocates TDX memory from the page allocator.
-There's no harm if the kernel tells the TDX module some memory regions
-are "TDX-usable" but they will never be allocated by the kernel as TDX
-memory.
+b. partially save/clear PMU MSRs at VM-Exit, but fully restore PMU MSRs at
+VM-Entry
 
-Note this doesn't have any security impact either because the kernel is
-out of TDX's TCB anyway.
+    This can fix the security issue as well, but suppose the performance
+overhead won't be reduced too much since wrmsr brings more overhead.
 
-This is feasible because in practice the CMRs just reflect the nature of
-whether the RAM can indeed be used by TDX, thus each CMR tends to be a
-large, uninterrupted range of memory, i.e., unlike the e820 table which
-contains numerous "ACPI *" entries in the first 2G range.  Refer to [2]
-for CMRs reported on the problematic platform using off-tree TDX code.
+c. Fall back to only optimization 1, no any PMU MSR save/restore and rdpmc
+is set to interception by default if guest doesn't use any PMU counters.
 
-So for this particular module initialization failure, the memory holes
-that are within [0x0, 0x80000000) are mostly indeed CMR.  By not adding
-them to the reserved areas, the number of consumed reserved areas for
-the TDMR [0x0, 0x80000000) can be dramatically reduced.
+    Suspect if it's a real scenario, at least for Linux, nmi_watchdog is
+enabled by default and it would manipulated PMU counters.
 
-Option 2) is also theoretically feasible, but it is not desired:
 
-It requires more complicated logic to handle splitting TDMR into smaller
-ones, which isn't trivial.  There are limitations to splitting TDMR too,
-thus it may not always work: 1) The smallest TDMR is 1GB, and it cannot
-be split any further; 2) This also increases the total number of TDMRs,
-which also has a maximum value limited by the TDX module.
-
-So, fix this issue by using option 1):
-
-1) reading out the CMRs from the TDX module global metadata, and
-2) changing to find memory holes for a given TDMR based on CMRs, but not
-   based on the list of "TDX-usable memory regions".
-
-Also dump the CMRs in dmesg.  They are helpful when something goes wrong
-around "constructing the TDMRs and configuring the TDX module with
-them".  Note there are no existing userspace tools that the user can get
-CMRs since they can only be read via SEAMCALL (no CPUID, MSR etc).
-
-[1] BIOS-E820 table of the problematic platform:
-
-  BIOS-e820: [mem 0x0000000000000000-0x000000000009efff] usable
-  BIOS-e820: [mem 0x000000000009f000-0x00000000000fffff] reserved
-  BIOS-e820: [mem 0x0000000000100000-0x000000005d168fff] usable
-  BIOS-e820: [mem 0x000000005d169000-0x000000005d22afff] ACPI data
-  BIOS-e820: [mem 0x000000005d22b000-0x000000005d3cefff] usable
-  BIOS-e820: [mem 0x000000005d3cf000-0x000000005d469fff] reserved
-  BIOS-e820: [mem 0x000000005d46a000-0x000000005e5b2fff] usable
-  BIOS-e820: [mem 0x000000005e5b3000-0x000000005e5c2fff] reserved
-  BIOS-e820: [mem 0x000000005e5c3000-0x000000005e5d2fff] usable
-  BIOS-e820: [mem 0x000000005e5d3000-0x000000005e5e4fff] reserved
-  BIOS-e820: [mem 0x000000005e5e5000-0x000000005eb57fff] usable
-  BIOS-e820: [mem 0x000000005eb58000-0x0000000061357fff] ACPI NVS
-  BIOS-e820: [mem 0x0000000061358000-0x000000006172afff] usable
-  BIOS-e820: [mem 0x000000006172b000-0x0000000061794fff] ACPI data
-  BIOS-e820: [mem 0x0000000061795000-0x00000000617fefff] usable
-  BIOS-e820: [mem 0x00000000617ff000-0x0000000061912fff] ACPI data
-  BIOS-e820: [mem 0x0000000061913000-0x0000000061998fff] usable
-  BIOS-e820: [mem 0x0000000061999000-0x00000000619dffff] ACPI data
-  BIOS-e820: [mem 0x00000000619e0000-0x00000000619e1fff] usable
-  BIOS-e820: [mem 0x00000000619e2000-0x00000000619e9fff] reserved
-  BIOS-e820: [mem 0x00000000619ea000-0x0000000061a26fff] usable
-  BIOS-e820: [mem 0x0000000061a27000-0x0000000061baefff] ACPI data
-  BIOS-e820: [mem 0x0000000061baf000-0x00000000623c2fff] usable
-  BIOS-e820: [mem 0x00000000623c3000-0x0000000062471fff] reserved
-  BIOS-e820: [mem 0x0000000062472000-0x0000000062823fff] usable
-  BIOS-e820: [mem 0x0000000062824000-0x0000000063a24fff] reserved
-  BIOS-e820: [mem 0x0000000063a25000-0x0000000063d57fff] usable
-  BIOS-e820: [mem 0x0000000063d58000-0x0000000064157fff] reserved
-  BIOS-e820: [mem 0x0000000064158000-0x0000000064158fff] usable
-  BIOS-e820: [mem 0x0000000064159000-0x0000000064194fff] reserved
-  BIOS-e820: [mem 0x0000000064195000-0x000000006e9cefff] usable
-  BIOS-e820: [mem 0x000000006e9cf000-0x000000006eccefff] reserved
-  BIOS-e820: [mem 0x000000006eccf000-0x000000006f6fefff] ACPI NVS
-  BIOS-e820: [mem 0x000000006f6ff000-0x000000006f7fefff] ACPI data
-  BIOS-e820: [mem 0x000000006f7ff000-0x000000006f7fffff] usable
-  BIOS-e820: [mem 0x000000006f800000-0x000000008fffffff] reserved
-  ......
-
-[2] Convertible Memory Regions of the problematic platform:
-
-  virt/tdx: CMR: [0x100000, 0x6f800000)
-  virt/tdx: CMR: [0x100000000, 0x107a000000)
-  virt/tdx: CMR: [0x1080000000, 0x207c000000)
-  virt/tdx: CMR: [0x2080000000, 0x307c000000)
-  virt/tdx: CMR: [0x3080000000, 0x407c000000)
-
-Signed-off-by: Kai Huang <kai.huang@intel.com>
----
-
-v1 -> v2:
- - Change to walk over CMRs directly to find out memory holes, instead
-   of walking over TDX memory blocks and explicitly check whether a hole
-   is subregion of CMR.  (Chao)
- - Mention any constant macro definitions in global metadata structures
-   are TDX architectural. (Binbin)
- - Slightly improve the changelog.
-
----
- arch/x86/virt/vmx/tdx/tdx.c | 116 ++++++++++++++++++++++++++++++------
- arch/x86/virt/vmx/tdx/tdx.h |  15 ++++-
- 2 files changed, 113 insertions(+), 18 deletions(-)
-
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 5ac0c411f4f7..3c19295f1f8f 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -293,6 +293,10 @@ static int stbuf_read_sysmd_field(u64 field_id, void *stbuf, int offset,
- 	return 0;
- }
- 
-+/* Wrapper to read one metadata field to u8/u16/u32/u64 */
-+#define stbuf_read_sysmd_single(_field_id, _pdata)	\
-+	stbuf_read_sysmd_field(_field_id, _pdata, 0, sizeof(typeof(*(_pdata))))
-+
- struct field_mapping {
- 	u64 field_id;
- 	int offset;
-@@ -349,6 +353,76 @@ static int get_tdx_module_version(struct tdx_sysinfo_module_version *modver)
- 	return stbuf_read_sysmd_multi(fields, ARRAY_SIZE(fields), modver);
- }
- 
-+/* Update the @cmr_info->num_cmrs to trim tail empty CMRs */
-+static void trim_empty_tail_cmrs(struct tdx_sysinfo_cmr_info *cmr_info)
-+{
-+	int i;
-+
-+	for (i = 0; i < cmr_info->num_cmrs; i++) {
-+		u64 cmr_base = cmr_info->cmr_base[i];
-+		u64 cmr_size = cmr_info->cmr_size[i];
-+
-+		if (!cmr_size) {
-+			WARN_ON_ONCE(cmr_base);
-+			break;
-+		}
-+
-+		/* TDX architecture: CMR must be 4KB aligned */
-+		WARN_ON_ONCE(!PAGE_ALIGNED(cmr_base) ||
-+				!PAGE_ALIGNED(cmr_size));
-+	}
-+
-+	cmr_info->num_cmrs = i;
-+}
-+
-+#define TD_SYSINFO_MAP_CMR_INFO(_field_id, _member)	\
-+	TD_SYSINFO_MAP(_field_id, struct tdx_sysinfo_cmr_info, _member)
-+
-+static int get_tdx_cmr_info(struct tdx_sysinfo_cmr_info *cmr_info)
-+{
-+	int i, ret;
-+
-+	ret = stbuf_read_sysmd_single(MD_FIELD_ID_NUM_CMRS,
-+			&cmr_info->num_cmrs);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < cmr_info->num_cmrs; i++) {
-+		const struct field_mapping fields[] = {
-+			TD_SYSINFO_MAP_CMR_INFO(CMR_BASE0 + i, cmr_base[i]),
-+			TD_SYSINFO_MAP_CMR_INFO(CMR_SIZE0 + i, cmr_size[i]),
-+		};
-+
-+		ret = stbuf_read_sysmd_multi(fields, ARRAY_SIZE(fields),
-+				cmr_info);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/*
-+	 * The TDX module may just report the maximum number of CMRs that
-+	 * TDX architecturally supports as the actual number of CMRs,
-+	 * despite the latter is smaller.  In this case all the tail
-+	 * CMRs will be empty.  Trim them away.
-+	 */
-+	trim_empty_tail_cmrs(cmr_info);
-+
-+	return 0;
-+}
-+
-+static void print_cmr_info(struct tdx_sysinfo_cmr_info *cmr_info)
-+{
-+	int i;
-+
-+	for (i = 0; i < cmr_info->num_cmrs; i++) {
-+		u64 cmr_base = cmr_info->cmr_base[i];
-+		u64 cmr_size = cmr_info->cmr_size[i];
-+
-+		pr_info("CMR[%d]: [0x%llx, 0x%llx)\n", i, cmr_base,
-+				cmr_base + cmr_size);
-+	}
-+}
-+
- static void print_basic_sysinfo(struct tdx_sysinfo *sysinfo)
- {
- 	struct tdx_sysinfo_module_version *modver = &sysinfo->module_version;
-@@ -369,6 +443,8 @@ static void print_basic_sysinfo(struct tdx_sysinfo *sysinfo)
- 			modver->internal, modver->build_num,
- 			modver->build_date, debug ? "Debug" : "Production",
- 			modinfo->tdx_features0);
-+
-+	print_cmr_info(&sysinfo->cmr_info);
- }
- 
- #define TD_SYSINFO_MAP_TDMR_INFO(_field_id, _member)	\
-@@ -401,6 +477,10 @@ static int get_tdx_sysinfo(struct tdx_sysinfo *sysinfo)
- 	if (ret)
- 		return ret;
- 
-+	ret = get_tdx_cmr_info(&sysinfo->cmr_info);
-+	if (ret)
-+		return ret;
-+
- 	return get_tdx_tdmr_sysinfo(&sysinfo->tdmr_info);
- }
- 
-@@ -825,29 +905,28 @@ static int tdmr_add_rsvd_area(struct tdmr_info *tdmr, int *p_idx, u64 addr,
- }
- 
- /*
-- * Go through @tmb_list to find holes between memory areas.  If any of
-+ * Go through all CMRs in @cmr_info to find memory holes.  If any of
-  * those holes fall within @tdmr, set up a TDMR reserved area to cover
-  * the hole.
-  */
--static int tdmr_populate_rsvd_holes(struct list_head *tmb_list,
-+static int tdmr_populate_rsvd_holes(struct tdx_sysinfo_cmr_info *cmr_info,
- 				    struct tdmr_info *tdmr,
- 				    int *rsvd_idx,
- 				    u16 max_reserved_per_tdmr)
- {
--	struct tdx_memblock *tmb;
- 	u64 prev_end;
--	int ret;
-+	int i, ret;
- 
- 	/*
- 	 * Start looking for reserved blocks at the
- 	 * beginning of the TDMR.
- 	 */
- 	prev_end = tdmr->base;
--	list_for_each_entry(tmb, tmb_list, list) {
-+	for (i = 0; i < cmr_info->num_cmrs; i++) {
- 		u64 start, end;
- 
--		start = PFN_PHYS(tmb->start_pfn);
--		end   = PFN_PHYS(tmb->end_pfn);
-+		start = cmr_info->cmr_base[i];
-+		end   = start + cmr_info->cmr_size[i];
- 
- 		/* Break if this region is after the TDMR */
- 		if (start >= tdmr_end(tdmr))
-@@ -948,16 +1027,16 @@ static int rsvd_area_cmp_func(const void *a, const void *b)
- 
- /*
-  * Populate reserved areas for the given @tdmr, including memory holes
-- * (via @tmb_list) and PAMTs (via @tdmr_list).
-+ * (via @cmr_info) and PAMTs (via @tdmr_list).
-  */
- static int tdmr_populate_rsvd_areas(struct tdmr_info *tdmr,
--				    struct list_head *tmb_list,
-+				    struct tdx_sysinfo_cmr_info *cmr_info,
- 				    struct tdmr_info_list *tdmr_list,
- 				    u16 max_reserved_per_tdmr)
- {
- 	int ret, rsvd_idx = 0;
- 
--	ret = tdmr_populate_rsvd_holes(tmb_list, tdmr, &rsvd_idx,
-+	ret = tdmr_populate_rsvd_holes(cmr_info, tdmr, &rsvd_idx,
- 			max_reserved_per_tdmr);
- 	if (ret)
- 		return ret;
-@@ -976,10 +1055,10 @@ static int tdmr_populate_rsvd_areas(struct tdmr_info *tdmr,
- 
- /*
-  * Populate reserved areas for all TDMRs in @tdmr_list, including memory
-- * holes (via @tmb_list) and PAMTs.
-+ * holes (via @cmr_info) and PAMTs.
-  */
- static int tdmrs_populate_rsvd_areas_all(struct tdmr_info_list *tdmr_list,
--					 struct list_head *tmb_list,
-+					 struct tdx_sysinfo_cmr_info *cmr_info,
- 					 u16 max_reserved_per_tdmr)
- {
- 	int i;
-@@ -988,7 +1067,7 @@ static int tdmrs_populate_rsvd_areas_all(struct tdmr_info_list *tdmr_list,
- 		int ret;
- 
- 		ret = tdmr_populate_rsvd_areas(tdmr_entry(tdmr_list, i),
--				tmb_list, tdmr_list, max_reserved_per_tdmr);
-+				cmr_info, tdmr_list, max_reserved_per_tdmr);
- 		if (ret)
- 			return ret;
- 	}
-@@ -999,11 +1078,13 @@ static int tdmrs_populate_rsvd_areas_all(struct tdmr_info_list *tdmr_list,
- /*
-  * Construct a list of TDMRs on the preallocated space in @tdmr_list
-  * to cover all TDX memory regions in @tmb_list based on the TDX module
-- * TDMR global information in @tdmr_sysinfo.
-+ * TDMR global information in @tdmr_sysinfo and CMR information in
-+ * @cmr_info.
-  */
- static int construct_tdmrs(struct list_head *tmb_list,
- 			   struct tdmr_info_list *tdmr_list,
--			   struct tdx_sysinfo_tdmr_info *tdmr_sysinfo)
-+			   struct tdx_sysinfo_tdmr_info *tdmr_sysinfo,
-+			   struct tdx_sysinfo_cmr_info *cmr_info)
- {
- 	int ret;
- 
-@@ -1016,7 +1097,7 @@ static int construct_tdmrs(struct list_head *tmb_list,
- 	if (ret)
- 		return ret;
- 
--	ret = tdmrs_populate_rsvd_areas_all(tdmr_list, tmb_list,
-+	ret = tdmrs_populate_rsvd_areas_all(tdmr_list, cmr_info,
- 			tdmr_sysinfo->max_reserved_per_tdmr);
- 	if (ret)
- 		tdmrs_free_pamt_all(tdmr_list);
-@@ -1207,7 +1288,8 @@ static int init_tdx_module(void)
- 		goto err_free_tdxmem;
- 
- 	/* Cover all TDX-usable memory regions in TDMRs */
--	ret = construct_tdmrs(&tdx_memlist, &tdx_tdmr_list, &sysinfo.tdmr_info);
-+	ret = construct_tdmrs(&tdx_memlist, &tdx_tdmr_list, &sysinfo.tdmr_info,
-+			&sysinfo.cmr_info);
- 	if (ret)
- 		goto err_free_tdmrs;
- 
-diff --git a/arch/x86/virt/vmx/tdx/tdx.h b/arch/x86/virt/vmx/tdx/tdx.h
-index 861ddf2c2e88..4b43eb774ffa 100644
---- a/arch/x86/virt/vmx/tdx/tdx.h
-+++ b/arch/x86/virt/vmx/tdx/tdx.h
-@@ -40,6 +40,10 @@
- #define MD_FIELD_ID_UPDATE_VERSION		0x0800000100000005ULL
- #define MD_FIELD_ID_INTERNAL_VERSION		0x0800000100000006ULL
- 
-+#define MD_FIELD_ID_NUM_CMRS			0x9000000100000000ULL
-+#define MD_FIELD_ID_CMR_BASE0			0x9000000300000080ULL
-+#define MD_FIELD_ID_CMR_SIZE0			0x9000000300000100ULL
-+
- #define MD_FIELD_ID_MAX_TDMRS			0x9100000100000008ULL
- #define MD_FIELD_ID_MAX_RESERVED_PER_TDMR	0x9100000100000009ULL
- #define MD_FIELD_ID_PAMT_4K_ENTRY_SIZE		0x9100000100000010ULL
-@@ -134,7 +138,7 @@ struct tdmr_info_list {
-  * Note not all metadata fields in each class are defined, only those
-  * used by the kernel are.
-  *
-- * Also note the "bit definitions" are architectural.
-+ * Also note the "bit/constant definitions" are architectural.
-  */
- 
- /* Class "TDX Module Info" */
-@@ -155,6 +159,14 @@ struct tdx_sysinfo_module_version {
- 	u32 build_date;
- };
- 
-+/* Class "CMR Info" */
-+#define TDX_MAX_CMRS	32
-+struct tdx_sysinfo_cmr_info {
-+	u16 num_cmrs;
-+	u64 cmr_base[TDX_MAX_CMRS];
-+	u64 cmr_size[TDX_MAX_CMRS];
-+};
-+
- /* Class "TDMR Info" */
- struct tdx_sysinfo_tdmr_info {
- 	u16 max_tdmrs;
-@@ -165,6 +177,7 @@ struct tdx_sysinfo_tdmr_info {
- struct tdx_sysinfo {
- 	struct tdx_sysinfo_module_info		module_info;
- 	struct tdx_sysinfo_module_version	module_version;
-+	struct tdx_sysinfo_cmr_info		cmr_info;
- 	struct tdx_sysinfo_tdmr_info		tdmr_info;
- };
- 
--- 
-2.45.2
-
+>
+> Thanks.
+> -Mingwei
+>>> It's a similar idea to TIF_NEED_FPU_LOAD, just that instead of a common chunk of
+>>> kernel code swapping out the guest state (kernel_fpu_begin()), it's a callback
+>>> into KVM.
