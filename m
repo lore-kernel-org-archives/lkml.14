@@ -1,112 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.python.org (mail.python.org [188.166.95.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91309249F9
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB437249F9;
+	Wed, 17 Jul 2024 08:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.166.95.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721204640; cv=none; b=tdjZO2vVHJZ1B2q5CXRoOdOlNnNP1vzDxiIQSXDlE1G/hffgdhBeoFH+UPwzAzPqe60lpJRJCvCo4FEbWvxnfvolAMvNzNwof98BESCt7h272Q6TXl+XkEsfkPOD6kSP7AiBU7I23tFmvLESf0uxK35c7aOWq3upOXgc7pgl2l4=
+	t=1721204787; cv=none; b=syky23DVHluf2R3U2X7ZaCbeYu8Ahr/6Hw4vs9DY6yeYkn12ZiGjacgMCTR9PQf6uShiHRXo4hpMb1WkJR9nxI7w3b2Gs2bZFraM9A+zlA9CaOkabrGICJnpaQ41YzTOmqCKRQHC+cZXeETUp6cLNP9/hzUKVJ6LBfvSRS6/O3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721204640; c=relaxed/simple;
-	bh=J93PJ80lwzNfVygKXW1Fko1sjw8RHKIQw4PZi1v3lsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=R/goBTnJ75BgV8DDUdlLU6gCvuxMgvDaZSU99nhIWvWckBlZ+eZYNMdaL0OxoOzxZWTl1Rk3jdHe1UOi8SqFKMqkHSCmWdDs0JJAJr+B9rjBeV+6GQmNtE0+tEdr38uogkU1yZyq97U5fgB9DVjP8ehcwLEgYK+EVo+DwEjI7lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+1tQJDc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721204787; c=relaxed/simple;
+	bh=fTteDRfXe9Vlvc3/MVkCR1QexOCfXk5wsr0WUqhKjwI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VUJPLEsAIhPFCLOh1r+3m+J1NjAxgMuyyAPcMjdojjMi3TZOKN+/5IciTHi/25KyXL/iD1E7TyWf+pgnaUO+TEYL/2MNqKLaK0vsgcOR7e2EXsPKLaYmKl3Ctfn/Jt3u4C/x4Rnod6g7E2Ttlm/ZAJ5qcNxeUPfZdbwOhCgqdWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=python.org; spf=pass smtp.mailfrom=python.org; dkim=pass (1024-bit key) header.d=python.org header.i=@python.org header.b=hYt2Bvmb; arc=none smtp.client-ip=188.166.95.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=python.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=python.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+1tQJDc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A97C32782;
-	Wed, 17 Jul 2024 08:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721204640;
-	bh=J93PJ80lwzNfVygKXW1Fko1sjw8RHKIQw4PZi1v3lsk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=a+1tQJDcq2AgOiaUBC0X9CSC33nitb4TQYxwYnBQvOhBDRwG723kgOT/jiPfUg0kr
-	 4gmDDJ6xxUo1E1JRH1HuwuIDxzAxW4nrYYYHOGzMpc0uSz3L3W/bCnqW4wo4x54MdX
-	 q0KfA+PGLHe9304WIncpl9eYGqK3J4BW5OXcQM1PUp8XStxsYfBMs44yFD52aonM2g
-	 Y6l2U7ha+SUNU5RqChpTzjJfUiEXZKtHzVZxce5Wk7SYk3oAFGS+R8WPM2AreTZUkM
-	 sinXdEmTnbB1pSGGYJkeLn/qfsiE6k02fXNhAxAqg+Ir0XZnoXhlL3SupqFrBdTqr5
-	 iEay0Z553sNsA==
-Date: Wed, 17 Jul 2024 11:23:50 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	James Gowans <jgowans@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Wei Yang <richard.weiyang@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] memblock: updates for 6.11-rc1
-Message-ID: <Zpd_luVnhT7VZz6v@kernel.org>
+	dkim=pass (1024-bit key) header.d=python.org header.i=@python.org header.b="hYt2Bvmb"
+Received: from [192.168.1.83] (unknown [2.29.184.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.python.org (Postfix) with ESMTPSA id 4WP8Cx4j8HznWFN;
+	Wed, 17 Jul 2024 04:26:21 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=python.org; s=200901;
+	t=1721204783; bh=fTteDRfXe9Vlvc3/MVkCR1QexOCfXk5wsr0WUqhKjwI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hYt2BvmbQYJcbMIPmDyPk0v5DDLpQwvR7wOKYjhJ3uw3TuQItzbBjTZiqlNAJKVbP
+	 7sccz+rS3ckrUp0F+K65M4OQN+VxdVTR8jl+PZ319XHPjr0ZHkx3SGkX0fwY3O6JrT
+	 Bb0ws6UinibHmFcuTiPzn/7nhblRN247FK4zx72Y=
+Message-ID: <a0da7702-dabe-49e4-87f4-5d6111f023a8@python.org>
+Date: Wed, 17 Jul 2024 09:26:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v19 1/5] exec: Add a new AT_CHECK flag to execveat(2)
+Content-Language: en-GB
+To: Jeff Xu <jeffxu@google.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Paul Moore <paul@paul-moore.com>, Theodore Ts'o <tytso@mit.edu>,
+ Alejandro Colomar <alx.manpages@gmail.com>, Aleksa Sarai
+ <cyphar@cyphar.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Casey Schaufler <casey@schaufler-ca.com>,
+ Christian Heimes <christian@python.org>, Dmitry Vyukov <dvyukov@google.com>,
+ Eric Biggers <ebiggers@kernel.org>, Eric Chiang <ericchiang@google.com>,
+ Fan Wu <wufan@linux.microsoft.com>, Florian Weimer <fweimer@redhat.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>,
+ Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Jordan R Abrahams <ajordanr@google.com>,
+ Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+ Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>,
+ Miklos Szeredi <mszeredi@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>,
+ Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+ Scott Shell <scottsh@microsoft.com>, Shuah Khan <shuah@kernel.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>, Steve Grubb <sgrubb@redhat.com>,
+ Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+ Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+ Xiaoming Ni <nixiaoming@huawei.com>, Yin Fengwei <fengwei.yin@intel.com>,
+ kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20240704190137.696169-1-mic@digikod.net>
+ <20240704190137.696169-2-mic@digikod.net>
+ <CALmYWFss7qcpR9D_r3pbP_Orxs55t3y3yXJsac1Wz=Hk9Di0Nw@mail.gmail.com>
+From: Steve Dower <steve.dower@python.org>
+In-Reply-To: <CALmYWFss7qcpR9D_r3pbP_Orxs55t3y3yXJsac1Wz=Hk9Di0Nw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On 17/07/2024 07:33, Jeff Xu wrote:
+> Consider those cases: I think:
+> a> relying purely on userspace for enforcement does't seem to be
+> effective,  e.g. it is trivial  to call open(), then mmap() it into
+> executable memory.
 
-The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
+If there's a way to do this without running executable code that had to 
+pass a previous execveat() check, then yeah, it's not effective (e.g. a 
+Python interpreter that *doesn't* enforce execveat() is a trivial way to 
+do it).
 
-  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
+Once arbitrary code is running, all bets are off. So long as all 
+arbitrary code is being checked itself, it's allowed to do things that 
+would bypass later checks (and it's up to whoever audited it in the 
+first place to prevent this by not giving it the special mark that 
+allows it to pass the check).
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock tags/memblock-v6.11-rc1
-
-for you to fetch changes up to 9364a7e40d54e6858479f0a96e1a04aa1204be16:
-
-  memblock tests: fix implicit declaration of function 'numa_valid_node' (2024-07-05 11:24:47 +0300)
-
-----------------------------------------------------------------
-memblock: updates for 6.11-rc1
-
-* reserve_mem command line parameter to allow creation of named memory
-  reservation at boot time.
-  The driving use-case is to improve the ability of pstore to retain
-  ramoops data across reboots.
-* cleaunps and small improvements in memblock and mm_init
-* new tests cases in memblock test suite
-
-----------------------------------------------------------------
-James Gowans (1):
-      memblock: Move late alloc warning down to phys alloc
-
-Steven Rostedt (Google) (2):
-      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-      pstore/ramoops: Add ramoops.mem_name= command line option
-
-Wei Yang (15):
-      mm/memblock: remove empty dummy entry
-      memblock tests: add memblock_reserve_all_locations_check()
-      memblock tests: add memblock_reserve_many_may_conflict_check()
-      mm/memblock: fix comment for memblock_isolate_range()
-      memblock tests: add memblock_overlaps_region_checks
-      mm/memblock: return true directly on finding overlap region
-      mm/memblock: use PAGE_ALIGN_DOWN to get pgend in free_memmap
-      mm/mm_init.c: use memblock_region_memory_base_pfn() to get startpfn
-      mm/memblock: fix a typo in description of for_each_mem_region()
-      mm/mm_init.c: move nr_initialised reset down a bit
-      mm/mm_init.c: get the highest zone directly
-      mm/mm_init.c: use deferred_init_mem_pfn_range_in_zone() to decide loop condition
-      mm/mm_init.c: not always search next deferred_init_pfn from very beginning
-      mm/mm_init.c: don't initialize page->lru again
-      memblock tests: fix implicit declaration of function 'numa_valid_node'
-
- Documentation/admin-guide/kernel-parameters.txt |  22 ++
- Documentation/admin-guide/ramoops.rst           |  13 +
- fs/pstore/ram.c                                 |  14 ++
- include/linux/memblock.h                        |  21 +-
- include/linux/mm.h                              |   2 +
- mm/memblock.c                                   | 151 ++++++++++--
- mm/mm_init.c                                    |  69 +++---
- tools/include/linux/mm.h                        |   1 +
- tools/include/linux/numa.h                      |   5 +
- tools/testing/memblock/tests/basic_api.c        | 314 +++++++++++++++++++++++-
- tools/testing/memblock/tests/common.c           |   8 +-
- tools/testing/memblock/tests/common.h           |   4 +
- 12 files changed, 542 insertions(+), 82 deletions(-)
--- 
-Sincerely yours,
-Mike.
+> b> if both user space and kernel need to call AT_CHECK, the faccessat
+> seems to be a better place for AT_CHECK, e.g. kernel can call
+> do_faccessat(AT_CHECK) and userspace can call faccessat(). This will
+> avoid complicating the execveat() code path.
+> 
+> What do you think ?
+> 
+> Thanks
+> -Jeff
