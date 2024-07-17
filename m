@@ -1,101 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C1A04D8B6;
-	Wed, 17 Jul 2024 08:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91309249F9
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721204592; cv=none; b=nw5QROMW77VaZiNzXkVXtRhSofZ/8+fwEdYdbrXxK+pYGIKy719+veSeGgHd0Z1m4yOYGfAztdoCd1pJJQkS0KIRzqbDTlD8jQGkx7saxxK4NFCMYw13mFzOtpesocp08w+8lBzE5+NAjN0JWv/7DlRPH8WW766yG/OEhOnQE/Y=
+	t=1721204640; cv=none; b=tdjZO2vVHJZ1B2q5CXRoOdOlNnNP1vzDxiIQSXDlE1G/hffgdhBeoFH+UPwzAzPqe60lpJRJCvCo4FEbWvxnfvolAMvNzNwof98BESCt7h272Q6TXl+XkEsfkPOD6kSP7AiBU7I23tFmvLESf0uxK35c7aOWq3upOXgc7pgl2l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721204592; c=relaxed/simple;
-	bh=7w8d4hF30cPl3B1WLOUMU9Qsqcr231BJGYZiaEO85Mk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pUm2tQcBmCNgs88NafkcofdozyUo/+cFreVwvQbAcNjZC1g9G6bSt9Fdtiw+nRUfNz4U+3q0NmLlNMpxYCcVGKviowJB/ptYVXi7QfnIaEf4UEzVWAdqMVkGF7iYUtNLOKdZczrMzAvY+wfdXQ9OT8g7lfZfS9fASE7Wl3nZPHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97576106F;
-	Wed, 17 Jul 2024 01:23:35 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4F42C3F762;
-	Wed, 17 Jul 2024 01:23:08 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Leo Yan <leo.yan@arm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	James Clark <james.clark@linaro.org>,
-	amadio@gentoo.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: James Clark <james.clark@arm.com>
-Subject: [PATCH v5 6/6] perf docs: Document cross compilation
-Date: Wed, 17 Jul 2024 09:22:11 +0100
-Message-Id: <20240717082211.524826-7-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240717082211.524826-1-leo.yan@arm.com>
-References: <20240717082211.524826-1-leo.yan@arm.com>
+	s=arc-20240116; t=1721204640; c=relaxed/simple;
+	bh=J93PJ80lwzNfVygKXW1Fko1sjw8RHKIQw4PZi1v3lsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=R/goBTnJ75BgV8DDUdlLU6gCvuxMgvDaZSU99nhIWvWckBlZ+eZYNMdaL0OxoOzxZWTl1Rk3jdHe1UOi8SqFKMqkHSCmWdDs0JJAJr+B9rjBeV+6GQmNtE0+tEdr38uogkU1yZyq97U5fgB9DVjP8ehcwLEgYK+EVo+DwEjI7lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+1tQJDc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+1tQJDc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A97C32782;
+	Wed, 17 Jul 2024 08:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721204640;
+	bh=J93PJ80lwzNfVygKXW1Fko1sjw8RHKIQw4PZi1v3lsk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=a+1tQJDcq2AgOiaUBC0X9CSC33nitb4TQYxwYnBQvOhBDRwG723kgOT/jiPfUg0kr
+	 4gmDDJ6xxUo1E1JRH1HuwuIDxzAxW4nrYYYHOGzMpc0uSz3L3W/bCnqW4wo4x54MdX
+	 q0KfA+PGLHe9304WIncpl9eYGqK3J4BW5OXcQM1PUp8XStxsYfBMs44yFD52aonM2g
+	 Y6l2U7ha+SUNU5RqChpTzjJfUiEXZKtHzVZxce5Wk7SYk3oAFGS+R8WPM2AreTZUkM
+	 sinXdEmTnbB1pSGGYJkeLn/qfsiE6k02fXNhAxAqg+Ir0XZnoXhlL3SupqFrBdTqr5
+	 iEay0Z553sNsA==
+Date: Wed, 17 Jul 2024 11:23:50 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	James Gowans <jgowans@amazon.com>, Mike Rapoport <rppt@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Wei Yang <richard.weiyang@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] memblock: updates for 6.11-rc1
+Message-ID: <Zpd_luVnhT7VZz6v@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Records the commands for cross compilation with two methods.
+Hi Linus,
 
-The first method relies on Multiarch. The second approach is to explicitly
-specify the PKG_CONFIG variables, which is widely used in build system
-(like Buildroot, Yocto, etc).
+The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
 
-Co-developed-by: James Clark <james.clark@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/Documentation/Build.txt | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
 
-diff --git a/tools/perf/Documentation/Build.txt b/tools/perf/Documentation/Build.txt
-index 3766886c4bca..83dc87c662b6 100644
---- a/tools/perf/Documentation/Build.txt
-+++ b/tools/perf/Documentation/Build.txt
-@@ -71,3 +71,31 @@ supported by GCC. UBSan detects undefined behaviors of programs at runtime.
-   $ UBSAN_OPTIONS=print_stacktrace=1 ./perf record -a
- 
- If UBSan detects any problem at runtime, it outputs a “runtime error:” message.
-+
-+4) Cross compilation
-+====================
-+As Multiarch is commonly supported in Linux distributions, we can install
-+libraries for multiple architectures on the same system and then cross-compile
-+Linux perf. For example, Aarch64 libraries and toolchains can be installed on
-+an x86_64 machine, allowing us to compile perf for an Aarch64 target.
-+
-+Below is the command for building the perf with dynamic linking.
-+
-+  $ cd /path/to/Linux
-+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
-+
-+For static linking, the option `LDFLAGS="-static"` is required.
-+
-+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
-+    LDFLAGS="-static" -C tools/perf
-+
-+In the embedded system world, a use case is to explicitly specify the package
-+configuration paths for cross building:
-+
-+  $ PKG_CONFIG_SYSROOT_DIR="/path/to/cross/build/sysroot" \
-+    PKG_CONFIG_LIBDIR="/usr/lib/:/usr/local/lib" \
-+    make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
-+
-+In this case, the variable PKG_CONFIG_SYSROOT_DIR can be used alongside the
-+variable PKG_CONFIG_LIBDIR or PKG_CONFIG_PATH to prepend the sysroot path to
-+the library paths for cross compilation.
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock tags/memblock-v6.11-rc1
+
+for you to fetch changes up to 9364a7e40d54e6858479f0a96e1a04aa1204be16:
+
+  memblock tests: fix implicit declaration of function 'numa_valid_node' (2024-07-05 11:24:47 +0300)
+
+----------------------------------------------------------------
+memblock: updates for 6.11-rc1
+
+* reserve_mem command line parameter to allow creation of named memory
+  reservation at boot time.
+  The driving use-case is to improve the ability of pstore to retain
+  ramoops data across reboots.
+* cleaunps and small improvements in memblock and mm_init
+* new tests cases in memblock test suite
+
+----------------------------------------------------------------
+James Gowans (1):
+      memblock: Move late alloc warning down to phys alloc
+
+Steven Rostedt (Google) (2):
+      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
+      pstore/ramoops: Add ramoops.mem_name= command line option
+
+Wei Yang (15):
+      mm/memblock: remove empty dummy entry
+      memblock tests: add memblock_reserve_all_locations_check()
+      memblock tests: add memblock_reserve_many_may_conflict_check()
+      mm/memblock: fix comment for memblock_isolate_range()
+      memblock tests: add memblock_overlaps_region_checks
+      mm/memblock: return true directly on finding overlap region
+      mm/memblock: use PAGE_ALIGN_DOWN to get pgend in free_memmap
+      mm/mm_init.c: use memblock_region_memory_base_pfn() to get startpfn
+      mm/memblock: fix a typo in description of for_each_mem_region()
+      mm/mm_init.c: move nr_initialised reset down a bit
+      mm/mm_init.c: get the highest zone directly
+      mm/mm_init.c: use deferred_init_mem_pfn_range_in_zone() to decide loop condition
+      mm/mm_init.c: not always search next deferred_init_pfn from very beginning
+      mm/mm_init.c: don't initialize page->lru again
+      memblock tests: fix implicit declaration of function 'numa_valid_node'
+
+ Documentation/admin-guide/kernel-parameters.txt |  22 ++
+ Documentation/admin-guide/ramoops.rst           |  13 +
+ fs/pstore/ram.c                                 |  14 ++
+ include/linux/memblock.h                        |  21 +-
+ include/linux/mm.h                              |   2 +
+ mm/memblock.c                                   | 151 ++++++++++--
+ mm/mm_init.c                                    |  69 +++---
+ tools/include/linux/mm.h                        |   1 +
+ tools/include/linux/numa.h                      |   5 +
+ tools/testing/memblock/tests/basic_api.c        | 314 +++++++++++++++++++++++-
+ tools/testing/memblock/tests/common.c           |   8 +-
+ tools/testing/memblock/tests/common.h           |   4 +
+ 12 files changed, 542 insertions(+), 82 deletions(-)
 -- 
-2.34.1
-
+Sincerely yours,
+Mike.
