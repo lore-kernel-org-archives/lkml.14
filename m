@@ -1,86 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014B217E8E6;
-	Wed, 17 Jul 2024 10:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668CE3D3BF
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 10:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721210883; cv=none; b=ZV2VHbW2U8FpOEZdrfPykwIyns3Xjm+QbcS5eYTox7qNYKgEK7iQb5r1XFsSo+R3c6DV4s6CpsxevNLysKSk0cD+6ZkiSUJO5Hd1rv2b9jQrnBf2btb7sH2R4IZbIDxjDi9dMZbGoYovujgYg/vQ+v56QRIXSRxZIjxKtCOLnVw=
+	t=1721210916; cv=none; b=bVozlOAmzkoX/r8Vekf4ttAV7jHYdpJ/bUAI9axH3WlaDfjz0VB3kXv/VoloJj8A++ERh3Jbjq4RuY/2U3t70PRNpGtAAV/JeLjMQWbpfD+4fTyIJKJj1x364gCz9mODkCZ/FvJkO7ZW60AcrrshAp6QDtbOOgKxrNo/XZoD0Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721210883; c=relaxed/simple;
-	bh=mAN8Q6z21yaEw+RDCfZviFVij0V8meYpkEOj5xb/xXQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=FjKY24fXxT52Xa1TzaKZdiGTjHz+v6HN/s3TM1anlUUETPmaiMIP+GCa1JsmEKaGfY1Oge7tiMowNBJbMNmhTfvv9+CKsq1c9SONPRuj0JhiZSnoA8E5ykT8ZXpkoyIyoL87TJMAGfKqvRPLIh53KqDqrFVH67cY6UL3mRpF+nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCU5ySEv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721210916; c=relaxed/simple;
+	bh=VJzbhh46j8FTftQKVsWxLRGfCdvkS4wlIGN2br8arew=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aY/62MPZXHjsMpq1vpCmr6spo1h8Wjv4RfYn8R98mDwVsiL9A1Tr+wNDX19si0ySTKTQGzz7kYLSqb1Un9OYV0Y6XRXLRg9GquyOrLvYJUOt+60I5TdAK//eTodSft1G/+ByWWZEo/vlvjV7E03KcAriD1hOhjFl9HU9Eub0E1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GPFBRtuT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCU5ySEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE6A7C32782;
-	Wed, 17 Jul 2024 10:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721210882;
-	bh=mAN8Q6z21yaEw+RDCfZviFVij0V8meYpkEOj5xb/xXQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=gCU5ySEvWVLcKid2+BOLuzORFDRJ0gnEz/v7kuA8lAZ0j+EfQ6sSe7T4cUjqJf2yX
-	 8jn2O0Kl4FZY6L9V0NxORWXGOXqkctg5w8twdui3xF43m0C1PmAOHmoTGdLfUe/UJ3
-	 mMv0ShfSvomrp53oyjtLYHLG1kMwbs/9Y3laHgPVsMdc/pMIgDujahHTT8vogfeE4L
-	 vANPEz3KKiOzRH8MShhZ+brWRxNqdC4hBUUoJZu0eRz91JeRieBEQEAxz92PkZPp+C
-	 dI5J/11aT8JNQz7CLohQdIxpR0O9lRqTcIvMUYOk/s6T12WQV3D7n/1hKSwY2lAuLK
-	 J8alN4xixRtuA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GPFBRtuT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721210913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xjkUyUot20NGrY9ZFrQg4iD0i6JztFTd/ok1J4HNwDY=;
+	b=GPFBRtuTpOSrbMeooo40gYn8ZOc9XmwEUthWNQcqR3HYzs4xHY0LRrfOUmkJgGbxY8jbji
+	dUVo+LN42DAMOg/9aCqZ//E6Lb+vJjyaQgR3Lc/DYnsKqemJrlArhYFkFow8y7WdY9jxOF
+	Z3i3FrpqZlT8brfd0n+uybW1e5YUDEQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-GsbtTOQSOGizWdk9BbjeNw-1; Wed, 17 Jul 2024 06:08:32 -0400
+X-MC-Unique: GsbtTOQSOGizWdk9BbjeNw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4279b07cd45so47475635e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 03:08:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721210911; x=1721815711;
+        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xjkUyUot20NGrY9ZFrQg4iD0i6JztFTd/ok1J4HNwDY=;
+        b=lOdoWPrTmZ72AeWxBmUvACsRL0XrYA9BqtWXMXPrb9BkoBPPOKiKPNzxH6j41w2ry5
+         Ux28hGoRg0jw3tWgVGTJb5hsWuw9FqvHSq61Qsad+XEzKIkVT8GmZiJC9mL8JxMCydah
+         nqdgY/+6hbVmvqwXYYlteOIyRgQUEyPiRHYg1SwXu4hbi4D5yI4Xzw3RmZncVqmx2SYS
+         MudTtxFl42MMsLH5rrnIV9WeXCsRsU4E2+WvTD/OAAbxYKDO62IU0XPz6QLjBKC9je0R
+         48+sCH8ZyMM+BBpOtAsI9UabSch7713s99aC/W952pPsbKiUgR5NBR5fWUeWj603gIY3
+         DPMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXy2XCnX0LWh4xzvby9Zi99d5DBjf617244BVXISCzDB4KuEZutcLNBYhNzNvWlas/GIls20UPoFhPua39yGtSscMDte1Ge2HxgqmwC
+X-Gm-Message-State: AOJu0YwSZIYvhXxwNXx/lxP7YdGJoUFgFTWd0cZEuB0YbqyAlEag5sTu
+	rfQTonWQfmja2m94+RTZfupeyZFGog+XKR6Rnau3WENGXWKokwNsvRyMufNmJcEpCgylD2fvPIi
+	kz7UfVhkGEtvVV97ZJY4UzOQCktNmflyQviXoMJv43CvG7x8nggk6L3y7ca5ivA==
+X-Received: by 2002:a05:600c:1c21:b0:426:4f47:6037 with SMTP id 5b1f17b1804b1-427c2cc2f5bmr8604555e9.19.1721210910941;
+        Wed, 17 Jul 2024 03:08:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkUSxu2VeixFnYHEIPInPCJHTDc3WCGL4pCgRh1eLivnZ8ZCPxQEJHjlvcn3WW+HuqhF4hlA==
+X-Received: by 2002:a05:600c:1c21:b0:426:4f47:6037 with SMTP id 5b1f17b1804b1-427c2cc2f5bmr8604225e9.19.1721210910486;
+        Wed, 17 Jul 2024 03:08:30 -0700 (PDT)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db038dbsm11135956f8f.95.2024.07.17.03.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 03:08:30 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Jocelyn Falempe <jfalempe@redhat.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Helge Deller <deller@gmx.de>, "Jiri Slaby
+ (SUSE)" <jirislaby@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Samuel Thibault <samuel.thibault@ens-lyon.org>,
+ Jocelyn Falempe <jfalempe@redhat.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 2/3] fbcon: Add an option to disable fbcon in panic.
+In-Reply-To: <20240717090102.968152-3-jfalempe@redhat.com>
+References: <20240717090102.968152-1-jfalempe@redhat.com>
+ <20240717090102.968152-3-jfalempe@redhat.com>
+Date: Wed, 17 Jul 2024 12:08:28 +0200
+Message-ID: <87zfqg49gj.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 17 Jul 2024 13:07:58 +0300
-Message-Id: <D2RQC1H7N1JI.1W4JT8FI0R8L4@kernel.org>
-Subject: Re: [PATCH 1/2] KEYS: trusted: fix DCP blob payload length
- assignment
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "David Gstir" <david@sigma-star.at>, "sigma star Kernel Team"
- <upstream+dcp@sigma-star.at>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
- <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
- <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
- Hallyn" <serge@hallyn.com>, "David Oberhollenzer"
- <david.oberhollenzer@sigma-star.at>, "Richard Weinberger" <richard@nod.at>
-Cc: <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
- <linux-security-module@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- "kernel test robot" <lkp@intel.com>
-X-Mailer: aerc 0.17.0
-References: <20240703125353.46115-1-david@sigma-star.at>
-In-Reply-To: <20240703125353.46115-1-david@sigma-star.at>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Wed Jul 3, 2024 at 3:53 PM EEST, David Gstir wrote:
-> The DCP trusted key type uses the wrong helper function to store
-> the blob's payload length which can lead to the wrong byte order
-> being used in case this would ever run on big endian architectures.
+Jocelyn Falempe <jfalempe@redhat.com> writes:
+
+> This is required to avoid conflict between DRM_PANIC, and fbcon. If
+> a drm device already handle panic with drm_panic, it should set
+> the skip_panic field in fb_info, so that fbcon will stay quiet, and
+> not overwrite the panic_screen.
 >
-> Fix by using correct helper function.
->
-> Signed-off-by: David Gstir <david@sigma-star.at>
-> Suggested-by: Richard Weinberger <richard@nod.at>
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> ---
 
-You cannot suggest a change that you author yourself.
+This makes sense to me as well.
 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202405240610.fj53EK0q-lkp@i=
-ntel.com/
-> Fixes: 2e8a0f40a39c ("KEYS: trusted: Introduce NXP DCP-backed trusted key=
-s")
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
-Tags are in wrong order. For next round:
+-- 
+Best regards,
 
-Cc: stable@vger.kernel.org # v6.10+
-Fixes: 2e8a0f40a39c ("KEYS: trusted: Introduce NXP DCP-backed trusted keys"=
-)
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202405240610.fj53EK0q-lkp@int=
-el.com/
-Signed-off-by: David Gstir <david@sigma-star.at>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
-
-BR, Jarkko
