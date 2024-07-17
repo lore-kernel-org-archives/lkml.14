@@ -1,318 +1,137 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11021101.outbound.protection.outlook.com [52.101.65.101])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE43187325;
-	Wed, 17 Jul 2024 21:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.101
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721252658; cv=fail; b=tWj4WXAMvzzN84VmzxddVsqqOp1YPPEdzrJ+ikqDG/q8XftiuHn9kZKmj3xr9LilaUjS5pIMlnxYVnOOtg/AZIZX8nv9rvXyr3Gt333o0XLLwryqmco/6NhvwerC3YEo+4B80sZ9hAAYVBRNDDrNeAhG+bFWYl2gweRjHZy05s8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721252658; c=relaxed/simple;
-	bh=fWbvBHKrWJT2QHXDdYmHiLsEgrKYcWS9XghsdlLl5jY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WLg10Bf2XrRpEKsq7AdC6xXjevNriaEz7HQkmzkGMZwqcokCLG9iDV2CQIZRzMsX0E5aC5lVjzzZstuHRTGwXr0caFkRn3mLhEZrqQ7Tmejo/xQ/SF1y1UHdMoGfjNDyyZXH+9I73mWDe6W0CtpeOyLD2P0waeEQkr3kdZkW4QA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esd.eu; spf=pass smtp.mailfrom=esd.eu; dkim=pass (1024-bit key) header.d=esdhannover.onmicrosoft.com header.i=@esdhannover.onmicrosoft.com header.b=kxMdpF8A; arc=fail smtp.client-ip=52.101.65.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=esd.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=esd.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53921188CA9
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 21:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721252673; cv=none; b=aOICKrMwl+jHAZprCkPNSkLydqWvYzjfcePHoMcLmsoC8Nk2NhZvItc65Cyu+1FuSiU/DxhR1WBMCuqIp9EO2UPi0HKB9Z7d29ynE90kuHkvdDqCw+Iwah2S73ZpIOdNjeD92vDEEKn8omFeFV4sMODLT53RkypfGhurqhBL+44=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721252673; c=relaxed/simple;
+	bh=nm1sn8H+UwA2gzDfCfCPgna/4ZDRkMbtFZ/jJS2k4dY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AipR+w2iqJCabOVCYUYq62chjhjFh7jMOCrX2613xQXwLBX3nlXVWcfMHEvFnrlfBJx6As3Uk+GaoldGgKIPlZRISL7u2I0JM1AHJqkKe/vuT0EuvuodZIOiRlwosdda1dRZmhz1iua1bG8cyNdqyHTTEX9kMN+PQSRkR7GUuR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HRM06IAv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=esdhannover.onmicrosoft.com header.i=@esdhannover.onmicrosoft.com header.b="kxMdpF8A"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E19Cxvhuil1JPN3qhN7JrSGw8jiYbcrPWCyhML9SAg+2xOgKpBLzeF5MVcVtlv+7bEQnLHkZHgabK83rudh9Q8ctH1MSH97ISlw5tyLTSITAevVJDgNztaDuPPenYL5hADskRswzQVijDQblkv0dqhbFBvYNfzDf8RIDhUE7mcGBLaVtw5Fn/UX7uGovWMU01jZJFmquClnDxRudX+kwS1+elpllJefcaJje6HxH2dvv9ZupsLM6tnFr+7x91YpwNfl7uuhd0EviKTr+zHTSsGKvYKGRNhMlF4/tMTsfxKTYGWjZ2kND40aSsezyc2wHI/Kw0HArxf9fGxTtxwYxHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9t9cg9MUrzlNcPKH8xVyy9AVPEoX4vJ/X1Ms2jwjlhs=;
- b=ygJNQbMqBkAkImdYlQlX4gqgr0G1B9PR+14LtauOWHUn/mI6vDdQHknpw3CJbgTbcfBnJPPf3ucwY47+rnUUx8ohK2hiJSxcNunMv4YIwUUantArxz3VQ8+lEyhEsbgp4jHWTDIpjTCLgae6YODOHsPOGG2GWiOLXYwEMUl0IlHwIhDHNRkfTIYWzA6oMef2SIMann6Sa3NMVKD+ktBDKzFQytdcIuEIjnp50JOvmsdQQkMEUM8TOaD98MNhPUtqmpI+I7DMY2QUVnbmu4Ko+TeVebdkh8DipuSQlj22jNeKBI4pJ/MLWRy2wgIAY7bxp4zhnqz3jdE0fyZZItIAQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 80.151.164.27) smtp.rcpttodomain=davemloft.net smtp.mailfrom=esd.eu;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=esd.eu; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=esdhannover.onmicrosoft.com; s=selector1-esdhannover-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9t9cg9MUrzlNcPKH8xVyy9AVPEoX4vJ/X1Ms2jwjlhs=;
- b=kxMdpF8AnZZIYh3SoLkVtni56+8SYUnDgMLljK3lytJmMdTYErr6E0huVYtI9dTPXeTHXdOvPxkngIlN8+pU14Fn3H+SgLfHw5NuUYAf2ZyjyQIeHu8gkedEQqhjKdlHQnB7Mi76SU3AWowCIvmxjKesmMC8fWdvHq2O4/rVmOY=
-Received: from DUZPR01CA0233.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b4::17) by GV2PR03MB9524.eurprd03.prod.outlook.com
- (2603:10a6:150:da::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.17; Wed, 17 Jul
- 2024 21:44:10 +0000
-Received: from DB5PEPF00014B9D.eurprd02.prod.outlook.com
- (2603:10a6:10:4b4:cafe::5a) by DUZPR01CA0233.outlook.office365.com
- (2603:10a6:10:4b4::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.18 via Frontend
- Transport; Wed, 17 Jul 2024 21:44:10 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 80.151.164.27) smtp.mailfrom=esd.eu; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=esd.eu;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning esd.eu
- discourages use of 80.151.164.27 as permitted sender)
-Received: from esd-s7.esd (80.151.164.27) by
- DB5PEPF00014B9D.mail.protection.outlook.com (10.167.8.164) with Microsoft
- SMTP Server id 15.20.7784.11 via Frontend Transport; Wed, 17 Jul 2024
- 21:44:09 +0000
-Received: from debby.esd.local (jenkins.esd.local [10.0.0.190])
-	by esd-s7.esd (Postfix) with ESMTPS id 8947E7C16C9;
-	Wed, 17 Jul 2024 23:44:09 +0200 (CEST)
-Received: by debby.esd.local (Postfix, from userid 2044)
-	id 7A03D2E0157; Wed, 17 Jul 2024 23:44:09 +0200 (CEST)
-From: =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>
-To: Marc Kleine-Budde <mkl@pengutronix.de>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wolfgang Grandegger <wg@grandegger.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH 1/2] can: esd_402_pci: Rename esdACC CTRL register macros
-Date: Wed, 17 Jul 2024 23:44:08 +0200
-Message-Id: <20240717214409.3934333-2-stefan.maetje@esd.eu>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240717214409.3934333-1-stefan.maetje@esd.eu>
-References: <20240717214409.3934333-1-stefan.maetje@esd.eu>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRM06IAv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721252670;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+wjxz20iy8G2qBsoFEZ2vcnJOu/C66k+kPs/38ZB7V8=;
+	b=HRM06IAv+K4caEO/Jfu3J0KLvy1sma7fZuNJ/eiSLLdW+Z7kLdsml0JnutnNAbLXeTJUwf
+	Lv6QdRo0eO+0EJzlgJ92FLHrx+ao+YLBqmGswXFkA53vnBe2R233DmtclLRFWoHPTv5qfP
+	cn4MUS64L9vl+kavou9gA+/+Blg7630=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-507-4FCJfa8EMu6lR0L_3R_HpQ-1; Wed, 17 Jul 2024 17:44:28 -0400
+X-MC-Unique: 4FCJfa8EMu6lR0L_3R_HpQ-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7f66b3d69a8so16523439f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 14:44:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721252668; x=1721857468;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+wjxz20iy8G2qBsoFEZ2vcnJOu/C66k+kPs/38ZB7V8=;
+        b=heJAk21BgCk/kXT9QbrgWuh6sOZSih0XwX3eA4yS5ccWoPl9B1/HP9lW0I3BoLvoJs
+         mqGK6+ndbhPygh/wbZ+RmS59l4hgQvdu3jjbsw9fC18rKYpm3+UbummTMBbdjl2X6PoT
+         D7yZAMnmi/zJ+j7NhQ6obJoLV1l8ouRVCm5v2iomc/NVT6ms09ZxScQfVHPN32m8/OMm
+         7tv9hYLwTqHhiCR5nGpiO7PUGgFpDmYYDZVsm2YuOJWrFwL16OLq4tula0CCwBLuVLsz
+         kLiiCVBOTJg7vxq2dr6qOEggsOYI2A6BMMA+J2jLz2R7ePMLw0rWeILl/EPnxBqROLlB
+         mYkA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTFact1w1FP774zREVfuMuZqNdH8KEEmXA5YwT0EzbOZf+2FEQtXAZeXsgDv6cTXVLWEi2cDg6sFQ8twZbuTREkhJMdomf8hBkPU8c
+X-Gm-Message-State: AOJu0YzzAMLaMMbUKhgngfhyqBcqbmu7WTZwq/uYm3ex+ifDKc4uszzD
+	UnA5YazmGLvkTamwywSo/Q2jgogRv9Gdn58YyYjtXPYn15qXb5A+iNaeEaeJa53Gf+erdkw70j5
+	MLp03POmcEkwiq2dckr89g5CzcmpRDZXinvle3HnZfLUAVcoSicbZgl3UfQa/eQ==
+X-Received: by 2002:a05:6602:2c92:b0:7f6:20d2:7a96 with SMTP id ca18e2360f4ac-81711e18b30mr344228739f.14.1721252668208;
+        Wed, 17 Jul 2024 14:44:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEg3w+Houb1Be8pF3Zf31Isom/zcA7zD4gXvl4BNJsg1iNrkpkV/hEYMiAVNuTjdPIuOyIyVA==
+X-Received: by 2002:a05:6602:2c92:b0:7f6:20d2:7a96 with SMTP id ca18e2360f4ac-81711e18b30mr344226539f.14.1721252667843;
+        Wed, 17 Jul 2024 14:44:27 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c210ff4c3bsm961063173.171.2024.07.17.14.44.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 14:44:27 -0700 (PDT)
+Date: Wed, 17 Jul 2024 15:44:25 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Axel Rasmussen <axelrasmussen@google.com>
+Cc: stable@vger.kernel.org, Ankit Agrawal <ankita@nvidia.com>, Eric Auger
+ <eric.auger@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
+ <kevin.tian@intel.com>, Kunwu Chan <chentao@kylinos.cn>, Leah Rumancik
+ <leah.rumancik@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>, Stefan
+ Hajnoczi <stefanha@redhat.com>, Yi Liu <yi.l.liu@intel.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.9 0/3] Backport VFIO refactor to fix fork ordering bug
+Message-ID: <20240717154425.43437eea.alex.williamson@redhat.com>
+In-Reply-To: <20240717213339.1921530-1-axelrasmussen@google.com>
+References: <20240717213339.1921530-1-axelrasmussen@google.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9D:EE_|GV2PR03MB9524:EE_
-X-MS-Office365-Filtering-Correlation-Id: affec90e-0fa5-43c4-d1bf-08dca6a9976e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NHFudXptWUtCT3hpQ0s4SjM4dU1xdUthSjJmNjR2SnFGM3JNY2dVb0U5Vmxr?=
- =?utf-8?B?cHpRWWRqWjJpaHV0dzBkZUtReU5lSy90QWZmZ3V2VGNFSTR0cUsrK1VhTStM?=
- =?utf-8?B?c0JkNzBWNWxDRDRCZ3BSdzNJb09xSDVnK29Va2tVcGk1cXNSZzE2b2pqdzI0?=
- =?utf-8?B?NHZpQ2VwT29xL2tMWFQvdStONWw1Z1Rkdmk5MkNEUUsrOFUyeGxYL0RUd2RG?=
- =?utf-8?B?TW1rd2srcktSOUZ3OUFvWTBmcGxWVWQ5SXZtVXRVTlFJM1E5NGIybHR6OHU2?=
- =?utf-8?B?WWptNittU2hZWlJDb1VIa3M4RjBNUlVVbnZ6d1plczk3S3V0MjFHbjFiM0p6?=
- =?utf-8?B?emJBM1I2cEVPVmYyc0t6TmJXYUhoQ1FRRlIxL2dLV2hBakt6cCtRSGdRcm91?=
- =?utf-8?B?dHY4Q3F1VWI4eTJRM1lENHJnYlNxR0Q4cEhLZ1hHeG1rR1hwMnFPNkNyYktk?=
- =?utf-8?B?RnlYVDhuMUhqcDFuUnNlVC9jSml0NS9SZUQ4ZGJhWHVHZmVDY2hDTjlKblY5?=
- =?utf-8?B?clIya0draDBBTGdzdTZrNDJTYmRsNi84dlJ5eGVkMEdnaGl6S09YUVNnOGJs?=
- =?utf-8?B?VGdYdUpQcXZNQ3BsU1Y2Sjh3R2NZalgvSTZ5LzM3d3BSTWg3MUhoQ0RJbHM5?=
- =?utf-8?B?TStWUmREUmd5a0RMYnZTN3g4dXQ4a3F2czAvQWQ2d28vQmNsUnFxNzE1UjMr?=
- =?utf-8?B?K3R6TCs2LzBDcjJhblhnR21CTkVuZTdOdlZSc1ZKV0I2N2NHa0ZGYlAzNURa?=
- =?utf-8?B?U3d6UHdsWk4xU3J1QVpiWldmNFllU1dKZDJMejNZMlRKM0VVVDkveXV1SFg1?=
- =?utf-8?B?ZGpEYjRYMHd3REhqcjdFc1h3cTEvcmNYV1ZqQkxoR2FVM3UweXBhZ2R3WnRO?=
- =?utf-8?B?SlMraFBGMFZoRkhjU2MxbHVuZ05RQUJ2a0tMUFNOU1ViRXhQV2JPdlI1Yjdk?=
- =?utf-8?B?dGpqT0poMHdWaFRmSGFDOVJyNmNRT2JwZTV5OHhBbksxWnZuOXVPaXhPbXlj?=
- =?utf-8?B?c3dTTXlVd0srZ3ZjZHQ1QXpHLzE2RlRHSmYrMEU2d0hPVDBDV1lKb2l0ek9L?=
- =?utf-8?B?NllXcDdqbGFnZytnVm9aRTJrQzFlYWJzZVJTY1dPcGEwL0hoSXJMbFRsQ1FP?=
- =?utf-8?B?b1YyZHlUbjd4RDM5NkFUeWlHK056Zy9vcDRqaEhHWFhxSlo1Wm0vTHcydW4x?=
- =?utf-8?B?eGduTTh4SWxoZDd3akF3eVl3cmIrZlpESTQzbU9DbEp6NFp2TnFYekJ1R0lL?=
- =?utf-8?B?S3ZZaTdBMVVXNmZJbE9MVHZkY2pCTnNDemkxV1ArMkViN04zOTVzRU9jNzJT?=
- =?utf-8?B?ekhkZHlMT250WjR0eUsvTUVkbjhTMnNXbjJaWHZiaXNOZnJpaUZWSXZUSUdB?=
- =?utf-8?B?TnZBTG9mMlB6UFE0YmlLWm8xYStCanVoWnMzR0pCSFRTUENLdlRHblZvNXFV?=
- =?utf-8?B?dmltR0VDZ2ZHMVp0bW5VektTVnYwcUQ5TGdYN3RVYmhtcHRlNzkrZTliTEhB?=
- =?utf-8?B?TnNnNFdhMjVMSE9rT0h4YjNEKytDTWpOZVpiTCtFWlR0bTJqdGZpWWloR2dV?=
- =?utf-8?B?NGlHOEEvMjJZQTVEeFpHNlROVjNQb0hzczFsK1hmR2g4UlpwaEduQVZUNVFV?=
- =?utf-8?B?WGVLdmZWVjlTOE9KYXExNyt5ZTYrN29jbHJTR2kwVlp6OVBrMndWR3QyUEQ5?=
- =?utf-8?B?bndKVnRuRlh6OVV6dWRvek9JRDdwSDVmODJnd0ozNHJCZXJBTDRMalYzbllO?=
- =?utf-8?B?aGNIdHZxRHB2MEZKbEh1YTE5NnJWWVBybW1ieFF3bEV3anRPeG9vVmYwQmhi?=
- =?utf-8?B?WEd5U2lCN1AwMU5na3lyOWdQMVVzYlRUc2JWcTlSRTRiYXR4Q0k1MWVLaDkv?=
- =?utf-8?B?dDNPMnZVNGI0dml1Y25reGdXbGxXNHhsS0xidHJjZ2VhcHNENDFsam9rSTlL?=
- =?utf-8?Q?CG9osnl92IU9MGGyPTUPIcsIiNcQuFyi?=
-X-Forefront-Antispam-Report:
-	CIP:80.151.164.27;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:esd-s7.esd;PTR:p5097a41b.dip0.t-ipconnect.de;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: esd.eu
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2024 21:44:09.8980
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: affec90e-0fa5-43c4-d1bf-08dca6a9976e
-X-MS-Exchange-CrossTenant-Id: 5a9c3a1d-52db-4235-b74c-9fd851db2e6b
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5a9c3a1d-52db-4235-b74c-9fd851db2e6b;Ip=[80.151.164.27];Helo=[esd-s7.esd]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B9D.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR03MB9524
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Rename macros to use for esdACC CTRL register access to match the
-internal documentation and to make the macro prefix consistent.
+On Wed, 17 Jul 2024 14:33:36 -0700
+Axel Rasmussen <axelrasmussen@google.com> wrote:
 
-- ACC_CORE_OF_CTRL_MODE -> ACC_CORE_OF_CTRL
-  Makes the name match the documentation.
-- ACC_REG_CONTROL_MASK_MODE_ -> ACC_REG_CTRL_MASK_
-  ACC_REG_CONTROL_MASK_ -> ACC_REG_CTRL_MASK_
-  Makes the prefix consistent for macros describing masks in the same
-  register (CTRL).
+> 35e351780fa9 ("fork: defer linking file vma until vma is fully initialized")
+> switched the ordering of vm_ops->open() and copy_page_range() on fork. This is a
+> bug for VFIO, because it causes two problems:
+> 
+> 1. Because open() is called before copy_page_range(), the range can conceivably
+>    have unmapped 'holes' in it. This causes the code underneath untrack_pfn() to
+>    WARN.
+> 
+> 2. More seriously, open() is trying to guarantee that the entire range is
+>    zapped, so any future accesses in the child will result in the VFIO fault
+>    handler being called. Because we copy_page_range() *after* open() (and
+>    therefore after zapping), this guarantee is violatd.
+> 
+> We can't revert 35e351780fa9, because it fixes a real bug for hugetlbfs. The fix
+> is also not as simple as just reodering open() and copy_page_range(), as Miaohe
+> points out in [1]. So, although these patches are kind of large for stable, just
+> backport this refactoring which completely sidesteps the issue.
+> 
+> Note that patch 2 is the key one here which fixes the issue. Patch 1 is a
+> prerequisite required for patch 2 to build / work. This would almost be enough,
+> but we might see significantly regressed performance. Patch 3 fixes that up,
+> putting performance back on par with what it was before.
+> 
+> Note [1] also has a more full discussion justifying taking these backports.
+> 
+> [1]: https://lore.kernel.org/all/20240702042948.2629267-1-leah.rumancik@gmail.com/T/
+> 
+> Alex Williamson (3):
+>   vfio: Create vfio_fs_type with inode per device
+>   vfio/pci: Use unmap_mapping_range()
+>   vfio/pci: Insert full vma on mmap'd MMIO fault
+> 
+>  drivers/vfio/device_cdev.c       |   7 +
+>  drivers/vfio/group.c             |   7 +
+>  drivers/vfio/pci/vfio_pci_core.c | 271 ++++++++-----------------------
+>  drivers/vfio/vfio_main.c         |  44 +++++
+>  include/linux/vfio.h             |   1 +
+>  include/linux/vfio_pci_core.h    |   2 -
+>  6 files changed, 125 insertions(+), 207 deletions(-)
+> 
+> --
+> 2.45.2.993.g49e7a77208-goog
+> 
 
-Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
----
- drivers/net/can/esd/esdacc.c | 46 ++++++++++++++++++------------------
- drivers/net/can/esd/esdacc.h | 37 +++++++++++++++--------------
- 2 files changed, 42 insertions(+), 41 deletions(-)
+LGTM
 
-diff --git a/drivers/net/can/esd/esdacc.c b/drivers/net/can/esd/esdacc.c
-index 121cbbf81458..ef33d2ccd220 100644
---- a/drivers/net/can/esd/esdacc.c
-+++ b/drivers/net/can/esd/esdacc.c
-@@ -43,8 +43,8 @@
- 
- static void acc_resetmode_enter(struct acc_core *core)
- {
--	acc_set_bits(core, ACC_CORE_OF_CTRL_MODE,
--		     ACC_REG_CONTROL_MASK_MODE_RESETMODE);
-+	acc_set_bits(core, ACC_CORE_OF_CTRL,
-+		     ACC_REG_CTRL_MASK_RESETMODE);
- 
- 	/* Read back reset mode bit to flush PCI write posting */
- 	acc_resetmode_entered(core);
-@@ -52,8 +52,8 @@ static void acc_resetmode_enter(struct acc_core *core)
- 
- static void acc_resetmode_leave(struct acc_core *core)
- {
--	acc_clear_bits(core, ACC_CORE_OF_CTRL_MODE,
--		       ACC_REG_CONTROL_MASK_MODE_RESETMODE);
-+	acc_clear_bits(core, ACC_CORE_OF_CTRL,
-+		       ACC_REG_CTRL_MASK_RESETMODE);
- 
- 	/* Read back reset mode bit to flush PCI write posting */
- 	acc_resetmode_entered(core);
-@@ -172,7 +172,7 @@ int acc_open(struct net_device *netdev)
- 	struct acc_net_priv *priv = netdev_priv(netdev);
- 	struct acc_core *core = priv->core;
- 	u32 tx_fifo_status;
--	u32 ctrl_mode;
-+	u32 ctrl;
- 	int err;
- 
- 	/* Retry to enter RESET mode if out of sync. */
-@@ -187,19 +187,19 @@ int acc_open(struct net_device *netdev)
- 	if (err)
- 		return err;
- 
--	ctrl_mode = ACC_REG_CONTROL_MASK_IE_RXTX |
--			ACC_REG_CONTROL_MASK_IE_TXERROR |
--			ACC_REG_CONTROL_MASK_IE_ERRWARN |
--			ACC_REG_CONTROL_MASK_IE_OVERRUN |
--			ACC_REG_CONTROL_MASK_IE_ERRPASS;
-+	ctrl = ACC_REG_CTRL_MASK_IE_RXTX |
-+		ACC_REG_CTRL_MASK_IE_TXERROR |
-+		ACC_REG_CTRL_MASK_IE_ERRWARN |
-+		ACC_REG_CTRL_MASK_IE_OVERRUN |
-+		ACC_REG_CTRL_MASK_IE_ERRPASS;
- 
- 	if (priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING)
--		ctrl_mode |= ACC_REG_CONTROL_MASK_IE_BUSERR;
-+		ctrl |= ACC_REG_CTRL_MASK_IE_BUSERR;
- 
- 	if (priv->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
--		ctrl_mode |= ACC_REG_CONTROL_MASK_MODE_LOM;
-+		ctrl |= ACC_REG_CTRL_MASK_LOM;
- 
--	acc_set_bits(core, ACC_CORE_OF_CTRL_MODE, ctrl_mode);
-+	acc_set_bits(core, ACC_CORE_OF_CTRL, ctrl);
- 
- 	acc_resetmode_leave(core);
- 	priv->can.state = CAN_STATE_ERROR_ACTIVE;
-@@ -218,13 +218,13 @@ int acc_close(struct net_device *netdev)
- 	struct acc_net_priv *priv = netdev_priv(netdev);
- 	struct acc_core *core = priv->core;
- 
--	acc_clear_bits(core, ACC_CORE_OF_CTRL_MODE,
--		       ACC_REG_CONTROL_MASK_IE_RXTX |
--		       ACC_REG_CONTROL_MASK_IE_TXERROR |
--		       ACC_REG_CONTROL_MASK_IE_ERRWARN |
--		       ACC_REG_CONTROL_MASK_IE_OVERRUN |
--		       ACC_REG_CONTROL_MASK_IE_ERRPASS |
--		       ACC_REG_CONTROL_MASK_IE_BUSERR);
-+	acc_clear_bits(core, ACC_CORE_OF_CTRL,
-+		       ACC_REG_CTRL_MASK_IE_RXTX |
-+		       ACC_REG_CTRL_MASK_IE_TXERROR |
-+		       ACC_REG_CTRL_MASK_IE_ERRWARN |
-+		       ACC_REG_CTRL_MASK_IE_OVERRUN |
-+		       ACC_REG_CTRL_MASK_IE_ERRPASS |
-+		       ACC_REG_CTRL_MASK_IE_BUSERR);
- 
- 	netif_stop_queue(netdev);
- 	acc_resetmode_enter(core);
-@@ -233,9 +233,9 @@ int acc_close(struct net_device *netdev)
- 	/* Mark pending TX requests to be aborted after controller restart. */
- 	acc_write32(core, ACC_CORE_OF_TX_ABORT_MASK, 0xffff);
- 
--	/* ACC_REG_CONTROL_MASK_MODE_LOM is only accessible in RESET mode */
--	acc_clear_bits(core, ACC_CORE_OF_CTRL_MODE,
--		       ACC_REG_CONTROL_MASK_MODE_LOM);
-+	/* ACC_REG_CTRL_MASK_LOM is only accessible in RESET mode */
-+	acc_clear_bits(core, ACC_CORE_OF_CTRL,
-+		       ACC_REG_CTRL_MASK_LOM);
- 
- 	close_candev(netdev);
- 	return 0;
-diff --git a/drivers/net/can/esd/esdacc.h b/drivers/net/can/esd/esdacc.h
-index a70488b25d39..d13dfa60703a 100644
---- a/drivers/net/can/esd/esdacc.h
-+++ b/drivers/net/can/esd/esdacc.h
-@@ -50,7 +50,7 @@
- #define ACC_OV_REG_MODE_MASK_FPGA_RESET BIT(31)
- 
- /* esdACC CAN Core Module */
--#define ACC_CORE_OF_CTRL_MODE 0x0000
-+#define ACC_CORE_OF_CTRL 0x0000
- #define ACC_CORE_OF_STATUS_IRQ 0x0008
- #define ACC_CORE_OF_BRP	0x000c
- #define ACC_CORE_OF_BTR	0x0010
-@@ -66,21 +66,22 @@
- #define ACC_CORE_OF_TXFIFO_DATA_0 0x00c8
- #define ACC_CORE_OF_TXFIFO_DATA_1 0x00cc
- 
--#define ACC_REG_CONTROL_MASK_MODE_RESETMODE BIT(0)
--#define ACC_REG_CONTROL_MASK_MODE_LOM BIT(1)
--#define ACC_REG_CONTROL_MASK_MODE_STM BIT(2)
--#define ACC_REG_CONTROL_MASK_MODE_TRANSEN BIT(5)
--#define ACC_REG_CONTROL_MASK_MODE_TS BIT(6)
--#define ACC_REG_CONTROL_MASK_MODE_SCHEDULE BIT(7)
--
--#define ACC_REG_CONTROL_MASK_IE_RXTX BIT(8)
--#define ACC_REG_CONTROL_MASK_IE_TXERROR BIT(9)
--#define ACC_REG_CONTROL_MASK_IE_ERRWARN BIT(10)
--#define ACC_REG_CONTROL_MASK_IE_OVERRUN BIT(11)
--#define ACC_REG_CONTROL_MASK_IE_TSI BIT(12)
--#define ACC_REG_CONTROL_MASK_IE_ERRPASS BIT(13)
--#define ACC_REG_CONTROL_MASK_IE_ALI BIT(14)
--#define ACC_REG_CONTROL_MASK_IE_BUSERR BIT(15)
-+/* CTRL register layout */
-+#define ACC_REG_CTRL_MASK_RESETMODE BIT(0)
-+#define ACC_REG_CTRL_MASK_LOM BIT(1)
-+#define ACC_REG_CTRL_MASK_STM BIT(2)
-+#define ACC_REG_CTRL_MASK_TRANSEN BIT(5)
-+#define ACC_REG_CTRL_MASK_TS BIT(6)
-+#define ACC_REG_CTRL_MASK_SCHEDULE BIT(7)
-+
-+#define ACC_REG_CTRL_MASK_IE_RXTX BIT(8)
-+#define ACC_REG_CTRL_MASK_IE_TXERROR BIT(9)
-+#define ACC_REG_CTRL_MASK_IE_ERRWARN BIT(10)
-+#define ACC_REG_CTRL_MASK_IE_OVERRUN BIT(11)
-+#define ACC_REG_CTRL_MASK_IE_TSI BIT(12)
-+#define ACC_REG_CTRL_MASK_IE_ERRPASS BIT(13)
-+#define ACC_REG_CTRL_MASK_IE_ALI BIT(14)
-+#define ACC_REG_CTRL_MASK_IE_BUSERR BIT(15)
- 
- /* BRP and BTR register layout for CAN-Classic version */
- #define ACC_REG_BRP_CL_MASK_BRP GENMASK(8, 0)
-@@ -300,9 +301,9 @@ static inline void acc_clear_bits(struct acc_core *core,
- 
- static inline int acc_resetmode_entered(struct acc_core *core)
- {
--	u32 ctrl = acc_read32(core, ACC_CORE_OF_CTRL_MODE);
-+	u32 ctrl = acc_read32(core, ACC_CORE_OF_CTRL);
- 
--	return (ctrl & ACC_REG_CONTROL_MASK_MODE_RESETMODE) != 0;
-+	return (ctrl & ACC_REG_CTRL_MASK_RESETMODE) != 0;
- }
- 
- static inline u32 acc_ov_read32(struct acc_ov *ov, unsigned short offs)
--- 
-2.34.1
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+
+Thanks,
+Alex
 
