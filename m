@@ -1,187 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 419F22374E
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB0B18EB1;
+	Wed, 17 Jul 2024 07:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721200396; cv=none; b=P8qvkrajKQiW8GDf0IxDQrMNUStXWn+dwMqfFz2qJI4OTtmhBhHceRrWA2hrrA4OaLliqy/d5oUhBm79i3Ql+hx56CX5Ho6Q7USfy/fy66PlY16xPhO6u8SDZE3phbbduNWrI8/NlK3eTrWkAjEBWTRcVkBk4FPUzlXoUf/Urho=
+	t=1721200480; cv=none; b=WGE09jhZHSmugYdo8q34T03//Zaet5lTabqQL6wRUBWLteAy7xiZ79LolOdtaMECyDbwys6T/cRgkj0VOYGTNVbCr/kjDZWX+OvIQp+4O96Z0IXDgRbi2d1jwGH5DGKwBjYHvs1P+guQUq3ln/QEY7//eohoBEW8+1Vhd2/gVW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721200396; c=relaxed/simple;
-	bh=h2bLedQsMscin+6dfEPrEQ0xc9IFwpLqy032eDAW428=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pcC1gsmZSuyZaeGz5Ry2XYsEBJHg/I4ToFwNAOTxy6iPwwifppov3WMe13Z0/rVkMkTKaZMRwgR4h9hztehZhipkX50B9nm2wN+T1bauLBPjBh3pGU2kxDmLHKF/ZxbXuzuNiX93qgq6RjEk8J5bb09+udSeBLJ141wscTBlaW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FE991063;
-	Wed, 17 Jul 2024 00:13:40 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F1E43F762;
-	Wed, 17 Jul 2024 00:13:12 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Barry Song <baohua@kernel.org>,
-	Lance Yang <ioworker0@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Pankaj Raghav <kernel@pankajraghav.com>,
-	Daniel Gomez <da.gomez@samsung.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [RFC PATCH v1 4/4] mm: Override mTHP "file_enabled" defaults at kernel cmdline
-Date: Wed, 17 Jul 2024 08:12:56 +0100
-Message-ID: <20240717071257.4141363-5-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240717071257.4141363-1-ryan.roberts@arm.com>
-References: <20240717071257.4141363-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1721200480; c=relaxed/simple;
+	bh=7YDAgM8hZW5ntSbpRA+tdwQRCUPWuI0iPufu6/S4KLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Clos/nMH7Aq4RB0Ojqk+3T5GseZyk5yGSkPSKinnW82j60KmJviJFlbCh9ucWykEmZkD02HboN7NsdfYAsLGia+vrBI9o9rrlWb4v3D3dNQCp/rfZ9hrPv7qRpOXdCo6Q/47zEOvyTJjX4j14aPpcVV5OwXGOZKk3OUBS7E4i0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=sVizOIy+; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="sVizOIy+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1721200443; x=1721805243; i=frank.scheiner@web.de;
+	bh=9pFZJbajQATWyl0bSF67lukzXH6aiQLZrpGanM5WKPA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=sVizOIy+P8NLEku1mdH2LKjNgq5VbkorAFtGmafc7P+q1EnN0UF63AQkK70tKxug
+	 Eu4h/joEqPCSEFZWcefYII1GIaaUB6eUJOksXR3Mkj68w9Gk4aFbu1+HuNVsAIqqD
+	 CkpsuZA4/WRTOsk6o18tXRCNGMrheJBL/xB5m0kBOvb0VgosbasLDRaSJA/nrDPmS
+	 bqyfP4q5Ghq6G0h9WFU97Kg5gnwQK9DJRDoKd+LeZxTKqxuKZPcZbtU78exYWL1a8
+	 muKcO2sVy8QPSAo5XxLPm33nU6IUG58c9XrdZQ2B5wLMbJCHtBOyKkIEcBh9b/W9o
+	 I6L15UXwFP+3QnCeOw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.30] ([84.152.252.217]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3Euv-1sUn8p44s9-007o6u; Wed, 17
+ Jul 2024 09:14:03 +0200
+Message-ID: <b5c73716-697f-4bb7-b024-17ae9a69d223@web.de>
+Date: Wed, 17 Jul 2024 09:14:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 000/284] 5.10.221-rc2 review
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, akpm@linux-foundation.org, allen.lkml@gmail.com,
+ broonie@kernel.org, conor@kernel.org, f.fainelli@gmail.com,
+ jonathanh@nvidia.com, linux-kernel@vger.kernel.org, linux@roeck-us.net,
+ lkft-triage@lists.linaro.org, patches@kernelci.org, patches@lists.linux.dev,
+ pavel@denx.de, rwarsow@gmx.de, shuah@kernel.org, srw@sladewatkins.net,
+ sudipm.mukherjee@gmail.com, torvalds@linux-foundation.org,
+ =?UTF-8?B?VG9tw6HFoSBHbG96YXI=?= <tglozar@gmail.com>
+References: <20240704094505.095988824@linuxfoundation.org>
+ <76458f11-0ca4-4d3b-a9bc-916399f76b54@web.de>
+ <2024071237-hypnotize-lethargic-98f2@gregkh>
+ <07a7bc4b-9b71-486f-8666-d3b3593d682c@web.de>
+ <2024071543-footing-vantage-bd4f@gregkh>
+Content-Language: en-US
+From: Frank Scheiner <frank.scheiner@web.de>
+In-Reply-To: <2024071543-footing-vantage-bd4f@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lAs9nI1UYfVKpINGL7g2Ljhb+2pUjfTGUjnS9R9DQRvotzJHtX4
+ +KW2kGvp2Ne2nK+Qt5bjOLXWcf9HCRdMVOK+Q6EWbd5GwAxz/OP+rhqK1bsPfwxUm0613Ro
+ Ya2RuYRjBczFiignSw337BkHVLrP3tRTCF1QVwZMF6ig8YZpk24Y8Bw2pyScjRol1VrsAex
+ Xq2s0ascuvTr78f4/BKjw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:L8Emu7uAdvU=;ggrbhS6sGixVSroBDefhlCzhvUi
+ JH3oFi8/JSokOuLrHgeKLSF1xAOkl6x5BeetLSn2VtQy+GaKvgEGwKhxiRIAYBHCQZJzT35O6
+ VCWCR1ZfMdt22ZeWolVlmKUHdTDzbPwbDYDuPaZXXa6kK1/r5Xmtt9DVXO3/Pfp4tzzY77TED
+ Jqs6g0UH26uWYbk37uQfpbwUa6M1A3CreIxBS636pOa2nwapR4hAza0oLL2FWJhtbjLJKBup1
+ XuwQYNaW/ZzTWnmHDmruKZ8aS+mx7cLigTxAJPqKaWRfToYqi2PNXm2Jhstag1kGVwOo7fxLw
+ oFWjVkspRUtiMMyFcTp0Snhp1Zc3BoBRLH16kPwki6/GUkNIVppJ5EPA1+0jv8SF77fRCi6yw
+ oZtbdfKyQaZbKv5ZIl9q39zAogQMIeHknT1x7W3EMwuPF/0w1KTksCjL6uDENk4p3GOf2PdBU
+ qYZ5TcHaZgHmJ08Gwnjj+gh3wwFzQ4Z4NFZkDCbJY5BOh3LzERGhT4SyENuDEXSjUJytJ9Ayk
+ I2staZuIwjHrjC6Afw2IrW4/gq6T2U2wxSKC/ThsLOhrpvDDVH3nr87aZ5YSANbf8u2H1Tk9l
+ vDCAAqN3ZC6iLa6TGIsTDEgRkEPctb1y4D41sb6rFr43aUuHU9SSTu7qwVmMB0YBJUWbF1FMz
+ wE7Yhl1npoLdWnDNQkWgzCgKM/0MGyGk5Ri91jxAafeEBedroIPi8qlld4C+rFvO8IRUghDUW
+ m9PMgLgH9UFgULFaL6B/uSynDFiH7mP4tqvXy3v+DAWLsjaS9N2q9XQSc6MxD1VhwJxWekdDN
+ ii8GYOJNVeCG32P8XULikXLI+uHidd1m/gZBHuzXiwT8A=
 
-Add thp_file= cmdline parameter to allow specifying the default
-enablement of each supported file-backed THP size. The parameter accepts
-the following format and can be provided multiple times to configure
-each size:
+On 15.07.24 13:43, Greg KH wrote:
+> On Fri, Jul 12, 2024 at 04:19:39PM +0200, Frank Scheiner wrote:
+>> On 12.07.24 15:32, Greg KH wrote:
+>>> [...]
+>>  From my understanding 31e0721aeabde29371f624f56ce2f403508527a5 should
+>> not be merged w/o 8ff059b8531f3b98e14f0461859fc7cdd95823e4, which also
+>> seems to be the case for all other stable kernels from linux-5.12.y up.
+>>
+>> So 8ff059b8531f3b98e14f0461859fc7cdd95823e4 should be added, too, if
+>> 31e0721aeabde29371f624f56ce2f403508527a5 stays in.
+>
+> Ok, thanks, now queued up.
 
-  thp_file=<size>[KMG]:<value>
+Great! linux-5.10.y is already building fine now again for ia64.
 
-See Documentation/admin-guide/mm/transhuge.rst for more details.
+>>> And I thought that ia64 was dead?
+>>
+>> No, actually it's alive and well - just currently outside of mainline -
+>> but still in the stable kernels up to linux-6.6.y and for newer kernels
+>> patched back in. If you want to check on our CI ([2]), all current
+>> stable kernels build fine for ia64 and run in Ski - but linux-5.10.y
+>> currently only because I manually added
+>> 8ff059b8531f3b98e14f0461859fc7cdd95823e4 to the list of patches applied
+>> by the CI.
+>>
+>> [2]: https://github.com/linux-ia64/linux-stable-rc/actions/runs/9901808=
+825
+>
+> Will be interesting to see how long it lasts, good luck!
 
-Configuring the defaults at boot time is often necessary because its not
-always possible to drop active executable pages from the page cache,
-especially if they are well used like libc. The command line parameter
-allows configuring the values before the first page is installed in the
-page cache.
+Thanks! I think we get better and better with each obstacle moved out of
+the way.
 
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- .../admin-guide/kernel-parameters.txt         |  8 ++++
- Documentation/admin-guide/mm/transhuge.rst    | 13 ++++++
- mm/huge_memory.c                              | 45 ++++++++++++++++++-
- 3 files changed, 65 insertions(+), 1 deletion(-)
+BTW that seems to have been prophetic by you, because now the
+linux-4.19.y build for ia64 is broken. ;-) But we're already on it and
+have a trace. I'll report our findings soon. :-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 48443ad12e3f..e3e99def5691 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6600,6 +6600,14 @@
- 			See Documentation/admin-guide/mm/transhuge.rst for more
- 			details.
- 
-+	thp_file=	[KNL]
-+			Format: <size>[KMG]:always|always+exec|never
-+			Can be used to control the default behavior of the
-+			system with respect to file-backed transparent hugepages.
-+			Can be used multiple times for multiple file-backed THP
-+			sizes. See Documentation/admin-guide/mm/transhuge.rst
-+			for more details.
-+
- 	threadirqs	[KNL,EARLY]
- 			Force threading of all interrupt handlers except those
- 			marked explicitly IRQF_NO_THREAD.
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-index f53d43d986e2..2379ed4ad085 100644
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -333,6 +333,19 @@ required. If ``thp_anon=`` is specified at least once, any anon THP sizes
- not explicitly configured on the command line are implicitly set to
- ``never``.
- 
-+Each supported file-backed THP size can be controlled by passing
-+``thp_file=<size>[KMG]:<state>``, where ``<size>`` is the THP size and
-+``<state>`` is one of ``always``, ``always+exec`` or ``never``.
-+
-+For example, the following will set 64K THP to ``always+exec``::
-+
-+	thp_file=64K:always+exec
-+
-+``thp_file=`` may be specified multiple times to configure all THP sizes as
-+required. If ``thp_file=`` is specified at least once, any file-backed THP
-+sizes not explicitly configured on the command line are implicitly set to
-+``never``.
-+
- Hugepages in tmpfs/shmem
- ========================
- 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 794d2790d90d..4d963dde7aea 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -83,6 +83,7 @@ unsigned long huge_anon_orders_inherit __read_mostly;
- unsigned long huge_file_orders_always __read_mostly;
- int huge_file_exec_order __read_mostly = -1;
- static bool anon_orders_configured;
-+static bool file_orders_configured;
- 
- unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
- 					 unsigned long vm_flags,
-@@ -774,7 +775,10 @@ static int __init hugepage_init_sysfs(struct kobject **hugepage_kobj)
- 	 * (and therefore THP_ORDERS_ALL_FILE_DEFAULT) isn't a compile-time
- 	 * constant so we have to do this here.
- 	 */
--	huge_file_orders_always = THP_ORDERS_ALL_FILE_DEFAULT;
-+	if (!file_orders_configured) {
-+		huge_file_orders_always = THP_ORDERS_ALL_FILE_DEFAULT;
-+		file_orders_configured = true;
-+	}
- 
- 	*hugepage_kobj = kobject_create_and_add("transparent_hugepage", mm_kobj);
- 	if (unlikely(!*hugepage_kobj)) {
-@@ -1008,6 +1012,45 @@ static int __init setup_thp_anon(char *str)
- }
- __setup("thp_anon=", setup_thp_anon);
- 
-+static int __init setup_thp_file(char *str)
-+{
-+	unsigned long size;
-+	char *state;
-+	int order;
-+	int ret = 0;
-+
-+	if (!str)
-+		goto out;
-+
-+	size = (unsigned long)memparse(str, &state);
-+	order = ilog2(size >> PAGE_SHIFT);
-+	if (*state != ':' || !is_power_of_2(size) || size <= PAGE_SIZE ||
-+	    !(BIT(order) & THP_ORDERS_ALL_FILE_DEFAULT))
-+		goto out;
-+
-+	state++;
-+
-+	if (!strcmp(state, "always")) {
-+		set_bit(order, &huge_file_orders_always);
-+		ret = 1;
-+	} else if (!strcmp(state, "always+exec")) {
-+		set_bit(order, &huge_file_orders_always);
-+		huge_file_exec_order = order;
-+		ret = 1;
-+	} else if (!strcmp(state, "never")) {
-+		clear_bit(order, &huge_file_orders_always);
-+		ret = 1;
-+	}
-+
-+	if (ret)
-+		file_orders_configured = true;
-+out:
-+	if (!ret)
-+		pr_warn("thp_file=%s: cannot parse, ignored\n", str);
-+	return ret;
-+}
-+__setup("thp_file=", setup_thp_file);
-+
- pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
- {
- 	if (likely(vma->vm_flags & VM_WRITE))
--- 
-2.43.0
-
+Cheers,
+Frank
