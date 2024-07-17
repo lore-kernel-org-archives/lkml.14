@@ -1,105 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC9D3BBEB;
-	Wed, 17 Jul 2024 22:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A03A48CCC
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 22:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721255038; cv=none; b=PHuuQiOpu/J10hZ89iysQfPqJ72LfKdKXWtzlU5PXGC1BIqdf6LMcN7UeyeZzpj6kiubifSEaiQed9Uxrk4mxgs/bg33IIk4jPAgbIuaMDJLbHjKC8vAQ2fOtcxKdUHTbaQB3ST7UdsNYRbrEs/qYchHvtSJQ9QuCwwGALEPhLc=
+	t=1721255078; cv=none; b=UpP1EPHJi1ZyKLlrmKxUN4yMYaL3HhshdC4PPyt/JdFq6MDGphZ/dAM7/oIWq7SkbVLhaAyfWxwK6QT5hj7ru6mXo2vntlVOeoBYs0qltYcJQc1Hd5mjiRC3vTYBMbdK69uL1s2kWYBxcWxPvuXgLNmPTR7Gnto3vSSbKOMWoDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721255038; c=relaxed/simple;
-	bh=lVte0NjxgcA/RIrwcGCMqJelccj6in8YLPIu7QjUJ94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VMM1LtvO0+FiC0bXJX12q4eZJZ+GbXZEtjiLLwzWPxXPp0jGvm/MUOrEsSQU0ESY2M3SY3CrgNJnWvshv9okJGNLsofDa0NhQixQoiwb8BIXQNgfTMzFJ8bD15mrX8XNE1ixAvGy5PbjrVniSOhGrDZZOV36fanOX63K19+f/Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqSZ/kTb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721255078; c=relaxed/simple;
+	bh=Ntl9tRnYPr/zJHNKvphgoIXwclc8AMU5292YrLEeLMg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Z4XzOwe9UDubsfCx/IujfcYP6BVYashXrygAzLdGXY5+jNpUYO2jg6FRhUEvtByeyryKwOW8gaCBc8t6LBMcbCdQ2vaxtyg0gFw+EiAMCXnIV1RfUocGTsPktHAQq9KoYm4rBFNUSpuHGDXRh1Q43KT3yspauuSEWiu42tvQR6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Trx5I8WJ; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqSZ/kTb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F365C2BD10;
-	Wed, 17 Jul 2024 22:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721255037;
-	bh=lVte0NjxgcA/RIrwcGCMqJelccj6in8YLPIu7QjUJ94=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EqSZ/kTb0yENo4g8xgwq6oW20Jm2cUhCWp+6LGPXJY+yfVs6bsyXSYESYHSIF3KFF
-	 BMnyBbQatBUrThevej6hETgTAEdE3Cy41tXhOwdXCuj08M386PQcnS8nGeL6R4cdu2
-	 QLHT9j5Fika+1kVGR8YJsvW5WjTNw8kh+BhEHeN4M6bbjTX/eF4c9duUAvpDNknV9m
-	 1B5/rc+7e+FMemHgb1t5SSn/AQApGZVj4t7ZF6YL/HyFfOGX/BEYcBEwlO3+Oa4dT7
-	 lQqeJczc59Uuj1ERRP6//1TEDBvhHPhoaqgG2EXbM3BPaX1fJDQxNLyFwSjhKw0Vjj
-	 kWDZeoAh+PAUg==
-Date: Wed, 17 Jul 2024 15:23:56 -0700
-From: Kees Cook <kees@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Adrian Ratiu <adrian.ratiu@collabora.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, kernel@collabora.com,
-	gbiv@google.com, inglorion@google.com, ajordanr@google.com,
-	Doug Anderson <dianders@chromium.org>, Jeff Xu <jeffxu@google.com>,
-	Jann Horn <jannh@google.com>,
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
-Message-ID: <202407171520.FD49AE35@keescook>
-References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
- <202407171017.A0930117@keescook>
- <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Trx5I8WJ"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e05f9611400so391510276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 15:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721255072; x=1721859872; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MezEZvDkvM+1W/zRjucz+iEQh8YeOxqZVDK0/PzLMrI=;
+        b=Trx5I8WJWSde4ZXTL+SX1MKXfpd8aEEjLHqkVa5LYd994J6dWBmChwK9QssfVILCOT
+         lVYy0v4DHdbkarhzeNQsK2p6wWZFTg24cALYe5rpsllEv23MqCPnp/IvS6xhlPyo2iMw
+         3HzJbMTDKk0PmVHxio8MGH1qdP/IudTrjziBCP43rBYpkwyl7Z1N/6f1tdq3yFOhAR/8
+         6VOC2WAMDylcK+YlmDOP5BU9hwo7zNkEDB0+73yqG6Gfkxh1MDCNHd0GIcKOnoq9imqW
+         qNTwCAqzV1+NChDcDGiO7ie0ZDbVwgUfiB/kQRFHfR5aa0JILFppfra4R7tRcCT7QIwC
+         EBjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721255072; x=1721859872;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MezEZvDkvM+1W/zRjucz+iEQh8YeOxqZVDK0/PzLMrI=;
+        b=uybZdoEdrG5f51Rr+nSIZDSuImFVnSxKJUV2iRyLItoB70l/dNEDhvwU8u/Wy3GERp
+         bWLfZv2ffZqUduCok/ZLm3rlp5X2jTIicKAzpQNneG5Ba+ijF24PL0Uk5DsiJLU9h1nu
+         ortIgA5ohwHQbNu4VRBE+WMAx5oecfg3P9ayOaIGU9eilYoA3RuXhQhqmSQZYrj7Ulk7
+         CKsHI+O1AjnlyCb7z4oBkPOoQjzN06VnE1Yvm9rAA5q4zVtJ3UcF7KdQnwqetoIkTzfb
+         yXZ7bSzDj3k8iqKlb+ihgQ6R2EQ3kRQR+6DRltyz0O/Rf4aBJ10Wm8ooY96Zv6D5Ik10
+         R/bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXp4b5S7AeimL42fSE7iB9hHBz0mCihW2N3RKyxGiKhSH5kFcKwFeEUPIv7AxFdIbix0Wp/xgH+12EXERHdmgaM2lY0sVFw3fourA1o
+X-Gm-Message-State: AOJu0Ywt22uRI9UV4GodAuHy06PexPxzK13mQXOwFKFTPVo6QW8ts3w0
+	rOKnYgvf/PBB/WecKemElNGIfAgFBLe9ccr+JxerNpShqSQA0Wmln5u9QQI27hTY4eADwwYUXd+
+	hEua+s3HRXwOGbuOjkctwPn5jfI8eSQ==
+X-Google-Smtp-Source: AGHT+IG3+vxstPdTJZp8jxDQlLO2DBDeon/AfyXaM8QcDfmGpsUe4BCC7qLioU+mUNebeDuzOmN7MsFB77LhWaaMobJI
+X-Received: from axel.svl.corp.google.com ([2620:15c:2a3:200:a503:d697:557b:840c])
+ (user=axelrasmussen job=sendgmr) by 2002:a05:6902:c03:b0:e05:fc91:8935 with
+ SMTP id 3f1490d57ef6-e05feb62eebmr2039276.3.1721255072045; Wed, 17 Jul 2024
+ 15:24:32 -0700 (PDT)
+Date: Wed, 17 Jul 2024 15:24:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
+Message-ID: <20240717222429.2011540-1-axelrasmussen@google.com>
+Subject: [PATCH 6.6 0/3] Backport VFIO refactor to fix fork ordering bug
+From: Axel Rasmussen <axelrasmussen@google.com>
+To: stable@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>, Ankit Agrawal <ankita@nvidia.com>, 
+	Eric Auger <eric.auger@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, 
+	Kunwu Chan <chentao@kylinos.cn>, Leah Rumancik <leah.rumancik@gmail.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Stefan Hajnoczi <stefanha@redhat.com>, Yi Liu <yi.l.liu@intel.com>, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Axel Rasmussen <axelrasmussen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jul 17, 2024 at 11:16:56AM -0700, Linus Torvalds wrote:
-> On Wed, 17 Jul 2024 at 10:23, Kees Cook <kees@kernel.org> wrote:
-> >
-> > For this to be available for general distros, I still want to have a
-> > bootparam to control this, otherwise this mitigation will never see much
-> > testing as most kernel deployments don't build their own kernels. A
-> > simple __ro_after_init variable can be used.
-> 
-> Oh, btw, I looked at the FOLL_FORCE back in 2017 when we did this:
-> 
->     8ee74a91ac30 ("proc: try to remove use of FOLL_FORCE entirely")
-> 
-> and then we had to undo that with
-> 
->     f511c0b17b08 (""Yes, people use FOLL_FORCE ;)"")
-> 
-> but at the time I also had an experimental patch that worked for me,
-> but I seem to have only sent that out in private to the people
-> involved with the original issue.
-> 
-> And then that whole discussion petered out, and nothing happened.
-> 
-> But maybe we can try again.
-> 
-> In particular, while people piped up about other uses (see the quotes
-> in that commit f511c0b17b08) they were fairly rare and specialized.
-> 
-> The one *common* use was gdb.
-> 
-> But my old diff from years ago mostly still applies, so I resurrected it.
-> 
-> It basically restricts FOLL_FORCE to just ptracers.
-> 
-> That's *not* good for some of the people that piped up back when (eg
-> Julia JIT), but it might be a more palatable halfway state.
-> 
-> In particular, this patch would make it easy to make that
-> SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE config option be a "choice"
-> where you pick "never, ptrace, always" by just changing the rules in
-> proc_is_ptracing().
+35e351780fa9 ("fork: defer linking file vma until vma is fully initialized")
+switched the ordering of vm_ops->open() and copy_page_range() on fork. This is a
+bug for VFIO, because it causes two problems:
 
-So the original patch could be reduced to just the single tristate option
-instead of 3 tristates? I think that would be a decent middle ground,
-and IIUC, will still provide the coverage Chrome OS is looking for[1].
+1. Because open() is called before copy_page_range(), the range can conceivably
+   have unmapped 'holes' in it. This causes the code underneath untrack_pfn() to
+   WARN.
 
--Kees
+2. More seriously, open() is trying to guarantee that the entire range is
+   zapped, so any future accesses in the child will result in the VFIO fault
+   handler being called. Because we copy_page_range() *after* open() (and
+   therefore after zapping), this guarantee is violated.
 
-[1] https://lore.kernel.org/lkml/CABi2SkWDwAU2ARyMVTeCqFeOXyQZn3hbkdWv-1OzzgG=MNoU8Q@mail.gmail.com/
+We can't revert 35e351780fa9, because it fixes a real bug for hugetlbfs. The fix
+is also not as simple as just reodering open() and copy_page_range(), as Miaohe
+points out in [1]. So, although these patches are kind of large for stable, just
+backport this refactoring which completely sidesteps the issue.
 
--- 
-Kees Cook
+Note that patch 2 is the key one here which fixes the issue. Patch 1 is a
+prerequisite required for patch 2 to build / work. This would almost be enough,
+but we might see significantly regressed performance. Patch 3 fixes that up,
+putting performance back on par with what it was before.
+
+Note [1] also has a more full discussion justifying taking these backports.
+
+I proposed the same backport for 6.9 [2], and now for 6.6. 6.6 is the oldest
+kernel which needs the change: 35e351780fa9 was reverted for unrelated reasons
+in 6.1, and was never backported to 5.15 or earlier.
+
+[1]: https://lore.kernel.org/all/20240702042948.2629267-1-leah.rumancik@gmail.com/T/
+[2]: https://lore.kernel.org/r/20240717213339.1921530-1-axelrasmussen@google.com
+
+Alex Williamson (3):
+  vfio: Create vfio_fs_type with inode per device
+  vfio/pci: Use unmap_mapping_range()
+  vfio/pci: Insert full vma on mmap'd MMIO fault
+
+ drivers/vfio/device_cdev.c       |   7 +
+ drivers/vfio/group.c             |   7 +
+ drivers/vfio/pci/vfio_pci_core.c | 271 ++++++++-----------------------
+ drivers/vfio/vfio_main.c         |  44 +++++
+ include/linux/vfio.h             |   1 +
+ include/linux/vfio_pci_core.h    |   2 -
+ 6 files changed, 125 insertions(+), 207 deletions(-)
+
+--
+2.45.2.993.g49e7a77208-goog
+
