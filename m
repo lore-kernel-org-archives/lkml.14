@@ -1,154 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6AE2288BD
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56A02033A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721204950; cv=none; b=AU7mM4CmqTgtyJKjakC/WFzMmWtzITmp7gnJw4lAoECFs25uLcUGVclUCFa290nqzVPh5+FoQ2Oj0HyGHdrppvaJJXEgjmb5YzW1lLxlxOwnsa0JgBIuo31Lbk46Kmq3S1EfAgn0EheLgUJ7WZ3QZdJn5AjZghXWyfctrhUs7SU=
+	t=1721205026; cv=none; b=bMH4UNjNIVKfPFJu/xFC5lUBL6P3fipHh24SctOfx9T08oGzNtpHhDVPehYKRDXy6GKgE22G7ba7u+B5Z7LuPNig7/0PlyooZl5kYZ81jrZMtOZ13SOkeJ86AlCJe0goobhgBIUwsbNZHgDaz4dK7cECQz+t36+OekrcWQ6AMTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721204950; c=relaxed/simple;
-	bh=lML3QMhkv3oU06XSQ5bFQL3OJWab2cvUOjGlux9mSfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YHU6PJH4Y3D8f5ET+SgP/b7RGccqQmLogqKiMHKYlM9jeUxWhmqtfGEmkq7z0T3iDZwi8C8wwAaItH4+6SeF/YL48uaqAzV4qanotpxlA0xECu3gZwaZsvAtrpG4s1xp2CaAX3Yxo4ir2j9Rl7J8kp3SBWvazoKac7AkQpgmIPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D6E7106F;
-	Wed, 17 Jul 2024 01:29:33 -0700 (PDT)
-Received: from [10.57.77.222] (unknown [10.57.77.222])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C12E03F762;
-	Wed, 17 Jul 2024 01:29:06 -0700 (PDT)
-Message-ID: <f84bd34d-ac64-4e2f-90c0-d637c00b5055@arm.com>
-Date: Wed, 17 Jul 2024 09:29:05 +0100
+	s=arc-20240116; t=1721205026; c=relaxed/simple;
+	bh=cElIZGVQuEc4yCgQqjOZfJfFWWUg+mqNSGvPESxG9Z8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VN5RpYh/AVy+r+6NwZZ2Dkai5ouHGW6uQ3NZW509jLizeStxFZe+V/h5viUf98eFvA/bj9xM8OwJkJOnKPvJv1paED1ROqI5nIvdkHPWBmP5EdGAavp5vXgs5EXpgoRxJguwwBHcfDp+vP9/Ud2HjyT8LnqykjsdXf8/cvtrReM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sU03I-00030f-MB; Wed, 17 Jul 2024 10:30:20 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sU03I-000AeA-6K; Wed, 17 Jul 2024 10:30:20 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1sU03I-00COor-0O;
+	Wed, 17 Jul 2024 10:30:20 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Wed, 17 Jul 2024 10:30:07 +0200
+Subject: [PATCH v2 1/2] wifi: mwifiex: simplify WPA flags setting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] mm: mTHP stats for pagecache folio allocations
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, Lance Yang <ioworker0@gmail.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, Jonathan Corbet <corbet@lwn.net>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-References: <20240711072929.3590000-1-ryan.roberts@arm.com>
- <20240711072929.3590000-3-ryan.roberts@arm.com>
- <9e0d84e5-2319-4425-9760-2c6bb23fc390@linux.alibaba.com>
- <CAK1f24nCDZM8aa9z_ZtgLbdj695JJri01q2HJUJb9pJt2uqy=w@mail.gmail.com>
- <756c359e-bb8f-481e-a33f-163c729afa31@redhat.com>
- <8c32a2fc-252d-406b-9fec-ce5bab0829df@arm.com>
- <a8441245-ae35-443f-9aea-325007492741@arm.com>
- <5c58d9ea-8490-4ae6-b7bf-be816dab3356@redhat.com>
- <f03deb7c-9a67-4096-9d33-32b357b52152@arm.com>
- <9052f430-2c5a-4d9d-b54c-bd093b797702@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <9052f430-2c5a-4d9d-b54c-bd093b797702@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240717-mwifiex-wpa-psk-sha256-v2-1-eb53d5082b62@pengutronix.de>
+References: <20240717-mwifiex-wpa-psk-sha256-v2-0-eb53d5082b62@pengutronix.de>
+In-Reply-To: <20240717-mwifiex-wpa-psk-sha256-v2-0-eb53d5082b62@pengutronix.de>
+To: Brian Norris <briannorris@chromium.org>, 
+ Francesco Dolcini <francesco@dolcini.it>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1721205020; l=2167;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=cElIZGVQuEc4yCgQqjOZfJfFWWUg+mqNSGvPESxG9Z8=;
+ b=SziT5GSTAZFkfcTXiv8zcqG/dwefa8qYromrrTwLFVEdnZrAfhurElCxVqZereJcBVTple21S
+ ld4Xd/sdafWAXNv43468dALw58unUkYrHIrtTNMF3H2Eux4Mxvvyo0W
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 17/07/2024 09:02, David Hildenbrand wrote:
->>> Sorry, busy with other stuff.
->>>
->>> Indicating only what really exists sounds cleaner. But I wonder how we would
->>> want to handle in general orders that are effectively non-existant?
->>
->> I'm not following your distinction between orders that don't "really exist" and
->> orders that are "effectively non-existant".
-> 
-> I'm questioning whether there should be a distinction at all. We should just
-> hide what is either non-existant (not implemented) or non-functional.
+The WPA flags setting only depends on the wpa_versions bitfield and not
+on the AKM suite, so move it out of the switch/case to simplify the code
+a bit. Also set bss_config->protocol to zero explicitly. This is done
+only to make the code clearer, bss_config has been zero alloced by the
+caller, so should be zero already. No functional change intended.
 
-Great we are on the same page.
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/net/wireless/marvell/mwifiex/uap_cmd.c | 28 ++++++++------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
-> 
->>
->> I guess the real supported orders are:
->>
->>    anon:
->>      min order: 2
->>      max order: PMD_ORDER
->>    anon-shmem:
->>      min order: 1
->>      max order: MAX_PAGECACHE_ORDER
->>    tmpfs-shmem:
->>      min order: PMD_ORDER <= 11 ? PMD_ORDER : NONE
->>      max order: PMD_ORDER <= 11 ? PMD_ORDER : NONE
->>    file:
->>      min order: 1
->>      max order: MAX_PAGECACHE_ORDER
-> 
-> That's my understanding. But not sure about anon-shmem really supporting
-> order-1, maybe we do.
+diff --git a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+index 491e366119096..7f822660fd955 100644
+--- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+@@ -46,31 +46,19 @@ int mwifiex_set_secure_params(struct mwifiex_private *priv,
+ 
+ 	bss_config->key_mgmt_operation |= KEY_MGMT_ON_HOST;
+ 
++	bss_config->protocol = 0;
++	if (params->crypto.wpa_versions & NL80211_WPA_VERSION_1)
++		bss_config->protocol |= PROTOCOL_WPA;
++	if (params->crypto.wpa_versions & NL80211_WPA_VERSION_2)
++		bss_config->protocol |= PROTOCOL_WPA2;
++
+ 	for (i = 0; i < params->crypto.n_akm_suites; i++) {
+ 		switch (params->crypto.akm_suites[i]) {
+ 		case WLAN_AKM_SUITE_8021X:
+-			if (params->crypto.wpa_versions &
+-			    NL80211_WPA_VERSION_1) {
+-				bss_config->protocol = PROTOCOL_WPA;
+-				bss_config->key_mgmt = KEY_MGMT_EAP;
+-			}
+-			if (params->crypto.wpa_versions &
+-			    NL80211_WPA_VERSION_2) {
+-				bss_config->protocol |= PROTOCOL_WPA2;
+-				bss_config->key_mgmt = KEY_MGMT_EAP;
+-			}
++			bss_config->key_mgmt = KEY_MGMT_EAP;
+ 			break;
+ 		case WLAN_AKM_SUITE_PSK:
+-			if (params->crypto.wpa_versions &
+-			    NL80211_WPA_VERSION_1) {
+-				bss_config->protocol = PROTOCOL_WPA;
+-				bss_config->key_mgmt = KEY_MGMT_PSK;
+-			}
+-			if (params->crypto.wpa_versions &
+-			    NL80211_WPA_VERSION_2) {
+-				bss_config->protocol |= PROTOCOL_WPA2;
+-				bss_config->key_mgmt = KEY_MGMT_PSK;
+-			}
++			bss_config->key_mgmt = KEY_MGMT_PSK;
+ 			break;
+ 		default:
+ 			break;
 
-Oh, I thought we only had the restriction for anon folios now (due to deferred
-split queue), so assumed it would just work. With Gavin's
-THP_ORDERS_ALL_FILE_DEFAULT change, that certainly implies that shmem must
-support order-1. If it doesn't then we we might want to tidy that further.
-
-Baolin, perhaps you can confirm either way?
-
-> 
->>
->> But today, controls and stats are exposed for:
->>
->>    anon:
->>      min order: 2
->>      max order: PMD_ORDER
->>    anon-shmem:
->>      min order: 2
->>      max order: PMD_ORDER
->>    tmpfs-shmem:
->>      min order: PMD_ORDER
->>      max order: PMD_ORDER
->>    file:
->>      min order: Nothing yet (this patch proposes 1)
->>      max order: Nothing yet (this patch proposes MAX_PAGECACHE_ORDER)
->>
->> So I think there is definitely a bug for shmem where the minimum order control
->> should be order-1 but its currently order-2.
-> 
-> Maybe, did not play with that yet. Likely order-1 will work. (although probably
-> of questionable use :) )
-
-You might have to expand on why its of "questionable use". I'd assume it has the
-same amount of value as using order-1 for regular page cache pages? i.e. half
-the number of objects to manage for the same amount of memory.
-
-> 
->>
->> I also wonder about PUD-order for DAX? We don't currently have a stat/control.
->> If we wanted to add it in future, if we take the "expose all stats/controls for
->> all orders" approach, we would end up extending all the way to PUD-order and all
->> the orders between PMD and PUD would be dummy for all memory types. That really
->> starts to feel odd, so I still favour only populating what's really supported.
-> 
-> I would go further and say that calling the fsdax thing a THP is borderline
-> wrong and we should not expose any new toggles for it that way.
-> 
-> It really behaves much more like hugetlb folios that can be PTE-mapped ... we
-> cannot split these things, and they are not allocated from the buddy. So I
-> wouldn't worry about fsdax for now.
-> 
-> fsdax support for compound pages (now large folios) probably never should have
-> been glued to any THP toggle.
-
-Yeah fair enough. I wasn't really arguing for adding any dax controls; I was
-just trying to think of examples as to why adding dummy controls might be a bad
-idea.
-
-> 
->>
->> I propose to fix shmem (extend down to 1, stop at MAX_PAGECACHE_ORDER) and
->> continue with the approach of "indicating only what really exists" for v2.
->>
->> Shout if you disagree.
-> 
-> Makes sense.
-
-Excellent. I posted v2, which has these changes, yesterday afternoon. :)
+-- 
+2.39.2
 
