@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCB1182A40;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E51183065;
 	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721235795; cv=none; b=RmILnBnkRThLpk/MyQeWwRtPAt5Ed50+KNQwTc6+gWnLvwI+pGZCMlKli3j+mNLpqQfjYpbUwLG2zD0mnwu/KUet4vyJ8BqQeknVCCzec4dIYVs6bt9aQ6v3Hh1kcVSX/EBp980hnOvMJp3Q8Vu/ECsINcjhnJx0jMiiz1pYPDs=
+	t=1721235795; cv=none; b=giiUt47IrfGfEwfgz3MhPd5rCPhzBBb4IZzLUKMomo9G5jlwwX6Low4eeQTvkgAxzZc1C7oQOcWSj/ztp55kVczy156Ovn3FK4jRr8XFHv9U15drDX7XamqzLOPA9SJSussVWJHX0W1pWaqtYBi6orGaHMlGZB4v9brp8o+KLNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721235795; c=relaxed/simple;
-	bh=8znAZBcirLJ8Efx48e0wAJqyTm86Mv7/PWdHuyyfnFY=;
+	bh=I2wSRHaYDVrxwX11GGk6+ukp4VyqQ6OrIa6J7s/t3jQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nMDTltQ8Osk20IYNK/BXk95GGOcsfdiybFRkRr7i933igH7641TBpbu0tj7owcdvIa1GE69PDOOu02KQnj0gcMYkhSWCBNgcyecQTFW2pvJw2G2UVvcKrHqjH9jAIEUw59TieuBh4vc50TjmpuR9V5J3jDksc2+oyavJe4T6AG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4WLFn4k; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=YDjJkcUNRY3PtLuh2M3wrm5ru1GcPAftALaF7TJb3NsGqyz1OR+9Hoemm5ly0GZCO0UkgwtbBqD8A9I7zebb1nLq1z+hpGGhVaBQSrgXh4ZL68yKqKL8ZZeHmMgNqtsD3iobFvgVPyWNEWsRiwL+Y80Um7Fl13afojHyf1DIbho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTZ8CXwj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4WLFn4k"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F2D5FC4AF15;
-	Wed, 17 Jul 2024 17:03:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTZ8CXwj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 491DEC4DDE8;
+	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721235795;
-	bh=8znAZBcirLJ8Efx48e0wAJqyTm86Mv7/PWdHuyyfnFY=;
+	bh=I2wSRHaYDVrxwX11GGk6+ukp4VyqQ6OrIa6J7s/t3jQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=l4WLFn4k4kL7R+8+NA2DXQC3rmJonpCPAJhL46vDYEuuAA8BFFnNBupupAPPp+Ko3
-	 Ywh6fF0gk5otvfS+4JNfPuo0q0pLh3dlkE9pLZkhw8pdwUioIhJH7c8dOYsVUQgyD5
-	 KkOt9z+FHmjRe+zj5tRjFk2dC7qBd2D3Ywhw6I5A2mG95k0zBPjcJbSrP/Yj2SD3Z8
-	 Fdnte0yl2lWIDzGSqgkiqBor8IwFnT1unLETVw8JlZfk5xnSl4VhquW5IuqvK3Ctw7
-	 cGa39VKd/R6UBJBAbPCJv6XdvHKW9lltpIESfFErQM8IkGAR+Y4fa8yoKYMc9Sxwqc
-	 vFJ+f+edj1Dfg==
+	b=DTZ8CXwjoQWzwYBGgBSCy0kUhYdWaM+9JZ1kJvMw7qpGQYkViY/95j9XqL0lZIf21
+	 fkwCbS2eucxyXGN12M56HYTtyRSNtC9wgd0LRTITMyLXzjp2Kz4sTrUvMg6xKvXVis
+	 lHKS2hYwe6R2x4ln265ZNwRv55G9OyjgMHk2zzayCncSPoHC/X7oEgXDy8nfnKZKSB
+	 o7K61yR0rFUgI/SARgIxAIrh1Btg3ilekQ5NMTNPyNwvVEtiG4DaT5xXDjq2UTQgHX
+	 eM3eNQTmxlThIHCS1nGsycKYpmFy32Y8rtknl1fsk02h7ScQ+zeSunyZtxpTz6eKWG
+	 cR/zBC2kvj4Ow==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9070C3DA60;
-	Wed, 17 Jul 2024 17:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E64EC3DA64;
+	Wed, 17 Jul 2024 17:03:15 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Wed, 17 Jul 2024 22:33:09 +0530
-Subject: [PATCH v2 04/13] dt-bindings: PCI: pci-ep: Document
- 'linux,pci-domain' property
+Date: Wed, 17 Jul 2024 22:33:13 +0530
+Subject: [PATCH v2 08/13] ARM: dts: qcom: sdx65: Add 'linux,pci-domain' to
+ PCIe EP controller node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240717-pci-qcom-hotplug-v2-4-71d304b817f8@linaro.org>
+Message-Id: <20240717-pci-qcom-hotplug-v2-8-71d304b817f8@linaro.org>
 References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
 In-Reply-To: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -56,16 +56,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2026;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=961;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=ZuN+bx8IKdLBF21t1VI/ja/rCNR5Gv+31UWAdkgegn8=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBml/lNOungbljczBVTQEbuVGUsSyBz514OTIUe1
- XwRJf+2l0mJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpf5TQAKCRBVnxHm/pHO
- 9W4TB/4+mQi+zmPUNe4N+A+8BE58IM6mcrr1saFbdM8Fgvd2+J60vl8DNlvStJ3ur9oGHtscFmv
- G6PqO/JxrE92lN2Ele/1qv4qaYEysMGDrMCuBhq2F1kpui1Pp/G9debqLKR0Mr9biZtF7/GZzjv
- bRhIxErl2K8zifTUeRXkXC1oGUthAW3obCaDd0aqTd7jBFixvasyMhd0zbmeXxKR2mkaQCbdxOs
- Tje3RIXecdZk4DuWtL+SevmREnYbMIFSF7OGOTAvbc571M67eq3bSPUNm6rF96ooNapgALrXDdY
- IehQIrNMwRTmhQYH8Bhm8NP9rDoNEZnwoodxn4j12FhcjbJP
+ bh=4ksb8gQi6XxtqZHvRIfOuO8m7D/GXep6HzglfrtwSCA=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBml/lOaxt8p1VgGOZBseIX6KvazP7qZyjP7I2qJ
+ 67f4dQ5/OCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpf5TgAKCRBVnxHm/pHO
+ 9dS3B/9Rjk+/ba3zu1H6d/sG4cj9IPKv0Z942GUAmrfXH8YUbpeUaBSFG88mexbV8zlFoZz61wQ
+ 7G1MgSo7bm8JbY/qVmvk0AOxJn/O3y5sW5z5LGupXMkz2ffMp7pN12e9bO8cS3cuaVQll3fVFSr
+ ZLzzhTezyNKcZw22kyRKEQ0F3BSg3kFHWeIDQb9OgjPNTv28OhO6rcnZT2JwcHpVLVimvASPMNR
+ kclkd+tzsE8wIbW7RE5W3UIbvkvWkFYn5VpjcqyTTMTfslxEE6jlphoqh4Dc4GDyqTzVlfyhqm0
+ 2IC950TCA0ZOBe+3E6jyu6sxHb3rrsn23W5BZYFfCk6XloRB
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -79,47 +79,27 @@ From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 endpoint controllers in a SoC. If this property is not present, then an
 unstable (across boots) unique number will be assigned.
 
-Devicetrees can specify the domain number based on the actual hardware
-instance of the PCI endpoint controllers in the SoC.
+Use this property to specify the domain number based on the actual hardware
+instance of the PCI endpoint controllers in SDX65 SoC.
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/pci-ep.yaml       | 11 +++++++++++
- Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml |  1 +
- 2 files changed, 12 insertions(+)
+ arch/arm/boot/dts/qcom/qcom-sdx65.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-index 0b5456ee21eb..f75000e3093d 100644
---- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-@@ -42,6 +42,17 @@ properties:
-     default: 1
-     maximum: 16
+diff --git a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
+index a949454212e9..fcfec4228670 100644
+--- a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
+@@ -345,6 +345,7 @@ pcie_ep: pcie-ep@1c00000 {
  
-+  linux,pci-domain:
-+    description:
-+      If present this property assigns a fixed PCI domain number to a PCI
-+      Endpoint Controller, otherwise an unstable (across boots) unique number
-+      will be assigned. It is required to either not set this property at all
-+      or set it for all PCI endpoint controllers in the system, otherwise
-+      potentially conflicting domain numbers may be assigned to endpoint
-+      controllers. The domain number for each endpoint controller in the system
-+      must be unique.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
- required:
-   - compatible
+ 			max-link-speed = <3>;
+ 			num-lanes = <2>;
++			linux,pci-domain = <0>;
  
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-index 46802f7d9482..1226ee5d08d1 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-@@ -280,4 +280,5 @@ examples:
-         phy-names = "pciephy";
-         max-link-speed = <3>;
-         num-lanes = <2>;
-+        linux,pci-domain = <0>;
-     };
+ 			status = "disabled";
+ 		};
 
 -- 
 2.25.1
