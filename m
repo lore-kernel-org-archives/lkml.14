@@ -1,165 +1,108 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BE014A96
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0515D1643A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721197571; cv=none; b=MvhZrvGqA/SKto+EKYSZKvMPHNOwPY6XI0qaNRvI7OOwD7q5QvqVGjEurY9JY4YPfVg6kgtRx06trOQ4lXipSw7u9TcTUNw4RNguP1Eh/gza3EprmUrNs3uVLpBUHkPiN7beYUp9WHkmcX9J30AbssvH22v5GpKIxNqgA9gZo0s=
+	t=1721197592; cv=none; b=Z7bBit8TAGlKVNZ8c1ijVF63P6aEHLzmwIa9Xs4oqY7C8xaBDEAsd43Kr7tIFC16i1dUfR7VmKlJiZgFoyzUsAC23l1IRipSRZJP9a2UbSVaSapZQ/XrolpbGUFZSU0eKQDcvM2TBvitU1z+VJUuBj5EtY9CimCb7ywXb45Be/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721197571; c=relaxed/simple;
-	bh=B1CnHSwQzyKmmdw+P7nNrDoltmKChpydt1ud39gLqxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gbCvhvqOp+pSBjaiIDht1YCuRC/AH9p/89+xAdWEeBrOg11EPbEB2JZUQOB8x/hYqk8IC/5XOuts4Hb1I1fXUbuchLhlRziP492I0Gdyn+lY65PPppVr11E5UN3oOdUFgiln1H7mp/nwn50zqhs49WFp58DqiKExldIUNE0rask=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=FQgOsYRw; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="FQgOsYRw"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-367ab50a07aso4010931f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721197568; x=1721802368; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3zMQJJ1+QlmFm418V6AGBGbWQY3rNoVY0h/UyfCjPDE=;
-        b=FQgOsYRwvLW0Cu4ZvNaG5VIIAj9nXfg+4Vxz5MVKLHJGXYneZ5jZ09G6DFlGlwZQQO
-         Y96ai4rvo3iqFPOamN2ubA4HbLsuGEFv1KylQ8xJo9WnOYi4zVCev7mqAgDEY9Y9vOi1
-         T6WDpjCbV1gNEWZhwtkF6CGhEZQZbp9menI/4ieaykkk4UicX2bLv1Qb1YF5eoWj/tE2
-         ZAa0ORNJ8b1GQpO/LOGZo3fTBHUPBsARKvjViKzZ+UquwosuFf9OQABeBIn/xOAyGicB
-         vlvdDITzLP3subtegbjYr+e4wl91Pu/Tvd0cldkhG8jMzhMwh1uyg6Djq/YcNukH+boM
-         UI9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721197568; x=1721802368;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3zMQJJ1+QlmFm418V6AGBGbWQY3rNoVY0h/UyfCjPDE=;
-        b=q0L5HsuXZbCugxoV5BeBwkRPhj7x9JgwhC8TiyiEv23vQOVLEcdHNTahcSXlgIfYZx
-         IttWR26CzuI+xdWr2K83MJQgdzSpzBCLUlQA+LxcZ3D0UGeTUXuFA0/UF1EMWGKq/M1k
-         hbVBeg+/aVS/eCjzfb4f5pA+rQqkJO5sUBHfX6MftABi/Tba/H7HHBeXmZQ6Ku1+ffGc
-         BBqCft3kFp0Dwc2xIg/G/of97bx1jhMcCuD83Aomrh5goWSPx6qxP6CxvTRAh0MIFioR
-         QGo0peLY+rvTW1APV2RiUNw9o/k40EuC4GiHa6BqPwGQ1466CmtIcCJuqntZwL78HYI9
-         +bpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0etaCO83mubZONJ4nnNj3D6UB+8nPzNULUixySgRrjnhwvDRyFmtOjfWBR1CVszVzdOeCInYZ5dbss6WvwGMlRydBsRVwyFvgsbJm
-X-Gm-Message-State: AOJu0Yz375VAVMg8cx5sENhg+JIkwkfQkpfKb/Zsopplpdfl2EJsHN4Q
-	2bxFXTI1HDi7ppiicNqPaKFYN9QYZ28is+B81IlllcPnjHKGKm9gdthfCJQD3uY=
-X-Google-Smtp-Source: AGHT+IE6uNjEd3rgzo2cnMZIenDe0Lf33upNb/sgH/fJlHpS9fKERnXLFFmQs0acmED+vAQAC04L2Q==
-X-Received: by 2002:adf:e681:0:b0:368:3079:4277 with SMTP id ffacd0b85a97d-3683165b50amr545623f8f.28.1721197567667;
-        Tue, 16 Jul 2024 23:26:07 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-368111d3e7dsm10358022f8f.87.2024.07.16.23.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 23:26:07 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 06/11] riscv: Implement xchg8/16() using Zabha
-Date: Wed, 17 Jul 2024 08:19:52 +0200
-Message-Id: <20240717061957.140712-7-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240717061957.140712-1-alexghiti@rivosinc.com>
-References: <20240717061957.140712-1-alexghiti@rivosinc.com>
+	s=arc-20240116; t=1721197592; c=relaxed/simple;
+	bh=x0AKMoZUBDBo20leKTYdtGaRJKtvDiirN9eJUat42nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/pnMOEp96w6m7QH2nEUKcPUX0CJrfepC7eGZq4EieZ8gg8hmB1CjNIWLYzMwblWWjKpPoeyc0u4i8EubgCP6VAgYLOXWexcdRk51sYr5zZnnjOHIT4J5Bn/fS1+Obfcw0P96VOEextsnK8v7MTHBVe8mKTfi/3vqhvR4zVVAY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sTy7L-0003ns-Bc; Wed, 17 Jul 2024 08:26:23 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sTy7K-0009PE-T7; Wed, 17 Jul 2024 08:26:22 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sTy7K-001vf0-2Y;
+	Wed, 17 Jul 2024 08:26:22 +0200
+Date: Wed, 17 Jul 2024 08:26:22 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Brian Norris <briannorris@chromium.org>, Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] wifi: mwifiex: simplify WPA flags setting
+Message-ID: <ZpdkDqJK63_a0ncW@pengutronix.de>
+References: <20240716-mwifiex-wpa-psk-sha256-v1-0-05ae70f37bb3@pengutronix.de>
+ <20240716-mwifiex-wpa-psk-sha256-v1-1-05ae70f37bb3@pengutronix.de>
+ <20240716194826.GA85916@francesco-nb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240716194826.GA85916@francesco-nb>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This adds runtime support for Zabha in xchg8/16() operations.
+On Tue, Jul 16, 2024 at 09:48:26PM +0200, Francesco Dolcini wrote:
+> Hello Sasha,
+> thanks for your patch.
+> 
+> On Tue, Jul 16, 2024 at 01:33:27PM +0200, Sascha Hauer wrote:
+> > The WPA flags setting only depends on the wpa_versions bitfield and not
+> > on the AKM suite, so move it out of the switch/case to simplify the code
+> > a bit. No functional change intended.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> 
+> Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> 
+> > ---
+> >  drivers/net/wireless/marvell/mwifiex/uap_cmd.c | 27 +++++++-------------------
+> >  1 file changed, 7 insertions(+), 20 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > index 491e366119096..8d0cd84d27698 100644
+> > --- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > +++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > @@ -46,31 +46,18 @@ int mwifiex_set_secure_params(struct mwifiex_private *priv,
+> >  
+> >  	bss_config->key_mgmt_operation |= KEY_MGMT_ON_HOST;
+> >  
+> > +	if (params->crypto.wpa_versions & NL80211_WPA_VERSION_1)
+> > +		bss_config->protocol = PROTOCOL_WPA;
+> > +	if (params->crypto.wpa_versions & NL80211_WPA_VERSION_2)
+> > +		bss_config->protocol |= PROTOCOL_WPA2;
+> > +
+> 
+> I am wondering what happens if NL80211_WPA_VERSION_1 is not set, no idea
+> what's the content of bss_config->protocol ...
+> 
+> in any case this is not something that you introduced, but maybe worth
+> having a look?
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/cmpxchg.h | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+bss_config is kzalloced in the only caller of mwifiex_set_secure_params(),
+so bss_config->protocol is zero on entry.
 
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index 608d98522557..091e6612ddb3 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -11,8 +11,27 @@
- #include <asm/fence.h>
- #include <asm/alternative.h>
- 
--#define __arch_xchg_masked(sc_sfx, prepend, append, r, p, n)		\
-+#define __arch_xchg_masked(sc_sfx, swap_sfx, prepend, sc_append,	\
-+			   swap_append, r, p, n)			\
- ({									\
-+	__label__ no_zabha, end;					\
-+									\
-+	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA)) {			\
-+		asm goto(ALTERNATIVE("j %[no_zabha]", "nop", 0,		\
-+				     RISCV_ISA_EXT_ZABHA, 1)		\
-+			 : : : : no_zabha);				\
-+									\
-+		__asm__ __volatile__ (					\
-+			prepend						\
-+			"	amoswap" swap_sfx " %0, %z2, %1\n"	\
-+			swap_append					\
-+			: "=&r" (r), "+A" (*(p))			\
-+			: "rJ" (n)					\
-+			: "memory");					\
-+		goto end;						\
-+	}								\
-+									\
-+no_zabha:;								\
- 	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
- 	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
- 	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
-@@ -28,12 +47,14 @@
- 	       "	or   %1, %1, %z3\n"				\
- 	       "	sc.w" sc_sfx " %1, %1, %2\n"			\
- 	       "	bnez %1, 0b\n"					\
--	       append							\
-+	       sc_append						\
- 	       : "=&r" (__retx), "=&r" (__rc), "+A" (*(__ptr32b))	\
- 	       : "rJ" (__newx), "rJ" (~__mask)				\
- 	       : "memory");						\
- 									\
- 	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
-+									\
-+end:;									\
- })
- 
- #define __arch_xchg(sfx, prepend, append, r, p, n)			\
-@@ -56,8 +77,13 @@
- 									\
- 	switch (sizeof(*__ptr)) {					\
- 	case 1:								\
-+		__arch_xchg_masked(sc_sfx, ".b" swap_sfx,		\
-+				   prepend, sc_append, swap_append,	\
-+				   __ret, __ptr, __new);		\
-+		break;							\
- 	case 2:								\
--		__arch_xchg_masked(sc_sfx, prepend, sc_append,		\
-+		__arch_xchg_masked(sc_sfx, ".h" swap_sfx,		\
-+				   prepend, sc_append, swap_append,	\
- 				   __ret, __ptr, __new);		\
- 		break;							\
- 	case 4:								\
+It might be worth setting it to zero explicitly here to make the code
+better understandable without having to look at the callers.
+
+Sascha
+
 -- 
-2.39.2
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
