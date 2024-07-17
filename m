@@ -1,64 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from the.earth.li (the.earth.li [93.93.131.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0722F19A;
-	Wed, 17 Jul 2024 10:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0B114AD19;
+	Wed, 17 Jul 2024 10:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.93.131.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721212664; cv=none; b=KqRu/tlsswdw0PWQliAX+bHzXCwpS2dUvyEJkJu81X3vOAl6ZFxOcnELfpeYxPc456GRjWnylbweYxS0YpyzkRqTVHchQkjgYXj2UIOuBpVy+gvi7fzFm5aUzXLe7ikAJyRIyJsgA32208KQjtPP0TVwQJTIDMg+EdR0/GJbeME=
+	t=1721212697; cv=none; b=TqcVTlqGUYHHul+vC+4xMGikc+mza6YNPM1fUS+5SFo3PbEYgcov/CgEEHJqtTszRuvuyFCSCMi9z1+5q3JHWVf9aOaliZqWyLxYzPz7C/A3QXRxk5I1fGl7CR1WGwf2H4FJHWQb+8V4Qn5abRV7V34feGcVQfnbIGDrpDFJVFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721212664; c=relaxed/simple;
-	bh=Q6yyNkLiYys3XP9OlDbfuiCgNIFjGCNTRdJbEkT/PXc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=T0L9QnXCevcIbMYerXw7FeQa0g9HVsUehUQJayojSYanoH6+w+iIt2adFkCzz/5XRmOmyWbO6eIKIEU1Uqnijq7brc64NTxG0rmEWVipjez5FEH3bsDa50PeSzIZUUiGbh7zkGYXS0slb58gl6Swl3LNo6Wek3lIsWX+ySmVyZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkheZPyq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721212697; c=relaxed/simple;
+	bh=HvhgoHyJKpIIPXLDKtSS/sCs2jXautb++tsD2DLZoBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ECv8qcEnPXNCTpQ949BXsN1wCdg7mAeA7B37WWyT8Z9545NfFn/lz6wuk549sPhUrPPuJXL8usO8zBJbv//VsevIjm8UipIe31+yCDSqxPphOh14dKMEffFf9JCdqohW21Xp+yfMEdX1d3h/BAtP/vDel0CZrIKauoyyko6EUug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li; spf=pass smtp.mailfrom=earth.li; dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b=MzZLfdDE; arc=none smtp.client-ip=93.93.131.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=earth.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkheZPyq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF4CC32782;
-	Wed, 17 Jul 2024 10:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721212663;
-	bh=Q6yyNkLiYys3XP9OlDbfuiCgNIFjGCNTRdJbEkT/PXc=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=rkheZPyqtD98e2RUHQaBGgQxUg0mDrE9Pwit7Q74g34rDIbxkO1sK95yIVa3wCRX5
-	 b3XCtK1VdPD8i8+8Fehl38nxd1txOCisrpcbyCMhZ+ViQnCgvv0e7qqvHSJo1mneKg
-	 TekrnKj3NNn3ZrllBLRsRjFpyxeMTsnD5m7dvZiF4t8g1O84AQHbUiwWYuQ9mfhP0r
-	 AMS5MP9Sdde18wMnyk5n323j2LspjxZnFsWcPL/H4KKYBePvwTsf6+ZXT/gp8BzExC
-	 YGRvLZ7l2jPj0Q9uyCqZJDUPf4Ay22M01moPuJh0SDNIIhvrbuj59/HgolKfayhzsF
-	 b1qmhpC5u9z2Q==
+	dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b="MzZLfdDE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+	s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
+	Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=crA7kBcB4rPslVEtpJNh9J3l8TLIse9JtfSt0FeRbRs=; b=MzZLfdDErg+lO02YjKutidxYlY
+	r6Yo77WfjHzXWWmnJEpO6OMjO4mhdQnMSE0ZJ0vOhaT+T28S8GsD84LHrG0jSAXB9RNNDlRPvcg3+
+	mTzDKnCMTVet153q690eQElvXA+RL9crciP35BwrVIdmNWeMopk/uOksVVs1Q2WAkr/0qxEBnLTdJ
+	yzudAfS5w724oEPnyS82XPiEhKpPKjUmGg+jykafXDC0JxzKobNIDBwfu4x+ZxYAj4/NjpaElvuCJ
+	SWyvKVLy8kCQ5qeJh1CE1A5L66Sko97ltaH6jpOlD5UU/zsBtXnz1hI1JlLCHGPp5rEww1xKoT7wE
+	zbAGjhhQ==;
+Received: from noodles by the.earth.li with local (Exim 4.96)
+	(envelope-from <noodles@earth.li>)
+	id 1sU1NO-008WmH-2y;
+	Wed, 17 Jul 2024 10:55:10 +0100
+Date: Wed, 17 Jul 2024 10:55:10 +0100
+From: Jonathan McDowell <noodles@earth.li>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] tpm: Relocate buf->handles to appropriate place
+Message-ID: <ZpeU_lxLtrpKGk4s@earth.li>
+References: <20240716185225.873090-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 17 Jul 2024 13:37:39 +0300
-Message-Id: <D2RQYS2CVEWL.3IU1P67NT0D5Y@kernel.org>
-Cc: <mona.vij@intel.com>, <kailun.qin@intel.com>, <stable@vger.kernel.org>
-Subject: Re: [PATCH v4 1/3] x86/sgx: Split SGX_ENCL_PAGE_BEING_RECLAIMED
- into two flags
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Dmitrii Kuvaiskii" <dmitrii.kuvaiskii@intel.com>,
- <dave.hansen@linux.intel.com>, <kai.huang@intel.com>,
- <haitao.huang@linux.intel.com>, <reinette.chatre@intel.com>,
- <linux-sgx@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240705074524.443713-1-dmitrii.kuvaiskii@intel.com>
- <20240705074524.443713-2-dmitrii.kuvaiskii@intel.com>
-In-Reply-To: <20240705074524.443713-2-dmitrii.kuvaiskii@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240716185225.873090-1-jarkko@kernel.org>
 
-On Fri Jul 5, 2024 at 10:45 AM EEST, Dmitrii Kuvaiskii wrote:
-> +/*
-> + * 'desc' bit indicating that PCMD page associated with the enclave page=
- is
-> + * busy (e.g. because the enclave page is being reclaimed).
-> + */
-> +#define SGX_ENCL_PAGE_PCMD_BUSY	BIT(3)
+On Tue, Jul 16, 2024 at 09:52:24PM +0300, Jarkko Sakkinen wrote:
+> tpm_buf_append_name() has the following snippet in the beginning:
+> 
+> 	if (!tpm2_chip_auth(chip)) {
+> 		tpm_buf_append_u32(buf, handle);
+> 		/* count the number of handles in the upper bits of flags */
+> 		buf->handles++;
+> 		return;
+> 	}
+> 
+> The claim in the comment is wrong, and the comment is in the wrong place
+> as alignment in this case should not anyway be a concern of the call
+> site. In essence the comment is  lying about the code, and thus needs to
+> be adressed.
+> 
+> Further, 'handles' was incorrectly place to struct tpm_buf, as tpm-buf.c
+> does manage its state. It is easy to grep that only piece of code that
+> actually uses the field is tpm2-sessions.c.
+> 
+> Address the issues by moving the variable to struct tpm_chip.
+> 
+> Cc: stable@vger.kernel.org # v6.10+
+> Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> 
+> v3:
+> * Reset chip->handles in the beginning of tpm2_start_auth_session()
+>   so that it shows correct value, when TCG_TPM2_HMAC is enabled but
+>   tpm2_sessions_init() has never been called.
+> v2:
+> * Was a bit more broken than I first thought, as 'handles' is only
+>   useful for tpm2-sessions.c and has zero relation to tpm-buf.c.
+> ---
+>  drivers/char/tpm/tpm-buf.c       | 1 -
+>  drivers/char/tpm/tpm2-cmd.c      | 2 +-
+>  drivers/char/tpm/tpm2-sessions.c | 7 ++++---
+>  include/linux/tpm.h              | 8 ++++----
+>  4 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
+> index cad0048bcc3c..d06e8e063151 100644
+> --- a/drivers/char/tpm/tpm-buf.c
+> +++ b/drivers/char/tpm/tpm-buf.c
+> @@ -44,7 +44,6 @@ void tpm_buf_reset(struct tpm_buf *buf, u16 tag, u32 ordinal)
+>  	head->tag = cpu_to_be16(tag);
+>  	head->length = cpu_to_be32(sizeof(*head));
+>  	head->ordinal = cpu_to_be32(ordinal);
+> -	buf->handles = 0;
+>  }
+>  EXPORT_SYMBOL_GPL(tpm_buf_reset);
+>  
+> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> index 1e856259219e..b781e4406fc2 100644
+> --- a/drivers/char/tpm/tpm2-cmd.c
+> +++ b/drivers/char/tpm/tpm2-cmd.c
+> @@ -776,7 +776,7 @@ int tpm2_auto_startup(struct tpm_chip *chip)
+>  	if (rc)
+>  		goto out;
+>  
+> -	rc = tpm2_sessions_init(chip);
+> +	/* rc = tpm2_sessions_init(chip); */
 
-What are other situations when this flag is set than being
-reclaimed? The comment says that it is only one use for this
-flag.
+Left over from testing? Or should be removed entirely?
 
-BR, Jarkko
+>  out:
+>  	/*
+> diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+> index d3521aadd43e..5e7c12d64ba8 100644
+> --- a/drivers/char/tpm/tpm2-sessions.c
+> +++ b/drivers/char/tpm/tpm2-sessions.c
+> @@ -238,8 +238,7 @@ void tpm_buf_append_name(struct tpm_chip *chip, struct tpm_buf *buf,
+>  
+>  	if (!tpm2_chip_auth(chip)) {
+>  		tpm_buf_append_u32(buf, handle);
+> -		/* count the number of handles in the upper bits of flags */
+> -		buf->handles++;
+> +		chip->handles++;
+>  		return;
+>  	}
+>  
+> @@ -310,7 +309,7 @@ void tpm_buf_append_hmac_session(struct tpm_chip *chip, struct tpm_buf *buf,
+>  
+>  	if (!tpm2_chip_auth(chip)) {
+>  		/* offset tells us where the sessions area begins */
+> -		int offset = buf->handles * 4 + TPM_HEADER_SIZE;
+> +		int offset = chip->handles * 4 + TPM_HEADER_SIZE;
+>  		u32 len = 9 + passphrase_len;
+>  
+>  		if (tpm_buf_length(buf) != offset) {
+> @@ -963,6 +962,8 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+>  	int rc;
+>  	u32 null_key;
+>  
+> +	chip->handles = 0;
+> +
+>  	if (!auth) {
+>  		dev_warn_once(&chip->dev, "auth session is not active\n");
+>  		return 0;
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index e93ee8d936a9..b664f7556494 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -202,9 +202,9 @@ struct tpm_chip {
+>  	/* active locality */
+>  	int locality;
+>  
+> +	/* handle count for session: */
+> +	u8 handles;
+>  #ifdef CONFIG_TCG_TPM2_HMAC
+> -	/* details for communication security via sessions */
+> -
+>  	/* saved context for NULL seed */
+>  	u8 null_key_context[TPM2_MAX_CONTEXT_SIZE];
+>  	 /* name of NULL seed */
+> @@ -377,7 +377,6 @@ struct tpm_buf {
+>  	u32 flags;
+>  	u32 length;
+>  	u8 *data;
+> -	u8 handles;
+>  };
+>  
+>  enum tpm2_object_attributes {
+> @@ -517,7 +516,7 @@ static inline void tpm_buf_append_hmac_session_opt(struct tpm_chip *chip,
+>  	if (tpm2_chip_auth(chip)) {
+>  		tpm_buf_append_hmac_session(chip, buf, attributes, passphrase, passphraselen);
+>  	} else  {
+> -		offset = buf->handles * 4 + TPM_HEADER_SIZE;
+> +		offset = chip->handles * 4 + TPM_HEADER_SIZE;
+>  		head = (struct tpm_header *)buf->data;
+>  
+>  		/*
+> @@ -541,6 +540,7 @@ void tpm2_end_auth_session(struct tpm_chip *chip);
+>  
+>  static inline int tpm2_start_auth_session(struct tpm_chip *chip)
+>  {
+> +	chip->handles = 0;
+>  	return 0;
+>  }
+>  static inline void tpm2_end_auth_session(struct tpm_chip *chip)
+> -- 
+> 2.45.2
+
+J.
+
+-- 
+"I'm not anti-establishment, I just don't see the point." -- Matthew
+Kirkwood, OxLUG mailing list.
