@@ -1,209 +1,228 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B936711720
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 06:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97DD14F6C;
+	Wed, 17 Jul 2024 06:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721197265; cv=none; b=XjCR6XepqOy6mQ4O7ngItBwKbvsQdOvdv9Q+g+qr2w+ceMXpkilxGrqlsQjLmTo18noS27sSEqhnVos1UgncDaAK8WZk13QkkcF/ep8iE+9ythL3l7GAizHWHd12sAl2td5wyOBBWmCwTC9c/cMvZ4UcXhruNi/ncj1T7siT0N8=
+	t=1721197269; cv=none; b=qrAoAxwNA520o+VmUzzzg8xjDCAdrmOGnoEgqhCrxnBCu09f7YEx6E5wtZzAOvzEfmSoiGfDJpdVu2COeISVUZRJBhdLnW9Q8KBcXRnUU0bpA6ULg2IzA7V7GqRP/B3fxuRvHo6UJMJ08WFDZpGJbDFabraDr6nPOAkfw3Zt6FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721197265; c=relaxed/simple;
-	bh=SXM4rwRn+leJo0pY0SefkogHqfR8LE/yvz/Y5VWFmfY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=au8BiBsToU1r/Ultth5JXPYaJgUdTj+qAxkj5Z0cNy05PLZoPEmpjXq3633AImJ+lI3tL0OJxqUlCY73bNvCUFm2BcZ7OBKiZpV+UjVaTYMCuKg6fNGpmpUVyNdNEtMjOSc8c/UpTVT5ibFLPzBbc8Z+Ov5IgMQxtRRCHpIKTD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NO6C4MFc; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1721197269; c=relaxed/simple;
+	bh=fp9pWdN7nQ259Pbax33SgaIQltaM0tNJnOcdOMyAuGk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=gmqu2BhatiYEGO8jWJWlzBQuR84m6I+d3Ol6laUZuNxRStufrf5ObWL/0TERPwkLjCLxZY/JfdlJduQV7jWyb4v/1Cu3T2Jz5njvDQ62mx3okxj56LE9CUIFt02SawPax7rv7FoJd2Quuv4Ujp2uoUOhJvQTduZ18xV623bbZD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oFCH7Wf5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NO6C4MFc"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4266fd39527so47683095e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2024 23:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721197261; x=1721802061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ObJKiPOVe5UThPd0qvfEFz5Dv3ABd72erfyOiynPtd0=;
-        b=NO6C4MFccp6jMYUp14P2O8wo0mBXLQl6LHFIuVweezaHf1jUvJie9NmZVZ0ZlFQi8H
-         wDY18VV5pgJBylc6QQI6pv2EtwmXFCspGDWNt7TfUutbEHRaLi6tKVk4+IA/x09mQ8SD
-         q9gm7kYx5Tlc9vTUvCPdPHChI64mu8vTVM+A5r18hmO0CePM2bGgCc7iUOXwvSvc/5RV
-         V808mT4G9+0wbzBHjzaTFKcZbkKnaR+5NATSw+JpgRp1PsHO0N6k18WYsovFOkYFQgol
-         UegyJfdiNS6B1RKv7Ex6GrE3xMbhpD/CcTFtMxWoRIbsaxHuwi3GSe5KlxnSbSMhmwoF
-         B77Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721197261; x=1721802061;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ObJKiPOVe5UThPd0qvfEFz5Dv3ABd72erfyOiynPtd0=;
-        b=dTbDJRrwdSPrK+zWoq1ECe9pD6mggot1x6dnteH8YYkGf3P1Qth0oMMmqfaCKIMuaI
-         6a62E5Ycu6sgLAUm4S2e9vXVTyi3MqsPSTBnr7vOYCTNVq6h56+anSQC/nv0xKZ51jqC
-         oPnY5CmwjTSSGUegW5mQ1qxSjh4v4we94juTfoSoyTMLCj2HEpV1gZ6x6NmIzbM6ZjSw
-         Dv9/KrdpmA4sleorKcHhZzRQTqDLEf23lqkGv64wziuMUDic2vZst/VDfuidqntFMluj
-         r8l7BphLxXszfCJ2JgJmtwCCkiQB7ikfKg5Zpp0hmj1QLMyigp1J+cxAl77vTcS+z7Ja
-         adDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpuWmbOjFPFPrWELa2D7Nv439kD41SFOqW9Bw1ZE4TBD6XMZgUvVcWEWKW7qDPY7iHpuFToNE2jDSLV0CnKypQNLjR+R+NLWAVJZjR
-X-Gm-Message-State: AOJu0YwSS+s14awTGTbI39VIcxdStFFxKi0QauFuKRDfsOF6AZOJTlJC
-	BY+Nj09uCRsIYxTsOsYweQZHhQ+41yO23hVAImHrhUzjT2lBkfOkoKxL9qYofEA=
-X-Google-Smtp-Source: AGHT+IEiqDUUVGHtWHIaIo4kIBhavsk6wpSjfOY4FyjkQmBFXrWWxjPRklD8XBy60kYG9vsl83pQBA==
-X-Received: by 2002:a5d:6a8c:0:b0:368:37ac:3f95 with SMTP id ffacd0b85a97d-36837ac4476mr188365f8f.31.1721197261060;
-        Tue, 16 Jul 2024 23:21:01 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dab3cd1sm10867433f8f.22.2024.07.16.23.21.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 23:21:00 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 01/11] riscv: Implement cmpxchg32/64() using Zacas
-Date: Wed, 17 Jul 2024 08:19:47 +0200
-Message-Id: <20240717061957.140712-2-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240717061957.140712-1-alexghiti@rivosinc.com>
-References: <20240717061957.140712-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oFCH7Wf5"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46GHfFF3024207;
+	Wed, 17 Jul 2024 06:20:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TiwUCxXHB26DbZ2DFDb9MYBu/nLfDOIAzQSLSUM0J8c=; b=oFCH7Wf5HZADgzBZ
+	8hE3S+XsOO7/m8Kp3UBtbFq7Vut4TrVFcJyxEflzPemsd7zfv4vKhYZgczxZ3Vvn
+	fAi5s9zwbDGPAVFmRCo0EAAq0Gy73SJKy+wQmvInnjoFi6bG0iRbuDEBt/yvm/A2
+	1us1M/+1SSx9X6ttsZNZHpol9bQ/kfMnDpKV8V6TxtK8UljhUEvYEBd1XqTzLL6N
+	sj4v2JB3YGLJlojcLrUttFZI1th10ldT4+CEXT3IkKlJwZeS85CCllaK/aHiwv+L
+	pXEmQNxy7S3nU0+QUUqhERMntaq2i4VVqG3ICqZrAEU9oJuFyClA/S2+WmQw32U+
+	fpedpw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfu1a1t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 06:20:50 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46H6Knjn002662
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 06:20:49 GMT
+Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 16 Jul
+ 2024 23:20:42 -0700
+Message-ID: <f773f3e2-dace-427e-b9e3-e211d9cf6574@quicinc.com>
+Date: Wed, 17 Jul 2024 14:20:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
+Subject: Re: [PATCH v2] dt-bindings: phy: qcom,usb-snps-femto-v2: Add bindings
+ for QCS9100
+To: Rob Herring <robh@kernel.org>
+CC: Trilok Soni <quic_tsoni@quicinc.com>,
+        Tengfei Fan
+	<quic_tengfan@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+        "Kishon Vijay
+ Abraham I" <kishon@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>
+References: <20240709-document_qcs9100_usb_hs_phy_compatible-v2-1-c84fbbafa9d6@quicinc.com>
+ <20240710162745.GA3212156-robh@kernel.org>
+ <3b8684f0-c89d-1a76-6bc5-93ced59dc51c@quicinc.com>
+ <51302de0-5e4c-4e2a-85a0-e22549baa13c@quicinc.com>
+ <20240711200354.GA2482879-robh@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20240711200354.GA2482879-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: cKBbtlWO0T6JKU0hJqEyLEFxBrrss12I
+X-Proofpoint-ORIG-GUID: cKBbtlWO0T6JKU0hJqEyLEFxBrrss12I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-17_02,2024-07-16_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ spamscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407170046
 
-This adds runtime support for Zacas in cmpxchg operations.
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/Kconfig               | 17 +++++++++++++++++
- arch/riscv/Makefile              |  3 +++
- arch/riscv/include/asm/cmpxchg.h | 26 +++++++++++++++++++++++---
- 3 files changed, 43 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 05ccba8ca33a..1caaedec88c7 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -596,6 +596,23 @@ config RISCV_ISA_V_PREEMPTIVE
- 	  preemption. Enabling this config will result in higher memory
- 	  consumption due to the allocation of per-task's kernel Vector context.
- 
-+config TOOLCHAIN_HAS_ZACAS
-+	bool
-+	default y
-+	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zacas)
-+	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zacas)
-+	depends on AS_HAS_OPTION_ARCH
-+
-+config RISCV_ISA_ZACAS
-+	bool "Zacas extension support for atomic CAS"
-+	depends on TOOLCHAIN_HAS_ZACAS
-+	default y
-+	help
-+	  Enable the use of the Zacas ISA-extension to implement kernel atomic
-+	  cmpxchg operations when it is detected at boot.
-+
-+	  If you don't know what to do here, say Y.
-+
- config TOOLCHAIN_HAS_ZBB
- 	bool
- 	default y
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 06de9d365088..9fd13d7a9cc6 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -85,6 +85,9 @@ endif
- # Check if the toolchain supports Zihintpause extension
- riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE) := $(riscv-march-y)_zihintpause
- 
-+# Check if the toolchain supports Zacas
-+riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZACAS) := $(riscv-march-y)_zacas
-+
- # Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
- # matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
- KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index 808b4c78462e..5d38153e2f13 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -9,6 +9,7 @@
- #include <linux/bug.h>
- 
- #include <asm/fence.h>
-+#include <asm/alternative.h>
- 
- #define __arch_xchg_masked(sc_sfx, prepend, append, r, p, n)		\
- ({									\
-@@ -134,21 +135,40 @@
- 	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
- })
- 
--#define __arch_cmpxchg(lr_sfx, sc_sfx, prepend, append, r, p, co, o, n)	\
-+#define __arch_cmpxchg(lr_sfx, sc_cas_sfx, prepend, append, r, p, co, o, n)	\
- ({									\
-+	__label__ no_zacas, end;					\
- 	register unsigned int __rc;					\
- 									\
-+	if (IS_ENABLED(CONFIG_RISCV_ISA_ZACAS)) {			\
-+		asm goto(ALTERNATIVE("j %[no_zacas]", "nop", 0,		\
-+				     RISCV_ISA_EXT_ZACAS, 1)		\
-+			 : : : : no_zacas);				\
-+									\
-+		__asm__ __volatile__ (					\
-+			prepend						\
-+			"	amocas" sc_cas_sfx " %0, %z2, %1\n"	\
-+			append						\
-+			: "+&r" (r), "+A" (*(p))			\
-+			: "rJ" (n)					\
-+			: "memory");					\
-+		goto end;						\
-+	}								\
-+									\
-+no_zacas:								\
- 	__asm__ __volatile__ (						\
- 		prepend							\
- 		"0:	lr" lr_sfx " %0, %2\n"				\
- 		"	bne  %0, %z3, 1f\n"				\
--		"	sc" sc_sfx " %1, %z4, %2\n"			\
-+		"	sc" sc_cas_sfx " %1, %z4, %2\n"			\
- 		"	bnez %1, 0b\n"					\
- 		append							\
- 		"1:\n"							\
- 		: "=&r" (r), "=&r" (__rc), "+A" (*(p))			\
- 		: "rJ" (co o), "rJ" (n)					\
- 		: "memory");						\
-+									\
-+end:;									\
- })
- 
- #define _arch_cmpxchg(ptr, old, new, sc_sfx, prepend, append)		\
-@@ -156,7 +176,7 @@
- 	__typeof__(ptr) __ptr = (ptr);					\
- 	__typeof__(*(__ptr)) __old = (old);				\
- 	__typeof__(*(__ptr)) __new = (new);				\
--	__typeof__(*(__ptr)) __ret;					\
-+	__typeof__(*(__ptr)) __ret = (old);				\
- 									\
- 	switch (sizeof(*__ptr)) {					\
- 	case 1:								\
+On 7/12/2024 4:03 AM, Rob Herring wrote:
+> On Thu, Jul 11, 2024 at 06:05:57PM +0800, Aiqun Yu (Maria) wrote:
+>>
+>>
+>> On 7/11/2024 12:45 AM, Trilok Soni wrote:
+>>> On 7/10/2024 9:27 AM, Rob Herring wrote:
+>>>> On Tue, Jul 09, 2024 at 08:46:19PM +0800, Tengfei Fan wrote:
+>>>>> Document the compatible string for USB phy found in Qualcomm QCS9100
+>>>>> SoC.
+>>>>> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
+>>>>> platform use non-SCMI resource. In the future, the SA8775p platform will
+>>>>> move to use SCMI resources and it will have new sa8775p-related device
+>>>>> tree. Consequently, introduce "qcom,qcs9100-usb-hs-phy" to describe
+>>>>> non-SCMI based USB phy.
+>>>>>
+>>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>>>>> ---
+>>>>> Introduce support for the QCS9100 SoC device tree (DTSI) and the
+>>>>> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+>>>>> While the QCS9100 platform is still in the early design stage, the
+>>>>> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+>>>>> mounts the QCS9100 SoC instead of the SA8775p SoC.
+>>>>>
+>>>>> The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
+>>>>> all the compatible strings will be updated from "SA8775p" to "QCS9100".
+>>>>> The QCS9100 device tree patches will be pushed after all the device tree
+>>>>> bindings and device driver patches are reviewed.
+>>>>
+>>>> I'm not convinced this is not just pointless churn. Aren't we going to 
+>>>> end up with 2 compatible strings for everything? SCMI should just change 
+>>>> the providers, but otherwise the consumers are the same. I suppose if 
+>>>> clocks are abstracted into power-domains (an abuse IMO) then the 
+>>>> bindings change.
+>>>>
+>>>> Why do we need to support both SCMI and not-SCMI for the same chip?
+>>>
+>>> IOT SKU of this SOC is using the non-SCMI solution and Auto SKU
+>>> of this SOC is using the SCMI based solution due to additional
+>>> safety requirements. 
+>>
+>> More add-on information, IOT SKU which have qcs9100 soc mounted will
+>> have firmware releases which support non-scmi solution.
+>> And AUTO SKU which mounted with SA8775p will have different firmware
+>> releases which support SCMI solution.
+> 
+> Yes, I understand the difference. My question is why should upstream 
+> support that? Normally, I wouldn't notice or care, but the churn of 
+> renaming everything makes me notice. Why do the maintainers need to 
+> review all these extra changes because QCom couldn't figure out their 
+> plans?
+
+Upstreaming prematurely, prior to finalizing all solutions, will have a
+significant pain point like this. I recognize the extra workload
+involved in reviewing these changes, but our aim is to minimize future
+maintenance efforts. SA8775p with non-SCMI resource solutions is going
+to be deprecated.
+
+The SA8775p is currently undergoing active development, with Qualcomm
+firmware updates altering essential resources such as clocks,
+regulators, etc. designs, to align with safety requirements.
+> 
+> So after you duplicate all the compatible strings, what's next? Changing 
+> all the SA8775p bindings which is an ABI break? Presumably, some 
+
+Yes, ABI is going to break/evolve as sa8775p moves to scmi based
+infrastructure. Auto product line intends to subsequently submit
+corresponding changes for sa8775p while derived part qcs9100 support,
+continue evolve in conventional manner.
+> bindings may not change at all? In that case, you don't need any rename.> I have no visibility into what's coming next, so please educate me.
+
+
+For instance, in this binding, ‘clk’, ‘resets’, and other elements are
+mandatory if ‘compatible’ includes qcs9100. However, after the SCMI
+resource solution is checked in, for ‘compatible’ containing sa8775p, it
+may only require ‘power-domains’ and ‘power-domain-names’.”
+
+A reference to one SCMI resource solution RFC, which will definitely
+require some changes, can be found here[1]:
+[1]
+https://lore.kernel.org/lkml/1709657858-8563-4-git-send-email-quic_sriramd@quicinc.com/
+
+The proposed solution(with compatible differentiation) will exhibit the
+following differences in addition to the current RFC.[1] :
+
+1. Both have SCMI and non-SCMI support in the same driver.
+The binding documentation will specify that ‘qcs9100’ compatibility
+requires properties such as ‘clk’, ‘reset’, ‘vdd’, etc., while ‘SA8775p’
+compatibility necessitates properties like ‘power-domains’,
+‘power-domain-names’, etc., as mandatory.
+
+2. having a /delete-property/ becomes unnecessary.
+The proposed solution will introduce a completely new SA8775p.dtsi from
+the outset. The current qcs9100.dtsi will not be included into this new
+SA8775p.dtsi.
+
+3. Driver C files will not eliminate calls to ‘clk’, ‘vreg’, etc.
+Instead, they will differentiate with a ‘qcs9100’ compatibility to
+include operation with legacy "clk", "vreg" calls, while ‘sa8775p’ will
+incorporate operations calls for ‘power-domains’, and so on.
+
+4. "hsphy,fw-managed" property to indicate SCMI resources is not necessary.
+Current patch have been using a DT property " hsphy,fw-managed;" to
+figure if it is SCMI based vs non-scmi. While it is going to be
+suggested to be designed to use "sa8775p" compatible.
+
+Further more:
+LinaroConnect presentation on qcom SCMI approach here[2]:
+[2]https://resources.linaro.org/en/resource/wfnfEwBhRjLV1PEAJoDDte
+
+> 
+> The minimal amount of changes here is you are stuck with the existing 
+> identifiers for the non-SCMI SKU. Then you can add a "new SoC" for the 
+> SCMI SKU. You might not like the names now, but you picked them and are 
+> kind of stuck with them.
+
+SA8775P is already announced Auto SOC for our OEMs. We can't ask for
+creating new Auto SKU to show the solution w/ SCMI like "SA8775P<XYZ>".
+
+Since the current code of SA8775P is matching w/ what is required for
+the purpose of QCS9100 s/w architecture the clear rename was proposed.
+It will also look odd to IOT customers to see their SOC DT file starting
+w/ the SA8775P.
+
+For the current Qualcomm device trees in upstream, we still use ‘soc’
+naming in the base soc device tree, which is consistent with our current
+hardware SOC naming convention. The basic <soc_name>.dtsi is, by
+default, aligned with the current market name of the SOC.
+
+Welcome comments and suggestions on the information we have proposed above.
+> 
+> Rob
+
 -- 
-2.39.2
-
+Thx and BRs,
+Aiqun(Maria) Yu
