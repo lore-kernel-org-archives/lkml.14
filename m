@@ -1,88 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4A71109;
-	Wed, 17 Jul 2024 14:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E7F224FA;
+	Wed, 17 Jul 2024 14:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721227012; cv=none; b=KuifIsfHrRLGLiGQnTjKcrT0UNvazq1JU4z2qqu24TY1XICDLu5SerNY/yrr4FhczcoNazXpqpD/RSTu3a+9BM5Q7ugw0DXjh/z/XqqEzH3jIapqN6oLN0pjh1/b5nSdFMWxTFz1Vmo5ECjscZlnjoXU+MgtPq+D9kyZBZhmomg=
+	t=1721227127; cv=none; b=iD2+95jUGpVLUkijuaNR/Pk7WDtDvs9yUit+5kWHNtfdKTXK0acVwh3GYclhiGCjIvZmN+FnDi+uHS1nl0S2EVABek+eUxSEhK7xYTmEQzYwjrwS4MwYQcQutcnOPl/6MdRpdnSn4+Qf55mJ95qyOEyuFFqdLt7dASNgE15R7jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721227012; c=relaxed/simple;
-	bh=CE9pKa3ma8lBfS7ILiZhNE4HGmrbG06pXvftfTT5KIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RyeT7zwDr6aWbYL6F/aSjSMhuDzdHso7suTeXXu6YEpsRPMAyd+huqzheIF0sIa2B7icx0paOMiTAAEetw6/cAmBYPNb/VYm4VhNScFOFzK7HeAdj1dcrDqCao67XEWGQMTkO2IOXVu6ElccLSrWvEM7feGCbWJR/9JRiIWAtrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78D1C4AF0E;
-	Wed, 17 Jul 2024 14:36:48 +0000 (UTC)
-Date: Wed, 17 Jul 2024 10:36:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vineeth Remanan Pillai
- <vineeth@bitbyteword.org>, Ben Segall <bsegall@google.com>, Borislav Petkov
- <bp@alien8.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Dave
- Hansen <dave.hansen@linux.intel.com>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar
- <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Mel Gorman
- <mgorman@suse.de>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, Vincent
- Guittot <vincent.guittot@linaro.org>, Vitaly Kuznetsov
- <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, Suleiman Souhlal
- <suleiman@google.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- himadrics@inria.fr, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, graf@amazon.com, drjunior.org@gmail.com
-Subject: Re: [RFC PATCH v2 0/5] Paravirt Scheduling (Dynamic vcpu priority
- management)
-Message-ID: <20240717103647.735563af@rorschach.local.home>
-In-Reply-To: <ZpfR49IcXNLS9qbu@google.com>
-References: <ZjJf27yn-vkdB32X@google.com>
-	<CAO7JXPgbtFJO6fMdGv3jf=DfiCNzcfi4Hgfn3hfotWH=FuD3zQ@mail.gmail.com>
-	<CAO7JXPhMfibNsX6Nx902PRo7_A2b4Rnc3UP=bpKYeOuQnHvtrw@mail.gmail.com>
-	<66912820.050a0220.15d64.10f5@mx.google.com>
-	<19ecf8c8-d5ac-4cfb-a650-cf072ced81ce@efficios.com>
-	<20240712122408.3f434cc5@rorschach.local.home>
-	<ZpFdYFNfWcnq5yJM@google.com>
-	<20240712131232.6d77947b@rorschach.local.home>
-	<ZpcFxd_oyInfggXJ@google.com>
-	<CAEXW_YS+8VKjUZ8cnkZxCfEcjcW=z52uGYzrfYj+peLfgHL75Q@mail.gmail.com>
-	<ZpfR49IcXNLS9qbu@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1721227127; c=relaxed/simple;
+	bh=y2CTKHy4tmRqu3SrAKRukfH66rNOE92bst2s2ctN81s=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=swrDwvm+02TGnHW151FsqeK7GfujVfa4WBgYkk6qEHO+uL0TzEUxJerxfzWl3r4YBOEb3BeU3w9N9ZGVlnX3mBPegyfDDF25gW/xy3PD9o0TYK3G2y+GPDLuZGWDJIqjtRJszgU4LMSGHnnomasubR4wgDxnRXLIONTuK5bSWaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hzEysB4f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ftlcGRt/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hzEysB4f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ftlcGRt/"
+Date: Wed, 17 Jul 2024 14:38:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1721227124;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sHN+HqITtT+RDl0xQQ+zmqZ3Q+mKU2FbR5ytBp2EUgA=;
+	b=hzEysB4fYeE/28lB03axPaPDkIDCFmJVvW6OIoVusPK9SKi9T2y3lwFEL0g4aaEHkBw1h0
+	qJpnr1gq9TV50cPz9mAB+vHOkfqyHaR9B40ihNzvNU1c5QrWyF3Zullug3AZ32y+qvoWP6
+	xeweKppNzRYbilL9lA89VWcVwzUR+Ei2vrxrdLsBHW8PAebrpYoHzmwr0OuJ1e5GfbCdh+
+	nJcA56+5ReB8vUmwcxz/mjH/ZKgX6cFHUKaGyrH5PvvBMW63nbGmpZnCu+mTaACVUULEoe
+	NT3uoqHoADLU3mwt3m9US/JiOPBrtB/nGBo0gmi6i6jpeDqtJsvSE8pmvreMRg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1721227124;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sHN+HqITtT+RDl0xQQ+zmqZ3Q+mKU2FbR5ytBp2EUgA=;
+	b=ftlcGRt/rNj4FeLOw3l4eTcYWzw9gAptZm5cxmrDRZkBXKsWxf0LfnsQCsOTVLkn8gTvOL
+	qBRqpzbMiKT8nVDg==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] locking/atomic/x86: Introduce the
+ read64_nonatomic macro to x86_32 with cx8
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240605181424.3228-1-ubizjak@gmail.com>
+References: <20240605181424.3228-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <172122712402.2215.3878920766724866170.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 17 Jul 2024 07:14:59 -0700
-Sean Christopherson <seanjc@google.com> wrote:
+The following commit has been merged into the locking/core branch of tip:
 
-> > What you're saying is the scheduler should change the priority of the
-> > vCPU thread dynamically. That's really not the job of the scheduler.
-> > The user of the scheduler is what changes the priority of threads, not
-> > the scheduler itself.  
-> 
-> No.  If we go the proposed route[*] of adding a data structure that lets userspace
-> and/or the guest express/adjust the task's priority, then the scheduler simply
-> checks that data structure when querying the priority of a task.
+Commit-ID:     6e30a7c98a9fda2f894e970e9cd637657f39c59d
+Gitweb:        https://git.kernel.org/tip/6e30a7c98a9fda2f894e970e9cd637657f39c59d
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Wed, 05 Jun 2024 20:13:15 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 17 Jul 2024 16:28:11 +02:00
 
-The problem with that is the only use case for such a feature is for
-vCPUS. There's no use case for a single thread to up and down its
-priority. I work a lot in RT applications (well, not as much anymore,
-but my career was heavy into it). And I can't see any use case where a
-single thread would bounce its priority around. In fact, if I did see
-that, I would complain that it was a poorly designed system.
+locking/atomic/x86: Introduce the read64_nonatomic macro to x86_32 with cx8
 
-Now for a guest kernel, that's very different. It has to handle things
-like priority inheritance and such, where bouncing a threads (or its
-own vCPU thread) priority most definitely makes sense.
+As described in commit:
 
-So you are requesting that we add a bad user space interface to allow
-lazy priority management from a thread so that we can use it in the
-proper use case of a vCPU?
+  e73c4e34a0e9 ("locking/atomic/x86: Introduce arch_atomic64_read_nonatomic() to x86_32")
 
--- Steve
+the value preload before the CMPXCHG loop does not need to be atomic.
 
+Introduce the read64_nonatomic assembly macro to load the value from a
+atomic_t location in a faster non-atomic way and use it in
+atomic64_cx8_32.S.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20240605181424.3228-1-ubizjak@gmail.com
+---
+ arch/x86/lib/atomic64_cx8_32.S |  9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/lib/atomic64_cx8_32.S b/arch/x86/lib/atomic64_cx8_32.S
+index 90afb48..b2eff07 100644
+--- a/arch/x86/lib/atomic64_cx8_32.S
++++ b/arch/x86/lib/atomic64_cx8_32.S
+@@ -16,6 +16,11 @@
+ 	cmpxchg8b (\reg)
+ .endm
+ 
++.macro read64_nonatomic reg
++	movl (\reg), %eax
++	movl 4(\reg), %edx
++.endm
++
+ SYM_FUNC_START(atomic64_read_cx8)
+ 	read64 %ecx
+ 	RET
+@@ -51,7 +56,7 @@ SYM_FUNC_START(atomic64_\func\()_return_cx8)
+ 	movl %edx, %edi
+ 	movl %ecx, %ebp
+ 
+-	read64 %ecx
++	read64_nonatomic %ecx
+ 1:
+ 	movl %eax, %ebx
+ 	movl %edx, %ecx
+@@ -79,7 +84,7 @@ addsub_return sub sub sbb
+ SYM_FUNC_START(atomic64_\func\()_return_cx8)
+ 	pushl %ebx
+ 
+-	read64 %esi
++	read64_nonatomic %esi
+ 1:
+ 	movl %eax, %ebx
+ 	movl %edx, %ecx
