@@ -1,76 +1,175 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3317376E9
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845E92557F
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 08:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721204409; cv=none; b=gHzyCypuWbplhnUux199wYK69HVec9xL/cxBV4qBCBjUSNeCAhfaCcpOXE7itgqBwgLdGBO8/a5zHknPgdGz7PrTYjnhS3HM/V/sORQutfcR8Y4wGY+OrxGa7pRjaR/J4UKKDLzefj2wEe1ekxDx/j1a0a0VoZ9Wqqo8DYpMN88=
+	t=1721204429; cv=none; b=nfoDo6OwJn122io2DHz8L4sZMWhE6exMfGFol5g1WuJpYrBM1ffsOiTraR03kYk6zmXw4zNpesUH+wytdQ+NiGb7aZQ12gV9qL+JqhmBSlBg1/3TivqgSFdQtlJx9PoRL2LdJna0z9tpe6soAp2zS6q/FuUucp/NPxyn/pX9/jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721204409; c=relaxed/simple;
-	bh=e6u5DXYvWe9AfBIeunZ32rLwBUOnL07mqu6HnKz+Hd0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WAwmPGPAPdDLGki6Vn/vHiHUb3zQpkbcH/z+VPe2LqRvIX6cqVQ2vFzaUiTBiL0Ao+nUqslwSu4L3xCF3k61ip63DfsYSkG69DyOWUkWFCRWlpWYP2DrX3Dwz7DMK6cO1ssGLtt4Qe5Y+TboDKa14wm9QuVXXBHgjqQg5KH3J8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=jWuQpBb8; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1721204429; c=relaxed/simple;
+	bh=61oQWDE6zifuDyVrc10oogSvwNyhncgHTA/Wmvsokv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RblP9dEIajWHi7PKr1Qkc2OjUd4sPvQ9Gd0lTwq5m+Y7M1s5mdKK/AlFBBEcOFnWQotwICHRoOf2aqI2RV9Ozvz3lagZ3WFYbu9I+NAkoDsbVWaHBTHss1hkGT2jI6EvEpp5bpc2uEKRPNXXbRYT0rLz/Z/46KqS6fde8LGVqzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZK8i56rx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1LQk6FTo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZK8i56rx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1LQk6FTo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="jWuQpBb8"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H5srGi013138;
-	Wed, 17 Jul 2024 03:19:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=PODMain02222019; bh=Vrysff8VaQmuw4qwsy
-	PYQ4a+6HDU2sFXDQK0pKW5lR0=; b=jWuQpBb8Y94BfXrHf2tkJZ6W8BKeZ78Ibw
-	XZ1EShFwUXuFJ8xEZwTiGdugylzG8ByB1q3lj2Pf3secic7AcB5WxjkdiWoHJuz5
-	r72CtC1ygzbXYJqUTI4zwmlNF3nd8rYeSD846D6qkOUubcTw8HuI0LKO9Rsc99ks
-	zKGgv0yJ9BEvIap6f0v3H0Dy8G72gOA4U7zgDWxfhJqYWl0LwzboVkHfP2ZUm+/c
-	XkQc0NRf8CQltwmtTynDv/xLPRxJoDgWHlcztrbYYwdR9NcHEQEfuFcfsuI/E4g/
-	wqWLWx3J6/Sz7SULXjQjKMJuksQpVaEtWJt4ko3N/SoMVvxL2iRA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 40dwengkqw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 03:19:48 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Jul
- 2024 09:19:46 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Wed, 17 Jul 2024 09:19:46 +0100
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 2B8F0820244;
-	Wed, 17 Jul 2024 08:19:46 +0000 (UTC)
-Date: Wed, 17 Jul 2024 09:19:45 +0100
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Chen Ni <nichen@iscas.ac.cn>
-CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <axel.lin@ingics.com>,
-        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] regulator: wm831x-isink: Convert comma to semicolon
-Message-ID: <Zpd+oXtUsC0z08d6@opensource.cirrus.com>
-References: <20240716085115.1252817-1-nichen@iscas.ac.cn>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZK8i56rx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1LQk6FTo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZK8i56rx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1LQk6FTo"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C0EFC21B31;
+	Wed, 17 Jul 2024 08:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721204424; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofViyxpL6E7msZWbqzROq9FMn11Nk20ZmNXXn1UgtsI=;
+	b=ZK8i56rxG9z+Jk+UFW8VuaLPpdEmXg+fiL3Jx90mvWYTxqUul2hVia8i4K/2dksMrEz0oD
+	uWpdonOQYuyO2cMK29A6gNF9C25gG0WdgGmItKSfWtfaE/GVm/Vsgg/vXsrzcL8L1b/SsB
+	bjan8orunFxebz/PGmQXyxir5gH9gm8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721204424;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofViyxpL6E7msZWbqzROq9FMn11Nk20ZmNXXn1UgtsI=;
+	b=1LQk6FToY4yiPdrCgvJVkLbvTDi4bcjv3RnvLfdA+J5ULOhBsS4HZNyPqV5uZy1gZflka8
+	/ywU4sQ2HRGPVcBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721204424; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofViyxpL6E7msZWbqzROq9FMn11Nk20ZmNXXn1UgtsI=;
+	b=ZK8i56rxG9z+Jk+UFW8VuaLPpdEmXg+fiL3Jx90mvWYTxqUul2hVia8i4K/2dksMrEz0oD
+	uWpdonOQYuyO2cMK29A6gNF9C25gG0WdgGmItKSfWtfaE/GVm/Vsgg/vXsrzcL8L1b/SsB
+	bjan8orunFxebz/PGmQXyxir5gH9gm8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721204424;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofViyxpL6E7msZWbqzROq9FMn11Nk20ZmNXXn1UgtsI=;
+	b=1LQk6FToY4yiPdrCgvJVkLbvTDi4bcjv3RnvLfdA+J5ULOhBsS4HZNyPqV5uZy1gZflka8
+	/ywU4sQ2HRGPVcBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 967F01368F;
+	Wed, 17 Jul 2024 08:20:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TPPUIsh+l2aKEAAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 17 Jul 2024 08:20:24 +0000
+Message-ID: <0c4c4365-2c2b-4985-bbb1-5d58bf332671@suse.de>
+Date: Wed, 17 Jul 2024 10:20:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240716085115.1252817-1-nichen@iscas.ac.cn>
-X-Proofpoint-ORIG-GUID: RElDV-OUkLaXNRkjyfe7xU6IOAlrxW1j
-X-Proofpoint-GUID: RElDV-OUkLaXNRkjyfe7xU6IOAlrxW1j
-X-Proofpoint-Spam-Reason: safe
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] nvmet-tcp: add unbound_wq support for nvmet-tcp
+To: Ping Gan <jacky_gam_2001@163.com>, sagi@grimberg.me, hch@lst.de,
+ kch@nvidia.com, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: ping.gan@dell.com
+References: <20240717075208.87324-1-jacky_gam_2001@163.com>
+ <20240717075208.87324-2-jacky_gam_2001@163.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240717075208.87324-2-jacky_gam_2001@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -0.29
+X-Spamd-Result: default: False [-0.29 / 50.00];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[163.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[163.com,grimberg.me,lst.de,nvidia.com,lists.infradead.org,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Tue, Jul 16, 2024 at 04:51:15PM +0800, Chen Ni wrote:
-> Replace a comma between expression statements by a semicolon.
+On 7/17/24 09:52, Ping Gan wrote:
+> To define a module parameter use_unbound_wq to enable unbound
+> workqueue to handle TCP's IO.
 > 
-> Fixes: d48acfd0377f ("regulator: wm831x-isink: Convert to use regulator_set/get_current_limit_regmap")
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> Signed-off-by: jackygam2001 <jacky_gam_2001@163.com>
+
+Please use your real name 'Ping Gan' as the author name, not the mail alias.
+
 > ---
+>   drivers/nvme/target/tcp.c | 12 ++++++++++--
+>   1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+> index 5bff0d5464d1..f71d56843e1a 100644
+> --- a/drivers/nvme/target/tcp.c
+> +++ b/drivers/nvme/target/tcp.c
+> @@ -73,6 +73,10 @@ device_param_cb(idle_poll_period_usecs, &set_param_ops,
+>   MODULE_PARM_DESC(idle_poll_period_usecs,
+>   		"nvmet tcp io_work poll till idle time period in usecs: Default 0");
+>   
+> +static bool use_unbound_wq;
+> +module_param(use_unbound_wq, bool, 0444);
+> +MODULE_PARM_DESC(use_unbound_wq, "use unbound workqueue to handle IO request: Default false");
+> +
+>   #ifdef CONFIG_NVME_TARGET_TCP_TLS
+>   /*
+>    * TLS handshake timeout
+> @@ -2196,9 +2200,13 @@ static const struct nvmet_fabrics_ops nvmet_tcp_ops = {
+>   static int __init nvmet_tcp_init(void)
+>   {
+>   	int ret;
+> +	unsigned int flags;
+> +
+> +	flags = WQ_MEM_RECLAIM | WQ_HIGHPRI;
+> +	if (use_unbound_wq)
+> +		flags |= (WQ_UNBOUND | WQ_SYSFS);
+>   
+> -	nvmet_tcp_wq = alloc_workqueue("nvmet_tcp_wq",
+> -				WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
+> +	nvmet_tcp_wq = alloc_workqueue("nvmet_tcp_wq", flags, 0);
+>   	if (!nvmet_tcp_wq)
+>   		return -ENOMEM;
+>   
+Otherwise looks good.
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Thanks,
-Charles
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+
