@@ -1,398 +1,112 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EFD17E8FD;
-	Wed, 17 Jul 2024 11:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD8C17E915
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 11:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721214409; cv=none; b=T3ShlXMEgr+sw+pJpIWJAuZry+5pfeQ5RVV7OzIYbWBsIMjjDGMQbXF4Ds2D+EoykOgCPcz5RbkfH8T4RRUsAR2vh97Ott/AexwA9A1Wbt1iNguy+R0gEsPtAngY2Bg0E5xe1H4jp/rAz/rROQrzn9vLp38eNq+lSp7Ro3L+620=
+	t=1721214482; cv=none; b=EylY2j5bo6YXSg2+kWq835a8dB6HmTRLUlDEDTvQEWphXoNaxTWbYoqBQsoeA82tDaaqq7cFiYno1NPpCjwuskiQuZk3CsOxWiCfbW+pe8YwhgBC7WAkWCth4GIgO5c8ckb7MQeECNidpbFPfSvXrBTDJYKpsWa54ximH//+TKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721214409; c=relaxed/simple;
-	bh=rKjsm66nd2Yy3GanOS6mfhnJt810rHEaDxggUXYZgSY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gJELqHrHeVOkFtfnPvRLyRqjOhD9EktNYcYd2rrsjz6Tc/sy7lMdnY+RtmiHZ11q3wPXe/X9kokNw58naGs9zA88bmzdePje7VTjdFAs+bppwzSBGoq0YdcG+GuZfjTq2N+PT0m66xbd2CEHXrG2aL4o4HtQpDTCHo5sAj9hYxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WPClS6rvBz6JB8C;
-	Wed, 17 Jul 2024 19:05:24 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id 21799140A08;
-	Wed, 17 Jul 2024 19:06:43 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 17 Jul 2024 12:06:42 +0100
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.039;
- Wed, 17 Jul 2024 12:06:42 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: fan <nifan.cxl@gmail.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "mike.malvestuto@intel.com"
-	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [RFC PATCH v9 01/11] EDAC: Add generic EDAC RAS feature driver
-Thread-Topic: [RFC PATCH v9 01/11] EDAC: Add generic EDAC RAS feature driver
-Thread-Index: AQHa15FyV2KoSGHoUUqpwpmK3mdCjbH5lEYAgAEuFlA=
-Date: Wed, 17 Jul 2024 11:06:42 +0000
-Message-ID: <f271f9a257e64b398783717237e63186@huawei.com>
-References: <20240716150336.2042-1-shiju.jose@huawei.com>
- <20240716150336.2042-2-shiju.jose@huawei.com> <Zpa1UNTOcJgcq2q5@debian>
-In-Reply-To: <Zpa1UNTOcJgcq2q5@debian>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1721214482; c=relaxed/simple;
+	bh=j5oHJ4N4AEEu9W/2D++2KOV4B2U6CZ2ItnsneC4swPc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CDuJh2/xlyaYheCT3tHpq2/whzddRBByoJMYKxCN5MoP5osbZhYvnmYQQcvZgli3F4C876FsuJtTSvCUysnMor+PaeAin265EjblFZlxT1d3gj4UG5GaWRI4P8iVrNSWLKqQfyi+WStPSDFNxLQO1kEcOQMtGqcK1WTS0qswgEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexus-software.ie; spf=none smtp.mailfrom=nexus-software.ie; dkim=pass (2048-bit key) header.d=nexus-software-ie.20230601.gappssmtp.com header.i=@nexus-software-ie.20230601.gappssmtp.com header.b=yj3yPeIy; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexus-software.ie
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nexus-software.ie
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nexus-software-ie.20230601.gappssmtp.com header.i=@nexus-software-ie.20230601.gappssmtp.com header.b="yj3yPeIy"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52ea5dc3c66so10874391e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 04:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nexus-software-ie.20230601.gappssmtp.com; s=20230601; t=1721214479; x=1721819279; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y0MkPJTgEMvQtnUcTdhPwWAgvVYXK9NSydN/rtNiOhc=;
+        b=yj3yPeIyJg8FO0WU+tMsaaX9Xhgswihi/S0Xs4SL/wpVC24yr+C7ml2ZIM+7Zt1XUA
+         OgRHe3tt7dwuNJgS+PxD6ChzWArmjOjDPk7R1oa/22GeZsXS+lxSTjwrmqXIc9fCylfQ
+         eD+PWFaA8JNbnpnrF8ZETsdpMBkN9+36zOgsO8sSz6Js5vAM/mWgX31Sw3pHSA5RXiwZ
+         L7zqHYK7iNHFdeDnNfXjsOfjk062nHHqM7/FU8XeEj49Fv0cjMEEXQ9itD/amFCiJWIB
+         2cqEf+bdAf7djXyP/Kcs5cdyEga+1GBej/kgsk7QMfrQXM2IqifCn5gxF+Rvlau6ekYb
+         X9HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721214479; x=1721819279;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y0MkPJTgEMvQtnUcTdhPwWAgvVYXK9NSydN/rtNiOhc=;
+        b=kRP+Q8sAeXgEaOn6CNmpOfmCegKnt3mhlKLQC92t5NMJ21SQ49WuRW+zETB10a7KWx
+         GqGc2HliSHzaZ+YDiSGAmEtWwlODFgJDyF0TGCOXp4nrZYxBBB/ODh1F0bOQurInYXDT
+         JKaCtTXkORi/r756I7tYE+AhQyAD4hQkZLicL2UNBauH/Ic+JwCcG9U3c2gwFKVaK4Bf
+         PgNECK/QUPOHjRNE8iyhivNEvmoFWL827ga7HghaYMGPz4Onz2CFi+1pDsH4FuCI+wmO
+         LSB+ElWei9SWKwsZ0sUiH1Uh5fdPkvKNLJnO/uw8y5uPcglcAs7c0splnRzKpYohQtik
+         Rbzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXioyDbn9xsCt0NpWuZH9sJHcc9fR1JyoAq3yA2FBPekUZxd/zrakKOinwgJoSruTYgxS5a/VgJmAMIPvzCfgGoWnmwpkUsIfMeHgEq
+X-Gm-Message-State: AOJu0YzaLwBpjD+3QcJK23BWh/nkweiiB9JRdahTOwFkeLK8/BjQtI2u
+	FItluxH35xDffuM47XwpAXDqXnlEzNx07DM4+0q2ZOA/lKTyWGeAaxSpTAsMk1M=
+X-Google-Smtp-Source: AGHT+IHD4LY4lMSqiD5JjSfArJK6jY0AXCRwIpm4xXnBwTPfSsq31/8OXJCfA+vVp3x6KUA4XxU0fA==
+X-Received: by 2002:a05:6512:b9a:b0:52c:cb8d:637d with SMTP id 2adb3069b0e04-52ee53a768bmr1247519e87.5.1721214478693;
+        Wed, 17 Jul 2024 04:07:58 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc800022sm440566366b.176.2024.07.17.04.07.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 04:07:57 -0700 (PDT)
+Message-ID: <c51936a7-bb62-4423-aa6d-598ca9d58b8d@nexus-software.ie>
+Date: Wed, 17 Jul 2024 12:07:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/6] clk: qcom: Add camera clock controller driver for
+ SM8150
+To: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Abhishek Sahu <absahu@codeaurora.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>
+References: <20240702-camcc-support-sm8150-v2-0-4baf54ec7333@quicinc.com>
+ <20240702-camcc-support-sm8150-v2-5-4baf54ec7333@quicinc.com>
+ <xbe7kmaxhfwy26qzxrmwgiijaaiap4kdkruaxjs6ymihaw5taf@hvj57wyncfea>
+ <cc1957af-17bc-cd71-e6da-013e3a740014@quicinc.com>
+ <CAA8EJpqmJZJfd2famarx-FKFb1_+-nZM3N+FwK_hiOurG8n9=A@mail.gmail.com>
+ <e235f19f-26b5-2cf7-ebb7-36e4dabe9b9b@quicinc.com>
+ <CAA8EJpob5Qov78JfNN5BE+c1WyvnuBcQLYENHL0c1GTS+PPfSQ@mail.gmail.com>
+ <503c8ba7-585d-4222-8e81-7f4c52f5f513@linaro.org>
+ <0b84b689-8ab8-bcdf-f058-da2ead73786c@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+In-Reply-To: <0b84b689-8ab8-bcdf-f058-da2ead73786c@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Fan,
-
-Thanks for the feedback.
-
->-----Original Message-----
->From: fan <nifan.cxl@gmail.com>
->Sent: 16 July 2024 19:01
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
->acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
->bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; dan.j.williams@intel.com; dave@stgolabs.net; Jonathan
->Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; mike.malvestuto@intel.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>
->Subject: Re: [RFC PATCH v9 01/11] EDAC: Add generic EDAC RAS feature drive=
-r
->
->On Tue, Jul 16, 2024 at 04:03:25PM +0100, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
+On 17/07/2024 07:24, Satya Priya Kakitapalli (Temp) wrote:
+>> Patch sent.
 >>
->> Add generic EDAC driver supports registering RAS features supported in
->> the system. The driver exposes feature's control attributes to the
->> userspace in /sys/bus/edac/devices/<dev-name>/<ras-feature>/
+>> https://lore.kernel.org/linux-arm-msm/20240715-linux-next-24-07-13-sc8280xp-camcc-fixes-v1-1-fadb5d9445c1@linaro.org/T/#u
 >>
->> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  drivers/edac/Makefile            |   1 +
->>  drivers/edac/edac_ras_feature.c  | 155
->> +++++++++++++++++++++++++++++++  include/linux/edac_ras_feature.h |
->> 66 +++++++++++++
->>  3 files changed, 222 insertions(+)
->>  create mode 100755 drivers/edac/edac_ras_feature.c  create mode
->> 100755 include/linux/edac_ras_feature.h
->>
->> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile index
->> 9c09893695b7..c532b57a6d8a 100644
->> --- a/drivers/edac/Makefile
->> +++ b/drivers/edac/Makefile
->> @@ -10,6 +10,7 @@ obj-$(CONFIG_EDAC)			:=3D edac_core.o
->>
->>  edac_core-y	:=3D edac_mc.o edac_device.o edac_mc_sysfs.o
->>  edac_core-y	+=3D edac_module.o edac_device_sysfs.o wq.o
->> +edac_core-y	+=3D edac_ras_feature.o
->>
->>  edac_core-$(CONFIG_EDAC_DEBUG)		+=3D debugfs.o
->>
->> diff --git a/drivers/edac/edac_ras_feature.c
->> b/drivers/edac/edac_ras_feature.c new file mode 100755 index
->> 000000000000..24a729fea66f
->> --- /dev/null
->> +++ b/drivers/edac/edac_ras_feature.c
->> @@ -0,0 +1,155 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * EDAC RAS control feature driver supports registering RAS
->> + * features with the EDAC and exposes the feature's control
->> + * attributes to the userspace in sysfs.
->> + *
->> + * Copyright (c) 2024 HiSilicon Limited.
->> + */
->> +
->> +#define pr_fmt(fmt)     "EDAC RAS CONTROL FEAT: " fmt
->> +
->> +#include <linux/edac_ras_feature.h>
->> +
->> +static void edac_ras_dev_release(struct device *dev) {
->> +	struct edac_ras_feat_ctx *ctx =3D
->> +		container_of(dev, struct edac_ras_feat_ctx, dev);
->> +
->> +	kfree(ctx);
->> +}
->> +
->> +const struct device_type edac_ras_dev_type =3D {
->> +	.name =3D "edac_ras_dev",
->> +	.release =3D edac_ras_dev_release,
->> +};
->> +
->> +static void edac_ras_dev_unreg(void *data) {
->> +	device_unregister(data);
->> +}
->> +
->> +static int edac_ras_feat_scrub_init(struct device *parent,
->> +				    struct edac_scrub_data *sdata,
->> +				    const struct edac_ras_feature *sfeat,
->> +				    const struct attribute_group **attr_groups) {
->> +	sdata->ops =3D sfeat->scrub_ops;
->> +	sdata->private =3D sfeat->scrub_ctx;
->> +
->> +	return 1;
->> +}
->> +
->> +static int edac_ras_feat_ecs_init(struct device *parent,
->> +				  struct edac_ecs_data *edata,
->> +				  const struct edac_ras_feature *efeat,
->> +				  const struct attribute_group **attr_groups) {
->> +	int num =3D efeat->ecs_info.num_media_frus;
->> +
->> +	edata->ops =3D efeat->ecs_ops;
->> +	edata->private =3D efeat->ecs_ctx;
->> +
->> +	return num;
->> +}
->> +
->> +/**
->> + * edac_ras_dev_register - register device for ras features with edac
->> + * @parent: client device.
->> + * @name: client device's name.
->> + * @private: parent driver's data to store in the context if any.
->> + * @num_features: number of ras features to register.
->> + * @ras_features: list of ras features to register.
->> + *
->> + * Returns 0 on success, error otherwise.
->> + * The new edac_ras_feat_ctx would be freed automatically.
->> + */
->> +int edac_ras_dev_register(struct device *parent, char *name,
->> +			  void *private, int num_features,
->> +			  const struct edac_ras_feature *ras_features) {
->> +	const struct attribute_group **ras_attr_groups;
->> +	struct edac_ras_feat_ctx *ctx;
->> +	int attr_gcnt =3D 0;
->> +	int ret, feat;
->> +
->> +	if (!parent || !name || !num_features || !ras_features)
->> +		return -EINVAL;
->> +
->> +	ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL);
->> +	if (!ctx)
->> +		return -ENOMEM;
->> +
->> +	ctx->dev.parent =3D parent;
->> +	ctx->private =3D private;
->> +
->> +	/* Double parse so we can make space for attributes */
->> +	for (feat =3D 0; feat < num_features; feat++) {
->> +		switch (ras_features[feat].feat) {
->> +		case ras_feat_scrub:
->> +			attr_gcnt++;
->> +			break;
->> +		case ras_feat_ecs:
->> +			attr_gcnt +=3D
->ras_features[feat].ecs_info.num_media_frus;
->> +			break;
->> +		default:
->> +			ret =3D -EINVAL;
->> +			goto ctx_free;
->> +		}
->> +	}
->> +
->> +	ras_attr_groups =3D devm_kzalloc(parent,
->> +				       (attr_gcnt + 1) * sizeof(*ras_attr_groups),
->> +				       GFP_KERNEL);
->> +	if (!ras_attr_groups) {
->> +		ret =3D -ENOMEM;
->> +		goto ctx_free;
->> +	}
->> +
->> +	attr_gcnt =3D 0;
->> +	for (feat =3D 0; feat < num_features; feat++, ras_features++) {
->> +		if (ras_features->feat =3D=3D ras_feat_scrub) {
->> +			if (!ras_features->scrub_ops)
->> +				continue;
->> +			ret =3D edac_ras_feat_scrub_init(parent, &ctx->scrub,
->> +						       ras_features,
->&ras_attr_groups[attr_gcnt]);
->> +			if (ret < 0)
->> +				goto ctx_free;
->> +
->> +			attr_gcnt +=3D ret;
->> +		} else if (ras_features->feat =3D=3D ras_feat_ecs) {
->> +			if (!ras_features->ecs_ops)
->> +				continue;
->> +			ret =3D edac_ras_feat_ecs_init(parent, &ctx->ecs,
->> +						     ras_features,
->&ras_attr_groups[attr_gcnt]);
->> +			if (ret < 0)
->> +				goto ctx_free;
->> +
->> +			attr_gcnt +=3D ret;
->> +		} else {
->> +			ret =3D -EINVAL;
->> +			goto ctx_free;
->We already check this in the first pass, cannot be reached in the second p=
-ass.
-Will change.
+> 
+> If the clock is modelled, it can get disabled during the late init call, 
+> when the CCF disables the unused clocks. But, it is a PoR ON  clock and 
+> expectation from design team is to keep it always-on for GDSC 
+> functionality.
 
->> +		}
->Why use if/else instead of using switch/case as above?
-Will do.
+Not if it _parks_ - that's what parking does, also what is the upstream 
+usecase to sustain the clock as on from PoR to CAMSS probe(); ?
 
->> +	}
->> +	ras_attr_groups[attr_gcnt] =3D NULL;
->> +	ctx->dev.bus =3D edac_get_sysfs_subsys();
->> +	ctx->dev.type =3D &edac_ras_dev_type;
->> +	ctx->dev.groups =3D ras_attr_groups;
->> +	dev_set_drvdata(&ctx->dev, ctx);
->> +	ret =3D dev_set_name(&ctx->dev, name);
->> +	if (ret)
->> +		goto ctx_free;
->> +
->> +	ret =3D device_register(&ctx->dev);
->> +	if (ret) {
->> +		put_device(&ctx->dev);
->need to free ctx?
-Will fix.
+---
+bod
 
->> +		return ret;
->> +	}
->> +
->> +	return devm_add_action_or_reset(parent, edac_ras_dev_unreg,
->> +&ctx->dev);
->> +
->> +ctx_free:
->> +	kfree(ctx);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(edac_ras_dev_register);
->> diff --git a/include/linux/edac_ras_feature.h
->> b/include/linux/edac_ras_feature.h
->> new file mode 100755
->> index 000000000000..000e99141023
->> --- /dev/null
->> +++ b/include/linux/edac_ras_feature.h
->> @@ -0,0 +1,66 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * EDAC RAS control features.
->> + *
->> + * Copyright (c) 2024 HiSilicon Limited.
->> + */
->> +
->> +#ifndef __EDAC_RAS_FEAT_H
->> +#define __EDAC_RAS_FEAT_H
->> +
->> +#include <linux/types.h>
->> +#include <linux/edac.h>
->> +
->> +#define EDAC_RAS_NAME_LEN	128
->> +
->> +enum edac_ras_feat {
->> +	ras_feat_scrub,
->> +	ras_feat_ecs,
->> +	ras_feat_max
->> +};
->Use uppercase for the strings.
-Will do.
-
->
->Fan
->> +
->> +struct edac_ecs_ex_info {
->> +	u16 num_media_frus;
->> +};
->> +
->> +/*
->> + * EDAC RAS feature information structure  */ struct edac_scrub_data
->> +{
->> +	const struct edac_scrub_ops *ops;
->> +	void *private;
->> +};
->> +
->> +struct edac_ecs_data {
->> +	const struct edac_ecs_ops *ops;
->> +	void *private;
->> +};
->> +
->> +struct device;
->> +
->> +struct edac_ras_feat_ctx {
->> +	struct device dev;
->> +	void *private;
->> +	struct edac_scrub_data scrub;
->> +	struct edac_ecs_data ecs;
->> +};
->> +
->> +struct edac_ras_feature {
->> +	enum edac_ras_feat feat;
->> +	union {
->> +		const struct edac_scrub_ops *scrub_ops;
->> +		const struct edac_ecs_ops *ecs_ops;
->> +	};
->> +	union {
->> +		struct edac_ecs_ex_info ecs_info;
->> +	};
->> +	union {
->> +		void *scrub_ctx;
->> +		void *ecs_ctx;
->> +	};
->> +};
->> +
->> +int edac_ras_dev_register(struct device *parent, char *dev_name,
->> +			  void *parent_pvt_data, int num_features,
->> +			  const struct edac_ras_feature *ras_features); #endif
->/*
->> +__EDAC_RAS_FEAT_H */
->> --
->> 2.34.1
->>
-
-Thanks,
-Shiju
