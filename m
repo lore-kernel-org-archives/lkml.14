@@ -1,113 +1,114 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0601643A;
-	Wed, 17 Jul 2024 06:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8225C33D8;
+	Wed, 17 Jul 2024 06:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721198613; cv=none; b=NETqqIwqGMZfvFr+IPvVYflJbnYjBVEMrn7VcxmJGK7Ma5XWcpJA1HCS1tov3JgHDBAc2g9ljv/6crHqc6iWV3RoortTv59WMGyOMVD3RdsYmpXJvFaAyx++EGE9e3cx+lp2hHkv1Nx5YyqobYPD+FhhbrmYCDvEZc0D9pfcD3Y=
+	t=1721198794; cv=none; b=Wt1KbCs87wYnZCW+UnFHC6ZZu8CHYwkRF53HG50UX+AK9QXfFlmzzkMpGMiC/R6ETujRpG1ChvEnuv7bSOutvBKd3VZPgC2b/yE5arupZBPUcmIX2lv5e6gF5dDEijtrh4OOtRA9GPCuCE2Nnjl9TP/EbaY18gkgk1WoIPC01pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721198613; c=relaxed/simple;
-	bh=ja7zeoYposPScr+T5LloA2DwfVJSupnGw+spH+7H5Do=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LvFPwIq+7Rd8JQ+pdvtgtemNy5S6byWcacR1J3SZZ2kW7e4FxfztTrh7X7VzEAh+335iebcrAb2CxSQutLcoENZHjeSch5Fm/CT/V+ujQ5mbqR/8gNw0xJeUgXUZAjfmqQq5Rzwdxf7cPle4qGk2Hl0jq4fWATfuZIaz68KhCrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HFoysgEO; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1721198794; c=relaxed/simple;
+	bh=uMqIIpyBOEqt0CJmGAlMj+e7wF3ct3u+0A8IBPGTYoU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W87FyNN3tjI7D5rOab5TzkNBLbe/xZIhUcE3lppwgdE9IqvJDjbkCYDheZ8wa7hduu582o/E2NkQHuLvRVZsjFi2GEh5230PYLb3jOSSzljnS0/WeyGUF7jxIGysEpNX3TK6Aw6QDAvWoONagdPZ8OlFoot1g1Mu0a1JmzMtoII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8w08Aol; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HFoysgEO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1721198559; x=1721803359; i=markus.elfring@web.de;
-	bh=ja7zeoYposPScr+T5LloA2DwfVJSupnGw+spH+7H5Do=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=HFoysgEOSnRSdxn0p1smH508PnxPRO5c9h3Pp81TPewOIJPM4bvkBJEvKTpFuBXa
-	 cSNe7C3PZDA53cK82S8LtfGWgaZPr+yYYaHtDS1FYqvZG2+nu1sB4ZofUbDh/Ro/6
-	 OkF3K0CtO41MFcaeJfxHWtupqZAY9vngWjAKVngolmBXwbzvpsi+IX0PMYQ+QdNqV
-	 MnvPI0OIMPVVHm4w6iSSfzTfYvUWqt87/hfUAHAnxbmDM1jNd2NpqfPLFGHA3Z1tR
-	 hV8uB8kGhLo099uACdjsNr2TJtemn30fXqTzuNIqpbrJyyVRKwwgOlpLvXwzm3+0A
-	 Pq4/NzrySaRMjMIECA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Movne-1rzqYD0cfu-00mLwS; Wed, 17
- Jul 2024 08:42:39 +0200
-Message-ID: <d4d6c5ec-f884-4942-b90e-a3b58edd1e4e@web.de>
-Date: Wed, 17 Jul 2024 08:42:07 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8w08Aol"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E9D6C4AF09;
+	Wed, 17 Jul 2024 06:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721198794;
+	bh=uMqIIpyBOEqt0CJmGAlMj+e7wF3ct3u+0A8IBPGTYoU=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=A8w08Aol4NsvGHucRsXWDe35HVmylrYgdApVMyGZM+l9fZTx15gq377yjJd+0Cn01
+	 ygFI3mE3ed7h6IWg8AZdoMWy0FzZc+26D5cignaMx/cSRsPZO0U90DsYEh3yGCZOR/
+	 nDiQn4DavEJ5x5P8NVtziGmTIa7HOL4V6gVKLXbY90ZeRd+KsttVP8AWtmogF96WLI
+	 2J5OnQYbcZNJ5zWlb+7F3Ip0z5vC8ibLzwd2TWg4bf+xsTmw8XoWbNE8Bo0jeN7Pvp
+	 UV3fDvxncuNFsGiejFTchBJ/IQWYfLrvri+uYbYX0Sek6Njz93ByV+To3CHD1rE7nk
+	 VTGNGk4JxXAGA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BBCC3DA4B;
+	Wed, 17 Jul 2024 06:46:34 +0000 (UTC)
+From: Cryolitia PukNgae via B4 Relay <devnull+Cryolitia.gmail.com@kernel.org>
+Subject: [PATCH v3 0/2] hwmon: add GPD devices sensor driver
+Date: Wed, 17 Jul 2024 14:46:25 +0800
+Message-Id: <20240717-gpd_fan-v3-0-8d7efb1263b7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: x86/resctrl: Use seq_putc() in two functions
-To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- kernel-janitors@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Fenghua Yu
- <fenghua.yu@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Julia Lawall <julia.lawall@inria.fr>
-References: <d4be0dc8-f6db-4bf1-bb6d-ccff161dfde9@web.de>
- <cb908d7f-db6a-4b04-8867-bf36fb2dd45f@intel.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <cb908d7f-db6a-4b04-8867-bf36fb2dd45f@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bsbBHCh9dSOnyJFlUE4Y0uTiGVM8gEVJFaqti2cjqpWIHVQXB/m
- 4sdHifbKPC3+mSW735fEhwT5WCu+dOtYOVWDP41R9wNQr0xgLV/+xWkLytFodM3QPlz8Prl
- oI/4xx0YYTM4YjvppGG+W3tdARtJI4WkXl9VgP6p1hWHCtcf/H9Cmh0t3Hd27FwZksNSffa
- W0UCNgvC8FGL+yYTCX47w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+YGqUFSdjlw=;4Xe2f9TWnn9td51FmwdfuX0V+Xa
- G9SpiSoFT7LI5sdwfUavt3JgIrEoEUpqoMAVfIq3RiVh/C9Lbsssk72/3ZEQ14SVqZLGkjbGs
- TWiRhujvHqRAbRaXvxSxIHuHOYyxlxky3rZiEauvFKvspLvErGyHl3qPld2bW0K9eqXlcyhrG
- TywxzktMTEnfG/O9WbV4/Wz3lRCVSTSHAf0tvCTScQv5H+R1DSq9mJ9k80BzU5HflJAfXkemJ
- u8KbSuFsw14ZG/6W61EGx++ogkncq9evV5xKlVzRzfu3Dvm0KjIspdugYxa3Fv81zVI4d68tR
- MM4CB6ToxvyUm8zB6F4vw9IL/WQOK4A0IIlxgr9pb3aKdbWn5kAYfVbTb4kvkjpzeb5cNeeNi
- l9/iwfAxvHxZguviq5U+aLUGWxcAbryzbH/TkTJI5QRxzqOh27nro67z3k43oaQx8ToK9UoQV
- xMA+c3I2EgEWVjsUKGs03eEEzPHZ7RxW71gYePi/gAE5eDp4hKEBF/zrQ44SNcNKuODxTQNtv
- 4lOfJcLvjJlupgFu2Lq6iKWSs1UD/YneOYfAxe2x52dFxTrFdJQltq6kNV2mX4us8Uhz3nXYT
- WBEZPCoBE/UBa4Eub5Eu4Qvi/5aRRYtSX5byntIw51o4dYVeIjAA5Z+mSjeJ0SJgtn9nyW0DA
- iZWnWRl/7YMc21rBof2acTmN8iCZtcOygtq6saUw2g6hx6pF4t3Rd13njBh5KMoG+0rPxpM13
- xGUbbNTTZYCOiZnPoMDK7tGuP0asVQg6IrNjmlLtLgBIg+yqnrKBn1PghpKqTWG558tCwvcTa
- O6BpWRFgkyOPXswQovtHwt4Q==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAMFol2YC/2WMyQqDMBRFf0XeuikZNNGu+h+llGgGH9SBpIQW8
+ d8b3VTo8lzuOQtEG9BGuBQLBJsw4jRmEKcCul6P3hI0mYFTXlLFJPGzeTg9kko5QRsuurouIb/
+ nYB2+99LtnrnH+JrCZw8ntq3/jcQIJaKkFTNGMU3l1Q8an+duGmBrJH701M/j2XOqVVa2jeOsP
+ Xrrun4BYCwYZtYAAAA=
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Cryolitia PukNgae <Cryolitia@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>, 
+ Yao Zi <ziyao@disroot.org>, 
+ =?utf-8?q?Marcin_Str=C4=85gowski?= <marcin@stragowski.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1328;
+ i=Cryolitia@gmail.com; h=from:subject:message-id;
+ bh=uMqIIpyBOEqt0CJmGAlMj+e7wF3ct3u+0A8IBPGTYoU=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0VCYlFHUy9wQU5Bd0FJQVQ1ZEYzTDhpb
+ zdkQWNzbVlnQm1sMmpGNjY3UjRtOGNzS1BDOXJxOXRzeU1sVXVwCkVpVzlYQnhLRWlpQTRwcVR1
+ M0tKQVRNRUFBRUlBQjBXSVFSME5XMHB5dmR3U0JGOENDWStYUmR5L0lxTzNRVUMKWnBkb3hRQUt
+ DUkErWFJkeS9JcU8zVC9HQi85a0l3eitoUEE3NXd3V3ZrWUdSTjYzQXJkQW1hNDRoeHExS2JuZQ
+ ppNjFxS0k4RWs2M20xbCt5ZXlrQ29HczZ3SFZRZVI2UjQ3Q2kvTDFhcUUzSFVFalRubW1vc2E1R
+ UFTNitPenhUCi9qNU1OWG11QlY5WVdmZDl4U0lGNmQyY2JFOEw1NkZaK0U5cU9NUmFjWmxaSUlS
+ UGFPUU1EdEFKbHcreUE4S0UKT0hxYjBTVStQSW9Oc0FwbVlsamNmdlhkWXh0MlV0dDlSSEpZZ3E
+ zZUJNMGttY2ZSUm9Dd0NCVDhTVDVCejhCbgpWVCtuV08vc1lUOVFwdXZodDhiNUozcFl5anRDZl
+ JyZy8xYkNxNmprUm1NdnZVTEt3NGl6Q1U2Y1ZJYUZxbEd6CjZ5cXQ1SmZQM1JGY05YQzUzcjRUc
+ 0phbVArajAwSjNIQkVEbTZYS2hFb0J3TDk2WAo9dzdnUQotLS0tLUVORCBQR1AgTUVTU0FHRS0t
+ LS0tCg==
+X-Developer-Key: i=Cryolitia@gmail.com; a=openpgp;
+ fpr=1C3C6547538D7152310C0EEA84DD0C0130A54DF7
+X-Endpoint-Received: by B4 Relay for Cryolitia@gmail.com/default with
+ auth_id=186
+X-Original-From: Cryolitia PukNgae <Cryolitia@gmail.com>
+Reply-To: Cryolitia@gmail.com
 
->> Single characters should be put into a sequence.
->> Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
->>
->> This issue was transformed by using the Coccinelle software.
->
-> Could you please point me to how you accomplished this?
-=E2=80=A6
+Sensors driver for GPD Handhelds that expose fan reading and control via
+hwmon sysfs.
 
-Maybe.
+Shenzhen GPD Technology Co., Ltd. manufactures a series of handheld
+devices. This driver implements these functions through x86 port-mapped IO.
+I have tested it on my device.
+
+Tested-by: Marcin Strągowski <marcin@stragowski.com>
+Signed-off-by: Cryolitia PukNgae <Cryolitia@gmail.com>
+
+---
+Changes in v3:
+- Re-arrange code, thanks to Krzysztof Kozlowski, Guenter Roeck, Yao Zi!
+- Link to v2: https://lore.kernel.org/r/20240717-gpd_fan-v2-0-f7b7e6b9f21b@gmail.com
+
+Changes in v2:
+- Improved documentation, thanks to Randy Dunlap!
+- Link to v1: https://lore.kernel.org/r/20240716-gpd_fan-v1-0-34051dd71a06@gmail.com
+
+---
+Cryolitia PukNgae (2):
+      hwmon: add GPD devices sensor driver
+      hwmon: document: add gpd-fan
+
+ Documentation/hwmon/gpd-fan.rst |  63 ++++
+ Documentation/hwmon/index.rst   |   1 +
+ MAINTAINERS                     |   7 +
+ drivers/hwmon/Kconfig           |  10 +
+ drivers/hwmon/Makefile          |   1 +
+ drivers/hwmon/gpd-fan.c         | 674 ++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 756 insertions(+)
+---
+base-commit: d67978318827d06f1c0fa4c31343a279e9df6fde
+change-id: 20240716-gpd_fan-57f30923c884
+
+Best regards,
+-- 
+Cryolitia PukNgae <Cryolitia@gmail.com>
 
 
-> Is this a new coccinelle script outside of the kernel
-
-I constructed small scripts for the semantic patch language according to
-the presented code refactoring a while ago.
-
-
-> or still on its way upstream?
-
-I am curious if such a transformation approach can eventually be integrate=
-d
-for the coccicheck tool.
-
-
-> Could you please highlight the benefit of this change? Looking at seq_pu=
-ts() implementation, thanks
-> to [1], it seems to me these seq_puts() calls will result in seq_putc() =
-anyway?
-
-If the appropriate function call would be directly used, extra optimisatio=
-n efforts can be avoided
-by the compiler.
-
-Regards,
-Markus
