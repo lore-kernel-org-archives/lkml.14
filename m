@@ -1,42 +1,73 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726E5224FA;
-	Wed, 17 Jul 2024 16:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92A7224FA;
+	Wed, 17 Jul 2024 16:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721234014; cv=none; b=TfoXKOlc/e0V21bkWdfK+07BmkrB1m8qDu/mgqyLfIsCZNAJ9tQJFjoJTJ9G/2nvRTi/gVbYr7TKPg0LMm6L6md1i259HJLhN3kga/dhFYc4t1NBl8KU0KDb4eRLz67MTYnD6Fjj6wZN9jZThaObu/OFaC4VWVdDqpdRottk5DY=
+	t=1721234040; cv=none; b=AgkNmJWOrZT6vTq5T3WmIjiktfoRhGb/zfUlwhtMJmgyYG2ipalHCsYrfpp4lUM9h1lxr7cFr0aDvUaPnlyOn2Vlj+3gJubd9NwmCaZhhj+TMpkqJwiJnTnUlmix6Jq9FknwjNre8b85755r4HFjc3YXxe3ccGTDod9O7V/PSM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721234014; c=relaxed/simple;
-	bh=UkC0sAZpE7/WRdVikjHbnqPQTCDC+XxSCjuX8q3pfp4=;
+	s=arc-20240116; t=1721234040; c=relaxed/simple;
+	bh=eR+IpSFHTJwj1F3U9PG174HQKqE7xDYlltM7oX9Ds84=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HRX/Tn3Vv/nk4GLEAjvh0lO7gq3VVpEDDYfZ+n8teVa4wB3ue22SnEKBsYtsMMoR13oAnKPnLjOPq3Vq2sAWs6XwyrwEOXRyAZEk4YfSvIcBitEWZAQoD0+BDRebATmZDWsc1sndr67aFaGlG0FQL7462LDMfXDYPBs7FhAc4jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=PQGwxwrR; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=UFJPjIlNgLs1sJYUs0W/y9n/jOilcvHZc3/2zNnm42TBeVr6ltinCxNKpyYERTSIv6wOUEEYVjShUUAhgPR3Up9us7ROX1KLZE39zSJJpiEvgUwTUdBbyo8EG4NRy7duCYsMdG5FXho0kP+dZVoZ+0K+1TTEda5DGr1RXXnkisc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eWdOlfL9; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="PQGwxwrR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1721234008;
-	bh=UkC0sAZpE7/WRdVikjHbnqPQTCDC+XxSCjuX8q3pfp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PQGwxwrRVZyGcGPG8VdfyoeXjmAWRfFso6dpzGonGXqWZ/2nWrhSgLaBJopa/qzHX
-	 g3KMQMDA9gWTXx44KaHXtxXp0/KBUmieI+x6oEuL4PpaShvPVpp2jvf5sZdppfxMjM
-	 wQNhAhQuyjWfy5oMiaK1xYwXXI3sYPRbWlYp/V0Y=
-Date: Wed, 17 Jul 2024 18:33:27 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v6] kbuild: add script and target to generate pacman
- package
-Message-ID: <41cf1da7-ef13-4586-9e9a-f1f8f3b34d8e@t-8ch.de>
-References: <20240716-kbuild-pacman-pkg-v6-1-d3a04e308013@weissschuh.net>
- <20240717011515.GA1230090@thelio-3990X>
- <CAK7LNARYNqjcMkdnaY2oAkxttFTtTEgJ9VuOZOn0i4AuXp-How@mail.gmail.com>
- <CAK7LNARGWu8q5dAW5tYzfiSKKtZ9t8Dm9FzRoaoZhU4d-TWswQ@mail.gmail.com>
- <20240717135747.GC24892@thelio-3990X>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWdOlfL9"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77d85f7fa3so184748266b.0;
+        Wed, 17 Jul 2024 09:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721234037; x=1721838837; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GInFX+KjHCh2SZ3uixPMhANVTPTX0s1Mpxztx+WvSTA=;
+        b=eWdOlfL9XnGGYpaoxXFgWtX/aKE1V4A/r4x2eatQIwNIbULCo3VlhcVnWI1LAFVGd2
+         7yBU4gISEcfG/bT+rs2IhIk03ddTjnwrjJfh3LQXcjl9uPbxwSqKWPkjAZYRh2yo7okw
+         /cqBxeFHgBY1AKYBW9pN4k6OQzZUzGEkTydM5S01u6pESqEJ8izZNr4vB0k10Sdu/3dr
+         PH7ZkCllz33ZVxpHnowlvprHl3nMrur1ovrR0u0z3WMul5pA6m0UfxB9T6ZUfJ5ioLZn
+         KZ405h5ViWO/HhenzsHqGlJP6TOU8p75ZFdNW8tjCsvj9spbpKAyYMiXzhnXWbW0/TZf
+         SmUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721234037; x=1721838837;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GInFX+KjHCh2SZ3uixPMhANVTPTX0s1Mpxztx+WvSTA=;
+        b=KpJEruQIBkUP2PHNEiuzk067ZHGXtLL2IdcYDi7gmOp9wa1UYNm54vjCM9uCnHxGdy
+         dXJFDDRxZwP7gAmwQA32dV0kOaWb/F8UrljMCVRMe+qIiTvg5iIWz7eL0gSWz+jA3ED7
+         jPXWPCf7GmSpsyEBNXxtemM0QcBH8hs5vWVsFhrjj5STAalWVoGn6VtjvA9vSGF3JKhr
+         okvOgHzQ9awp8qNGmISc6KWMtCq5+sf9bwv3zc3HFYIqGb6d5igwDhjxKpgILHexSCvj
+         QK6Tq6uGDFvP0tlkKmmMNhD5XQo+JX95WciRxPM7jNXS7KhJ8APiaP1GE3gKi4+eGnw0
+         b8tg==
+X-Forwarded-Encrypted: i=1; AJvYcCXidQys7uAJP5fNzG5oWY/H+t2GBlF+tmtyJM8HJYBv1PiL9K0DoRCk5EPsJDRsAH7JDhxDsiimB29teCHfKwaoqqiOGBWyPEn85xgMhRHGSfz0QDYIrYF4MgeuR1TuP9yp8RvUUB+5zSszMQ==
+X-Gm-Message-State: AOJu0Yy+3BuYLvDjsUErLj9e1CO8873xqnXL3/7MGFDGRsIPV2lKyvTY
+	JRx3TWSafpB0C3kZOkVV8cTXyP7WzSbB4OMTF497Dv/lVrGG1BSA
+X-Google-Smtp-Source: AGHT+IG+pJCuJO7wqUIo6mEWXUTt+L9f5QLWe2SlWxtz8fE12AIl6KwlmaFJE+tbVXCalbz5FHfNHg==
+X-Received: by 2002:a17:906:af0d:b0:a77:ecf0:84e5 with SMTP id a640c23a62f3a-a7a0f13be53mr16604966b.14.1721234036828;
+        Wed, 17 Jul 2024 09:33:56 -0700 (PDT)
+Received: from trashcan (public-nat-01.vpngate.v4.open.ad.jp. [219.100.37.233])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc5a342esm463059366b.40.2024.07.17.09.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 09:33:56 -0700 (PDT)
+Date: Wed, 17 Jul 2024 16:31:59 +0000
+From: Vladimir Lypak <vladimir.lypak@gmail.com>
+To: Connor Abbott <cwabbott0@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jordan Crouse <jordan@cosmicpenguin.net>,
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] fixes for Adreno A5Xx preemption
+Message-ID: <Zpfx_xnRmwoMkSFw@trashcan>
+References: <20240711100038.268803-1-vladimir.lypak@gmail.com>
+ <CACu1E7HROtx1Zgyy0EJuHj_HWE8Nd6OtFnxTcrDrHP+2HA5o6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,65 +77,85 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240717135747.GC24892@thelio-3990X>
+In-Reply-To: <CACu1E7HROtx1Zgyy0EJuHj_HWE8Nd6OtFnxTcrDrHP+2HA5o6A@mail.gmail.com>
 
-On 2024-07-17 06:57:47+0000, Nathan Chancellor wrote:
-> On Wed, Jul 17, 2024 at 05:51:21PM +0900, Masahiro Yamada wrote:
-> ...
-> > > > > diff --git a/scripts/package/PKGBUILD b/scripts/package/PKGBUILD
-> > > > > new file mode 100644
-> > > > > index 000000000000..eb3957fad915
-> > > > > --- /dev/null
-> > > > > +++ b/scripts/package/PKGBUILD
-> > > > > @@ -0,0 +1,99 @@
-> > > > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > > > +# Maintainer: Thomas Weißschuh <linux@weissschuh.net>
-> > > > > +# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
-> > > > > +
-> > > > > +pkgbase=linux-upstream
-> ...
-> > Perhaps, this may make sense.
-> > 
-> > Currently,
-> > pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-api-headers")
-> > is hard-coded.
-> > 
-> > I do not think linux-upstream-headers make sense
-> > when CONFIG_MODULE is disabled.
-> > 
-> > scripts/package/mkspec turns off with_devel
-> > when CONFIG_MODULE is disabled.
-
-Ack.
-
-> Yes, I think that is a reasonable change to make. In the face of that
-> potential change, would it make sense to slightly adjust the
-> makedepends? pahole is only needed when CONFIG_DEBUG_INFO_BTF is enabled
-> but I guess no other package building infrastructure makes dependencies
-> conditional in that manner.
-
-The pahole dependency optimization seems like an overcomplication.
-Arch Linux in general is not hell-bent on minimizing dependencies,
-for example there are no dev-packages at all.
-Also if the kernel will require pahole in more cases it will create
-churn.
-
-> Another thing I wonder about would be allowing the user to customize the
-> value of pkgbase, like
+On Wed, Jul 17, 2024 at 10:40:26AM +0100, Connor Abbott wrote:
+> On Thu, Jul 11, 2024 at 11:10 AM Vladimir Lypak
+> <vladimir.lypak@gmail.com> wrote:
+> >
+> > There are several issues with preemption on Adreno A5XX GPUs which
+> > render system unusable if more than one priority level is used. Those
+> > issues include persistent GPU faults and hangs, full UI lockups with
+> > idling GPU.
+> >
+> > ---
+> > Vladimir Lypak (4):
+> >   drm/msm/a5xx: disable preemption in submits by default
+> >   drm/msm/a5xx: properly clear preemption records on resume
+> >   drm/msm/a5xx: fix races in preemption evaluation stage
+> >   drm/msm/a5xx: workaround early ring-buffer emptiness check
+> >
+> >  drivers/gpu/drm/msm/adreno/a5xx_gpu.c     | 18 ++++++++++----
+> >  drivers/gpu/drm/msm/adreno/a5xx_gpu.h     | 12 ++++++---
+> >  drivers/gpu/drm/msm/adreno/a5xx_preempt.c | 30 ++++++++++++++++++++---
+> >  3 files changed, 47 insertions(+), 13 deletions(-)
+> > ---
+> > base-commit: 523b23f0bee3014a7a752c9bb9f5c54f0eddae88
+> > --
+> > 2.45.2
+> >
 > 
->   pkgbase=${PACMAN_PKGBASE:-linux-upstream}
+> Hi Vladimir,
+
+Hi Connor!
+
 > 
-> because unlike Debian and Fedora, multiple versions of the same kernel
-> package cannot be installed at once. If I wanted to build a package
-> against mainline and -next and install them side by side, I could only
-> do so if they are named differently. This would allow one to provide
-> PACMAN_PKGBASE=linux-mainline and PACMAN_PKGBASE=linux-next to
-> accomplish that. Might be a hyper specific use case though, so I am not
-> opposed to disregarding it.
+> While looking at preemption on a7xx, where the overall logic is pretty
+> much the same, and I've been seeing the same "soft lockups". However
+> even after porting patch 3, it turns out that's not enough because
+> there's a different race. The sequence of events is something like
+> this:
+> 
+> 1. Medium-prio app A submits to ring 2.
+> 2. Ring 0 retires its last job and we start a preemption to ring 2.
+> 3. High-prio app B submits to ring 0. It sees the preemption from step
+> 2 ongoing and doesn't write the WTPR register or try to preempt.
+> 4. The preemption finishes and we update WPTR.
+At this point with patch 3 applied it should switch to ring 0 right away
+because of trigger call in the end of a5xx_preempt_irq. Didn't you
+forget it? Downstream has such call too. Even though it makes preemption
+a little more aggressive it doesn't work without it.
 
-Ack.
+> 5. App A's submit retires. We try to preempt, but the submit and
+> ring->cur write from step 3 happened on a different CPU and the write
+> hasn't landed yet so we skip it.
 
-FYI linux-upstream was picked to be consistent with pkg-debian and not
-to conflict with the existing linux-mainline package in AUR [0].
+I don't think this is possible on modern CPUs. Could it be that retire
+IRQ appeared earlier (while it was switching from 0 to 2) and you are
+looking at msm_gpu_submit_retired trace event which is called from
+retire work later.
 
-[0] https://aur.archlinux.org/packages/linux-mainline
+> 
+> It's a bit tricky because write reordering is involved, but this seems
+> to be what's happening - everything except my speculation about the
+> delayed write to ring->cur being the problem comes straight from a
+> trace of this happening.
+> 
+> Rob suggested on IRC that we make retire handling happen on the same
+> workqueue as submissions, so that preempt_trigger is always
+> serialized, which IIUC would also make patch 3 unnecessary. What do
+> you think?
+
+In this patch series i have tried to do least amount of changes so it
+could be easily back-ported. It isn't pretty but it works reliably for
+me. Otherwise it would be fine to just disable preemption like it's done
+on LTS before 5.4 and rework preemption in new kernel releases.
+
+Kind regards,
+
+Vladimir
+
+> 
+> Best regards,
+> 
+> Connor
