@@ -1,202 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0456D181BBE;
-	Wed, 17 Jul 2024 18:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1AA12E75;
+	Wed, 17 Jul 2024 18:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721240364; cv=none; b=Ywj+d7uU/V3Zh30/n/97/xScWF9skNzlVeuzo2NnSJ+WK0+md/t9wWeDwRlzgaQnl7eD1VxxMHWZZ4Lb7tlU+pbkqRRT+VTBJnIB3JPnXkPYRn89CdV6jl3b5CFyqaOjgBZJQGcacGZeN2XO7j0b5762plaVvn7v1hEqm17MPck=
+	t=1721240399; cv=none; b=er1oHqyTzq3zVjVKB9o/JX+aUX95h0VK8MELLQs2g7CoVPdXDdC5TMTbj03PtL61+rHJIdtHUf5pFBV4wQ7xUUZ580CLL1jBvWIuN5GtPmgEBrlkSjK3j/yWBXssr6QBXZLIzDladEGU+o4PDZVC8BYxMVamuIfwb27OGVl+t68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721240364; c=relaxed/simple;
-	bh=GmUUSK5wGPMIjTgA2rtDl0EVIe+HRUqTQRe1IJXXyoQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SKKMj5bO+W0BC/S5mTpLx3+81EBfzhjJyfKDQHM/lhvPhvSSZth56EpPem4uWmPR4ywnvlyJzdW+u0TwEJJqIVBnDoxovi2YkUz3z6BZuu7740xBIq8KBVsWt8IaTpVzZGP4QFpwDmuE0htSbVIEaMdUo9rnzZOLUVt+3dPl7P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZtLqw72z; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721240399; c=relaxed/simple;
+	bh=8icS3I5fyutbM346XBkOUW3AxYb3LWPuaYdcM7QeK5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SmOTj9ZPDWNUD+B3FqKggMUdUjdICq64hetUJxnGthx25KbMqTWAimSIR/lBRoXOgZwp7T6D0D24uaJ2sx6VJ1GDaJ9Oc90OpPAWpKmGVQvtJ2sEHdScfpCi5hiBSqHBdUdFX5hJzoxJ5mRWWPEpp2XVqthJxIEyp8teFZ7GK60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lRJ1uDXn; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZtLqw72z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721240362; x=1752776362;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GmUUSK5wGPMIjTgA2rtDl0EVIe+HRUqTQRe1IJXXyoQ=;
-  b=ZtLqw72zTZ1XD1rty/MpkrpVxIk6ZrzfOiDbKUlwWezqUGwRfGGuvXj9
-   ZR7y64rEZ4W+UfOIRz4+eUx5BxiZ824PHvdDWHC6vnzMGh5o8feH72LL0
-   NH+i/54GFpGLT7coKHW8MGeORpx7hOPmN7uGqPZJl4qriqTS8/KNi1zIe
-   4FUTUev3AcgaWAfDzquyrpDEjC08dJ8lbBt+tx8ttBociyNxvtW6zaSWd
-   JCoktSRyQTiJbPRXqnjQYB+9V7UDfdwFB8Iqpc3elQEclySJogV287JkE
-   YOh3H/uu+JOcKA05BbdmLiFkmHLbcfn1I11RsIWq8lvHS4De/GbEjJu19
-   Q==;
-X-CSE-ConnectionGUID: YMjvFbxhRfqD3sdYkQR28Q==
-X-CSE-MsgGUID: Kbnf9STSSye7ROe72Sskgw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="18461490"
-X-IronPort-AV: E=Sophos;i="6.09,215,1716274800"; 
-   d="scan'208";a="18461490"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 11:19:21 -0700
-X-CSE-ConnectionGUID: BK4n1Gw7TPi3uA5tprpqAg==
-X-CSE-MsgGUID: YDzbysw2RuCRKkhBAcMtQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,215,1716274800"; 
-   d="scan'208";a="50358864"
-Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
-  by fmviesa008.fm.intel.com with ESMTP; 17 Jul 2024 11:19:20 -0700
-From: matthew.gerlach@linux.intel.com
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	joyce.ooi@intel.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH] dt-bindings: PCI: altera: msi: Convert to YAML
-Date: Wed, 17 Jul 2024 13:17:56 -0500
-Message-Id: <20240717181756.2177553-1-matthew.gerlach@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lRJ1uDXn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=wZm6SNFUjdixQ8MFhwCOTFsWlwrJ2qo19PWx5tk7Qzs=; b=lR
+	J1uDXnY/gXzVm5H6rPK31AMEifEF9kNgBrRazajQJrliANeNtDEVlS6Zht2oMO9gfi6pYTk3X85ke
+	xv8lh0ocHxvPiAS66fIvxlGJgB85mL53FYPAAXqn9wt+7y+j1gD2EV8XhPONhBKG7lN4L7L2Sx6YF
+	HDkfRDuOZsLxqxs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sU9Fk-002jAB-Ec; Wed, 17 Jul 2024 20:19:48 +0200
+Date: Wed, 17 Jul 2024 20:19:48 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Rayyan Ansari <rayyan.ansari@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Timur Tabi <timur@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: net: qcom,emac: convert to dtschema
+Message-ID: <a6a0c244-f8da-4736-bb63-429a508d6993@lunn.ch>
+References: <20240717090931.13563-1-rayyan.ansari@linaro.org>
+ <cecaa6c3-adeb-489f-a9d2-0f43d089dd1d@lunn.ch>
+ <D2RXISKUMBWA.ZQDKI0F03EI0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <D2RXISKUMBWA.ZQDKI0F03EI0@linaro.org>
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-
-Convert the device tree bindings for the Altera PCIe MSI controller
-from text to YAML.
-
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
----
- .../bindings/pci/altera-pcie-msi.txt          | 27 --------
- .../bindings/pci/altr,msi-controller.yaml     | 65 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 66 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-deleted file mode 100644
-index 9514c327d31b..000000000000
---- a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Altera PCIe MSI controller
--
--Required properties:
--- compatible:	should contain "altr,msi-1.0"
--- reg:		specifies the physical base address of the controller and
--		the length of the memory mapped region.
--- reg-names:	must include the following entries:
--		"csr": CSR registers
--		"vector_slave": vectors slave port region
--- interrupts:	specifies the interrupt source of the parent interrupt
--		controller. The format of the interrupt specifier depends on the
--		parent interrupt controller.
--- num-vectors:	number of vectors, range 1 to 32.
--- msi-controller:	indicates that this is MSI controller node
--
--
--Example
--msi0: msi@0xFF200000 {
--	compatible = "altr,msi-1.0";
--	reg = <0xFF200000 0x00000010
--		0xFF200010 0x00000080>;
--	reg-names = "csr", "vector_slave";
--	interrupt-parent = <&hps_0_arm_gic_0>;
--	interrupts = <0 42 4>;
--	msi-controller;
--	num-vectors = <32>;
--};
-diff --git a/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml b/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-new file mode 100644
-index 000000000000..84ff0b8a7725
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) 2015, 2024, Intel Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/altr,msi-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Altera PCIe MSI controller
-+
-+maintainers:
-+  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - altr,msi-1.0
-+
-+  reg:
-+    items:
-+      - description: CSR registers
-+      - description: Vectors slave port region
-+
-+  reg-names:
-+    items:
-+      - const: csr
-+      - const: vector_slave
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  msi-controller: true
-+
-+  num-vectors:
-+    description: number of vectors
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 32
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - msi-controller
-+  - num-vectors
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    msi0: msi@ff200000 {
-+        compatible = "altr,msi-1.0";
-+        reg = <0xff200000 0x00000010>,
-+              <0xff200010 0x00000080>;
-+        reg-names = "csr", "vector_slave";
-+        interrupt-parent = <&hps_0_arm_gic_0>;
-+        interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+        msi-controller;
-+        num-vectors = <32>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f296a5ea2529..8a3424a03772 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17585,7 +17585,7 @@ PCI MSI DRIVER FOR ALTERA MSI IP
- M:	Joyce Ooi <joyce.ooi@intel.com>
- L:	linux-pci@vger.kernel.org
- S:	Supported
--F:	Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-+F:	Documentation/devicetree/bindings/pci/altr,msi-controller.yaml
- F:	drivers/pci/controller/pcie-altera-msi.c
+On Wed, Jul 17, 2024 at 04:45:55PM +0100, Rayyan Ansari wrote:
+> On Wed Jul 17, 2024 at 4:20 PM BST, Andrew Lunn wrote:
+> > On Wed, Jul 17, 2024 at 10:09:27AM +0100, Rayyan Ansari wrote:
+> > > Convert the bindings for the Qualcomm EMAC Ethernet Controller from the
+> > > old text format to yaml.
+> > > 
+> > > Also move the phy node of the controller to be within an mdio block so
+> > > we can use mdio.yaml.
+> >
+> > Does the MAC driver already support this?
+> >
+> > When i look at the emacs-phy.c there is
+> >
+> > 	struct device_node *np = pdev->dev.of_node;
+> >
+> >                 ret = of_mdiobus_register(mii_bus, np);
+> >
+> > I don't see anything looking for the mdio node in the tree.
+> >
+> > 	Andrew
+> 
+> Hi Andrew,
+> 
+> Yes, from my understanding an mdio node is not explicitly needed as it
+> just uses "phy-handle".
+> 
+> However, I think it makes more sense to place the phy within an mdio
+> node instead of directly under the controller node. This is based off
+> of 5ecd39d1bc4b ("dt-bindings: net: convert emac_rockchip.txt to YAML"),
+> in which the same decision was made ("Add mdio sub node"), also during a
+> text -> yaml conversion.
  
- PCI MSI DRIVER FOR APPLIEDMICRO XGENE
--- 
-2.34.1
+Using an MDIO node is preferred, and is the modern way of doing
+it. Placing the PHY directly in the MAC node is valid, but it is the
+old way of doing it.
 
+It is up to the driver to decide where it looks for the PHY nodes when
+it registers the MDIO bus. The np in of_mdiobus_register(mii_bus, np);
+points to the MAC node. So when you move the PHYs into the new MDIO
+node, they will not be found when the MDIO bus is probed.
+
+Take a look at:
+
+commit 2c60c4c008d4b05b9b65bf88f784556208029333
+Author: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Date:   Mon Mar 25 16:34:51 2024 +0100
+
+    ravb: Add support for an optional MDIO mode
+
+as an example where support for such an MDIO node was added to a
+driver.
+
+    Andrew
+
+---
+pw-bot: cr
