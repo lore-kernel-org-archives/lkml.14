@@ -1,113 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EF741A94;
-	Wed, 17 Jul 2024 08:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208C038F97;
+	Wed, 17 Jul 2024 08:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721205546; cv=none; b=kmlIlVWfuZKjFrxuHwqT9ByB8Y0puj9HkamcBrSEL7KNTv8d0q1G7uQIh4m2aMvUmGeTRbjVbMBFv3VlckHWb6NOjusZoHqc1938PMy+6XOrJjCawpL2lgPWoR+v7X4/Tvv/s99oj9r8O+Jnw1ywx0exB4SJdqxlEfIKtAiMlf8=
+	t=1721205586; cv=none; b=foZ/bBntqIQKcOZB+GIeCpBAakUSolaC3B0PNHU+WvMoI4iyMd4Wxq8w9lpaXzSHg0tkCVu0U6ahfIJK1GDti9MfUqByPH5vyu2dOdRGnRRgNStgwTPXbMR5mUwILmjpInI22sDDxU9Z/+0sbqMfl3V8IdtNssOPrLUn/haAi8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721205546; c=relaxed/simple;
-	bh=+0JnY0BRZ9gFkA3BfeIiX/VZb78v6eNHC2ZKCKCZMlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/Mrvcol1nbzjhJBi3IC3ASUJsmmxX9/7VyjvQYd2lYvS0Qg1nfJIZt7KrqeHwAcosHH4sZCrmfuZbtTvqr9+Cb3yVnC8mTuBZCj7A90CvnZkUfzjQS2rzEi4CzjYno4lVOR6XCmFPIUVdAYj2+bUUKw4/saShJBizxgLEm2j5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B1C9C32782;
-	Wed, 17 Jul 2024 08:39:00 +0000 (UTC)
-Date: Wed, 17 Jul 2024 14:08:56 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Sricharan R <quic_srichara@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devi priya <quic_devipriy@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Anusha Rao <quic_anusha@quicinc.com>
-Subject: Re: [PATCH V6 4/4] PCI: qcom: Add support for IPQ9574
-Message-ID: <20240717083856.GD2574@thinkpad>
-References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
- <20240716092347.2177153-5-quic_srichara@quicinc.com>
+	s=arc-20240116; t=1721205586; c=relaxed/simple;
+	bh=opPt7tqdT8LfI+IabmLzugjEK+EwOUpc8JG+FLZUkAs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=geikVEu+qymdHCCup5Tug9WH1LEkPgq5qAflyl9XFIhpIqbyZ14YocR9QO7eYqIkSQ9jHS2WitmrhNopeBtucySKJByocCLQT/DCw2+kgMtLBvPCiGOQToe/x4wgWjI2Rwt9AwkoDk6QEtpZ0rl7O3ex0zqlelUYjH0H7oPCFuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pxa78rQj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GWmGvZw7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pxa78rQj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GWmGvZw7; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pxa78rQj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GWmGvZw7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pxa78rQj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GWmGvZw7"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 606CE21B48;
+	Wed, 17 Jul 2024 08:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721205583; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aWd77CskmZAw29o1fnPllLrLsoYpfLesmhhj3Kakj/E=;
+	b=pxa78rQj+nX9KXEEB6YNzJPZuY1dvGoDwIBF3G4/JXiUYv3/EqHWprGj7JV8APvb3v8a+c
+	9btJdgY2D6i0VYZGmPK37UsKZk7wGcPrpvj4zUIkfthoYWDvbKTX1IAj6w/AWRu+/wJbVe
+	MHReJvZ0GjowdiimMEzzKVB7Halp5LA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721205583;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aWd77CskmZAw29o1fnPllLrLsoYpfLesmhhj3Kakj/E=;
+	b=GWmGvZw7pLd9+mfqz7ssyUO63zC7WhKK80q6aRwea4Xpg3tVO0tWTQj8K+bQJSxvFlAXX4
+	aK5Me0k/Pt1Y0CAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=pxa78rQj;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GWmGvZw7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721205583; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aWd77CskmZAw29o1fnPllLrLsoYpfLesmhhj3Kakj/E=;
+	b=pxa78rQj+nX9KXEEB6YNzJPZuY1dvGoDwIBF3G4/JXiUYv3/EqHWprGj7JV8APvb3v8a+c
+	9btJdgY2D6i0VYZGmPK37UsKZk7wGcPrpvj4zUIkfthoYWDvbKTX1IAj6w/AWRu+/wJbVe
+	MHReJvZ0GjowdiimMEzzKVB7Halp5LA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721205583;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aWd77CskmZAw29o1fnPllLrLsoYpfLesmhhj3Kakj/E=;
+	b=GWmGvZw7pLd9+mfqz7ssyUO63zC7WhKK80q6aRwea4Xpg3tVO0tWTQj8K+bQJSxvFlAXX4
+	aK5Me0k/Pt1Y0CAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 218FA1368F;
+	Wed, 17 Jul 2024 08:39:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id KdLbBk+Dl2a2FgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 17 Jul 2024 08:39:43 +0000
+Date: Wed, 17 Jul 2024 10:40:15 +0200
+Message-ID: <87y160xvgw.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: lars@metafoo.de,
+	perex@perex.cz,
+	tiwai@suse.com,
+	broonie@kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	shengjiu.wang@gmail.com
+Subject: Re: [PATCH] ALSA: pcm_dmaengine: Don't synchronize DMA channel when DMA is paused
+In-Reply-To: <1721198693-27636-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1721198693-27636-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240716092347.2177153-5-quic_srichara@quicinc.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[metafoo.de,perex.cz,suse.com,kernel.org,vger.kernel.org,alsa-project.org,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.01
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 606CE21B48
 
-On Tue, Jul 16, 2024 at 02:53:47PM +0530, Sricharan R wrote:
-> From: devi priya <quic_devipriy@quicinc.com>
+On Wed, 17 Jul 2024 08:44:53 +0200,
+Shengjiu Wang wrote:
 > 
-> The IPQ9574 platform has four Gen3 PCIe controllers:
-> two single-lane and two dual-lane based on SNPS core 5.70a.
+> When suspended, the DMA channel may enter PAUSE state if dmaengine_pause()
+> is supported by DMA.
+> At this state, dmaengine_synchronize() should not be called, otherwise
+> the DMA channel can't be resumed successfully.
 > 
-> QCOM IP rev is 1.27.0 and Synopsys IP rev is 5.80a.
-> Add a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
-> which reuses all the members of 'ops_2_9_0' except for the
-> post_init as the SLV_ADDR_SPACE_SIZE configuration differs
-> between 2_9_0 and 1_27_0.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> ---
->  [V6] Fixed all Manivannan's and Bjorn Helgaas comments.
->       Removed the SLV_ADDR_SPACE_SZ_1_27_0 macro to have default value.
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 31 ++++++++++++++++++++++----
->  1 file changed, 27 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 0180edf3310e..26acd9f5385e 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1116,16 +1116,13 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
->  	return clk_bulk_prepare_enable(res->num_clks, res->clks);
->  }
->  
-> -static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> +static int qcom_pcie_post_init(struct qcom_pcie *pcie)
->  {
->  	struct dw_pcie *pci = pcie->pci;
->  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	u32 val;
->  	int i;
->  
-> -	writel(SLV_ADDR_SPACE_SZ,
-> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> -
->  	val = readl(pcie->parf + PARF_PHY_CTRL);
->  	val &= ~PHY_TEST_PWR_DOWN;
->  	writel(val, pcie->parf + PARF_PHY_CTRL);
-> @@ -1165,6 +1162,18 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
->  	return 0;
->  }
->  
-> +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-> +{
-> +	return qcom_pcie_post_init(pcie);
-> +}
-> +
-> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> +
+> Fixes: e8343410ddf0 ("ALSA: dmaengine: Synchronize dma channel after drop()")
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-As discussed in [1], DBI/ATU mirroring should be disabled completely to avoid
-the enumeration issue you are seeing on this platform. Please rebase on top of
-the referenced patch (once v2 gets posted).
+Thanks, applied now.
 
-- Mani
 
-[1] https://lore.kernel.org/linux-arm-msm/a01404d2-2f4d-4fb8-af9d-3db66d39acf7@quicinc.com/
--- 
-மணிவண்ணன் சதாசிவம்
+Takashi
