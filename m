@@ -1,48 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E306438396;
-	Wed, 17 Jul 2024 07:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D5F20B0F;
+	Wed, 17 Jul 2024 07:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721202622; cv=none; b=fTnRfKP5S2Aoq07gym1MauRMLiFVkPy8QZj8E7FLAlgwu9xuA2dzRxvA9fmRTBp7Pruz7h0qQ1uIwxruiY1Xm3BzSeriVCWdPLxuH0tpuHDYI07IwCjtaCKgt9vjH4e4dm6yk6ejDyrnCHF+Yfh8qyoM3pl2WC+woq0d9c1Pj9A=
+	t=1721202628; cv=none; b=EM0bQVZpmBEQL2cCOYs+SOCO78HOcVKCFnJFwn30Va1ssF6OLQVajrXmTFBZXSAtIjeSRBY1bqUKZxcr87GPNDnLDrin5/nMTeNVIjv0J/bvzsRTk7flIjKlFG+GLhKXXxQNMC8cSUbXGMAHZBJjffwc1n4vrH5E1dQUFX+lt90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721202622; c=relaxed/simple;
-	bh=SLUV51RvtIWgXuM7MBTSJv2TYkDWKXLtsIRRZESaCLo=;
+	s=arc-20240116; t=1721202628; c=relaxed/simple;
+	bh=QgeNMP59ZJp2VsYUt26F0DEFpOxpr1YaaHlDBa9gCV4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f00Gf9udBV9dH8qGlt+DIWobOrorSUr5t5zJyoOSiQMsV2Z8gZer7bPz7llCofJwEuCzfdRTwRLvVZQmni1UgthNVn4lgNnBHMeN/n800GigdhWVyzncpHGKh5GHT9HA2Efaymay622peIbmw7oZ6kp6XiWBuY78FJjBd53rb0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=tX7o1c51; arc=none smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=pxec5sURRdg6w+85nHbT5t1hEHmUrAgIn9un46y0FynE2adBR8MOblpl0fElHyR3IkbImHifD0dOKIkoKu6gT9CKlmxl07vk52Cq7UeK+k812NWQp+NeP0fHjgvF1o4VMjCbOQtoRPXJCKRu0SZsBJvActGTBbdcWTb6GONZ+8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=7aW+kwkq; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="tX7o1c51"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H5wxV5001490;
-	Wed, 17 Jul 2024 09:49:54 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="7aW+kwkq"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H5e15k010567;
+	Wed, 17 Jul 2024 09:49:37 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	1DknkizxVV/IH/bP7HOHWWENUi7tH+dKqef25hsU4VU=; b=tX7o1c51BNMX83uU
-	QnB7F6YQLetN5UBKgy2WH5mwxkvE1VaHUOE8LcOkQdsu1YlFajsMF93uKyVpqvVp
-	C9O7em4ebNSlN27asC/lr2hU45G0mwgp3BO8x6Lc2BhW2x404fZ4scQZa7lI3FYy
-	n+c5KvrT/PqPcz6H3IIwO9/z3q8TjXNucfRiFbhVD1gokqNb5Stx+49Nxxp04PuT
-	AwojyNSM77Zv7gfjxsCbGbVWPXAREtuwZkSnsJAeJLWVXAahvcRoDVU7VQ5zNEfL
-	+aS7jqI/Zw3qtKvXldjlTVXDTOJCSepFijWm+sP0LltaA+xJv/d+CObPCb/VxCCM
-	qN3YJQ==
+	/wDzLMJfs3d0OO8qkL/AMn3f2Lm5+yPbKI78+MtQ96w=; b=7aW+kwkq+b4dF2Cs
+	BSl2TJzJlgULsgzBc73ccKSf9OkeXSSTiz/MhEZcxYDdM1DlFl7zuaqIw+IMWEEY
+	kQCQI7uEGBpVmN7gFPlDDxSaca7OXQwfQlYEM+WfE59nyCx2lB0yAkJ0NLYQtDER
+	GWT2Nu3B+CiKKyRX9N0sBeYc/wKNXbCqPvNlpWkJcfGg9wciAw3RC/1Duq8ndihP
+	Cd/e7+7T9ghOBXdfSm1H8UN6QxhpynnhnZ4k4Hyha/1i+1FUWomR5G7qsqoATpVn
+	1Fbh+TNeWyt4TSEDT7chKS6m5Nyt7RHiGseXigo7qU9z2q6cyVHf+EOrKwNF7Abs
+	igN83w==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 40dwfkt78u-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 40dwfh26at-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jul 2024 09:49:54 +0200 (MEST)
+	Wed, 17 Jul 2024 09:49:37 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6AD664002D;
-	Wed, 17 Jul 2024 09:49:37 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9B94B40045;
+	Wed, 17 Jul 2024 09:49:32 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 24E02241491;
-	Wed, 17 Jul 2024 09:48:57 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EDF2B24148A;
+	Wed, 17 Jul 2024 09:48:54 +0200 (CEST)
 Received: from localhost (10.48.86.111) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 17 Jul
- 2024 09:48:56 +0200
+ 2024 09:48:54 +0200
 From: Valentin Caron <valentin.caron@foss.st.com>
 To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Rob Herring
@@ -57,9 +57,9 @@ CC: <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
         Amelie Delaunay <amelie.delaunay@foss.st.com>,
         Valentin Caron
 	<valentin.caron@foss.st.com>
-Subject: [PATCH v2 4/4] rtc: stm32: add alarm A out feature
-Date: Wed, 17 Jul 2024 09:48:35 +0200
-Message-ID: <20240717074835.2210411-5-valentin.caron@foss.st.com>
+Subject: [PATCH v2 1/4] dt-bindings: rtc: stm32: describe pinmux nodes
+Date: Wed, 17 Jul 2024 09:48:32 +0200
+Message-ID: <20240717074835.2210411-2-valentin.caron@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240717074835.2210411-1-valentin.caron@foss.st.com>
 References: <20240717074835.2210411-1-valentin.caron@foss.st.com>
@@ -77,150 +77,71 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-17_04,2024-07-16_02,2024-05-17_01
 
-STM32 RTC can pulse some SOC pins when an RTC alarm expires.
-This patch adds this functionality for alarm A. The pulse can out on three
-pins RTC_OUT1, RTC_OUT2, RTC_OUT2_RMP (PC13, PB2, PI8 on stm32mp15)
-(PC13, PB2, PI1 on stm32mp13) (PC13, PF4/PF6, PI8 on stm32mp25).
+STM32 RTC is capable to handle 3 specific pins of the soc (out1, out2,
+out2_rmp) and to outputs 2 signals (LSCO, alarm-a).
 
-This patch only adds the functionality for devices which are using
-st,stm32mp1-rtc and st,stm32mp25-rtc compatible.
-
-Add "alarm-a" in pinmux functions.
+This feature is configured thanks to pinmux nodes and pinctrl framework.
+This feature is available with compatible st,stm32mp1-rtc and
+st,stm32mp25-rtc only.
 
 Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
 ---
- drivers/rtc/rtc-stm32.c | 60 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ .../devicetree/bindings/rtc/st,stm32-rtc.yaml | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index 675860a13051..3e4f2ee22b0b 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -47,8 +47,10 @@
- #define STM32_RTC_CR_ALRAE		BIT(8)
- #define STM32_RTC_CR_ALRAIE		BIT(12)
- #define STM32_RTC_CR_OSEL		GENMASK(22, 21)
-+#define STM32_RTC_CR_OSEL_ALARM_A	FIELD_PREP(STM32_RTC_CR_OSEL, 0x01)
- #define STM32_RTC_CR_COE		BIT(23)
- #define STM32_RTC_CR_TAMPOE		BIT(26)
-+#define STM32_RTC_CR_TAMPALRM_TYPE	BIT(30)
- #define STM32_RTC_CR_OUT2EN		BIT(31)
+diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+index 7a0fab721cf1..aae06e570c22 100644
+--- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+@@ -53,6 +53,28 @@ properties:
+       override default rtc_ck parent clock phandle of the new parent clock of rtc_ck
+     maxItems: 1
  
- /* STM32_RTC_ISR/STM32_RTC_ICSR bit fields */
-@@ -158,6 +160,7 @@ struct stm32_rtc_data {
- 	bool need_accuracy;
- 	bool rif_protected;
- 	bool has_lsco;
-+	bool has_alarm_out;
- };
++patternProperties:
++  "^rtc-[a-z]+-[0-9]+$":
++    type: object
++    $ref: /schemas/pinctrl/pinmux-node.yaml
++    description: |
++      Configuration of STM32 RTC pins description. STM32 RTC is able to output
++      some signals on specific pins:
++      - LSCO (Low Speed Clock Output) that allow to output LSE clock on a pin.
++      - Alarm out that allow to send a pulse on a pin when alarm A of the RTC
++        expires.
++    additionalProperties: false
++    properties:
++      function:
++        enum:
++          - lsco
++          - alarm-a
++      pins:
++        enum:
++          - out1
++          - out2
++          - out2_rmp
++
+ allOf:
+   - if:
+       properties:
+@@ -68,6 +90,9 @@ allOf:
  
- struct stm32_rtc {
-@@ -245,6 +248,47 @@ struct stm32_rtc_pinmux_func {
- 	int (*action)(struct pinctrl_dev *pctl_dev, unsigned int pin);
- };
+         clock-names: false
  
-+static int stm32_rtc_pinmux_action_alarm(struct pinctrl_dev *pctldev, unsigned int pin)
-+{
-+	struct stm32_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
-+	struct stm32_rtc_registers regs = rtc->data->regs;
-+	unsigned int cr = readl_relaxed(rtc->base + regs.cr);
-+	unsigned int cfgr = readl_relaxed(rtc->base + regs.cfgr);
++      patternProperties:
++        "^rtc-[a-z]+-[0-9]+$": false
 +
-+	if (!rtc->data->has_alarm_out)
-+		return -EPERM;
-+
-+	cr &= ~STM32_RTC_CR_OSEL;
-+	cr |= STM32_RTC_CR_OSEL_ALARM_A;
-+	cr &= ~STM32_RTC_CR_TAMPOE;
-+	cr &= ~STM32_RTC_CR_COE;
-+	cr &= ~STM32_RTC_CR_TAMPALRM_TYPE;
-+
-+	switch (pin) {
-+	case OUT1:
-+		cr &= ~STM32_RTC_CR_OUT2EN;
-+		cfgr &= ~STM32_RTC_CFGR_OUT2_RMP;
-+		break;
-+	case OUT2:
-+		cr |= STM32_RTC_CR_OUT2EN;
-+		cfgr &= ~STM32_RTC_CFGR_OUT2_RMP;
-+		break;
-+	case OUT2_RMP:
-+		cr |= STM32_RTC_CR_OUT2EN;
-+		cfgr |= STM32_RTC_CFGR_OUT2_RMP;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	stm32_rtc_wpr_unlock(rtc);
-+	writel_relaxed(cr, rtc->base + regs.cr);
-+	writel_relaxed(cfgr, rtc->base + regs.cfgr);
-+	stm32_rtc_wpr_lock(rtc);
-+
-+	return 0;
-+}
-+
- static int stm32_rtc_pinmux_lsco_available(struct pinctrl_dev *pctldev, unsigned int pin)
- {
- 	struct stm32_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
-@@ -307,6 +351,7 @@ static int stm32_rtc_pinmux_action_lsco(struct pinctrl_dev *pctldev, unsigned in
+       required:
+         - st,syscfg
  
- static const struct stm32_rtc_pinmux_func stm32_rtc_pinmux_functions[] = {
- 	STM32_RTC_PINMUX("lsco", &stm32_rtc_pinmux_action_lsco, "out1", "out2_rmp"),
-+	STM32_RTC_PINMUX("alarm-a", &stm32_rtc_pinmux_action_alarm, "out1", "out2", "out2_rmp"),
- };
+@@ -83,6 +108,9 @@ allOf:
+           minItems: 2
+           maxItems: 2
  
- static int stm32_rtc_pinmux_get_functions_count(struct pinctrl_dev *pctldev)
-@@ -763,6 +808,7 @@ static const struct stm32_rtc_data stm32_rtc_data = {
- 	.need_accuracy = false,
- 	.rif_protected = false,
- 	.has_lsco = false,
-+	.has_alarm_out = false,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -788,6 +834,7 @@ static const struct stm32_rtc_data stm32h7_rtc_data = {
- 	.need_accuracy = false,
- 	.rif_protected = false,
- 	.has_lsco = false,
-+	.has_alarm_out = false,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -822,6 +869,7 @@ static const struct stm32_rtc_data stm32mp1_data = {
- 	.need_accuracy = true,
- 	.rif_protected = false,
- 	.has_lsco = true,
-+	.has_alarm_out = true,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -847,6 +895,7 @@ static const struct stm32_rtc_data stm32mp25_data = {
- 	.need_accuracy = true,
- 	.rif_protected = true,
- 	.has_lsco = true,
-+	.has_alarm_out = true,
- 	.regs = {
- 		.tr = 0x00,
- 		.dr = 0x04,
-@@ -878,6 +927,17 @@ MODULE_DEVICE_TABLE(of, stm32_rtc_of_match);
- static void stm32_rtc_clean_outs(struct stm32_rtc *rtc)
- {
- 	struct stm32_rtc_registers regs = rtc->data->regs;
-+	unsigned int cr = readl_relaxed(rtc->base + regs.cr);
++      patternProperties:
++        "^rtc-[a-z]+-[0-9]+$": false
 +
-+	cr &= ~STM32_RTC_CR_OSEL;
-+	cr &= ~STM32_RTC_CR_TAMPOE;
-+	cr &= ~STM32_RTC_CR_COE;
-+	cr &= ~STM32_RTC_CR_TAMPALRM_TYPE;
-+	cr &= ~STM32_RTC_CR_OUT2EN;
-+
-+	stm32_rtc_wpr_unlock(rtc);
-+	writel_relaxed(cr, rtc->base + regs.cr);
-+	stm32_rtc_wpr_lock(rtc);
- 
- 	if (regs.cfgr != UNDEF_REG) {
- 		unsigned int cfgr = readl_relaxed(rtc->base + regs.cfgr);
+       required:
+         - clock-names
+         - st,syscfg
 -- 
 2.25.1
 
