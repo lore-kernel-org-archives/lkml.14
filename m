@@ -1,136 +1,71 @@
-Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865CB180A6A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 14:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D80180A6A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 14:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721227825; cv=none; b=aVy62R3GhU0QT8+2n6DpOFk2NqQ2slUoyt0kN1Mf9l1NmJIQuf+Q1jG+WqirvI47v9G7b1xljdrbxKxLctZHQK46aasgpYUk1q2xn/StDjBBXqhYEL/cHBZsJliEVt8TXpSZiAc7VBD+ItGmBJfnlR2iEM/vLG15odUIphrPeM8=
+	t=1721227882; cv=none; b=ObJVvCXVmSZHApBp+Htf46meSJSfhfPgL9AESUDd3FzIjnabwIUiFJVMUAeGQd2CkskvmChrGvZWXsv53mBdAhuTC5vlJuDAh9N++4guDqXY9Nfn39UVnEunq2JyJ+7KYl9ZD1C00U87P4+jX15p/FETWm0mso2l+EIMCWT0NM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721227825; c=relaxed/simple;
-	bh=kOC7dain/Ecn19fnYCSA1BsvxNkv4qPBuYHtr6kGdec=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mcxuPSAyct77c2sjbZpsK7RempYfMhqiYQwmCZZzJO07dtqeUJ6TnWXWNAKJ51ofz1iphu6e2QQf6C6rv93KFsxkxgUh6rHtkKamzX0JjkCJiNkBPL5L6dxeuKEbBrDPhUWW4Aa8uc1UVvMbrU4GF6BpADTSNvdKy8wqz6UvqUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=HNb3qLVb; arc=none smtp.client-ip=17.58.6.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1721227882; c=relaxed/simple;
+	bh=XRYe6k301hVMrjUu3bWA/ITB1UE99EqwDnjHlWIAJ5k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=flSdFCp2wSToeC1k380AJ2nm94Vh1R/C92r37flMHCWjgGCRX6ZT1nfCcaLyrIk516HX8XCXKKjZQ3pP2upD3mY+43tS64BGV/SarwPcQJdHkRpzP0M8zrBFL07LSIDxcOgF0K1LtdZaFscCUR2x0CA7pFClreKVE/1BZOsNj4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i1MPIB6x; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="HNb3qLVb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1721227824;
-	bh=IlittNRrWIwg+J1ede5MGTyPJ8aU7D2MA3P6IZLCUTw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To;
-	b=HNb3qLVbZg6jhrJp2/p5LBUiiiFk1/thCt+zgP1wFVK2sji5TllVBfRa483mngGS0
-	 IoFifzn0hkttQPQ2B1OYbDgyCcAtk/QeIeo8byENgrNbPLipOReu4wrCiW0vAz2y5W
-	 JSkMxP9Pg5USlgzhrIrrZQSb6a5uuNDcCSQywsD1ITXLbXlI/1z4ZRW+VhLs6lFyif
-	 L9NC0yQ5OpNGWL3KSBwt7S8aXhYk7WAGkM2QyhjLeu008u3uFm1HVVXuDmPc5WA3dG
-	 RB6uVHY2DhSuDFH7haDlSNmg3vKwBUhr8frDW+nm58JKQwsb0AT0MzCvkekAFEpcM1
-	 fNwNZdk0B53qQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id 98CB218055D;
-	Wed, 17 Jul 2024 14:50:20 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Wed, 17 Jul 2024 22:50:05 +0800
-Subject: [PATCH] driver core: Fix error handling in driver API
- device_rename()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1MPIB6x"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2cb4b75a150so635540a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:51:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721227881; x=1721832681; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XRYe6k301hVMrjUu3bWA/ITB1UE99EqwDnjHlWIAJ5k=;
+        b=i1MPIB6x/XudVHm5ksxOrn8oP/aeIM3MGiCnPojyWpHdQzoYKBpa0Pvr8/kW/55LYZ
+         BvWjJ5T8EgXFnq2XFPd/VPnh5ZRJWha35tD9X47L6u1omiXhL1gi9zXIrEPsFrgYyyYi
+         1KphVffBjKEAvWDrIcjn/LjwXjzzqyMzRNax4LCY53JWJIV6mZvwsxwbNRdzUmw/dGPl
+         ydLFkMfTj9M7Nrg9cBp65y8aCHWkTGAYIzhgGfZZ7p3eJH0u4dkNtL5FyrtjGG5wF3X1
+         CIMJZcDdwm7ovlRImzi9cnBk7cnAcs7ppY25HlwsWxzt2M5JyXB8WR+c1qDYurGfdL90
+         k5rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721227881; x=1721832681;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XRYe6k301hVMrjUu3bWA/ITB1UE99EqwDnjHlWIAJ5k=;
+        b=KL6EPl2XHRZgvzBV6ijHfFbTidRBX+PC5ZZiQq68jDVPzVjNVhgYSRedfh2gaN5rQA
+         em3/tN7+V2M9jCtz9hX1g6bv8TM4b7LsjyXSrQhUC0LMRXdOv0P8IUnxz2h3P3w0b9pi
+         i2RkDg/VwYVSgHg4lGmbSR2JLIseaXlJ41u1XKAn0n7UY4U0p5IqSZH3jvgm9KVVV/sF
+         ASs3UvAqSdCTk7LnvyN4QxT1CRS1f6/Tstd7kNJbA3m9HBAI9gkWDX7iizRjSQG37u/u
+         2CalmY5wgXUrIZ+DxxEbSQQfmJcNVQCw+krLCB3q1iZVxgt+ypMyeP/m3wMgUyGCmgep
+         D+hw==
+X-Gm-Message-State: AOJu0Yxlm4Kt1WA4jidjjASwaC9i/pWMVMTI430eAnko+8DaEjjsWZKt
+	3iAP3FK8k9tYgHA70NlU9WLXVrXDSBi1ECBGBOJB2qnzHv4qyIsg
+X-Google-Smtp-Source: AGHT+IFzBQApJfDtVZSjHvWylGDQrFtwfnApHHiZeaH5cGIbrnS1T9c2rr2gcgJjRWoSldlTvJUrVA==
+X-Received: by 2002:a17:90a:c28d:b0:2c7:8a94:215d with SMTP id 98e67ed59e1d1-2cb5268fff4mr1447884a91.12.1721227880645;
+        Wed, 17 Jul 2024 07:51:20 -0700 (PDT)
+Received: from kernelexploit-virtual-machine.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb600f9db0sm22082a91.14.2024.07.17.07.51.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 07:51:20 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: syzbot+a81f2759d022496b40ab@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [syzbot] [net?] KMSAN: uninit-value in hsr_get_node (3)
+Date: Wed, 17 Jul 2024 23:51:15 +0900
+Message-Id: <20240717145115.9515-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <0000000000004a86bf0616571fc7@google.com>
+References: <0000000000004a86bf0616571fc7@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240717-device_rename_fix-v1-1-54d85024518f@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIABzal2YC/x2MwQqAIBAFfyX2nGBiGP1KRIi+ag9ZKEQQ/ntLx
- 3nMm5cKMqPQ2LyUcXPhMwl0bUNh92mD4ihMRhurXedUFClgyUj+wLLyoxCw6sG6waIn+V0ZMv/
- Naa71A8iGJH5jAAAA
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Benjamin Thery <benjamin.thery@bull.net>, 
- "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Zijun Hu <zijun_hu@icloud.com>, Greg Kroah-Hartman <gregkh@suse.de>, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.0
-X-Proofpoint-GUID: pObZy8LU45do_ik5wl5xDhsv4mPjPFbg
-X-Proofpoint-ORIG-GUID: pObZy8LU45do_ik5wl5xDhsv4mPjPFbg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_11,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- clxscore=1011 suspectscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2407170114
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
-
-Call failure of device_rename(@dev, @new_name) maybe unexpectedly change
-link name within @dev's class directory to @new_name, fixed by correcting
-error handling for the API.
-
-Fixes: f349cf34731c ("driver core: Implement ns directory support for device classes.")
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/base/core.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 2b4c0624b704..a05b7186cf33 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -4512,9 +4512,11 @@ EXPORT_SYMBOL_GPL(device_destroy);
-  */
- int device_rename(struct device *dev, const char *new_name)
- {
-+	struct subsys_private *sp = NULL;
- 	struct kobject *kobj = &dev->kobj;
- 	char *old_device_name = NULL;
- 	int error;
-+	bool is_link_renamed = false;
- 
- 	dev = get_device(dev);
- 	if (!dev)
-@@ -4529,7 +4531,7 @@ int device_rename(struct device *dev, const char *new_name)
- 	}
- 
- 	if (dev->class) {
--		struct subsys_private *sp = class_to_subsys(dev->class);
-+		sp = class_to_subsys(dev->class);
- 
- 		if (!sp) {
- 			error = -EINVAL;
-@@ -4537,17 +4539,20 @@ int device_rename(struct device *dev, const char *new_name)
- 		}
- 
- 		error = sysfs_rename_link_ns(&sp->subsys.kobj, kobj, old_device_name,
--					     new_name, kobject_namespace(kobj));
--		subsys_put(sp);
-+				new_name, kobject_namespace(kobj));
- 		if (error)
- 			goto out;
-+
-+		is_link_renamed = true;
- 	}
- 
- 	error = kobject_rename(kobj, new_name);
--	if (error)
--		goto out;
--
- out:
-+	if (error && is_link_renamed)
-+		sysfs_rename_link_ns(&sp->subsys.kobj, kobj, new_name,
-+				old_device_name, kobject_namespace(kobj));
-+	subsys_put(sp);
-+
- 	put_device(dev);
- 
- 	kfree(old_device_name);
-
----
-base-commit: 51835949dda3783d4639cfa74ce13a3c9829de00
-change-id: 20240717-device_rename_fix-ecef084784e5
-
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
-
+#syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
