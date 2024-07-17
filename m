@@ -1,75 +1,102 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBBD1CD00
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AB81CA80
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 07:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721202541; cv=none; b=DlfGROycMKHX3H9Zp7egA7GEUfDQx8Fv2TRwP9eMJ2vXIDem1jYXs79RoM5LYtoT2c1W2YkHXiKCs7/JpJB21udAdGjedPmXabxMg+2f5gmrqI6hXYRmsMDbB2grj9CqpmksTkXN6WqXshZTBefTQImYraJceos0f1HfKpvEjYA=
+	t=1721202600; cv=none; b=qoE1ZXn1Wkm3TJXpgrsSXMTeIgiDm4XJa75jyCgVHo0luLwq50ysQsOYWykBJbXmSo5QhMmXpVA/A8AVd6cakGHSYa0YjzzA+A4ccnc3cZ4DMK3wTT8Z4a8XtrYWP7IEhVDehzL7w+Edza84t1SGTut1fQfx3OuyYSa/+cUMAek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721202541; c=relaxed/simple;
-	bh=fQKinLOgVYXUaqhb1jsK2F5qZ/2mY2/bYYXibk9U4MA=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=qTErLpAA65BV+bIP12ObFjcMcnjBW5ExNwTYkHvfDfpM3qaYb2vf2gHGdzXuBTilmdzPP9R6rO4tvI5m9zTsB3ejhWWauz4CRzIfMbUMGufre6sk6xOwTL5rvGUhkUvQV/YFa1EffG9rblm9zqAJyg7HxpEaqAHIBsLKXtzjtio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1721202600; c=relaxed/simple;
+	bh=oZZuOcd5k/lY+KJ8M8Pe2lZiMTEJa6EaJvfs//FIdfg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NrCBAw7Gi1V0l37XC+nKflwukdx3HsjAHR8zbRO2ZFSzo2ByQsqQIQixQFWgTieE1SvUjpL5ayk18B8bVQ9lsaRsbCzUwq6Z8UGt2IQis3gBU5M0XkW9gGN+YjKtS7XZpUgGKC6S1Rhmbi8jvkaWpn9md7QZTBlHm6Ed+iT2SdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WP7Lk3rZmzdj7G;
-	Wed, 17 Jul 2024 15:47:10 +0800 (CST)
-Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3A4A114037B;
-	Wed, 17 Jul 2024 15:48:54 +0800 (CST)
-Received: from [10.173.127.72] (10.173.127.72) by
- kwepemd200019.china.huawei.com (7.221.188.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 17 Jul 2024 15:48:53 +0800
-Subject: Re: [PATCH v2] mm/hwpoison: reset hwpoison filter parameters in
- pfn_inject_exit()
-To: Michal Hocko <mhocko@suse.com>
-CC: <akpm@linux-foundation.org>, <nao.horiguchi@gmail.com>,
-	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <20240716033516.606582-1-linmiaohe@huawei.com>
- <ZpYxkH1EFB65tEzt@tiehlicka>
- <c81031da-2722-dea4-0118-9f4911035cae@huawei.com>
- <ZpdiOAjdSJfkpbr7@tiehlicka>
- <d04b9e4f-fc43-f93b-c1a2-2ed9479ffc71@huawei.com>
- <Zpdx-smohyWI2nYV@tiehlicka>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <04f8db38-9a53-a81a-82ac-21653f795e08@huawei.com>
-Date: Wed, 17 Jul 2024 15:48:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WP7KF6L0gz20krH;
+	Wed, 17 Jul 2024 15:45:53 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id C7C451A0190;
+	Wed, 17 Jul 2024 15:49:56 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 17 Jul
+ 2024 15:49:56 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <linux@armlinux.org.uk>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+	<gregkh@linuxfoundation.org>, <arnd@arndb.de>, <deller@gmx.de>,
+	<javierm@redhat.com>, <bhe@redhat.com>, <robh@kernel.org>,
+	<peterz@infradead.org>, <julian.stecklina@cyberus-technology.de>,
+	<rafael.j.wysocki@intel.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH -next v3 1/2] x86/kexec: Fix crash memory reserve exceed system memory bug
+Date: Wed, 17 Jul 2024 15:54:38 +0800
+Message-ID: <20240717075439.2705552-2-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240717075439.2705552-1-ruanjinjie@huawei.com>
+References: <20240717075439.2705552-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zpdx-smohyWI2nYV@tiehlicka>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200019.china.huawei.com (7.221.188.193)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On 2024/7/17 15:25, Michal Hocko wrote:
-> On Wed 17-07-24 14:59:40, Miaohe Lin wrote:
->> On 2024/7/17 14:18, Michal Hocko wrote:
-> [...]
->>> Why does this need to be done through different modules? Why it cannot
->>> be part of the memory-filure.c?
->>
->> This is a bold idea for me. :) I think it can be part of the memory-filure.c.
->> So CONFIG_HWPOISON_INJECT should be removed from the world and then make
->> hwpoison-inject default on when MEMORY_FAILURE is configured?
-> 
-> I would start by moving code into mm/hwpoison-inject.c. Whether this
-> should also remove CONFIG_HWPOISON_INJECT is a different question. I
-> am not really sure a debugfs interface warrants a config option. Anyway
-> two things for two separate patches
-> 
+On x86_32 Qemu machine with 1GB memory, the cmdline "crashkernel=4G" is ok
+as below:
+	crashkernel reserved: 0x0000000020000000 - 0x0000000120000000 (4096 MB)
 
-Thanks for your suggestion. :) Will try to do it when I am free.
-Thanks.
-.
+The cause is that the crash_size is parsed and printed with "unsigned long
+long" data type which is 8 bytes but allocated used with "phys_addr_t"
+which is 4 bytes in memblock_phys_alloc_range().
+
+Fix it by checking if the crash_size is greater than system RAM size and
+warn out if so as Baoquan suggested.
+
+After this patch, it fails and warn out as expected and no above confusing
+reserve success info.
+
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Suggested-by: Baoquan He <bhe@redhat.com>
+---
+v3:
+- Handle the check in arch_reserve_crashkernel() Baoquan suggested.
+- Split x86_32 and arm32.
+- Add Suggested-by.
+- Drop the wrong fix tag.
+v2:
+- Also fix for x86_32.
+- Update the fix method.
+- Peel off the other two patches.
+- Update the commit message.
+---
+ arch/x86/kernel/setup.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 05c5aa951da7..c26373029b77 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -481,6 +481,11 @@ static void __init arch_reserve_crashkernel(void)
+ 	if (ret)
+ 		return;
+ 
++	if (crash_size >= memblock_phys_mem_size()) {
++		pr_warn("Crashkernel reserve memory cannot exceed physical memory.");
++		return;
++	}
++
+ 	if (xen_pv_domain()) {
+ 		pr_info("Ignoring crashkernel for a Xen PV domain\n");
+ 		return;
+-- 
+2.34.1
+
