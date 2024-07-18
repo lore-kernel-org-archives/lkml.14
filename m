@@ -1,264 +1,118 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438986F312;
-	Thu, 18 Jul 2024 14:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9B812C7FB;
+	Thu, 18 Jul 2024 14:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721313433; cv=none; b=NffpU84/cm7HhHjpn7ubbCTGem4VclLYFG3WiCbXBOtzQBy4BeRgE4QfEIcBzLMTWhyJy2Wy8ImTJgLVfmlOuGLrzuZ13OO41stCaJ93G6CrvfLxivpf763tIkgQjtgX4E9Tcr6DHD4Q+Ojuchofknt5bKTvI7PCyzMY5G4SzDQ=
+	t=1721313634; cv=none; b=NYww/wM/lPzChXAXmaQEwPl67ODheuC4bzFw7rRj5kVwMhZminyU/PmzD8IFIKep8Pkeh05VtuknyUmNpxGdQzdNNUcOJp1e74ZQFhlR4Ty2tDkZz3sbGNXCcDjlBQAj9DL5JHvsQ+qhSe2dxkoA0iHo7XhWPVR0ZG7pT/jmelk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721313433; c=relaxed/simple;
-	bh=KG+r9+pdBxGhUyc5bKGSm19ff+3ISaJmIXIzLEDRzxg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VFx0NvDLz/M0qhLp2+u0gJlGuBqOa6BRd6OgQR6zYotMOgqYmUUgm9rleXkOVcQbyBw4c59pGbp3b5JtOZRqb6/zugYT/NzVnRDjgSIH9mTq6Lh36PKL9pJKe1qVEf2HbKGda9tEJ0hbKI4Z3UlZjXUcvuLJBpEsch/7asMD1Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4WPvYC0VmNz9v7Hk;
-	Thu, 18 Jul 2024 21:58:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 1531314061D;
-	Thu, 18 Jul 2024 22:17:15 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwAnJC7RI5lm88lbAA--.56617S2;
-	Thu, 18 Jul 2024 15:17:14 +0100 (CET)
-Message-ID: <ae769bbfe51a2c1c270739a91defc0dfbd5b8b5a.camel@huaweicloud.com>
-Subject: Re: [RFC PATCH v19 2/5] security: Add new SHOULD_EXEC_CHECK and
- SHOULD_EXEC_RESTRICT securebits
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>, Kees Cook
-	 <kees@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>,  Linus Torvalds <torvalds@linux-foundation.org>, Paul
- Moore <paul@paul-moore.com>, Theodore Ts'o <tytso@mit.edu>,  Alejandro
- Colomar <alx@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>, Andrew Morton
- <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>,
- Christian Heimes <christian@python.org>, Dmitry Vyukov
- <dvyukov@google.com>, Eric Biggers <ebiggers@kernel.org>, Eric Chiang
- <ericchiang@google.com>, Fan Wu <wufan@linux.microsoft.com>, Florian Weimer
- <fweimer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, James
- Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>,  Jann Horn
- <jannh@google.com>, Jeff Xu <jeffxu@google.com>, Jonathan Corbet
- <corbet@lwn.net>, Jordan R Abrahams <ajordanr@google.com>, Lakshmi
- Ramasubramanian <nramas@linux.microsoft.com>, Luca Boccassi
- <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, "Madhavan T .
- Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski
- <mattbobrowski@google.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Matthew
- Wilcox <willy@infradead.org>, Miklos Szeredi <mszeredi@redhat.com>, Mimi
- Zohar <zohar@linux.ibm.com>, Nicolas Bouchinet
- <nicolas.bouchinet@ssi.gouv.fr>, Scott Shell <scottsh@microsoft.com>, Shuah
- Khan <shuah@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Steve
- Dower <steve.dower@python.org>, Steve Grubb <sgrubb@redhat.com>, Thibaut
- Sautereau <thibaut.sautereau@ssi.gouv.fr>, Vincent Strubel
- <vincent.strubel@ssi.gouv.fr>,  Xiaoming Ni <nixiaoming@huawei.com>, Yin
- Fengwei <fengwei.yin@intel.com>,  kernel-hardening@lists.openwall.com,
- linux-api@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
- linux-integrity@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org
-Date: Thu, 18 Jul 2024 16:16:45 +0200
-In-Reply-To: <20240706.eng1ieSh0wa5@digikod.net>
-References: <20240704190137.696169-1-mic@digikod.net>
-	 <20240704190137.696169-3-mic@digikod.net> <202407041711.B7CD16B2@keescook>
-	 <20240705.IeTheequ7Ooj@digikod.net> <202407051425.32AF9D2@keescook>
-	 <20240706.eng1ieSh0wa5@digikod.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1721313634; c=relaxed/simple;
+	bh=YwZzyUITuCl4ZqII9n1ohNvr2Pwme3YCK721bGwwxXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NBf7yuv2C+FsFEnbpgN7rlphf07Ri6HLWSvPj0AHAwwEviZvlYsDzhlL2QAbB7A572dmZGEefAf5TlvxxgDMWZZSOekNYtAHDaig8I7Gf2Cu+1zXQCEYD5ybD1103mWpIhdL7Q6r4JyvC7LyjsMG9UR/VmpK2w8HV8/983Xv/9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZrXMuw0u; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZrXMuw0u"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I89Hgm029089;
+	Thu, 18 Jul 2024 14:40:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SNT71tPy05ChRz7sis8j+D9KLmuFbuIxE/qs7WYt1fU=; b=ZrXMuw0uLCNZ88mw
+	/LdvEFHXGvzh6gHQC3WRx+5f7BoPSa0Lmh75o/4Kmf8jdsyNAY9ZvLay/KJgYJRQ
+	u4wTxNWqoYZvGMCNTjjdn3BgDC6cRZTvCNDOKTOd7r8IsGcprJPu3q12gKqmUZnp
+	TagXGuNmw1VvXfE2L5VE9h8BX6F1blpudIo9UJepRelPhbCFbH6HhMckHXASeokg
+	Kyk+obcfWcUXJSIp+9kSu8hyXty4UrenZjAEvRXwsXS8o9NomtuFy69c+s79grFG
+	JcfHMZrYRC1jwYMYI/WFeXMJp2VF+ozi+aD9Ha4mSMz7zO6Qy/prMG+Jt7s6Ugb/
+	2h32aQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfs5sdd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 14:40:20 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46IEeJIm029753
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 14:40:19 GMT
+Received: from [10.48.247.102] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Jul
+ 2024 07:40:18 -0700
+Message-ID: <d44fdc0b-b4a7-4f36-9961-c5c042ed43df@quicinc.com>
+Date: Thu, 18 Jul 2024 07:40:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwAnJC7RI5lm88lbAA--.56617S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3GFyUAw4rKrWDKF4UtF15twb_yoWxWw1fpa
-	yrAayUKF4DGF10y3Z2k3W8Xa4SkrWxJF1UWr9Iqryruwn09F1IgrW3tr4Y9FykursY93W2
-	vrW2v343Wa4DAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
-	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUVZ2-UUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAIBGaYenQJ5wAAsQ
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] arm64: dts: qcom: x1e80100-yoga: add wifi calibration
+ variant
+Content-Language: en-US
+To: Patrick Wildt <patrick@blueri.se>, Kalle Valo <kvalo@kernel.org>,
+        Bjorn
+ Andersson <andersson@kernel.org>
+CC: "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad
+ Dybcio <konrad.dybcio@linaro.org>,
+        Steev Klimaszewski <steev@kali.org>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        "ath12k@lists.infradead.org" <ath12k@lists.infradead.org>
+References: <ZpV6o8JUJWg9lZFE@windev.fritz.box>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <ZpV6o8JUJWg9lZFE@windev.fritz.box>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: B5AeWhvGDVXLAGUShuXalfOdCrnjVIRi
+X-Proofpoint-GUID: B5AeWhvGDVXLAGUShuXalfOdCrnjVIRi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-18_10,2024-07-18_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=731
+ impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0 clxscore=1011
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407180095
 
-On Sat, 2024-07-06 at 16:56 +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> On Fri, Jul 05, 2024 at 02:44:03PM -0700, Kees Cook wrote:
-> > On Fri, Jul 05, 2024 at 07:54:16PM +0200, Micka=C3=ABl Sala=C3=BCn wrot=
-e:
-> > > On Thu, Jul 04, 2024 at 05:18:04PM -0700, Kees Cook wrote:
-> > > > On Thu, Jul 04, 2024 at 09:01:34PM +0200, Micka=C3=ABl Sala=C3=BCn =
-wrote:
-> > > > > Such a secure environment can be achieved with an appropriate acc=
-ess
-> > > > > control policy (e.g. mount's noexec option, file access rights, L=
-SM
-> > > > > configuration) and an enlighten ld.so checking that libraries are
-> > > > > allowed for execution e.g., to protect against illegitimate use o=
-f
-> > > > > LD_PRELOAD.
-> > > > >=20
-> > > > > Scripts may need some changes to deal with untrusted data (e.g. s=
-tdin,
-> > > > > environment variables), but that is outside the scope of the kern=
-el.
-> > > >=20
-> > > > If the threat model includes an attacker sitting at a shell prompt,=
- we
-> > > > need to be very careful about how process perform enforcement. E.g.=
- even
-> > > > on a locked down system, if an attacker has access to LD_PRELOAD or=
- a
-> > >=20
-> > > LD_PRELOAD should be OK once ld.so will be patched to check the
-> > > libraries.  We can still imagine a debug library used to bypass secur=
-ity
-> > > checks, but in this case the issue would be that this library is
-> > > executable in the first place.
-> >=20
-> > Ah yes, that's fair: the shell would discover the malicious library
-> > while using AT_CHECK during resolution of the LD_PRELOAD.
->=20
-> That's the idea, but it would be checked by ld.so, not the shell.
->=20
-> >=20
-> > > > seccomp wrapper (which you both mention here), it would be possible=
- to
-> > > > run commands where the resulting process is tricked into thinking i=
-t
-> > > > doesn't have the bits set.
-> > >=20
-> > > As explained in the UAPI comments, all parent processes need to be
-> > > trusted.  This meeans that their code is trusted, their seccomp filte=
-rs
-> > > are trusted, and that they are patched, if needed, to check file
-> > > executability.
-> >=20
-> > But we have launchers that apply arbitrary seccomp policy, e.g. minijai=
-l
-> > on Chrome OS, or even systemd on regular distros. In theory, this shoul=
-d
-> > be handled via other ACLs.
->=20
-> Processes running with untrusted seccomp filter should be considered
-> untrusted.  It would then make sense for these seccomp filters/programs
-> to be considered executable code, and then for minijail and systemd to
-> check them with AT_CHECK (according to the securebits policy).
->=20
-> >=20
-> > > > But this would be exactly true for calling execveat(): LD_PRELOAD o=
-r
-> > > > seccomp policy could have it just return 0.
-> > >=20
-> > > If an attacker is allowed/able to load an arbitrary seccomp filter on=
- a
-> > > process, we cannot trust this process.
-> > >=20
-> > > >=20
-> > > > While I like AT_CHECK, I do wonder if it's better to do the checks =
-via
-> > > > open(), as was originally designed with O_MAYEXEC. Because then
-> > > > enforcement is gated by the kernel -- the process does not get a fi=
-le
-> > > > descriptor _at all_, no matter what LD_PRELOAD or seccomp tricks it=
- into
-> > > > doing.
-> > >=20
-> > > Being able to check a path name or a file descriptor (with the same
-> > > syscall) is more flexible and cover more use cases.
-> >=20
-> > If flexibility costs us reliability, I think that flexibility is not
-> > a benefit.
->=20
-> Well, it's a matter of letting user space do what they think is best,
-> and I think there are legitimate and safe uses of path names, even if I
-> agree that this should not be used in most use cases.  Would we want
-> faccessat2(2) to only take file descriptor as argument and not file
-> path? I don't think so but I'd defer to the VFS maintainers.
->=20
-> Christian, Al, Linus?
->=20
-> Steve, could you share a use case with file paths?
->=20
-> >=20
-> > > The execveat(2)
-> > > interface, including current and future flags, is dedicated to file
-> > > execution.  I then think that using execveat(2) for this kind of chec=
-k
-> > > makes more sense, and will easily evolve with this syscall.
-> >=20
-> > Yeah, I do recognize that is feels much more natural, but I remain
-> > unhappy about how difficult it will become to audit a system for safety
-> > when the check is strictly per-process opt-in, and not enforced by the
-> > kernel for a given process tree. But, I think this may have always been
-> > a fiction in my mind. :)
->=20
-> Hmm, I'm not sure to follow. Securebits are inherited, so process tree.
-> And we need the parent processes to be trusted anyway.
->=20
-> >=20
-> > > > And this thinking also applies to faccessat() too: if a process can=
- be
-> > > > tricked into thinking the access check passed, it'll happily interp=
-ret
-> > > > whatever. :( But not being able to open the fd _at all_ when O_MAYE=
-XEC
-> > > > is being checked seems substantially safer to me...
-> > >=20
-> > > If attackers can filter execveat(2), they can also filter open(2) and
-> > > any other syscalls.  In all cases, that would mean an issue in the
-> > > security policy.
-> >=20
-> > Hm, as in, make a separate call to open(2) without O_MAYEXEC, and pass
-> > that fd back to the filtered open(2) that did have O_MAYEXEC. Yes, true=
-.
-> >=20
-> > I guess it does become morally equivalent.
-> >=20
-> > Okay. Well, let me ask about usability. Right now, a process will need
-> > to do:
-> >=20
-> > - should I use AT_CHECK? (check secbit)
-> > - if yes: perform execveat(AT_CHECK)
-> >=20
-> > Why not leave the secbit test up to the kernel, and then the program ca=
-n
-> > just unconditionally call execveat(AT_CHECK)?
->=20
-> That was kind of the approach of the previous patch series and Linus
-> wanted the new interface to follow the kernel semantic.  Enforcing this
-> kind of restriction will always be the duty of user space anyway, so I
-> think it's simpler (i.e. no mix of policy definition, access check, and
-> policy enforcement, but a standalone execveat feature), more flexible,
-> and it fully delegates the policy enforcement to user space instead of
-> trying to enforce some part in the kernel which would only give the
-> illusion of security/policy enforcement.
+On 7/15/2024 12:38 PM, Patrick Wildt wrote:
+> This series adds the missing calibration variant devicetree property
+> which is needed to load the calibration data and use the ath12k wifi
+> on the Lenovo Yoga Slim 7x.
+> 
+> Patrick Wildt (2):
+>   dt-bindings: net: wireless: add ath12k pcie bindings
+>   arm64: dts: qcom: x1e80100-yoga: add wifi calibration variant
+> 
+>  .../net/wireless/qcom,ath12k-pci.yaml         | 59 +++++++++++++++++++
+>  .../dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  |  9 +++
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 10 ++++
+>  3 files changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml
+> 
 
-A problem could be that from IMA perspective there is no indication on
-whether the interpreter executed or not execveat(). Sure, we can detect
-that the binary supports it, but if the enforcement was
-enabled/disabled that it is not recorded.
++ath12k mailing list.
 
-Maybe, setting the process flags should be influenced by the kernel,
-for example not allowing changes and enforcing when there is an IMA
-policy loaded requiring to measure/appraise scripts.
+Qualcomm expects, on x86 and Qualcomm-based ARM devices, that this information
+come from ACPI.
 
-Roberto
+That support is currently under review:
+https://lore.kernel.org/all/20240717111023.78798-1-quic_lingbok@quicinc.com/
 
-> >=20
-> > Though perhaps the issue here is that an execveat() EINVAL doesn't
-> > tell the program if AT_CHECK is unimplemented or if something else
-> > went wrong, and the secbit prctl() will give the correct signal about
-> > AT_CHECK availability?
->=20
-> This kind of check could indeed help to identify the issue.
-
+/jeff
