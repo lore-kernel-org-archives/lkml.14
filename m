@@ -1,56 +1,123 @@
-Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786B127448;
-	Thu, 18 Jul 2024 12:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48DA27448;
+	Thu, 18 Jul 2024 12:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721306432; cv=none; b=rl5qKc6w1lYVk4djXfLADxdbAgGuBGlbER+IanMXToVJOaG+HZS3KN6TwsX67OZskRceVP6dhYdiWl2XK/YfY0e8d7AwuvUrU3FUj677hEXYtzhKNdHvoaTliZG7Iqhwqj73D3HKYk5muz6o8PfJuYyY3/ggHAzmeVz2197ACvg=
+	t=1721306572; cv=none; b=TxHLHEblsok5y8BTHXrvWSM3dImGQ6X3BMfqiaC8gCSsuKvQGxSkg32YPRLNRdXDbVmUP1VmfKs/WJ3cjuHedswMlJhsqA0co+Gd7r4QrlCWFLVD+/KrAuiPApmkVMHNqN6nNUNAsk4CAAiyEZwRcoty7rj2X5AYax4bjuWx31E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721306432; c=relaxed/simple;
-	bh=Ph/orsGQZfBassPxjJuuazPuq62SnGzkpgp5aA31j5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cqIVWJAnIhBQiNfHXntN1ZENeGjxZm1aTFuuo0NqtHFQlDbsO2pW6KZeZdaBOI+W0q+ISGuKFpguYcWmBJcberQ3Bcgm1t2PnyVtHJJ8mVvm/W3RiUE6/Ilp+uEY4mkQRMzz+USbuXfNl2jQGuzjKu8rVbLvYpnkzlVsZCXQpc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu; spf=none smtp.mailfrom=freedom.csh.rit.edu; arc=none smtp.client-ip=129.21.49.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=freedom.csh.rit.edu
-Received: from localhost (localhost [127.0.0.1])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 2E3B440D7C89;
-	Thu, 18 Jul 2024 08:40:29 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at csh.rit.edu
-Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
- by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
- with ESMTP id p_NXtbJXWZoP; Thu, 18 Jul 2024 08:40:28 -0400 (EDT)
-Received: from freedom.csh.rit.edu (freedom.csh.rit.edu [129.21.49.182])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTPS id C2CBE45735E9;
-	Thu, 18 Jul 2024 08:40:28 -0400 (EDT)
-Date: Thu, 18 Jul 2024 08:40:27 -0400
-From: Mary Strodl <mstrodl@freedom.csh.rit.edu>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Mary Strodl <mstrodl@csh.rit.edu>, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, urezki@gmail.com, linux-mm@kvack.org,
-	lee@kernel.org, andi.shyti@kernel.org, linux-i2c@vger.kernel.org,
-	s.hauer@pengutronix.de, christian.gmeiner@gmail.com
-Subject: Re: [PATCH 1/3] mm: vmalloc: export __vmalloc_node_range
-Message-ID: <ZpkNOyuxuJHaTW35@freedom.csh.rit.edu>
-References: <20240718011504.4106163-1-mstrodl@csh.rit.edu>
- <20240718011504.4106163-2-mstrodl@csh.rit.edu>
- <ZpiGIbczW4iItKVx@infradead.org>
+	s=arc-20240116; t=1721306572; c=relaxed/simple;
+	bh=3oo/1fdRVEeoCJR851fHyddrLVIO6d49k2GGZFgER/Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mHu5+ACSl6eO2NB/iOcV5H8GJbgSHQCQuO+Jw5VbVzbmNx/Tq0RAJiXiCzrdQW9CrDyJomA8v9KB/PB2sONEPT/P0Hd1HQPUtZWga/ufl/6IZAvD+TieQKeJt4EkmTkj3YwGnAfx4W72SUnPacgq7y0CSchnCljF/DNSHNymKyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WPslw4s7BzyN2q;
+	Thu, 18 Jul 2024 20:38:04 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id B511918005F;
+	Thu, 18 Jul 2024 20:42:48 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
+ 2024 20:42:48 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <kees@kernel.org>,
+	<gustavoars@kernel.org>, <arnd@arndb.de>, <maobibo@loongson.cn>,
+	<loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH] loongarch: Support RANDOMIZE_KSTACK_OFFSET
+Date: Thu, 18 Jul 2024 20:47:39 +0800
+Message-ID: <20240718124739.3834489-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZpiGIbczW4iItKVx@infradead.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Wed, Jul 17, 2024 at 08:04:01PM -0700, Christoph Hellwig wrote:
-> NAK to a driver creating random writable and exectutable memory:
+Add support of kernel stack offset randomization while handling syscall,
+the offset is defaultly limited by KSTACK_OFFSET_MAX().
 
-Is there a better way to do what I'm trying to do? Or some way to
-expose this functionality with more guard rails so that it's a
-little bit safer?
+In order to avoid trigger stack canaries (due to __builtin_alloca) and
+slowing down the entry path, use __no_stack_protector attribute to
+disable stack protector for do_syscall() at function level.
 
-Thank you for taking time to review my patches!
+With this patch, the REPORT_STACK test show that:
+	`loongarch64 bits of stack entropy: 7`
+
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/loongarch/Kconfig          |  1 +
+ arch/loongarch/kernel/syscall.c | 16 +++++++++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index ddc042895d01..fcf6451b4e38 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -106,6 +106,7 @@ config LOONGARCH
+ 	select HAVE_ARCH_KFENCE
+ 	select HAVE_ARCH_KGDB if PERF_EVENTS
+ 	select HAVE_ARCH_MMAP_RND_BITS if MMU
++	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+ 	select HAVE_ARCH_SECCOMP
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_TRACEHOOK
+diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
+index ec17cd5163b7..a332c6cb76ec 100644
+--- a/arch/loongarch/kernel/syscall.c
++++ b/arch/loongarch/kernel/syscall.c
+@@ -9,6 +9,7 @@
+ #include <linux/entry-common.h>
+ #include <linux/errno.h>
+ #include <linux/linkage.h>
++#include <linux/randomize_kstack.h>
+ #include <linux/syscalls.h>
+ #include <linux/unistd.h>
+ 
+@@ -39,7 +40,7 @@ void *sys_call_table[__NR_syscalls] = {
+ typedef long (*sys_call_fn)(unsigned long, unsigned long,
+ 	unsigned long, unsigned long, unsigned long, unsigned long);
+ 
+-void noinstr do_syscall(struct pt_regs *regs)
++__no_stack_protector void noinstr do_syscall(struct pt_regs *regs)
+ {
+ 	unsigned long nr;
+ 	sys_call_fn syscall_fn;
+@@ -55,11 +56,24 @@ void noinstr do_syscall(struct pt_regs *regs)
+ 
+ 	nr = syscall_enter_from_user_mode(regs, nr);
+ 
++	add_random_kstack_offset();
++
+ 	if (nr < NR_syscalls) {
+ 		syscall_fn = sys_call_table[nr];
+ 		regs->regs[4] = syscall_fn(regs->orig_a0, regs->regs[5], regs->regs[6],
+ 					   regs->regs[7], regs->regs[8], regs->regs[9]);
+ 	}
+ 
++	/*
++	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
++	 * bits. The actual entropy will be further reduced by the compiler
++	 * when applying stack alignment constraints: 16-byte (i.e. 4-bit)
++	 * aligned, which will remove the 4 low bits from any entropy chosen
++	 * here.
++	 *
++	 * The resulting 6 bits of entropy is seen in SP[9:4].
++	 */
++	choose_random_kstack_offset(get_random_u16());
++
+ 	syscall_exit_to_user_mode(regs);
+ }
+-- 
+2.34.1
+
