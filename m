@@ -1,39 +1,39 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from mail-43167.protonmail.ch (mail-43167.protonmail.ch [185.70.43.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32BC12F375
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 11:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927CB13774A;
+	Thu, 18 Jul 2024 11:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721302152; cv=none; b=TnQ/T0KSMJMJbOwYrXsLDOuVtf9sJ7nLB/127hPrLFKj5fOvuL1hEjcTO2w3oCfHFGqYqEyM/+zavbvoSAVZXNuK2aShXw1fEVN/UQ4Hlcxd/sQO8j+Dfy4IxPNxO/X3g3T0NLQ8cnyGCxpd5J2LZcZkweP1XbGHE6/N/cXf2k8=
+	t=1721302153; cv=none; b=bHIuJjahRZaXVL60xcVSNJOoNblPoc3g0dBVTzqx6NYpVbLnDnARC0PvVDZHnH4cNiTn4lza8o5z8xtBsBO0icAwoL+Dymg5t4RDXULG6IDLKYUkFFc1RlUnK9zHgeQUrREYLD2Ro3g8l+908tBE2bS5BdMs5pzrbX9N+ksSr1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721302152; c=relaxed/simple;
+	s=arc-20240116; t=1721302153; c=relaxed/simple;
 	bh=bn3VgzhSAEhdQZg1IslFXJCq1k/bK2Pb74+mWuAsJU0=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ArUMS85Gzpcm9oesVOUaRFah2E4beUvF6qIct1UNIUd4NN0iOiozPa8ORKy0HD4kBoBE86QtPwLudBimsP8f5banAVqt0WXdq+z3XNEVZhqAa6NLaCio+fO6tiQAJe1Bru4NQjRB8nu2mn6TnMmftdfcYtw9xXKHNqAAGEXRkCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=X4wfE2Bi; arc=none smtp.client-ip=188.165.51.139
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IBX9rNTNOvN+0gQg5W6BZ7MPe4ne8vj+w2NsGF/03lG3u2ivXLnDaIJEG2cg/ycn1QV8tr6ePCjJDFnFn20X2thZ5Hya8zv4bUOYI+26Yz0drU2NLlxqwlagDGOy0Fb8pHNe0bsT4u7T3qtcJO1jkpXGytT92iigvlL33f2QOps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=b/rSdbX2; arc=none smtp.client-ip=185.70.43.167
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="X4wfE2Bi"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="b/rSdbX2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1721302135; x=1721561335;
+	s=protonmail; t=1721302142; x=1721561342;
 	bh=YqXULOXBiO6I3qT5sax6NUnclYLueA776MI/l1Vr56Q=;
 	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
 	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=X4wfE2BijqzkxfnMuWJq8fjSDZuM1mIFHPbLCCUPXd9KcRwbD99Iqvu5C0VgCmVdE
-	 TBLQu/f9hZzXZetGurwqZxNeMueIlWQB2w3wBaeakrk2C/EfLrFvM/ME+XdCBv3C+V
-	 RzUdd6z9Ni+SJD99wJ2/qQQ1IBSAVqkCm1GhCEtTomn5WyjHZwQYbC7XmnI4HRc9u4
-	 EAz/9YyIo6fDVOzX4leGWV9d2jQ9/kd5X6w1E0I+iZejIJBg4+lYkecZ2Rf7eCS6ap
-	 vekE6RH1zFQO5WQqrMPBkEJHzSsPwIjX+uu2DiiW1VHZjatkUq/+BlLhXTeiwQVZJ0
-	 2sQ6EOyVsSMrw==
-Date: Thu, 18 Jul 2024 11:28:49 +0000
+	b=b/rSdbX2FS2aoHxOPnGVW58kSkqahosRZZ/KcRxJs0hZRrfXWPSEc6K9vPYirQ0iP
+	 bKKTMwe+rpugBR1vjEE72xlZlOdUBItxvs9bU9xeyG8dE5dhYd86RrCESfxcDJ0ahS
+	 jmPb1GXwGXSFn/SyuMbYgCLo7bKwHO5ELhCVoQG6pUa28ydLN+aDDSNh3Dz4Uw8lUm
+	 DKOmGBXvqyitvz9KEV0PSkDqk8/PGklkwrZ4ha9qBXu3QQ08rlQhJhNcufB5i8tKaA
+	 RNQArgECc/AJ7ywtKkKdeNEy9MWm22Imr/8B+yHT+xBWAglgEr33ZOL/+7Yd1XbSaQ
+	 cpxXvExdpGzjg==
+Date: Thu, 18 Jul 2024 11:28:57 +0000
 To: linux-kernel@vger.kernel.org
 From: "Lin, Meng-Bo" <linmengbo06890@proton.me>
 Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
 Subject: [PATCH v2] arm64: dts: qcom: msm8916-samsung-grandmax: Add touchscreen
-Message-ID: <20240718112454.6095-1-linmengbo06890@proton.me>
+Message-ID: <20240718112715.6117-1-linmengbo06890@proton.me>
 Feedback-ID: 112742687:user:proton
-X-Pm-Message-ID: 15df56a09ed5c9d39528bdaaa65da8cabf4df811
+X-Pm-Message-ID: 821a46a3e47e95dd0c9dae777f4a971b4e4c4227
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
