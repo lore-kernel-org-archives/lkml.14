@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E841FB5
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 01:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22CB2BAF3
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 01:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721264454; cv=none; b=tsEcFC9fiVoAU5Enhjxc6QINJ3ERgsq3lq9UZ7mo9w6k71ujDLflUMbi/akA6Iear4vMM2whABi+sL2dKP3D8pyxcom+Do7Otogit03wMngiTBJCllmIvB+8nSlv6KPg/eu+Jtr9liRuWqbMLxWO49ufmcwGaYAtbf1d+2u+h6w=
+	t=1721264455; cv=none; b=R7ys25P0DXmHKD2pbIMjHsPVX2FI8qKl2D11b/m+quSNb7YAYct9Sc/7OhnKp3cnJJEV7o3Bs9l9Pqd3ZKAg/OCtjSESr8vZshkr/v/JTKvPLBQ35q1DGEiDgAYbeXyXe9vYWDz6OTzRjzNMnAZ/wQPuegRO/mVFrBz8KxNvL5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721264454; c=relaxed/simple;
-	bh=0BXDyWwgS7S79iHuJLErgWNfQ21DsHxf96EgsvxViOQ=;
+	s=arc-20240116; t=1721264455; c=relaxed/simple;
+	bh=knmil6GMFDmF9fxKO25Al7zr+dbtmO1yh62jXywG2KM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=H8Kdt9utB7T8inTPIQ8rVPu3KQjyY8JRWuh9nWjX4wPKxuMAsS6PlYv6hluMOtGs9hAzIICW6PIcv76p7RXuWEzlX4UEeX1ecqitcYtJyCsv6fn8HNLchuaB1fCGmyJnKn/8RGgWwWpbuWHr0qXKaUUTKEIMtSBiPaMoMiW5UNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qzTS2RmD; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=AoAhAZ/PcWVd5bXsLy8mSEjJd3ycBcE44d5ESqpoeSbok50/rUxlvWQuFAe3vSkcfqNK3cxk/bv9JkB5S6mVD8t5KPbCKAnhsuIoQKv828sO7S2tgUFyFHTlYRhTjWuLyCvDHTbuImDkCVuC6JOc3H9PC8exd+Ne4UE8rxuSBOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4gi2Byc/; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qzTS2RmD"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6525230ceeaso6066987b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 18:00:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4gi2Byc/"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-654d96c2bb5so6395617b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 18:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721264448; x=1721869248; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721264453; x=1721869253; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UnSPlghBx3VkMv83qbGk/P7jIBEF9LRODtE5BbjiJPc=;
-        b=qzTS2RmDKJyFvLCmshMsIiJdqV/oMTdC+c32o586AkXa9huq07cDkxDteocs3tvB6S
-         MVh1vsA758cZdEiw6vG0A3XWFMbbG7vWJwCexglb/s24/aczuvqwACP6+9L92Dez/BkB
-         kV/nPMMPalL+hC/5wsKtDxHxKXsp096uaut0FjnhzlBcKJf/NQCtlxVhEITeLGomx6gh
-         wVLJeMlYi+gQ8QzVVjjl6DMWmhqjxLiTmcmvcgKpEZNNR4jSU0dbCzRSxWtDWCzz03NW
-         Ss2Io0EVRv9yWSJcCGPL3+X8eKRW9Scz9LXke302jAGK6h0cvzlUUDHhAI2u0dmAWcFY
-         vVAA==
+        bh=82lJtR2QiowtdojpRIK0xRJphQA1CgRwB82Bes7qNdo=;
+        b=4gi2Byc/QSLgEE6CKpb+y6+NyW1re7ExwAZi6/IL4AIY5MJ5XRiOHjCbvFkVEvaWRb
+         jX9NN6L+t79TVUDr8+qFqwmAUcXvVC7d6L+w1toFGn0xP2+hg+U7sgOrEasPujroLhjd
+         tDQdMc7vhdUVldSY67QvID5ouW4q45FLH8Yv7SNGFyeUVpwve1OdBJURmpToAVFpKzy0
+         tvdsJgFdYVPePxOq0THYKagJcllLyQqnUfdJydNoYCGjK+18qS1QnEeYEEU+6Tu0ESpm
+         C9WS4gzkviYZakJK5Ns9+1vi5Rey0yegajE/R2oXtPT9ZoehTrwDHSO3tPrv6XwfJFDq
+         d5fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721264448; x=1721869248;
+        d=1e100.net; s=20230601; t=1721264453; x=1721869253;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UnSPlghBx3VkMv83qbGk/P7jIBEF9LRODtE5BbjiJPc=;
-        b=csfMVEiMolQrMtFxfDNtWMujcOr8BpDgP34EcHaQ2tGcQde34d+EPW1oZMIEYWPHx2
-         S3OWx2ZpowuwMafr6gCOFrg7QYvfPhZK3PB2+6c7AK5XzJJ8c6+VBwl9p2mvd2H1JZaP
-         Oh+xJedicoj6BsFq020TJxvZ//YSp0MjzTWOkoM3biSac+BGzcnIfOYZHbj6cUn33Mwx
-         AlPnG/FFFfgF3C7ABTIvZax0UjPstByOJRBbbWq3qfZqCqodl8y/pa5SY//r8dT2OvAk
-         RE89hxzEiHzN0VfgFc7SFUlKpwhMhUxDR5oJUEG0LOnbRmXR4im+b3Sop7hRi1Op7LaK
-         bHAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmZD8ncmngIeZXsavMgOVmIm3YTjWDqrHjfCiiIZz4Sxn0UWW73EQpcZqcgN/Z5Gkm3crQVDZHYVZ4AHL9XQ9TyS/KGEPNWxqXGHaR
-X-Gm-Message-State: AOJu0YwEfN6U9DulWp7s89hg5Ok33hnFtkWQHWHEPjNnc/1+24cahTz8
-	CraAXID9A4btKyeWxWzGzPGrCkQD2xDdGfIlrhENWQSvdDpzhBe0swhQnru+ev7IAreFcOkWvAU
-	BMuXoQw==
-X-Google-Smtp-Source: AGHT+IEtJVGPJ7X377yE2YXSNRqiPai0lkaBu0kyQ7M1ExKy3MUuhJpxePliNSESNkfKYo7HPJkc1WZwBgQJ
+        bh=82lJtR2QiowtdojpRIK0xRJphQA1CgRwB82Bes7qNdo=;
+        b=FX5/tCXqsVN0kZW253uFqcEd7VIabMT+h+CR+K+VygcbgPIHTjWdKYBxhKxdXl9vsD
+         DD7FhnpntoZH9wrAsK3r1MPxbuJvKriA3YNjYTxtfbnrYFY0N3IGya7aI+4xZw3pG4NJ
+         eUmMfSmLOPpCaaKzkBptJ6xNhwvBSHEoNk2xBhbhmaR9ZZH3FUoUIdId/hStE5/zCN/v
+         EU/3SRoDjFSUu0fGvuY7HX6FwH9Mi1w30wrIYcumVNbCUQYKtLrg02uCwtHy3HOiL0Y6
+         iGcTAyscOnfaQA2af6jQr9B+uekNHicvcuOQEW2M/+hIck0m0+mq5Dm15AhObb6bQ1kp
+         Y8hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXre7Qo1hDNrh3oAfGVVQ7ptvg3scjgpN7AySOYPSHRGGz+vCEo28h8/grEZJF3wXZMx8+dL5dZ693zkKV6fKnTU6tQTCq4koN9VzgG
+X-Gm-Message-State: AOJu0YxYC3kFewXSM/OYHdbzM1L7qN3RsEHFNSnXwA+krJQPwvbP981q
+	q7HShG7oxMo4KsWvwFzAQM6YRXFecbcW9xxM+EEWN/ZqUn0YJptwcXYyCbEWHbqvpXR+R96WHjY
+	yo/um1Q==
+X-Google-Smtp-Source: AGHT+IEyKD1zw/SRriBJYp/5PAftCKkg1vVG8YgDL9BHxzbdv3Dg4Oi+rhd7WFZsx5MgVc5quGMumQEfcIPT
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:940b:9044:fa83:4060])
- (user=irogers job=sendgmr) by 2002:a05:690c:110:b0:65c:1db1:9235 with SMTP id
- 00721157ae682-666005395bbmr263657b3.0.1721264447940; Wed, 17 Jul 2024
- 18:00:47 -0700 (PDT)
-Date: Wed, 17 Jul 2024 18:00:01 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:ec8:b0:665:a4a4:57c1 with SMTP id
+ 00721157ae682-666015f3170mr275457b3.2.1721264452941; Wed, 17 Jul 2024
+ 18:00:52 -0700 (PDT)
+Date: Wed, 17 Jul 2024 18:00:03 -0700
 In-Reply-To: <20240718010023.1495687-1-irogers@google.com>
-Message-Id: <20240718010023.1495687-6-irogers@google.com>
+Message-Id: <20240718010023.1495687-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240718010023.1495687-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.1089.g2a221341d9-goog
-Subject: [PATCH v6 05/27] perf tool: Add perf_tool__init
+Subject: [PATCH v6 07/27] perf buildid-list: Use perf_tool__init
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,97 +80,155 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add init function that behaves like perf_tool__fill_defaults but
-assumes all values haven't been initialized.
+Reduce scope of build_id__mark_dso_hit_ops to the scope of function
+perf_session__list_build_ids, its only use, and use perf_tool__init
+for the default values. Move perf_event__exit_del_thread to event.[ch]
+so it can be used in builtin-buildid-list.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/tool.c | 58 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/tool.h |  1 +
- 2 files changed, 59 insertions(+)
+ tools/perf/builtin-buildid-list.c | 10 ++++++++++
+ tools/perf/util/build-id.c        | 32 -------------------------------
+ tools/perf/util/build-id.h        |  4 +---
+ tools/perf/util/event.c           | 20 +++++++++++++++++++
+ tools/perf/util/event.h           |  4 ++++
+ 5 files changed, 35 insertions(+), 35 deletions(-)
 
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 17219ecb8fa6..cbd9b888bd73 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -230,6 +230,64 @@ static int perf_session__process_compressed_event_stub(struct perf_session *sess
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index 383d5de36ce4..52dfacaff8e3 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -89,6 +89,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+ 		.mode  = PERF_DATA_MODE_READ,
+ 		.force = force,
+ 	};
++	struct perf_tool build_id__mark_dso_hit_ops;
+ 
+ 	symbol__elf_init();
+ 	/*
+@@ -97,6 +98,15 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+ 	if (filename__fprintf_build_id(input_name, stdout) > 0)
+ 		goto out;
+ 
++	perf_tool__init(&build_id__mark_dso_hit_ops, /*ordered_events=*/true);
++	build_id__mark_dso_hit_ops.sample	= build_id__mark_dso_hit;
++	build_id__mark_dso_hit_ops.mmap		= perf_event__process_mmap;
++	build_id__mark_dso_hit_ops.mmap2	= perf_event__process_mmap2;
++	build_id__mark_dso_hit_ops.fork		= perf_event__process_fork;
++	build_id__mark_dso_hit_ops.exit		= perf_event__exit_del_thread;
++	build_id__mark_dso_hit_ops.attr		= perf_event__process_attr;
++	build_id__mark_dso_hit_ops.build_id	= perf_event__process_build_id;
++
+ 	session = perf_session__new(&data, &build_id__mark_dso_hit_ops);
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 098fcc625d91..451d145fa4ed 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -67,38 +67,6 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
  	return 0;
  }
  
-+void perf_tool__init(struct perf_tool *tool, bool ordered_events)
-+{
-+	tool->ordered_events = ordered_events;
-+	tool->ordering_requires_timestamps = false;
-+	tool->namespace_events = false;
-+	tool->cgroup_events = false;
-+	tool->no_warn = false;
-+	tool->show_feat_hdr = SHOW_FEAT_NO_HEADER;
-+
-+	tool->sample = process_event_sample_stub;
-+	tool->mmap = process_event_stub;
-+	tool->mmap2 = process_event_stub;
-+	tool->comm = process_event_stub;
-+	tool->namespaces = process_event_stub;
-+	tool->cgroup = process_event_stub;
-+	tool->fork = process_event_stub;
-+	tool->exit = process_event_stub;
-+	tool->lost = perf_event__process_lost;
-+	tool->lost_samples = perf_event__process_lost_samples;
-+	tool->aux = perf_event__process_aux;
-+	tool->itrace_start = perf_event__process_itrace_start;
-+	tool->context_switch = perf_event__process_switch;
-+	tool->ksymbol = perf_event__process_ksymbol;
-+	tool->bpf = perf_event__process_bpf;
-+	tool->text_poke = perf_event__process_text_poke;
-+	tool->aux_output_hw_id = perf_event__process_aux_output_hw_id;
-+	tool->read = process_event_sample_stub;
-+	tool->throttle = process_event_stub;
-+	tool->unthrottle = process_event_stub;
-+	tool->attr = process_event_synth_attr_stub;
-+	tool->event_update = process_event_synth_event_update_stub;
-+	tool->tracing_data = process_event_synth_tracing_data_stub;
-+	tool->build_id = process_event_op2_stub;
-+
-+	if (ordered_events)
-+		tool->finished_round = perf_event__process_finished_round;
-+	else
-+		tool->finished_round = process_finished_round_stub;
-+
-+	tool->id_index = process_event_op2_stub;
-+	tool->auxtrace_info = process_event_op2_stub;
-+	tool->auxtrace = process_event_auxtrace_stub;
-+	tool->auxtrace_error = process_event_op2_stub;
-+	tool->thread_map = process_event_thread_map_stub;
-+	tool->cpu_map = process_event_cpu_map_stub;
-+	tool->stat_config = process_event_stat_config_stub;
-+	tool->stat = process_stat_stub;
-+	tool->stat_round = process_stat_round_stub;
-+	tool->time_conv = process_event_time_conv_stub;
-+	tool->feature = process_event_op2_stub;
-+#ifdef HAVE_ZSTD_SUPPORT
-+	tool->compressed = perf_session__process_compressed_event;
-+#else
-+	tool->compressed = perf_session__process_compressed_event_stub;
-+#endif
-+	tool->finished_init = process_event_op2_stub;
-+}
-+
- void perf_tool__fill_defaults(struct perf_tool *tool)
+-static int perf_event__exit_del_thread(const struct perf_tool *tool __maybe_unused,
+-				       union perf_event *event,
+-				       struct perf_sample *sample
+-				       __maybe_unused,
+-				       struct machine *machine)
+-{
+-	struct thread *thread = machine__findnew_thread(machine,
+-							event->fork.pid,
+-							event->fork.tid);
+-
+-	dump_printf("(%d:%d):(%d:%d)\n", event->fork.pid, event->fork.tid,
+-		    event->fork.ppid, event->fork.ptid);
+-
+-	if (thread) {
+-		machine__remove_thread(machine, thread);
+-		thread__put(thread);
+-	}
+-
+-	return 0;
+-}
+-
+-struct perf_tool build_id__mark_dso_hit_ops = {
+-	.sample	= build_id__mark_dso_hit,
+-	.mmap	= perf_event__process_mmap,
+-	.mmap2	= perf_event__process_mmap2,
+-	.fork	= perf_event__process_fork,
+-	.exit	= perf_event__exit_del_thread,
+-	.attr		 = perf_event__process_attr,
+-	.build_id	 = perf_event__process_build_id,
+-	.ordered_events	 = true,
+-};
+-
+ int build_id__sprintf(const struct build_id *build_id, char *bf)
  {
- 	if (tool->sample == NULL)
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 7913b698033a..897c6c44b6b2 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -88,6 +88,7 @@ struct perf_tool {
- 	enum show_feature_header show_feat_hdr;
+ 	char *bid = bf;
+diff --git a/tools/perf/util/build-id.h b/tools/perf/util/build-id.h
+index ae87c4c58d5b..a212497bfdb0 100644
+--- a/tools/perf/util/build-id.h
++++ b/tools/perf/util/build-id.h
+@@ -16,11 +16,9 @@ struct build_id {
+ 	size_t	size;
  };
  
-+void perf_tool__init(struct perf_tool *tool, bool ordered_events);
- void perf_tool__fill_defaults(struct perf_tool *tool);
+-struct nsinfo;
+-
+-extern struct perf_tool build_id__mark_dso_hit_ops;
+ struct dso;
+ struct feat_fd;
++struct nsinfo;
  
- bool perf_tool__compressed_is_stub(const struct perf_tool *tool);
+ void build_id__init(struct build_id *bid, const u8 *data, size_t size);
+ int build_id__sprintf(const struct build_id *build_id, char *bf);
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index c2f0e7f40ad5..aac96d5d1917 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -426,6 +426,26 @@ int perf_event__process_exit(const struct perf_tool *tool __maybe_unused,
+ 	return machine__process_exit_event(machine, event, sample);
+ }
+ 
++int perf_event__exit_del_thread(const struct perf_tool *tool __maybe_unused,
++				union perf_event *event,
++				struct perf_sample *sample __maybe_unused,
++				struct machine *machine)
++{
++	struct thread *thread = machine__findnew_thread(machine,
++							event->fork.pid,
++							event->fork.tid);
++
++	dump_printf("(%d:%d):(%d:%d)\n", event->fork.pid, event->fork.tid,
++		    event->fork.ppid, event->fork.ptid);
++
++	if (thread) {
++		machine__remove_thread(machine, thread);
++		thread__put(thread);
++	}
++
++	return 0;
++}
++
+ size_t perf_event__fprintf_aux(union perf_event *event, FILE *fp)
+ {
+ 	return fprintf(fp, " offset: %#"PRI_lx64" size: %#"PRI_lx64" flags: %#"PRI_lx64" [%s%s%s]\n",
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 4b24f1c580fd..f8742e6230a5 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -319,6 +319,10 @@ int perf_event__process_exit(const struct perf_tool *tool,
+ 			     union perf_event *event,
+ 			     struct perf_sample *sample,
+ 			     struct machine *machine);
++int perf_event__exit_del_thread(const struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine);
+ int perf_event__process_ksymbol(const struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
 -- 
 2.45.2.1089.g2a221341d9-goog
 
