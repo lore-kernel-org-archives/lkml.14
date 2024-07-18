@@ -1,103 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC5A487A5
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860F16F079
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721287201; cv=none; b=DlPtvm8BB7ZVCkUD4HmHnnpEa1Fohcw4RGeoAQP9NkQM7d3bNVI4oBd9NHXRXXmBR9KQibl5pw1bsxBCsCWfgerkDza7BGK0i69x/FgtvETdYBSL8R6RAUPaGoUDRXkD1QQk4VoejvyTGAP1dWafemPu+hwpGkfRls7aezN9b5M=
+	t=1721287251; cv=none; b=gM6+YqG9XUGf+rE/xBUuVuddQ1cdb4m37AzEncBOTmXwjFtrE89Ng4lICIAKqh8N19cxXgy+q6Yzr22N4h8aWOXcodMcfcx0vIYE/h9J4jsCWtEBiYtFZzyrEp4DpQ9YFzhp/ZWz2em/2A5G50YMmZpanLS+Lh6J+0OdFpe3Z10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721287201; c=relaxed/simple;
-	bh=mUNyAVXTHaeweTwKXTUMP8K2f4gS8rET1vARTXK7EFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jasae7GA7H2fri1tkpLViZqiWbqQn9vfzOpCZkW8rxbkluQ5oyni/0C2ZVmO4iARdOEmwajq1EI2O96gNZQn3FY5ONm3jHdb5DMJ4vV4a0Kbz0SLlsXiB/LQGZtCECFNV/CfWX+RVEjSfpbaIwdqr2jkpc5+S4oscN8R7b9Q/O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSEiit4q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSEiit4q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04399C116B1;
-	Thu, 18 Jul 2024 07:20:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721287201;
-	bh=mUNyAVXTHaeweTwKXTUMP8K2f4gS8rET1vARTXK7EFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VSEiit4qKsC1okLufvCfWt2DfetfqNbp+A0pYZxdaAF1lh19XFXaUMdbhead0uJ/j
-	 aA8tHubjVnbcJm6Bvlo72lIKUVDfb0e3Tzv6xKbnV6OMRquLn3QbAEn9kzzqR8EfHX
-	 K0FecPkbh2hwoXj10+GirXNQSAyFbrtywXglZBIrX0OVpMXuoRrMphNP5TsqGKZ1e8
-	 lKBZZtM3a0IaooYsRLKn3QlHBfetrRj0Kyr7eU+yh0UYj9RxbQE1pGyNRSc4O0vNG9
-	 2KB3DffI06hN7VmfpMc1CJgP7k6yaF92Cn2rmZTaxQeh/wopayrUKWD54wyT+wSaw3
-	 Vkk7FnFlVWgHQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sULQq-0000000042j-2pGT;
-	Thu, 18 Jul 2024 09:20:05 +0200
-Date: Thu, 18 Jul 2024 09:20:04 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Correctly honor the RID remapping
-Message-ID: <ZpjCJLH3EEUELS2n@hovoldconsulting.com>
-References: <20240717195937.2240400-1-maz@kernel.org>
+	s=arc-20240116; t=1721287251; c=relaxed/simple;
+	bh=9r6phBL6mPm+oCeYTda17z0h3jkD6loV46niqytSIXI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pGksWai32Jx9T68nWlQgyomcd/JHZM3bT8hohT2/1E1XKgc8hhcloz/LciqfkhAswAmLwn89eWMfnquikWbomOuZEXONjM1PlLNwO/Q/Tcj5ZzCZk8ngW2x1Ssb9XO4fMkT/ZCODCe+AAiRG4Q/bqsD6hUQrCZmpcQC19NgYC+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WPkd63RzQzQmB5;
+	Thu, 18 Jul 2024 15:16:42 +0800 (CST)
+Received: from kwepemm600004.china.huawei.com (unknown [7.193.23.242])
+	by mail.maildlp.com (Postfix) with ESMTPS id E51C51400D1;
+	Thu, 18 Jul 2024 15:20:46 +0800 (CST)
+Received: from localhost.localdomain (10.28.79.22) by
+ kwepemm600004.china.huawei.com (7.193.23.242) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 18 Jul 2024 15:20:46 +0800
+From: Huisong Li <lihuisong@huawei.com>
+To: <xuwei5@hisilicon.com>
+CC: <linux-kernel@vger.kernel.org>, <soc@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <Jonathan.Cameron@Huawei.com>,
+	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
+Subject: [PATCH 1/5] soc: hisilicon: kunpeng_hccs: fix a PCC typo
+Date: Thu, 18 Jul 2024 15:11:30 +0800
+Message-ID: <20240718071134.31155-2-lihuisong@huawei.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20240718071134.31155-1-lihuisong@huawei.com>
+References: <20240718071134.31155-1-lihuisong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717195937.2240400-1-maz@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600004.china.huawei.com (7.193.23.242)
 
-On Wed, Jul 17, 2024 at 08:59:37PM +0100, Marc Zyngier wrote:
-> Since 6adb35ff43a16 ("irqchip/gic-v3-its: Provide MSI parent for
-> PCI/MSI[-X]"), the primary domain a PCI device allocates its interrupts
-> from is the one that is directly attached to the device itself.
-> 
-> By virtue of being a PCI device, it has no OF node.
-> 
-> This domain is (through more layer than it is worth describing)
-> passed to its_pci_msi_prepare(), which tries to compute the
-> full RID that is presented to the ITS by the device. This is ultimately
-> done by calling pci_msi_domain_get_msi_rid(), passing both the
-> domain and the PCI device as arguments.
-> 
-> The baked-in assumption is that either the domain that is passed
-> to pci_msi_domain_get_msi_rid() describes an interrupt controller
-> with either an OF node or an entry in an ACPI IORT table.
-> In our case, it is *neither*. This domain is does not represent
+This patch fix a PCC typo.
 
-nit: stray "is"
+Signed-off-by: Huisong Li <lihuisong@huawei.com>
+---
+ drivers/soc/hisilicon/kunpeng_hccs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> anything firmware-based, but just an allocation unit for the device.
-> 
-> As a result, we fail to provide the full RID (which requires inspecting
-> the msi-map/msi-mask properties in the DT), and stick to the BDF,
-> which isn't very useful.
-> 
-> Tragedy follows with a litany of devices that randomly die as
-> they fail to see any MSI (because the RID is wrong) or fail to
-> get an allocation (because they try to steal LPIs from their
-> neighbour's pool).
-> 
-> This will happen on any system where a single ITS is shared by
-> multiple root ports and end-points with overlapping BDF numbers,
-> and has the topology described in the device-tree.  Simpler DT
-> topologies will luckily work, and so will ACPI-based systems.
-> 
-> Solve it by pointing pci_msi_domain_get_msi_rid() at the *parent*
-> domain, which is the ITS, resulting in a correct mapping and a
-> restored happiness in my personal zoo.
-> 
-> Fixes: 6adb35ff43a16 ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
-> Reported-by: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
+diff --git a/drivers/soc/hisilicon/kunpeng_hccs.c b/drivers/soc/hisilicon/kunpeng_hccs.c
+index e882a61636ec..c4a57328f22a 100644
+--- a/drivers/soc/hisilicon/kunpeng_hccs.c
++++ b/drivers/soc/hisilicon/kunpeng_hccs.c
+@@ -144,7 +144,7 @@ static int hccs_register_pcc_channel(struct hccs_dev *hdev)
+ 
+ 	pcc_chan = pcc_mbox_request_channel(cl, hdev->chan_id);
+ 	if (IS_ERR(pcc_chan)) {
+-		dev_err(dev, "PPC channel request failed.\n");
++		dev_err(dev, "PCC channel request failed.\n");
+ 		rc = -ENODEV;
+ 		goto out;
+ 	}
+-- 
+2.22.0
 
-This fixes the regression for the Qualcomm machines I ran into this
-with:
-
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-Thanks!
-
-Johan
