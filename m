@@ -1,147 +1,163 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41EA12C7FB
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 14:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E68F1428F3;
+	Thu, 18 Jul 2024 14:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721313801; cv=none; b=eo/m6qz9uu781QWe2Syp975y0GhcQE2pDKOzbwbXDBW/6Z5IydRMu4AFYlXwPlsKIomnBpUsVi62cBXk12nR/5ztGGded8o2Z5hWZeme+rwEfqiOtylnReT3W+LXwb6pDbv9zuH+VouUW0PWM3z4WiCWfsXR0LlmxTxL7enkX8U=
+	t=1721313813; cv=none; b=qMor+tep4cnvq6Xa8bhKdkzRSBjlBCennqi8vHT0pCz9WEPw3uT01HElpjtvgkjqg3TffkRA17WOQ6KnkITHEcac6K9EaLT/oL/Bq4iwFsZgF8aj7mm3ZSv5Ez+oMZ0aCv/F0BVXsU/DUlDnWXEI0EdfOqVOMc1wPwfXcoCIoUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721313801; c=relaxed/simple;
-	bh=KEzro45JPQUxyEbETooDeOw9wctjrPSE1URuVYN7hhQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=STsJB4n+4Bvw/1237kJZuWY/TsCrFqVW9EMw6NX+9rB1z17c5uOfQsojndP6QvtenI/UCzNOQRlSlvHv7ZaNjr7XA7f2COOkpA8kejACJo5mTEqPjRa7aB2PJJt5I3bg39Mkz+6k2EHRJz7Ksu8EhFspw4wEKIAt6CNJwxcIa38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UKlKyYdU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hY0dVqsb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=px51OBcg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9R066FqY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1721313813; c=relaxed/simple;
+	bh=bIz6pGrabOkWqeOOLGp/7zatmKtlgXevjscXxYUc558=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DxKn2X1LUyQ96ALhm9S37pgIPSnca0q+rixNhrritROB3bMoeq/Wywo7Gfl/dWjRDBXXLYvwDhzaypjvNFVCHbq2wQYPGRKOVfRC8/s10KTy0bMv5zxfvczLqfo7luVLagaY6sEs8/0q5qCJJpNTLFpLHq5snqHf53b/QMM9IdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iPcPg/tQ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UKlKyYdU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hY0dVqsb";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="px51OBcg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9R066FqY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iPcPg/tQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721313809;
+	bh=bIz6pGrabOkWqeOOLGp/7zatmKtlgXevjscXxYUc558=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iPcPg/tQUnEWa7RbgKJmKryGWhd2xYuzpU21/acce0c88+cjY8RKrPCAuO11NlBEo
+	 W1vHlpMjI9iq6pnFn8NXNwUKdNtkl/qTLgcwMPnLLeQgGUxbnyUZOvZhlDiEQuJI9F
+	 IXV1YcFsCtbt7tOLg1yRpOe5x6DMbsMvj+9vv3zyJHInNnIX7mJCtld73T4IcFzF3p
+	 e82XYcLNmHCCkBw6iDapviPylpMP0eEpGXkZaHkyLFE6ZvGEfn28ZDtCgVTrATksDP
+	 X3ST4Cft+EXMN7qpq1ISt19JrbVWCQgdvLKGAENb66kP2WENk+AwVQZGjPh2FhskAB
+	 0/2CFDIuoULWA==
+Received: from [100.93.89.217] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D58B61FBF0;
-	Thu, 18 Jul 2024 14:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721313798; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
-	b=UKlKyYdU3JqAOj/r7NR7HEZlmdhEyn4WngzbiknP4LJNhefGNPyn5a+NmrkNcLq2sy8Zhf
-	qn60Q/jOMju8fHosubPsM2p0OyzgdmSVYezXMzVet6F0PXtxAfr4UmzBY4LB3uz3dSfJJa
-	0Y7jXSZSACnkXZpbVDy8C86MuRc11/4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721313798;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
-	b=hY0dVqsbCMV7L9IROgrzgDgI91WomrOsm1lbGnAGJxC2sF/e23ukKF9/mZ67PQEl4Lms9C
-	zvSr08it7vZ3g+AA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=px51OBcg;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=9R066FqY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721313797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
-	b=px51OBcgIDAy0oqYocKXLMfHo55QE5PGwYsn4Kmf+4er29z7hxL4deoa2hdXkODRdN26jF
-	gMnQzgjUFtE/CiLXbSOlttIr77xAnq1M94zCnG6/gKowcXNOlp5MX2shvAbYBsQ026ILIa
-	hg7v1//JUHcCt0ZlEli3Wr7flc1Ep+I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721313797;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
-	b=9R066FqY6sGGMzsfSo/SH/4QSLZETDEiUn/xJ+2PQriCs2YIYlcrz8JAOO1MhHU4icyegp
-	0bI8VyP5YmjwZNAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5506D136F7;
-	Thu, 18 Jul 2024 14:43:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YQYKEwUqmWaLHgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 18 Jul 2024 14:43:17 +0000
-Date: Thu, 18 Jul 2024 16:43:50 +0200
-Message-ID: <87o76uvjyx.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: <broonie@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>,
-	<lgirdwood@gmail.com>,
-	<perex@perex.cz>,
-	<pierre-louis.bossart@linux.intel.com>,
-	<13564923607@139.com>,
-	<alsa-devel@alsa-project.org>,
-	<linux-kernel@vger.kernel.org>,
-	<liam.r.girdwood@intel.com>,
-	<bard.liao@intel.com>,
-	<yung-chuan.liao@linux.intel.com>,
-	<cameron.berkenpas@gmail.com>,
-	<baojun.xu@ti.com>,
-	<soyer@irl.hu>,
-	<Baojun.Xu@fpt.com>
-Subject: Re: [PATCH v1] ALSA: hda/tas2781: Add new quirk for Lenovo Hera2 Laptop
-In-Reply-To: <20240717115305.723-1-shenghao-ding@ti.com>
-References: <20240717115305.723-1-shenghao-ding@ti.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	(Authenticated sender: benjamin.gaignard)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6A7C83780029;
+	Thu, 18 Jul 2024 14:43:29 +0000 (UTC)
+Message-ID: <069a9e2b-f0bc-46a7-aaec-f30157e9be2d@collabora.com>
+Date: Thu, 18 Jul 2024 16:43:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: D58B61FBF0
-X-Spam-Flag: NO
-X-Spam-Score: 1.99
-X-Spam-Level: *
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [1.99 / 50.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,gmail.com,perex.cz,139.com,alsa-project.org,vger.kernel.org,intel.com,ti.com,irl.hu,fpt.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
-X-Rspamd-Action: no action
-X-Spamd-Bar: +
-
-On Wed, 17 Jul 2024 13:53:04 +0200,
-Shenghao Ding wrote:
-> 
-> Add new vendor_id and subsystem_id in quirk for Lenovo Hera2 Laptop.
-> 
-> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
-
-Thanks, applied.
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] media: videodev2: Add flags to unconditionnaly
+ enumerate pixels formats
+To: Nicolas Dufresne <nicolas@ndufresne.ca>,
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: mchehab@kernel.org, ezequiel@vanguardiasur.com.ar,
+ hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ kernel@collabora.com
+References: <20240717131430.159727-1-benjamin.gaignard@collabora.com>
+ <20240717131430.159727-2-benjamin.gaignard@collabora.com>
+ <2kbxr3hkjbcnaqescxmlcerziixg72icqpug6wa25eeggy2pnj@vqmxe4ojcwml>
+ <dfc292f8-0014-4bf4-9429-31f729a176cd@collabora.com>
+ <ok2a4ubzka6rhzyj2c5op73ij7pw35g6e75whc2jjget62fatx@zka2ewyt3kfv>
+ <c8358d79bd51a9bfa5116b33ae5e7766b95d344d.camel@ndufresne.ca>
+ <1faa7098-b108-480e-ae4b-ed25e0020e51@collabora.com>
+ <7113029e2e192d43523a1ea5dae041fb53ae5948.camel@ndufresne.ca>
+ <b454d93d607047c63663b3f003b3d3c23f07bac7.camel@ndufresne.ca>
+Content-Language: en-US
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+In-Reply-To: <b454d93d607047c63663b3f003b3d3c23f07bac7.camel@ndufresne.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Takashi
+Le 18/07/2024 à 16:02, Nicolas Dufresne a écrit :
+> Le jeudi 18 juillet 2024 à 09:56 -0400, Nicolas Dufresne a écrit :
+>> Hi,
+>>
+>> Le jeudi 18 juillet 2024 à 09:04 +0200, Benjamin Gaignard a écrit :
+>>> Le 17/07/2024 à 19:50, Nicolas Dufresne a écrit :
+>> [...]
+>>
+>>>>>>>> @@ -1569,6 +1569,7 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
+>>>>>>>>     	int ret = check_fmt(file, p->type);
+>>>>>>>>     	u32 mbus_code;
+>>>>>>>>     	u32 cap_mask;
+>>>>>>>> +	u32 flags;
+>>>>>>>>
+>>>>>>>>     	if (ret)
+>>>>>>>>     		return ret;
+>>>>>>>> @@ -1578,8 +1579,10 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
+>>>>>>>>     		p->mbus_code = 0;
+>>>>>>>>
+>>>>>>>>     	mbus_code = p->mbus_code;
+>>>>>>>> +	flags = p->flags & V4L2_FMT_FLAG_ENUM_ALL_FORMATS;
+>>>>>>>>     	memset_after(p, 0, type);
+>>>>>>>>     	p->mbus_code = mbus_code;
+>>>>>>>> +	p->flags = flags;
+>>>>>>> Won't this set V4L2_FMT_FLAG_ENUM_ALL_FORMATS (if present) in the
+>>>>>>> flags returned to userspace ? Shouldn't be drivers to set
+>>>>>>> V4L2_FMT_FLAG_ALL_FORMATS instead ?
+>>>>>> memset_after zeroed flags field so we need this to send V4L2_FMT_FLAG_ENUM_ALL_FORMATS
+>>>>>> flag to drivers. Return it to userspace is a side effect but I don't that is problem
+>>>>>> since it set it anyway.
+>>>>>>
+>>>>> Ok, if the expectation is that the flag is preserved through the ioctl
+>>>>> call, this is fine with me
+>>>> I might be missing something other similar features are explicitly advertised by
+>>>> drivers. This way, the generic layer can keep or clear the flag based of if its
+>>>> supported. The fact the flag persist the ioctl() or not endup having a useful
+>>>> semantic.
+>>>>
+>>>> Could we do the same?
+>>> It is the only flag set by userspace when calling the ioctl(), all others
+>>> are set by the drivers.
+>>> I can clean it from the ioctl() structure after driver call but that won't change anything.
+>> This does not answer my question. In other similar feature, we have an
+>> **internal** flag set by drivers to tell the framework that such feature is
+>> abled. Using that, the framework can keep or remove that flag based on if its
+>> supported or not. This way, userspace have a clue if the driver do have this
+>> support or if the returned result (in that case) is just a subset matching the
+>> configuration. We don't seem to have done the same level of effort here.
+> For the reference, you actually use that semantic in GStreamer implementation,
+> but the kernel code seems broken.
+>
+> https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/7078/diffs#eb90d5495df2f085f163996014c748a36f143f76_516_527
+
+device_caps u32 field is already almost fully used, only one 1 bit is free.
+I could use it but, for me, the capability to enumerate all the formats
+doesn't fit well in the existing list.
+
+Benjamin
+
+>
+>> Nicolas
+>>
+>>>>> Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+>>>>>
+>>>>>>>>     	switch (p->type) {
+>>>>>>>>     	case V4L2_BUF_TYPE_VIDEO_CAPTURE:
+>>>>>>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>>>>>>>> index fe6b67e83751..b6a5da79ba21 100644
+>>>>>>>> --- a/include/uapi/linux/videodev2.h
+>>>>>>>> +++ b/include/uapi/linux/videodev2.h
+>>>>>>>> @@ -886,6 +886,8 @@ struct v4l2_fmtdesc {
+>>>>>>>>     #define V4L2_FMT_FLAG_CSC_HSV_ENC		V4L2_FMT_FLAG_CSC_YCBCR_ENC
+>>>>>>>>     #define V4L2_FMT_FLAG_CSC_QUANTIZATION		0x0100
+>>>>>>>>     #define V4L2_FMT_FLAG_META_LINE_BASED		0x0200
+>>>>>>>> +#define V4L2_FMT_FLAG_ENUM_ALL_FORMATS		0x0400
+>>>>>>>> +#define V4L2_FMT_FLAG_ALL_FORMATS		0x0800
+>>>>>>>>
+>>>>>>>>     	/* Frame Size and frame rate enumeration */
+>>>>>>>>     /*
+>>>>>>>> --
+>>>>>>>> 2.43.0
+>>>>>>>>
+>>>>>>>>
+>>>>>>> _______________________________________________
+>>>>>>> Kernel mailing list -- kernel@mailman.collabora.com
+>>>>>>> To unsubscribe send an email to kernel-leave@mailman.collabora.com
+>>>>>>> This list is managed by https://mailman.collabora.com
+>>> _______________________________________________
+>>> Kernel mailing list -- kernel@mailman.collabora.com
+>>> To unsubscribe send an email to kernel-leave@mailman.collabora.com
+>>> This list is managed by https://mailman.collabora.com
+>> _______________________________________________
+>> Kernel mailing list -- kernel@mailman.collabora.com
+>> To unsubscribe send an email to kernel-leave@mailman.collabora.com
+>> This list is managed by https://mailman.collabora.com
