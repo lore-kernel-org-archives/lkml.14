@@ -1,176 +1,155 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B7A28DD1;
-	Thu, 18 Jul 2024 09:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5460A28DD1
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 09:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721294744; cv=none; b=px6y1VsNcdLv1dEI5WhC23hMc3z0Ag3WqljUd7a9EiqGguVe/gQgXAZdGcdYIfqUACsvIqZYAlJUGtyfc5DOv8QXHZX7cSCr6p7+6nUPyBYH8Kl2oZW7WAmnrIbvYgJYfMt5vkj4BxE3TtkOcLgHV92hRZyOEU5oKu+mEyc5vzM=
+	t=1721294798; cv=none; b=GT1vqD4tG+CoO3Iumc82ooBddC5xnewNJ1atwDSd2klknkNUmM4ZjO4yPlV18ThEmo/PixMEMkbVaMhUjWO3GxghELG2uXI2I3jFjvRuVjpoPXDRA4KY0no5sNMVMPiT2OyXYEY4s6Nxq0GIF0C/NNAVQcr5SF/Dl8xy2m4svN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721294744; c=relaxed/simple;
-	bh=sBpRG87XTr+lD5LPwEAV/IC2h5JXbj8qV0PXvNTPR9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J4FrZv3S9V7YRtAoUFLUWzqTumi7D36avutDKbZEpLaTv31MZRo18MyzLnQF2B4mKySzhBUNyCNhiOh94AkSNNSl3eMLEuLO+3i4MOa1sSZtF7lg+r05V6cH+sYSyaeedYG17mQEQuTEcuxc5ioDvCE0uB08lVruEykENMHJ0u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e860d09.versanet.de ([94.134.13.9] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sUNOD-0003Jt-IN; Thu, 18 Jul 2024 11:25:29 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Conor Dooley <conor@kernel.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject:
- Re: [PATCH v2 1/3] dt-bindings: clocks: add binding for
- voltage-controlled-oscillators
-Date: Thu, 18 Jul 2024 11:25:28 +0200
-Message-ID: <3178118.zE8UqtGg2D@diego>
-In-Reply-To: <20240716-deceiving-saucy-851fb2303c1f@spud>
-References:
- <20240715110251.261844-1-heiko@sntech.de>
- <20240715110251.261844-2-heiko@sntech.de>
- <20240716-deceiving-saucy-851fb2303c1f@spud>
+	s=arc-20240116; t=1721294798; c=relaxed/simple;
+	bh=oNm1Sb952AQl6uIuqRzYY+o4N9rSksdo1G8MX5yLFwE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=XLRZ5nPDPFmlcgupxbpnvjcgV7AGxdge/ciDYMiRDcuPuhMb1LAOi9HI0pu4Mu2YuU7J3sEszx/8x5GmfXU2PZW+SL0WJABfe4kvGr+YXkfsrnF0UhAGAOTo8ZSfK1kVkQ0mTloaIyntPSaMjHixyCjsc+h/zpg8t/bS/PcAVsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BN2L5sOU; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BN2L5sOU"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I9QH8f021775;
+	Thu, 18 Jul 2024 09:26:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:in-reply-to:references:date:message-id
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	lyHDtyrv4mmJ5N8CRWKtHL2k+LJE9iDa/mi4uCgG0oE=; b=BN2L5sOUqd4gRr1N
+	lj/NNfZRaZM3sJ0EApbHoFyOxLvz8/51e9dvJlPlMKrwCAn9zeLgKLaYVM8OJOMr
+	W1evLMkEDeRqkTyjkkBy/YJRZjHe7IcS59PxywaymLn1STGnyLdAkHvs3b0qEWGF
+	6erev9Mw1UfZz2HKg72PNVmJBXe4EAK/W4fOUAxq6hON9Lx3KUavO44DwRsK6bGj
+	rcrQv7M/7WaDyr0Ankl29X8lnDMoual7jb2akkqkR4NQDBdV22bfXCEPukRUGRqA
+	ghkLRX3ReioL7hEFQJASk1BnpplWKnl134nCA9oxmyjfxRY+TsgJ0qO7Byj1Fzk4
+	sm9lgg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eyjp83ne-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 09:26:17 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I9QG3E021735;
+	Thu, 18 Jul 2024 09:26:16 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eyjp83k2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 09:26:16 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I95YIB009173;
+	Thu, 18 Jul 2024 09:23:52 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40dwkmrw87-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 09:23:52 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I9Nlxu53870890
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jul 2024 09:23:49 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DBEA22004D;
+	Thu, 18 Jul 2024 09:23:46 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B17B120043;
+	Thu, 18 Jul 2024 09:23:45 +0000 (GMT)
+Received: from li-1de7cd4c-3205-11b2-a85c-d27f97db1fe1.ibm.com (unknown [9.179.24.91])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 18 Jul 2024 09:23:45 +0000 (GMT)
+From: "Marc Hartmayer" <mhartmay@linux.ibm.com>
+To: Yu Zhao <yuzhao@google.com>, Janosch Frank <frankja@linux.ibm.com>,
+        kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
+        Linux Memory Management List
+ <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Muchun
+ Song <muchun.song@linux.dev>,
+        David Hildenbrand <david@redhat.com>,
+        Frank
+ van der Linden <fvdl@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Peter Xu <peterx@redhat.com>,
+        Yang Shi <yang@os.amperecomputing.com>, linux-kernel@vger.kernel.org,
+        ying.huang@intel.com, feng.tang@intel.com, fengwei.yin@intel.com,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens
+ <hca@linux.ibm.com>,
+        Yosry Ahmed <yosryahmed@google.com>
+Subject: Re: [linux-next:master] [mm/hugetlb_vmemmap] 875fa64577:
+ vm-scalability.throughput -34.3% regression
+In-Reply-To: <CAOUHufaO-hxdEJZtdN-5EHEs-wOJoGQ1pVGeHaa89L7hSz8grQ@mail.gmail.com>
+References: <202407091001.1250ad4a-oliver.sang@intel.com>
+ <3acefad9-96e5-4681-8014-827d6be71c7a@linux.ibm.com>
+ <CAOUHufYvCeiGGa+3PbPDfFx__aV2XxyS7TMHMicws4aNTg4qmQ@mail.gmail.com>
+ <CAOUHufaO-hxdEJZtdN-5EHEs-wOJoGQ1pVGeHaa89L7hSz8grQ@mail.gmail.com>
+Date: Thu, 18 Jul 2024 11:23:44 +0200
+Message-ID: <875xt3dpen.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: CZX9u0F6eALlKMm8C6icAj4r9txRB6d9
+X-Proofpoint-ORIG-GUID: VdC1-gG72XRKDWGg9xrl1LXn5vd61cRt
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-18_06,2024-07-17_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=700 adultscore=0
+ impostorscore=0 clxscore=1011 mlxscore=0 spamscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2407180060
 
-Hi Conor,
+On Wed, Jul 17, 2024 at 09:44 AM -0600, Yu Zhao <yuzhao@google.com> wrote:
+> On Wed, Jul 17, 2024 at 2:36=E2=80=AFAM Yu Zhao <yuzhao@google.com> wrote:
+>>
+>> Hi Janosch and Oliver,
+>>
+>> On Wed, Jul 17, 2024 at 1:57=E2=80=AFAM Janosch Frank <frankja@linux.ibm=
+.com> wrote:
+>> >
+>> > On 7/9/24 07:11, kernel test robot wrote:
+>> > > Hello,
+>> > >
+>> > > kernel test robot noticed a -34.3% regression of vm-scalability.thro=
+ughput on:
+>> > >
+>> > >
+>> > > commit: 875fa64577da9bc8e9963ee14fef8433f20653e7 ("mm/hugetlb_vmemma=
+p: fix race with speculative PFN walkers")
+>> > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git mas=
+ter
+>> > >
+>> > > [still regression on linux-next/master 0b58e108042b0ed28a71cd7edf517=
+5999955b233]
+>> > >
+>> > This has hit s390 huge page backed KVM guests as well.
+>> > Our simple start/stop test case went from ~5 to over 50 seconds of run=
+time.
+>>
+>> Could you try the attached patch please? Thank you.
+>
 
-Am Dienstag, 16. Juli 2024, 18:15:08 CEST schrieb Conor Dooley:
-> On Mon, Jul 15, 2024 at 01:02:49PM +0200, Heiko Stuebner wrote:
-> > In contrast to fixed clocks that are described as ungateable, boards
-> > sometimes use additional oscillators for things like PCIe reference
-> > clocks, that need actual supplies to get enabled and enable-gpios to be
-> > toggled for them to work.
-> > 
-> > This adds a binding for such oscillators that are not configurable
-> > themself, but need to handle supplies for them to work.
-> > 
-> > In schematics they often can be seen as
-> > 
-> >          ----------------
-> > Enable - | 100MHz,3.3V, | - VDD
-> >          |    3225      |
-> >    GND - |              | - OUT
-> >          ----------------
-> > 
-> > or similar. The enable pin might be separate but can also just be tied
-> > to the vdd supply, hence it is optional in the binding.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > ---
-> >  .../bindings/clock/voltage-oscillator.yaml    | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/voltage-oscillator.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/voltage-oscillator.yaml b/Documentation/devicetree/bindings/clock/voltage-oscillator.yaml
-> > new file mode 100644
-> > index 0000000000000..8bff6b0fd582e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/voltage-oscillator.yaml
-> > @@ -0,0 +1,49 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/clock/voltage-oscillator.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Voltage controlled oscillator
-> 
-> Voltage controlled oscillator? Really? That sounds far too similar to a
-> VCO to me, and the input voltage here (according to the description at
-> least) does not affect the frequency of oscillation.
+Hi,
 
-That naming was suggested by Stephen in v1 [0] .
+thanks a lot for the fix, it has fixed the problem on s390.
 
-Of course the schematics for the board I have only describe it as
-"100MHz,3.3V,3225" , thumbing through some mouser parts matching that
-only mentions "supply voltage" in their datasheets but not a dependency
-between rate and voltage.
+--=20
+Kind regards / Beste Gr=C3=BC=C3=9Fe
+   Marc Hartmayer
 
-[0] https://lore.kernel.org/linux-arm-kernel/b3c450a94bcb4ad0bc5b3c7ee8712cb8.sboyd@kernel.org/
-
-> Why the dedicated binding, rather than adding a supply and enable-gpio
-> to the existing "fixed-clock" binding? I suspect that a large portion of
-> "fixed-clock"s actually require a supply that is (effectively)
-> always-on.
-
-I guess there are three aspects:
-- I do remember discussions in the past about not extending generic
-  bindings with device-specific stuff. I think generic power-sequences
-  were the topic back then, though that might have changed over time?
-- There are places that describe "fixed-clock" as
-  "basic fixed-rate clock that cannot gate" [1]
-- Stephen also suggested a separate binding [2]
-
-With the fixed-clock being sort of the root for everything else on most
-systems, I opted to leave it alone. I guess if the consenus really is that
-this should go there, I can move it, but discussion in v1 
-
-Interestingly the fixed clock had a gpios property 10 years ago [3] :-) .
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clk/clk-fixed-rate.c#n18
-[2] https://lore.kernel.org/linux-arm-kernel/68f6dc44a8202fd83792e58aea137632.sboyd@kernel.org/
-[3] https://lore.kernel.org/linux-kernel//20140515064420.9521.47383@quantum/T/#t
-
-
-Heiko
-
-
-> > +
-> > +maintainers:
-> > +  - Heiko Stuebner <heiko@sntech.de>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: voltage-oscillator
-> > +
-> > +  "#clock-cells":
-> > +    const: 0
-> > +
-> > +  clock-frequency: true
-> > +
-> > +  clock-output-names:
-> > +    maxItems: 1
-> > +
-> > +  enable-gpios:
-> > +    description:
-> > +      Contains a single GPIO specifier for the GPIO that enables and disables
-> > +      the oscillator.
-> > +    maxItems: 1
-> > +
-> > +  vdd-supply:
-> > +    description: handle of the regulator that provides the supply voltage
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#clock-cells"
-> > +  - clock-frequency
-> > +  - vdd-supply
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    voltage-oscillator {
-> > +      compatible = "voltage-oscillator";
-> > +      #clock-cells = <0>;
-> > +      clock-frequency = <1000000000>;
-> > +      vdd-supply = <&reg_vdd>;
-> > +    };
-> > +...
-> 
-
-
-
-
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+Gesch=C3=A4ftsf=C3=BChrung: David Faller
+Sitz der Gesellschaft: B=C3=B6blingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
