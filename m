@@ -1,117 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2135.outbound.protection.partner.outlook.cn [139.219.146.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6549239FD4;
-	Thu, 18 Jul 2024 03:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721275036; cv=none; b=SDlRaAlBd3eCyuWTo1ROsCnwtI73otm62WctICPrlkn5/tUFeOLIigrqEkTwKbUygr+W12Vo7g5zzzOnM/K6Qw0qv/PFiB6DG/ZhX6RuFH8To1699YwF2uJNZ+7c+cTcCPZMGIlOfdsn4SxYAJ4dVjiipWf1YMVVz0rbYPFQYzA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721275036; c=relaxed/simple;
-	bh=twHvAcda8Z/GGj5MjDm3WeTacn53HYfEBn563aMraqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IcUvePln5REDlnhVIAz7dXRMjALm+V6Y612AE2fmiDGl6k8aCMLYXF7FDXBZRodhxefduZYyurfgeOgZloiIA8PidH1/iCGBh6rQ9sMOswBCIZP6Qk+0eF4cIGDakrd1AYAsPBSKM6nqCIJK7Rrw2YFUdnrBQ6Vl1Ks5Mqx3SN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PZKT34Vy; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PZKT34Vy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721275035; x=1752811035;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=twHvAcda8Z/GGj5MjDm3WeTacn53HYfEBn563aMraqQ=;
-  b=PZKT34VyMKrMG3tvBR1h+lJOs1iEhjz/cMlHl0nPe+ZxHux5+dbiEV05
-   hSIA1iiY+l4A6PjJFumeAdNQj6Bbx80X+wW/rtbIMISGNqWJwKwT9xOze
-   QTKpHvWq7/q9hmZWwPWyqN6lKHNH0bjyD301WDpPYb7wUtUqCiVmthtQG
-   g6mXnAl3EtiCfhyy8DVXQkRLi2VmHbHo5RuOZdm2bp7KpCnQNZYglGuoH
-   YbilC8OQw0gGqrK1ZM72TFuDSlQ2WZ52F2wpMm67WAS7nIDN2o0irqGoE
-   d3Cnk6i+YOF/RJsJg4ovsqE/iYvwZTKj67IMEFnGmZeFcebkhnIeVDZ5R
-   Q==;
-X-CSE-ConnectionGUID: LY6YsaxjSlCjkQF0BVq0Yw==
-X-CSE-MsgGUID: CGVBtpItTHyBBXnaHhm5XQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="18626954"
-X-IronPort-AV: E=Sophos;i="6.09,216,1716274800"; 
-   d="scan'208";a="18626954"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 20:57:14 -0700
-X-CSE-ConnectionGUID: BgezPt6PQciq+6bm85OcoA==
-X-CSE-MsgGUID: ivDuiGalRpa2v6si1bKteQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,216,1716274800"; 
-   d="scan'208";a="88100677"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 17 Jul 2024 20:57:11 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sUIGS-000gvi-18;
-	Thu, 18 Jul 2024 03:57:08 +0000
-Date: Thu, 18 Jul 2024 11:56:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mary Strodl <mstrodl@csh.rit.edu>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
-	urezki@gmail.com, hch@infradead.org, linux-mm@kvack.org,
-	lee@kernel.org, andi.shyti@kernel.org, linux-i2c@vger.kernel.org,
-	s.hauer@pengutronix.de, christian.gmeiner@gmail.com,
-	Mary Strodl <mstrodl@csh.rit.edu>
-Subject: Re: [PATCH 2/3] x86: Add basic support for the Congatec CGEB BIOS
- interface
-Message-ID: <202407181147.SJ9mOE8q-lkp@intel.com>
-References: <20240718011504.4106163-3-mstrodl@csh.rit.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC2629A1;
+	Thu, 18 Jul 2024 04:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721275248; cv=fail; b=UvRZNOBbVbnVz/s/K2jSsWujyNoq4Yx3xTe2wAZHFcxBAYuuermlTrrilmUS4KhfsAecQeiAecQx/PLYNfjZp8gRhD973lanoDyujTXWzAQVrcACYPooRdP5EpeyQE+6IyWpoW3mYQKiJdT+xw7nHp+MT0bWucRBv4u5BhR16CQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721275248; c=relaxed/simple;
+	bh=HIciiOD7hp+BcewcEPvoUXiLMrTywFcCkDf5a9hIbB0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nMsOLAELOZJGknEJGsMaiC8kJ0aAyVXaxmv3ofuuQ8z6HAZQ/dVk12X/52vP4v8uO/nOgbPNy1bkthxlBXWWLspr/F6a8kvx01X8yUTMM/0KjPsJg4ftW4I7sW9ipOPOYlVPbyUHWl03Lo9MnKGkXl8ZN68bGO3DS7XzcLoiAtk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MNJ86a/Jt/IuZn91ThTDLLz3dkLn6rWFvQS/DIhYvu0NACMsavb1YJL7iGUy1oQnvoxstbm77B/+EYf8EPgibpp/c+dlxdLijcyo3UCYHkJnQYhi9fWfALdVVSK6CuurtDXk6kWaPTCP8lRLyyiO5E/t2GezoZrU83eX7K6B69gSCxC9EjDGZCmdFDxuNin/iPEAF8Zur031tNy2FdnQGftb5d7A3lHuhgipQafKrakfmF6S8LM+6wlymPsz5QADguLA4gqvIkgqqwgevWgCPcAbRf1OQOsv82cAw+2CECb6PUog37IZHUwyuI07HAeO85hf0B4ayv4AlGHP3arTRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ddjJ1l1tFX8PlnZ2moNGBlgsm9lxfZM595j++Kw0u+0=;
+ b=cl1PrjrbKCkQgbhxGAWbkjlT+q7AEMbyOMsaRyXOjx7VRwYWWVHlHCXYo1P0BUoMErnUuj5E3b9ycFrZpn7xGjOYQbV4WtXhOv0fMhqBp61VMkuaJOAue72EBalxbfGpxRIKr23yr8+NBQfwmHiAJZPy2TicxnstWweGfOj8Tnk9SaLK8f19SzHw/Cope8TSH8JJJr12a5eUeq3Axt1YwjKX6blZfN0UzKVBJ8PRO4nEvK5ZH5khco3q4ejHx2nHVHK9zIw56iFv9NRzMknN5TilfHPeZhRcn0oIm4Y32u4hSTCmpnksM2p3lJljcz55wiibuvdQFOAP65kz3iADvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB1046.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:e::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Thu, 18 Jul
+ 2024 03:28:43 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::64c5:50d8:4f2c:59aa]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%6])
+ with mapi id 15.20.7741.044; Thu, 18 Jul 2024 03:28:43 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Jack Zhu <jack.zhu@starfivetech.com>,
+	Keith Zhao <keith.zhao@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	Jayshri Pawar <jpawar@cadence.com>,
+	Jai Luthra <j-luthra@ti.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: [PATCH v2 2/5] media: cadence: csi2rx: Add system PM support
+Date: Wed, 17 Jul 2024 20:28:31 -0700
+Message-Id: <20240718032834.53876-3-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240718032834.53876-1-changhuang.liang@starfivetech.com>
+References: <20240718032834.53876-1-changhuang.liang@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0031.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::14) To ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240718011504.4106163-3-mstrodl@csh.rit.edu>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1046:EE_
+X-MS-Office365-Filtering-Correlation-Id: 663452da-dd46-45c4-2f21-08dca6d9b9ee
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|52116014|41320700013|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	22rUrY8pge3un0ZLhD/DEC+rrotOWbE9Z7hBWCV1etkEDnH5M9L1Kwi2qbbQqcSpBSKnbGFkMjHyyyWvKwoseE09Ms23rOe6OgmT1x5KO9X/Odu5FN/zokFllX8YH1f1vNIhttf8TVRF4afFUE7qsmq/o4rwS9HQo9MY0c0QE+5bKgYpVmWsiTqI1ybljdYgV+P7Im/BhLIQVsvn1Qxjrrpa3upuLMv8uU6L/Bejnu/RVNwKJuFKTRn5aPKdkh9S+X1VCr80D1JYfCiM5MlFlLROrwCKOxgZ54BEOYIbHhr+0L91yAqKA+dmHNUfUYy8xQIv8pcZBE12n+dbOiOwni+0fnEtqHbmCriSXdQukgtx/5LWlpQKyz1W7eaq/dEw2d+lqBqfxqErWwq4mrvYysxMHQocik9W5fNqchn4FcrrLkEJheTh1YIRCnIZBkDxERgMuATuXe5gbuomXqkc6VRdEoBFmkIaokHkk3t4UxejQIHmMKvBdOm0dOVRRYySl7bDBRoeQxwLBBkAn0WS1c8NfF2ZS7fXBT3P0XwOxe+b1yNA/aR6uYSxr7FMO3tUQ0EIxytY4TGD9MnJPHI38Pf4hOP3Fybg22POKybL4pokn2VHwDgDuvZX4NqwddWT
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(41320700013)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?c1fLn69RH4ctQ2zN6ymZcr1KmXj+8BNld91YohbDwEnmeKpZZ+WF7GFp7wrc?=
+ =?us-ascii?Q?xImwR/HBMzyFslwiveO8wOb8ODtvHwzj3eT3eyQjNvWmDL7LFxtlwxf8v7LO?=
+ =?us-ascii?Q?r1QGTsw4+kCz6RvDa9tWV4hVKjUCX4IK13nOQOxoylJNzjP0xdlSf+mSBvIE?=
+ =?us-ascii?Q?tt9nHLcPuMYsso5YlXLb7E5sZZtbizhg4vobx60pbIwp6bOZoijuX9CaInRO?=
+ =?us-ascii?Q?6N+k4JIsEZgSHaPoEiBV2d0JctazPf0zS2d0cp2ORdEwqHt3x1xpJLJMZNdu?=
+ =?us-ascii?Q?I8ipF9NiDnhd8WAR3C0ygHOfcUwtk5NSwCxceDIEPI68WVY1QrwTxZx7hr3P?=
+ =?us-ascii?Q?em5qfgsiZ5ddvcsAN5BZObOFvEdRjfOainUKOiw5q+z1wFDl00GzEGl/bhIR?=
+ =?us-ascii?Q?sLg73UQelRYfuKzHvQnHQ7Sdvgh0IrViatpAAHx3LA5aR6DcajRMWXD2YBg0?=
+ =?us-ascii?Q?EoVNjKoDnnmUbwxc4VcBlW81qnkiFqm+lCz9NJ8o2guTxHT90ds5kYtdx3nb?=
+ =?us-ascii?Q?4L2vCgR5VJiM/ky44E6DlrAB78MrAOfQTyRS7kTPF8BERM2mY1Fg/sYeZuUD?=
+ =?us-ascii?Q?lq9NV9+EVHpru+zVBvVXD3DlbvNke1MIRLT2CtGWorzXk9zo5MO9KBqDSk1d?=
+ =?us-ascii?Q?Ex+HDz91/xRNXuUy81ROE093U/8LM+cc9TJ0npyTmsiDPY319ELHOndSDFBc?=
+ =?us-ascii?Q?BocQa9dQQYUXrYVvuN48WpM4RTBA07faO/HZzGiQkUptTVA6mN2ev0toFsnT?=
+ =?us-ascii?Q?UXTnRlOaufyNPUjbxa22rMBpLDoOa+HTGmJFBPuzilyYuaGXpad+ATTMwmlL?=
+ =?us-ascii?Q?rxYyFV9FP+5Aw52CFdjcsCEvHXQg3wbBkCZo9N2/tkabSYNh6P2RL5u9sL7A?=
+ =?us-ascii?Q?SfRcEi2UPbF5XnM65vjcpJEYW1QnCjamoNG5fRT0yDRnMutCrIux+/vVHEZf?=
+ =?us-ascii?Q?75uV7OnPsIetI5tq3TxvEtSy+gDNa3b4r/M8O0xsyedHMkCgC0XzdTNBr2/A?=
+ =?us-ascii?Q?r+5byDG69biDjCTiY/+iNQMcBOV18hW+9HRuZt+sPnQodNGLERc1tX8FLC81?=
+ =?us-ascii?Q?NtCCYxtqMVu11VVZLZ+dfKV9ASH1PuM5AIn37YAnABTPv95tGgOKObVNSwMt?=
+ =?us-ascii?Q?NfUI25OTleWLODGtT7l8ITAlLkF2WH/3n7VcstOnS2si+EDJo8pj6ZrqohpF?=
+ =?us-ascii?Q?kQwlIs+BVPQWG44u/+i4VITOYhPmY7axu/t6sZkuixoi35ZsfWScauAs7fty?=
+ =?us-ascii?Q?USGXw+jOwN/Z1u8esCEWr9/WsW9QWNGRh7lRYHRjcOnCNYlHjuuCyImpHB9C?=
+ =?us-ascii?Q?M4cSBu0S2WFUqGbz5RZfRQZrz6+wR6hY+fFcBujk8wLsl3s9IrXJ8eDNQW3h?=
+ =?us-ascii?Q?6obE8V0HcWNaswOrGbpv5egNl6M2UUQKwy0m+H9PBTGEOM6oLtk9sU/iIrsS?=
+ =?us-ascii?Q?pzVHnclUpjIcTLOSh+NduzODl7QSmRP7wxbHLZRm7IFkq3GA2qABPtiSLVKs?=
+ =?us-ascii?Q?P8c8UPWK9qIvqTSbzgxp8PNGsoE6zC01y+y2LBfuU06VcRv5PrnOC4kSFnsg?=
+ =?us-ascii?Q?xgQrU3gZso0icJW1KLGwS3G2k+8Dq9tRKIiGOVLevzKpmvqPq5MrhNx4aq+M?=
+ =?us-ascii?Q?FOhHmTiQDoNqgyHiTtWqCaU=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 663452da-dd46-45c4-2f21-08dca6d9b9ee
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 03:28:43.8229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: extmWOJYAqiEGvwmT9V7o0UfbyUNC2LG9kKdxj/l4FzhvuepXRZUiak251y23Pb432d7vxur/rF4jXuphQijLyUTSvXYbqqxwBVtr12uE5jdR0JfyTqK78f5YZECtzam
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1046
 
-Hi Mary,
+Add system PM support make it stopping streaming at system suspend time,
+and restarting streaming at system resume time.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+---
+ drivers/media/platform/cadence/cdns-csi2rx.c | 32 ++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-[auto build test WARNING on lee-mfd/for-mfd-next]
-[also build test WARNING on lee-mfd/for-mfd-fixes akpm-mm/mm-everything andi-shyti/i2c/i2c-host linus/master v6.10 next-20240717]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mary-Strodl/mm-vmalloc-export-__vmalloc_node_range/20240718-091816
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20240718011504.4106163-3-mstrodl%40csh.rit.edu
-patch subject: [PATCH 2/3] x86: Add basic support for the Congatec CGEB BIOS interface
-reproduce: (https://download.01.org/0day-ci/archive/20240718/202407181147.SJ9mOE8q-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407181147.SJ9mOE8q-lkp@intel.com/
-
-versioncheck warnings: (new ones prefixed by >>)
-   INFO PATH=/opt/cross/rustc-1.78.0-bindgen-0.65.1/cargo/bin:/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   /usr/bin/timeout -k 100 3h /usr/bin/make KCFLAGS= -Wtautological-compare -Wno-error=return-type -Wreturn-type -Wcast-function-type -funsigned-char -Wundef -fstrict-flex-arrays=3 -Wformat-overflow -Wformat-truncation -Wenum-conversion W=1 --keep-going LLVM=1 -j32 ARCH=x86_64 versioncheck
-   find ./* \( -name SCCS -o -name BitKeeper -o -name .svn -o -name CVS -o -name .pc -o -name .hg -o -name .git \) -prune -o \
-   	-name '*.[hcS]' -type f -print | sort \
-   	| xargs perl -w ./scripts/checkversion.pl
-   ./drivers/accessibility/speakup/genmap.c: 13 linux/version.h not needed.
-   ./drivers/accessibility/speakup/makemapdata.c: 13 linux/version.h not needed.
->> ./drivers/mfd/congatec-cgeb.c: 25 linux/version.h not needed.
-   ./drivers/staging/media/atomisp/include/linux/atomisp.h: 23 linux/version.h not needed.
-   ./samples/bpf/spintest.bpf.c: 8 linux/version.h not needed.
-   ./samples/trace_events/trace_custom_sched.c: 11 linux/version.h not needed.
-   ./sound/soc/codecs/cs42l42.c: 14 linux/version.h not needed.
-   ./tools/lib/bpf/bpf_helpers.h: 423: need linux/version.h
-   ./tools/testing/selftests/bpf/progs/dev_cgroup.c: 9 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/netcnt_prog.c: 3 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_map_lock.c: 4 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_send_signal_kern.c: 4 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_spin_lock.c: 4 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_tcp_estats.c: 37 linux/version.h not needed.
-   ./tools/testing/selftests/wireguard/qemu/init.c: 27 linux/version.h not needed.
-
+diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
+index 981819adbb3a..81e90b31e9f8 100644
+--- a/drivers/media/platform/cadence/cdns-csi2rx.c
++++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+@@ -776,8 +776,40 @@ static int csi2rx_runtime_resume(struct device *dev)
+ 	return ret;
+ }
+ 
++static int __maybe_unused csi2rx_suspend(struct device *dev)
++{
++	struct csi2rx_priv *csi2rx = dev_get_drvdata(dev);
++
++	mutex_lock(&csi2rx->lock);
++	if (csi2rx->count)
++		csi2rx_stop(csi2rx);
++	mutex_unlock(&csi2rx->lock);
++
++	pm_runtime_force_suspend(dev);
++
++	return 0;
++}
++
++static int __maybe_unused csi2rx_resume(struct device *dev)
++{
++	struct csi2rx_priv *csi2rx = dev_get_drvdata(dev);
++	int ret;
++
++	ret = pm_runtime_force_resume(dev);
++	if (ret < 0)
++		return ret;
++
++	mutex_lock(&csi2rx->lock);
++	if (csi2rx->count)
++		csi2rx_start(csi2rx);
++	mutex_unlock(&csi2rx->lock);
++
++	return 0;
++}
++
+ static const struct dev_pm_ops csi2rx_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(csi2rx_runtime_suspend, csi2rx_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(csi2rx_suspend, csi2rx_resume)
+ };
+ 
+ static const struct of_device_id csi2rx_of_table[] = {
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
