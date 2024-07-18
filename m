@@ -1,168 +1,213 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2065.outbound.protection.outlook.com [40.107.117.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6830B19E;
-	Thu, 18 Jul 2024 01:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721267366; cv=none; b=tpiiyS95JTZhFsBDdtZg0hfub+jtHp1lIZUgKr2K5NfVEUykPKkdN5XgaGGiIL1mFC3nWuZl9RdCgw1Sp1RaRMhtDX7sXz8gqoMJExca/cJO2QRZMOHnVra6jnxuSlBnRzb9kCHSoEZnY+y67abB5FMqY9k9eyUusnHIYIv8/58=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721267366; c=relaxed/simple;
-	bh=Pi8/3jwy2l9+AmJtuYgshe/ziSNw878e7MeG21eo1K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ur2mK5JYOW/vXbL+OWaB2U1MtRFIwL4X/Qq7HSb/IapNqRY5Y3p0taj/fctDoIlEASVtPZ8hQ2RaucSAXsDYlrQ0yeEpA0I7TUtUarHrGgMWDTsdtc1Jz0yVtfxImE1SQHJWoUuN4mQC1rMfF5l6fhOeax4spEzJHZ7rneW/Qj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=b1DGKJ+u; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249A9139F;
+	Thu, 18 Jul 2024 01:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721267509; cv=fail; b=SN1llkrEotagx/QQDEVzb6PdW8gBMocbqcjjIQLZ5/yvsrMh1zrBl5tDD0ZsWh8GeRztqwKLs3wygWznLgM4Kp5elIbcj9wDRV+uTCdzN+Ulbn5AIgNXUYZrlay98orZjkz6dFxxvxNLJGuA3f6BTDzpIryA6O9DrDm8ULBxm9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721267509; c=relaxed/simple;
+	bh=ffDLRbkxwkuL0zy4zx2d6GO5nVrKB6ADTOtXYk4krtk=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JAdSL/CxCamI+yPfPNHuGFMXVjBeCOc1oM96yopD8mNe7rCJqtg1eoHtsG8aOz/9FLBbxQyEiR2UDEQkv9FrS+IhVBo0UGpqJeWOuT1zm6R6jxWLB6oUkkaP889uordwHWJFw2C5CoX4Adc2fvpozDTyAwSluCqFlUj+rw4mH0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=bIo7lFlA; arc=fail smtp.client-ip=40.107.117.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b1DGKJ+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1721267358;
-	bh=1NRM7JcRwY2THxFpUefXrObhIbdMlndIp71Mh/8WNt0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=b1DGKJ+ukjIW2SzPeEReZGJvUlAc1Ap9iBHztuyhoMDvKbVONNxoXP2AmaZQA1aVo
-	 /+T5AZjarjTQ6Ys/07iveL72XVI5K8vKo3jZ2nre5HrwFCwIdUZjicGAEEbG+D68U/
-	 tsghnJXQ90zjn0a3gbIXrNIEeDXXzsKD+ddRn0uVMCR1vcf5r45KeXrQf+h275QRxM
-	 6kDO6nu4GgFVwJAqQYxYemF8QlS6+V69WU1NBC6QyI2ogU+MQEqfUH7d4tgm6kYYx9
-	 Dma9Zb9Gc6lDkoZRS3DUCn+2bSoKZTS7UsxnuPJRkCzoibt0D3JjZMMsayoM9saY4z
-	 BbSN3gvraoz/A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WPbMK4D5Sz4wbr;
-	Thu, 18 Jul 2024 11:49:17 +1000 (AEST)
-Date: Thu, 18 Jul 2024 11:49:16 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>, David Miller <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Mark
- Brown <broonie@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Alexei
- Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, bpf
- <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, Kui-Feng Lee
- <thinker.li@gmail.com>, Martin KaFai Lau <martin.lau@kernel.org>,
- linux-input@vger.kernel.org, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-Message-ID: <20240718114916.7fab0442@canb.auug.org.au>
-In-Reply-To: <20240710091344.2f3f2029@canb.auug.org.au>
-References: <ZnB9X1Jj6c04ufC0@sirena.org.uk>
-	<20240710091344.2f3f2029@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="bIo7lFlA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XNn/EAqvAuQFy2wbXg6v+D7el16I1x0pKsl6IZSaNqMP3g9x49xPN0KfW6huVFLxW6fGBb+YnlPKTdVIMBKdFogtnVnZIj/tAIGGL2Cc6n1AtK9xenY3ppkj39w3ntKgL43fvXKbI5+OncNAUFuSFlcyUc5IMeOShz2cUeRIvoEqTQWS8b3Ul1Lmk8U+KAvEb+/p9S2gUdEYxe5gbLkNnCrUtreQ2bgtxuZUUGY907ehSet4v2N6h3+z5vnDWZp+KPOIONxaS87f78PHaxE9Wg3Hl9xK1IH0qGXYFEU4Qkj4Nn0mDi+Sbhlh9Ujk8mjHzkhAbUzmFRDuixtLO2QrlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZpL7g4xdX7luCR1v3OrmoiAGKG0lpxcIFChmNB8OgHg=;
+ b=O0zPw6Ed4IUqqp1WQONA8s5G0OL3y2QikhkEmwmtIjvixnhDDPpxrn+GTXI+yB2LaZzqEvPd8wT0aMeuqSG0hkpHtz8mElh1xYcmRzk/EkNixleaTy8HhlG4ktGLQuZdVMqntkWhJithvlvulHl8PNHlZXHLWwVGz6aeseDMY9aQ/xJZn/CDsHc0+r0MQ2ImllE1LBUItOhzzUU+zfNC39W1oQb5hzKq8s+s1wyQzzdi67k5fybuWHll4HwNn4XbyIFg97Kn/05bhOHwB4agT8bL7AGLFkIaIrDBM+9ev+8j0yQco+aIT9lgOrRQwDfmBsxGUxxSMtmTQhyT3HDq6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZpL7g4xdX7luCR1v3OrmoiAGKG0lpxcIFChmNB8OgHg=;
+ b=bIo7lFlAbdE4c2QnFjQP3xFFmjePqC+srKSqdXFCeJ8RRlZIdA0Qjf/lvGrNcFc8yLmFF/TDTInS8/d7QBHl5bf3aczWLR2kAKfiJNWJwNS0i3X4F2evUQI4WObtg5vS/eyAvD5wi6U+TpTl48QSk0PhUD6LpUpddmFasS431j/jKJ5pVNB9+Des3Eo9RlD4MQNVu41/Zb6meJHP5xFqnEGYUYWKBw0kWvxwA63YIEXxhQ3PjA1vTpdGFWulbzZd3TneT3bR7UbN1zgp/L7xV+PiMfgTIpgkbEVgjLwX3SV2+NKttJTuSf3gXn/KrEV9pKgxEaIFOysR5rUCwLZiuQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PUZPR06MB5676.apcprd06.prod.outlook.com (2603:1096:301:f8::10)
+ by TYUPR06MB6271.apcprd06.prod.outlook.com (2603:1096:400:352::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Thu, 18 Jul
+ 2024 01:51:43 +0000
+Received: from PUZPR06MB5676.apcprd06.prod.outlook.com
+ ([fe80::a00b:f422:ac44:636f]) by PUZPR06MB5676.apcprd06.prod.outlook.com
+ ([fe80::a00b:f422:ac44:636f%6]) with mapi id 15.20.7762.027; Thu, 18 Jul 2024
+ 01:51:43 +0000
+Message-ID: <7140a145-7dd5-43b0-8b2a-0fd12bb9e62d@vivo.com>
+Date: Thu, 18 Jul 2024 09:51:39 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dma-buf: heaps: DMA_HEAP_IOCTL_ALLOC_READ_FILE
+ framework
+To: Christoph Hellwig <hch@infradead.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T.J. Mercier" <tjmercier@google.com>, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+References: <20240711074221.459589-1-link@vivo.com>
+ <20240711074221.459589-2-link@vivo.com>
+ <5ccbe705-883c-4651-9e66-6b452c414c74@amd.com>
+ <ZpTnzkdolpEwFbtu@phenom.ffwll.local>
+ <99364176-a7f0-4a17-8889-75ff92d5694e@amd.com>
+ <06713006-c5ce-4773-a1b3-ca3bea56ee45@vivo.com>
+ <ZpY-CfcDdEhzWpxN@phenom.ffwll.local>
+ <b18ad853-90e4-4ad7-b621-2ca8a8111708@vivo.com>
+ <Zpff-8LmqK5AD-a8@phenom.ffwll.local> <Zpf5R7fRZZmEwVuR@infradead.org>
+From: Huan Yang <link@vivo.com>
+In-Reply-To: <Zpf5R7fRZZmEwVuR@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TY2PR06CA0030.apcprd06.prod.outlook.com
+ (2603:1096:404:2e::18) To PUZPR06MB5676.apcprd06.prod.outlook.com
+ (2603:1096:301:f8::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2M387VI3s81L9IdtWW7R0d/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PUZPR06MB5676:EE_|TYUPR06MB6271:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79e3dc2a-1239-47a1-4546-08dca6cc2cad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|52116014|376014|1800799024|366016|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Qk5nRFEwKzdBOWZ4UzJaOE9SaG1BejFzN3NGRGZsNDZrcnZPbWxuQW90dmRl?=
+ =?utf-8?B?OUpyUnVHaCt2enBuQjFPalc2eDk2cFJtMXdmMGtxeXU1dTNueitsKy96M1Q4?=
+ =?utf-8?B?b2Y5dU9HdHpYQSt4RGZOdUVhT2krU3VzRWQvbjVUYk4vUE82bmxteHNYVmlh?=
+ =?utf-8?B?NFdTdHAyeUVBK2pNL0w2M3p2clNnRTZnNzlpNXpjV01KQkFRRURUZlhJL2VH?=
+ =?utf-8?B?UlpFbWdtc3lwcjcvQVVTc3AwNTJpZWlOaFVubUJ1VTNDb0UvclM5L3JJKy9T?=
+ =?utf-8?B?R055TTVFOStlTVJ5QzZsTVlkMzJ6OE16MURZdnJwMjNUTko0eVRUQWhsNDlR?=
+ =?utf-8?B?TE5sNWRPU1RKUnYwSHNkTDM4c1dickFxNjZ5aEhNdWhZS0UwLzkxMEc4YW1V?=
+ =?utf-8?B?M2VBb2dJN0ZUdW9lNmlFb3VzVnJyZ2QwZ3dDZUlDeWR2WDdYZUJBTGZXR2tS?=
+ =?utf-8?B?QnMwbm0xNkswbDhIcmhvZ0Q5QWh0OEJKYUVHbStqMjJCSGs4WllCTXJLSTJR?=
+ =?utf-8?B?TmVtaEdrakZaRkV4aTRveUVpVVdOczNEOTJFSzIvQkRuMFJPbjgyR3l3ZGZ1?=
+ =?utf-8?B?NThYdWpMSUFaaU5TODd2V2c2S2R5MmZjcXZEUVRGckYzOWlLRmlZblNPMXJS?=
+ =?utf-8?B?OVJvSlM4dkRHanZsK200TzVsbEFFS0FuemRBRTBXU3JKWExoVGk2MFhWNDFx?=
+ =?utf-8?B?K2g0RGtZVTI3UktUN1ZMaDE2dmRxZHZJZFFHeDEzakRFOU5iWHQ2eTM5eERJ?=
+ =?utf-8?B?ZlZvcVhyYzJZQXBPSkI2ODJjMXZzdC9RdERzZWY4SVVVN3NKSXBabnRwbklv?=
+ =?utf-8?B?YlcwdWR4RU93dm9ialRsWm1meU16T2pFNHZML21YQlVYZDNzY0ZwODdXVElQ?=
+ =?utf-8?B?dk5Kekl6NFdQZFpYbitrckY3RUxJWW9HYW90MHdYc0dBemVnVGN3Zk5sUngv?=
+ =?utf-8?B?MUVRdWNPeURTVTVIcVV0c0ZnaTI1M1lLdS95bHpIeDhYQVY2c0RLTzBkK0t1?=
+ =?utf-8?B?djdqNVZXUkVWbzR0WXFJQi8wdWYrQkl6a0VBSTFzUjhiRFJleFFBdVNMeWFm?=
+ =?utf-8?B?Sm5ORG94QW1oUUt3b2RQR0ZUUDFxT2tUMTdubStYZUlUWGZyS1VJN0UrSlVH?=
+ =?utf-8?B?OFhVMDFSaEpQbWZwN0JwdEJiaFVoTWs1VTQzVWlFeDAvOVFiVDE4dU5EMjdx?=
+ =?utf-8?B?ZVFYV2EzcnVzaTB0Z0VlUnVCM2FvMlJhMjlPQ0hkMm5mTW50S0ZnM2lvbVda?=
+ =?utf-8?B?Zm0yaXJrak5aNlNRYnZWOHkvMnBFYnpuSUVra1hxL0IwVWl2ZW1lUjVNcS9C?=
+ =?utf-8?B?R0JJTnlsTDRTZDZtNHloVHdoM2dydWQyYm4rS2RReVVRdUZvSlpzVUh1QlRM?=
+ =?utf-8?B?ZDV4bDR4djR2RzhrbWpHcFI2SXRPOTdoZ0NpbWVqQjlxS0o2UXZhL2xpc3Fu?=
+ =?utf-8?B?Y3RBVGgzMnRiQkRYOXpxZFBZUHd4Z1drTGRXQW53b2d4c2lVaHZnd3g1bGNL?=
+ =?utf-8?B?cDN0OU9GTEs4SCtLQkozY3hjMTVTcUV3NHNhWk00TjM2VDgwZEMxMlJQNUxD?=
+ =?utf-8?B?VW5Hb3Via09UWm5CZXR1L3NjWXF3bjVmRTRJb0xGUjNZVHhzd3o0UlJmRHNo?=
+ =?utf-8?B?WWJSSElmTGlpS09sVk1yVjFGUElZZXZ0c2pqcmlBaW9lbUNFTU9hMlBONnE5?=
+ =?utf-8?B?ZGljUklpT2NjclhtbzdUdFFhemVyUW1ZUWhaNnRNS3ZHckxscVdBazNpbEZX?=
+ =?utf-8?B?MzVoR0V1TkF5V2F4QXhiTEJXM09FdDRLVGJRMk5jUDJuRkhvN2NZaUxWV2Q4?=
+ =?utf-8?B?TDUwVGJQUzlnWkNlRTQzbHQ5OHVPbEEvU3g5dThXM09NMzh0bHNSN2hJMHJM?=
+ =?utf-8?B?REFvT1JZMmpoV2FvbDdsaXJudVFRWmpzL3FTV2hSSkJCcFF4dFBTL3FuVDB4?=
+ =?utf-8?Q?4BPzSb8tjH0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB5676.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(1800799024)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bjYzanlMNmk5cUgwUjVjcUQrUW8yaFFTT3RWKzFhVGc4N2diaGcxM0tYUjZ3?=
+ =?utf-8?B?RndZczJmUnE0RjR0R2FPTUpjYm1ZRktnUzRUeURjOGxhenNPU1h5bnNWMVZh?=
+ =?utf-8?B?Ky91VmdQTldhQUdveXF1cEVaa2ZIK0x4YzROeDRVVUxYR2RvNkV1RDBMREtE?=
+ =?utf-8?B?bXptY0N2cFlEbmUwaUFleVNjK05MZWFERHFkaXRvUThCQUVzaUNXVWUrcXhi?=
+ =?utf-8?B?azNlZFo2UUJZbUxqWlpaOWozMkk3RndPSWc1ak5MNnlIZWV6SXAwQ09MSUhz?=
+ =?utf-8?B?clM5b2VxeXl5NjZqQXZZUE1kQUdpczV5eDJ0YkJDeFlRTm1IdFkxQ2dTa01p?=
+ =?utf-8?B?RlFuTUovMEtZK1p2a0RFa2tGSXlndk8waFJNekREQytNVkJoODR3L0xWMjky?=
+ =?utf-8?B?S2ZEQ09hTHlxMUtzbGQ4SnRqRTFYbG0vNTNrOExNVmI2aXNKblEvWkdadTdh?=
+ =?utf-8?B?K0Q1NlJoQU9wcmZJbVJXV3VnV2FhOXZjS0V1dnFwUXJ3ajlrbWxqN0xETWsv?=
+ =?utf-8?B?Qy8vdkI5Njh4ZEtpbXBkL2RaYU9qUjdrY1l4YWViMS9sS2FGZjBaZmtJRE9L?=
+ =?utf-8?B?aGNlQTMzVWZUK3Y2aXBFK3Z1bFQ5ZWtnN1c3NnE3RlpEekxLb2RnbTRaL1BP?=
+ =?utf-8?B?VGNkWHdTeXlOWWZ0Sk1rQzNZWWcvSEc5MzZCbXUya3M2T1RXRm5ER2hOcUdC?=
+ =?utf-8?B?T1AvdkgwL1ljLzgydm5KdjNBUGNGSThoM2hMaXdBeDYrbCt5TW1LRm9sSjk2?=
+ =?utf-8?B?VG1TM05oRGlxelh0TjJTQXpuTWJWSit6UDJEV0tYR0ZyYXBJYUdhcVhENGsv?=
+ =?utf-8?B?SHVRNjJvNXBFZlhzb0pMZEhvNXkwSFgxMDdVSHAvRElLT1ZNcStYT3JvZkNt?=
+ =?utf-8?B?RTA2VUhJcFFDb1BsdTZ5ZFFtQzIwMThRYlNxbnRUQXVuLzdkVjc3ckcreHVw?=
+ =?utf-8?B?VnpWaDJBdmhiS3EwU3Q2RlFYQ2QrdTB4cmFVbG1Gd3JVRFVQV2xUc3psUi8y?=
+ =?utf-8?B?TmlRd3ZZSzFwYXo3b2JTaHpoWDR5azZKc2E3Y0lnQkU0MEprL2E0ZG0xa01U?=
+ =?utf-8?B?TUJQV3lIUjFuY0wwWlhVQ0gyN0QwMkxnRjR3cjhUYVVrWC92aVN6RlBQMWNr?=
+ =?utf-8?B?aFp0Sm9POGV6UXZpNy8yMlZtS1Jmb3ludlBOSXRPUkNVRVVJLzYrd0JDUnJG?=
+ =?utf-8?B?a0w0NXBlWElueVJ2ZDFibWh3YWhrN0E5UW5oSnlFUXJBcm1RV1lzZnJFeFhw?=
+ =?utf-8?B?L1pucnZtcGU3SStHNkFEYjlmK3ZDVTlKNTc3MitCem5nNHMwWHdYZzlTM1hx?=
+ =?utf-8?B?aktsN2dQaitGajlPMWJCbWkxSDFHRVRLWEtKY0JYL0draFd0cUFITElabVh0?=
+ =?utf-8?B?QmxMZWZIZ1RQYUUzQ0t1Z3FoYkE3dXZubm9YMXRWSDhJNjBIN01aSjJiRk1o?=
+ =?utf-8?B?RjlKR0dPa2Q1VGhkOFI3N3YyQithMm5pWWVWeXFGWVdScHE0TG9pSXRYK3l2?=
+ =?utf-8?B?UUpwdWE2NUdXWkNSS3ZXQ3RmT3UwUVArRm5RaDIvUDZCWXVWZkNyWklsWkZp?=
+ =?utf-8?B?YTVkZUtUL3BxNXdQN0JhRHZFMXE3RWg0RmtIK1M2RHd5QVhyWkNhSVV1L2tE?=
+ =?utf-8?B?UHRyVUh3aXhjUy9qcFpCbUJFQXVJVFdMY241eXVyaTR0ck1rZHpTN1FORjNX?=
+ =?utf-8?B?NUNYR0pXL2h3anNKS1JaREVLZlBGY1NHdGVxeFlYSnY3UkQ4MFNTWmU1YWJa?=
+ =?utf-8?B?Q2VHVzhhQ2FsNGV2aG5hM1p6L3RubzJzaXV5N1AyV3dBQy9zM3p6Q0lobndF?=
+ =?utf-8?B?dEdrVTlMT05vdG9DeGY5Znd0akpodkNOYkFvWVNZcWZZRFFwM2k3bmdJbmRQ?=
+ =?utf-8?B?ZUorZG5MN2tHUWhtd2RrQmF5alV0NGt6QVcrSlZ2STJJakttSkttZ3E1TEYx?=
+ =?utf-8?B?b3VUajFFSzNmUy94ZE41d0lUOVZBYnNhUStHZFRxSkZraWswRi9sRmRCSVpQ?=
+ =?utf-8?B?RjBmR0Y1QjNOSXFsUEZkcm5OaEp0Ym8va2tBUTkzRnJ5dGdEYW9Fa1N2bXZ0?=
+ =?utf-8?B?N204QkFjRVNDeGtNWUdLcmRSbTNNRHVjVTYvbGxjQS83aWpIdTFZQlpkTldU?=
+ =?utf-8?Q?959M0bplvgwk8YP5w5EtZpQWn?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79e3dc2a-1239-47a1-4546-08dca6cc2cad
+X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB5676.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 01:51:43.4375
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2GkIeZ2xh0SBptEBFZUO8aNsiEImc61nSOESAtFf+PkRba3loPYr208WsZYNRkrGkoiA4EXTSyBqSgQHhSL64w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB6271
 
---Sig_/2M387VI3s81L9IdtWW7R0d/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-On Wed, 10 Jul 2024 09:13:44 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+在 2024/7/18 1:03, Christoph Hellwig 写道:
+> [Some people who received this message don't often get email from hch@infradead.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
 >
-> On Mon, 17 Jun 2024 19:15:59 +0100 Mark Brown <broonie@kernel.org> wrote:
-> >
-> > After merging the bpf-next tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> >=20
-> > /tmp/next/build/drivers/hid/bpf/hid_bpf_struct_ops.c:280:16: error: ini=
-tialization of 'int (*)(void *, struct bpf_link *)' from incompatible point=
-er type 'int (*)(void *)' [-Werror=3Dincompatible-pointer-types]
-> >   280 |         .reg =3D hid_bpf_reg,
-> >       |                ^~~~~~~~~~~
-> > /tmp/next/build/drivers/hid/bpf/hid_bpf_struct_ops.c:280:16: note: (nea=
-r initialization for 'bpf_hid_bpf_ops.reg')
-> > /tmp/next/build/drivers/hid/bpf/hid_bpf_struct_ops.c:281:18: error: ini=
-tialization of 'void (*)(void *, struct bpf_link *)' from incompatible poin=
-ter type 'void (*)(void *)' [-Werror=3Dincompatible-pointer-types]
-> >   281 |         .unreg =3D hid_bpf_unreg,
-> >       |                  ^~~~~~~~~~~~~
-> > /tmp/next/build/drivers/hid/bpf/hid_bpf_struct_ops.c:281:18: note: (nea=
-r initialization for 'bpf_hid_bpf_ops.unreg')
-> >=20
-> > Caused by commit
-> >=20
-> >   73287fe228721b ("bpf: pass bpf_struct_ops_link to callbacks in bpf_st=
-ruct_ops.")
-> >=20
-> > interacting with commit
-> >=20
-> >   ebc0d8093e8c97 ("HID: bpf: implement HID-BPF through bpf_struct_ops")
-> >=20
-> > from the HID tree.
-> >=20
-> > I've fixed it up as below:
-> >=20
-> > From e8aeaba00440845f9bd8d6183ca5d7383a678cd3 Mon Sep 17 00:00:00 2001
-> > From: Mark Brown <broonie@kernel.org>
-> > Date: Mon, 17 Jun 2024 19:02:27 +0100
-> > Subject: [PATCH] HID: bpf: Fix up build
-> >=20
-> > Fix up build error due to 73287fe228721b ("bpf: pass bpf_struct_ops_lin=
-k to callbacks in bpf_struct_ops.")
-> >=20
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >  drivers/hid/bpf/hid_bpf_struct_ops.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/hid/bpf/hid_bpf_struct_ops.c b/drivers/hid/bpf/hid=
-_bpf_struct_ops.c
-> > index 5f200557ff12b..744318e7d936b 100644
-> > --- a/drivers/hid/bpf/hid_bpf_struct_ops.c
-> > +++ b/drivers/hid/bpf/hid_bpf_struct_ops.c
-> > @@ -175,7 +175,7 @@ static int hid_bpf_ops_init_member(const struct btf=
-_type *t,
-> >  	return 0;
-> >  }
-> > =20
-> > -static int hid_bpf_reg(void *kdata)
-> > +static int hid_bpf_reg(void *kdata, struct bpf_link *link)
-> >  {
-> >  	struct hid_bpf_ops *ops =3D kdata;
-> >  	struct hid_device *hdev;
-> > @@ -229,7 +229,7 @@ static int hid_bpf_reg(void *kdata)
-> >  	return err;
-> >  }
-> > =20
-> > -static void hid_bpf_unreg(void *kdata)
-> > +static void hid_bpf_unreg(void *kdata, struct bpf_link *link)
-> >  {
-> >  	struct hid_bpf_ops *ops =3D kdata;
-> >  	struct hid_device *hdev;
-> > --=20
-> > 2.39.2
-> >  =20
->=20
-> This fixup is now required when the hid and next-next trees are merged.
+> On Wed, Jul 17, 2024 at 05:15:07PM +0200, Daniel Vetter wrote:
+>> I'm talking about memfd, not dma-buf here. I think copy_file_range to
+>> dma-buf is as architecturally unsound as allowing O_DIRECT on the dma-buf
+>> mmap.
+> copy_file_range only work inside the same file system anyway, so
+> it is completely irrelevant here.
 
-And now this is needed when the hid tree is merged with Linus' tree.
+Yes, actually, if dma-buf want's to copy_file_range from a file, it need 
+change something in vfs_copy_file_range:
 
---=20
-Cheers,
-Stephen Rothwell
+1. in generic_file_rw_checks, dma-buf file is not a normal file, but 
+inode_out check it.  need bypass
 
---Sig_/2M387VI3s81L9IdtWW7R0d/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+2. file in and out need in the same file system which you point it. So, 
+need bypass it
 
------BEGIN PGP SIGNATURE-----
+3. if dma-buf above 2G, need bypass generic_write_check_limits's file 
+O_LARGEFILE check, it only allow copy range below 2G.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaYdJwACgkQAVBC80lX
-0Gzm4gf+K5Eaw1hvi2atamuIucgJDjivmNzXb3gDTrIWxAwufU6uM61blbV8fBJ2
-H7ZcSIvsPD51QsazauCN77Xcgt80KMlhCAYixSXqoz9LU9+k5w29S7hXdseL/HYS
-hlFFw1BPtnTlPx6pzXEtq6z0MxUFoif3/D6j0wWFJLFx3DQsLGCOdxVtOnQ0hboA
-pFFzgZ9XKnYGhqRqpbCn/AXyFb6rgwzUM0gbgLCIoQDGfWchYfeD6Wi/+j9vGDTI
-Kr4x4nUlxlt0a+FdLKHAerlAOU49cUdhMuAxsTAA0SbJCRZNm/VcevAMNMD7arH0
-7ANk3vvbMrFCAYZspujkNW2ggjRC6w==
-=1aIh
------END PGP SIGNATURE-----
+I feel that the above limitations indicate that copy_file_range is not 
+really suitable for copying between different file systems or 
+unconventional file types.(both shmemfs and other's)
 
---Sig_/2M387VI3s81L9IdtWW7R0d/--
+Perhaps enabling dma-buf to support copy_file_range is not a good idea? :)
+
+>
+> What should work just fine is using sendfile (or splice if you like it
+> complicated) to write TO the dma buf.  That just iterates over the page
+OK, I'll research it also.
+> cache on the source file and calls ->write_iter from the page cache
+> pages.  Of course that requires that you actually implement
+> ->write_iter, but given that dmabufs support mmaping there I can't
+> see why you should not be able to write to it.
+>
+> Reading FROM the dma buf in that fashion should also work if you provide
+> a ->read_iter wire up ->splice_read to copy_splice_read so that it
+> doesn't require any page cache.
+>
