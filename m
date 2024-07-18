@@ -1,248 +1,310 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2089.outbound.protection.outlook.com [40.107.100.89])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D7C63A;
-	Thu, 18 Jul 2024 17:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A0763A;
+	Thu, 18 Jul 2024 17:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721324533; cv=fail; b=ht34kVPpsRTBrNC+ub7NSMH5pkokxO7rWyEaQj7WvVO5r3ixWumKJXyUTV6s7v6QJFn8k3YGdj9omLURTktJOXb0SgS/dUJcznHJL9TgTXuIlR7wc/w02ytslQ6GzzUjbz9a98fbgNeb7sjqvDH737KD869Fj2D8/b8dPl+zvTw=
+	t=1721324682; cv=fail; b=DZKvw06iXLHkngZsh/fKl7cVPT/BMkaZmLsViz+OHedM2gLwxBL8bl8epDtnySY9CTp2oDmAMhC69IXacbvVuQv+MkWAoJA0k4o0cNAjs3hev7VPfqbNKYFOpeMztcyqePv5MVnn2Xt2TKi1hTPJEWtUjGdBQ0DDpiCuHASEWI4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721324533; c=relaxed/simple;
-	bh=GS+9cX3HIWsBIIgsAAX0TZsRM4RqrXFSSILh5MvDWTU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XG0eG62XX/fVtnerplnoTAGEndzGZkcX4CmdK0qPg9dbbhQaKh135LkiC+ftdKwc59Y6D6g+GShg2CkchvndIE7wB7PA1A5Wg2X5E8qux9zgxzaEQSwMH1+U/cDw9MkhPwfkqsTLMROv2NtniI8gH0SztrBMHhpiKLn3twKd+5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hWt5hV57; arc=fail smtp.client-ip=40.107.100.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1721324682; c=relaxed/simple;
+	bh=45jYPxISLzq9B+bq2uQ1F86y2mQGFQ9hZxu/w6npBbQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=s7+S6JmeF4zYqiI3heoecqgiQS2BTfMd4XbH2srUm0CoHfVpj+FJfclqn8j1Em6Ki5M0Mm9xU6LKjEpYRqhurW2P7WLQooq0h31esL6/Vk7crwj6oduZ4gN0f8b0p3fLZb1jmOXujsfXiR4PpZ76gsfHvrv3FYOIWJ3La/AzytU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fld/zSP0; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hWt5hV57"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fld/zSP0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721324680; x=1752860680;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=45jYPxISLzq9B+bq2uQ1F86y2mQGFQ9hZxu/w6npBbQ=;
+  b=Fld/zSP02wFzLXJSR8SQ0wAh4u9t+gH83cuKCh8T39oV459XqP5R927t
+   1+TNX//hhqQjEar+PPdx82evMALAZXTg3IuAjpIAAERuYFd9SZpqmlGNm
+   hu42JWXgyN903RcpDkMrQc8Y1gF+/kx+UaQzneEGc2cVfEjz+CQSTTQxx
+   7VUd9dHVvWBB4zTTf3oPriQRbktS+z6MIQGzXWlArKBas6Re8OOyYjvDY
+   Z0JARWeRK3EzS2JRD6fI1YUU0rU3lVvI2HrnYqTdKGI2FJd0eGxgZsb09
+   Zr4LEPS6G9GrZlK4wLbmYtrYFdpD6w1tx205EfyXETpLb0EYJhIgO/QlY
+   g==;
+X-CSE-ConnectionGUID: 5ktWP3NSQou16myi+e7k+A==
+X-CSE-MsgGUID: oHTvFjRbQkuq0yLG0hyHZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="30292213"
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="30292213"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:44:40 -0700
+X-CSE-ConnectionGUID: 15PrxiOATCWiEBpWeBNbMA==
+X-CSE-MsgGUID: 1388tz5YQ82wIzgy4Da6Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="81473534"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Jul 2024 10:44:40 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 18 Jul 2024 10:44:39 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 18 Jul 2024 10:44:38 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 18 Jul 2024 10:44:38 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 18 Jul 2024 10:44:38 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qIXjAyllMpyDE7vkU9dsY4BpSYUnZhdZkiBrxn1bpEkDNe9GP/QjaOA79qnGPJa/ZQkYd57iKgzezYvAm1p55iJX4S/evENgVpKVBCfQ8+jFayIzs3eJzgtKKxOl1bCfvHe4VvW8tGddKIX1NYEI6k7JVVvAPmKWl5CFNQb/5QbcfAoUnknbYklFbfGXMXrt/zG5DBL1+VUlnab2qBP0P53pXrgxWkPCm5mIddCcAUUz9xPN5VOmJ0X1ECF9OnqKrLnbcQ+31ORBLcXfW2+eBx/LgWUvZfqWxqWS4YlLxmiBRDLaNj3t684wR32TpHG2i/Ai/mVq207o+8YkA4B8sA==
+ b=tf404wtd7SpntjjL//BrV9agvZwqCt4VRvUkqawIsnclhQImXxyk0hs04yroAUrqWyEqOOkvNTGsl/0zbrQkxtq8TwZzQVbZ7m6U+BI92pzS9VyTgjl/VCGWjWqcC8Ndi+qXI1p/sY3n6qsxRKa50L1lX8aooSqDBCPPBhS8LWtIaktFjhRQsxWpbXktuOv2cd/ckolob20+9awM3ZNgQVinsfYyffv/D/w2w+QRlJHZ5ECG0KpseBzZFoRRadDnSuZrTDqamF2RjkhZmu8hc+z8A4NVu2u/NDE16zcjXZ4gLYFazRhksabTfow0lViub50IbjVNZF6ET9pX/yH3lg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jdg2xGPFEx5LUvrDSzd34yhaIzXER3wfBLrCFlQ67ak=;
- b=r1mUnPT+WVmSUTQfSxGbq3LS9Z5FkPm3N0Da7DUWdNozGWKJJJV8eZTKE926Hs2NItqDuzdg9TEbQXHYaIE/0i4Pngd62RdgnOmclALwD6pZmrAxUXLHc88EpVJ7QzD/VZaUgKrE1KuunDW2pcyXfMJ8EHwY9tiA7RcpZUCfKztRd057I5fOazs99wtDnz9cx3xuml5plxIEg9RZXokF24is8D4/gl6/PpVPYRLgwnMg3Gf64ht0PtjLxi3mWQXl1xDQjQPR7uIlEnw6Xbt48TR6KRhRx6l3l0Cc7mZzfdlpMwRMulXBiD8G66K+mg8HbBdLLOo9DkR0oztS5XHJcw==
+ bh=6kaUyuJjVtmR8M58p4yQEiWJuIVcK2s7dcMlYtujE50=;
+ b=fFyqdbGlay4AFVUY5TIjPBYqDYSZGuwc1glXH+kmNBQAh4hKYwtTVj67I80AlkIueupKfRMr28h0ekSQveSFWWx4QIpHVLwThcy1/YhvUB5c2G3HiNuFXWiGdsCmSjnKRarD6Zi5yX+ySAyl44TfKjAbeZGHvBWXFfg1AvFnGeKB6JadLxCwOeftz6hXOuXX7n0VH4VG5pb6cBM6o/625lnMzHEYa2o2X4I09aZ3cY/cIMD7AvsAZkvnZtqWqBpVzlKdFKWWLvbal0v5a0UFIx8gbDBRliLVQslKJ38700EXIpOhbp3ijpmxsbGGRQ0PKmCaefnR7li8PDh06+PdCg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jdg2xGPFEx5LUvrDSzd34yhaIzXER3wfBLrCFlQ67ak=;
- b=hWt5hV57hJHJ9p4jRhLokx7hkB6bN0ow2uQw+jg73L5wqQ3BDVgVsIwvRWukJNRAFpkikSoxgPcn+ZrCc1lIhUnIHisFm1tB8cVB9/n8vA9DDJSW4LmRWaYAMG21HSmfdrcICZ1QAg+xDo/uyc8yYXRJNTLV6ArxNCOuERjZkucXizjA/M5eZhQNBRPCkKVn2QWOFrOt6BOzE95P4mqgVkoSeVcd5zCs8NU47ru4tuXX4lOGR5mYoEPrRKq9zHuEitE4Z6G7QikPErHE8BADOt5G91E8HWsF+1KQeY00O3CaxPfjDMoGR30x1ey0EU0eiv9hPC55EXV6LbhBKTov7w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
- SJ2PR12MB8832.namprd12.prod.outlook.com (2603:10b6:a03:4d0::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7784.14; Thu, 18 Jul 2024 17:42:07 +0000
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::ae68:3461:c09b:e6e3]) by CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::ae68:3461:c09b:e6e3%6]) with mapi id 15.20.7784.017; Thu, 18 Jul 2024
- 17:42:07 +0000
-Message-ID: <5e432afa-5a00-46bd-b722-4bf8f875fc39@nvidia.com>
-Date: Thu, 18 Jul 2024 18:42:02 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH net-next v3 3/4] net: phy: aquantia: wait for the
- GLOBAL_CFG to start returning real values
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
- Brad Griffis <bgriffis@nvidia.com>
-References: <20240708075023.14893-1-brgl@bgdev.pl>
- <20240708075023.14893-4-brgl@bgdev.pl>
- <7c0140be-4325-4005-9068-7e0fc5ff344d@nvidia.com>
- <CAMRc=McF93F6YsQ+eT9oOe+c=2ZCQ3rBdj+-3Ruy8iO1B-syjw@mail.gmail.com>
- <CAMRc=Mc=8Sa76TOZujMMZcaF2Dc8OL_HKo=gXuj-YALaH4zKHg@mail.gmail.com>
- <6e12f5a5-8007-4ddc-a5ad-be556656af71@nvidia.com>
- <CAMRc=MdvsKeYEEvf2w3RxPiR=yLFXDwesiQ75JHTU-YEpkF-ZA@mail.gmail.com>
- <874f68e3-a5f4-4771-9d40-59d2efbf2693@nvidia.com>
- <CAMRc=MeKdg-MnO_kNkgpwbuSgL0mfAw8HveGFKFwUeNd6379bQ@mail.gmail.com>
-From: Jon Hunter <jonathanh@nvidia.com>
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
+ by MW4PR11MB7163.namprd11.prod.outlook.com (2603:10b6:303:212::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.17; Thu, 18 Jul
+ 2024 17:44:35 +0000
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::fcf6:46d6:f050:8a8c]) by SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::fcf6:46d6:f050:8a8c%4]) with mapi id 15.20.7784.016; Thu, 18 Jul 2024
+ 17:44:35 +0000
+From: "Li, Xin3" <xin3.li@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "shuah@kernel.org"
+	<shuah@kernel.org>, "vkuznets@redhat.com" <vkuznets@redhat.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "Shankar, Ravi V"
+	<ravi.v.shankar@intel.com>, "xin@zytor.com" <xin@zytor.com>
+Subject: RE: [PATCH v2 09/25] KVM: VMX: Switch FRED RSP0 between host and
+ guest
+Thread-Topic: [PATCH v2 09/25] KVM: VMX: Switch FRED RSP0 between host and
+ guest
+Thread-Index: AQHaWe/p8mDo/Zfb1Ue0O++EkKDe07HFceqAgCsrPICAA4rmgIAADUkwgAAHp4CAAADDQIAH5h3QgAFdn4CAADW8IA==
+Date: Thu, 18 Jul 2024 17:44:35 +0000
+Message-ID: <SA1PR11MB6734AE7A4969F8AEEDE30B75A8AC2@SA1PR11MB6734.namprd11.prod.outlook.com>
+References: <20240207172646.3981-1-xin3.li@intel.com>
+ <20240207172646.3981-10-xin3.li@intel.com> <ZmoYvcbFBPJ5ARma@google.com>
+ <SA1PR11MB67348BD07CCCF8D52FCAC8FEA8A42@SA1PR11MB6734.namprd11.prod.outlook.com>
+ <ZpFH86n_YY5ModwK@google.com>
+ <SA1PR11MB67341A4D3E4D11DAE8AF6D2EA8A62@SA1PR11MB6734.namprd11.prod.outlook.com>
+ <ZpFZg-9MTveHfn_4@google.com>
+ <SA1PR11MB67349D5D7B0E26A49B8A1112A8A62@SA1PR11MB6734.namprd11.prod.outlook.com>
+ <SA1PR11MB67348CCC02DE80B2DAA4C7A0A8A32@SA1PR11MB6734.namprd11.prod.outlook.com>
+ <ZpkfkSMPiXrS9r2K@google.com>
+In-Reply-To: <ZpkfkSMPiXrS9r2K@google.com>
+Accept-Language: en-US
 Content-Language: en-US
-In-Reply-To: <CAMRc=MeKdg-MnO_kNkgpwbuSgL0mfAw8HveGFKFwUeNd6379bQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0292.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:196::9) To CO6PR12MB5444.namprd12.prod.outlook.com
- (2603:10b6:5:35e::8)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|MW4PR11MB7163:EE_
+x-ms-office365-filtering-correlation-id: 73a441b1-1315-40e8-448b-08dca75149d1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?cCMthJYv3Qk/Bsc05eeb9DqKYGDd5nEgIkg+cI+j1P0iiYcz6UXR7XuAxhXg?=
+ =?us-ascii?Q?lOjQvm9r7+g9Y1KPTJTSDHElKLmSmIrgjGweEeF0z7N9lY9g43KnDmoJtpPN?=
+ =?us-ascii?Q?f5cgHHeqhsE7FA6zVrlX936Ji5bEszeCog3BWphybasz8UD5D3dnyL2Gt9iZ?=
+ =?us-ascii?Q?G/MNJn7Um+gd6nQRWd92zKCn6UmMpGZ6D/mDDVKlGXqpqO5p3DX3ZCUDgSUM?=
+ =?us-ascii?Q?dZlz5squ1sTg6G7Q8u/mufpzAUuORZvU4+U/+Hlj1JR7wmxfIhz+d1PJ3lmq?=
+ =?us-ascii?Q?V26YYOhLLp0CraWFUHzIbrt0tDfMtxm+PZJTFPY/RSq2Ejkt9Mg0KlYkcOV2?=
+ =?us-ascii?Q?VUnlocnAYW0Cciw4R/noHLgRV1ISC8xWkJFgbbO8uqUotLS9okRivFsA+1az?=
+ =?us-ascii?Q?6nWsvH3c7fUHeiwHRSPc4bVeT6VNDeWcJkUsSwjDLU3oltOY3uYIXu9Io6J8?=
+ =?us-ascii?Q?uxdzCc1HFb9bZQKFCIvFRrxFHfxLl5lad4K9FX9pdqnsf+jNonV/6GD0azfo?=
+ =?us-ascii?Q?EUrFBXqFcEqUMGFFPowBVD2eqEdrzDF7ALqOmGoELQFFAKpEbbGP89BQwN6A?=
+ =?us-ascii?Q?+Y9kLBQH9WxGdUx9oMVYFvShgGHl5Y/Ie8VyBTBm3WxPlKlygpX0lGPmirWe?=
+ =?us-ascii?Q?ifKi4kaifB3PNJ+iRD+nY/j3C48gfvcxhQVwbFezjzp/GlzbB43zNZeH+XmS?=
+ =?us-ascii?Q?FXNZTXYKHmwfZoBCpJJZ6gEQ2/rvEKQXtmEhj41D65+QJ01thBbxc7GeJw2p?=
+ =?us-ascii?Q?UivodJhmFeoSGKbjUX6j04+r+s35VNy3kGOZJY93+WDrSnkpyFmfKOWQPZkY?=
+ =?us-ascii?Q?2KiaSUi3izPZKu5/jiqe4jFDd/3oLavYDKLCVOMo656ECsk2urvY2lQbAtnF?=
+ =?us-ascii?Q?2nWsdM64k71azz2FPf2QNqubLjtdngcXyJ5/nISHab4RSJoeEvqb3qt8xmcM?=
+ =?us-ascii?Q?zq6ilXm9ftdP1YTNmogeZzZnvr68SihFmmvLECmHTdLi147Lama+RZporJU0?=
+ =?us-ascii?Q?FKPgnzAibXi2yfAZnc5Y6Tl7VNv34iuRS393bjRS/Ub7ksUuI/p3K/dCeVNt?=
+ =?us-ascii?Q?o7DxRGJ/sB9NzGWCHs5FGTHasJIawOnFdsFMvTInQFhEU47YOxNF+9HL8VD5?=
+ =?us-ascii?Q?OWX01mhn1pK1LPYw9wloDzASy3oyRDqdFlw2eIuT7vhCSCeD1DoWEF+p2P6x?=
+ =?us-ascii?Q?Fo2stjE4tMyfzg+Wfk9TyOv2vRBYRJJnq25mw85XVMprhetdCBai+7o7z0No?=
+ =?us-ascii?Q?785NnO3sri2yv6IHPAc9Twbxr+XR+MYXwKrdRAA6mMyINn/usEIabq79LJC3?=
+ =?us-ascii?Q?1Kw6OwHvvUh1pLEr++Qs56ezpoVlSAjvCIz2MtAYtzPE7SeS5eKYaWp6Sssa?=
+ =?us-ascii?Q?De/bN0vPFgUIzuWeU4WmJQhXDnJAWGSUZUxpMSJHOkqy8+1jrA=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?N6AsdsaksQDzac6caGaoM9RPCN+bYbfXrn3BBzEC4uauQVbWSwETpyE2Lkdy?=
+ =?us-ascii?Q?7zos5PTg2ydvLi3oHV3KXm8zaopjgEzoOGjG1NVUYovwaeF/dEdXTpyyWbA4?=
+ =?us-ascii?Q?jkRLqXBG/WOoFKyBkh7GCtjiEe8OFUDnsugMJvW7bt2VXwHwTN4B3TfetpZB?=
+ =?us-ascii?Q?P1yJs6AwbtdD3tRd/hKoFDJEjFLOiD2kb9q+ron3MBGGIFiQVXp2P5z+AGoP?=
+ =?us-ascii?Q?I6XC/mwTkvoqv5itTl4vd/+Tslj5P90K5jdh+Uyr7+3smuv4luNzjBzjajTh?=
+ =?us-ascii?Q?OnyK20GnRE/UxTNzZiRhXVa0R5hqKnsXizWyCzk8GbBr6XfAP6TQ6qAawnDi?=
+ =?us-ascii?Q?evRnPVUL3I8FKWp5fHsOQ7JMo+Jygzq7GPYXyb06p04v1nrUh2iWpWhSrGl/?=
+ =?us-ascii?Q?tWs6ADb+ab6L4QiZhd8LZKHdsCgaCIhnluh7Rh5cK9IEAi+UtTICGv8ST8AM?=
+ =?us-ascii?Q?5+SxYdzZzvcP6gN8f5HYkSxBO0nhHrVfX9OPy7nn/oIxKpPOTGXcOsAYGIsY?=
+ =?us-ascii?Q?1VG0hu3G+vgoa4862cZA6MrQ6gFNE5Q3ldXj6XtA1TTl1LcAVoNEFxXAdY3U?=
+ =?us-ascii?Q?Hqqo+3e+z52GSqcAuqxjRnTR6lV1c/4FoxWSp2D6YoTatwUyZJD8lkyRDKrI?=
+ =?us-ascii?Q?R7W05gYpFiLXxU6+pM1Qo4+2U4Ji7OY0xpW3iw/Vcik1P43uG6fpu3/v9W0i?=
+ =?us-ascii?Q?FgVZ8W1jWqhVboe4dpLqJJ6waun8CajqQF4Cj58vddQ+D/nghZ+JR2OhybpQ?=
+ =?us-ascii?Q?IhWB9Jmfgf1IVtJU9jz7lOfu1Um/Tc/kSO8X6JqFDX0RqTabj2CVbltKHmSb?=
+ =?us-ascii?Q?Dmc4fXJkK/ETkfOHgCWa6/yUDS9sGYDPVYHOB7zJBX7H/YOkn4VXiHPvjW2j?=
+ =?us-ascii?Q?kZhn/kQAdCy7T3Y0qIdwqzZOumEldEuiejEE88ptjxtbffI05T4H1vPL0ulx?=
+ =?us-ascii?Q?EbIiJcmkXXx3ZAoo1TMPs6Qxsz/HxA4XxabyTqKsAluY47HoqltG1OrWB3vc?=
+ =?us-ascii?Q?5UD495UBq5k4BWMXilyFBvXE2/O/HSlJ2czmB6a8OaaKM4gFLAOpUcAM3fSq?=
+ =?us-ascii?Q?tqe1l7sAVR9fFgCOPkNBv6NdhMbGTsWrUjCZkzr6UYh0DCM8w3Q1m0JwKENZ?=
+ =?us-ascii?Q?8uR29BaCv6gGOySH5pJbkxZWO6yADst9dDqLd/+V7omBWGi8PEHwpuNbQeUM?=
+ =?us-ascii?Q?fbZ5RbNS+CbqfTwcba1d8bm3+Eb67JnyFf7vQpbgyu1tPxzTpZP6uA5q7BzS?=
+ =?us-ascii?Q?KtyYmUQuBByyRpIoepzQehZZapRnCbVYUKys4TdCTvMrdREorElPT7nTkBV2?=
+ =?us-ascii?Q?5lmvryg+JXcxolj7B0vc43VEzMR9zbqqRMGTAcvi04OWp511IV9e1KmZgO9E?=
+ =?us-ascii?Q?Y3x/44SA1v2Sof2IIexKQVlee+RXYrpxkAWI82LitNZD9AiRiwPRQomV8zpj?=
+ =?us-ascii?Q?s9W2w90GwlogYEH3b/9HOGjutnvVF4cG6SbgAIEk1Pt4fCykAN6it1RJB9eu?=
+ =?us-ascii?Q?Ea1QaA4LbmTPaPcJcFAMcBfRjzdpdLGAB+zBs6Y1klHSJjrYL+ay85RFBIBR?=
+ =?us-ascii?Q?UDVHF7l0oIOsWWvnztg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|SJ2PR12MB8832:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7fbc04fb-29d9-4fd2-b159-08dca750f199
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dEhRWXh3czM2OHdhYzJmNU1QKytmK2RsbkN3ZFZCKzJBZSs5dTFDOGRqZ2cv?=
- =?utf-8?B?S2xsS3pGREFjS013ZTd2RUJRYmZwUDU3UUxibms3Rk9yV2p3QVY2NGV3dE1U?=
- =?utf-8?B?Ty9aQTdpbjd5cUNVZTNtUzNNVUZBZDVuTG55dkJveGZ0a1FsYTFhU0lmTW1Q?=
- =?utf-8?B?d0lHTWpxeWZkVGw3QTR4amFVQWE3NmdPSHJ0VFVGZ1ZlaS9MaGw4eHV2ZXFF?=
- =?utf-8?B?cksyV2ptWVdvSjRhTkZmOFhkTi9tSnd4dEUxZjkvaEpPbmNOV0lIMEV4WHoz?=
- =?utf-8?B?RGtoZ1FZWVMxL3Q5YmdjdGpSbGovcnBxT0R0cWFpNmVWNjQ4UFZhb0VwUnd1?=
- =?utf-8?B?a2VSa0FGYXlPZS81bjZMemU1aDJCL3psRnk5QkJ3NzJrcnVvY2hUTGdxM1hu?=
- =?utf-8?B?aWZyN1BZRUFVUThRTk5HejlRWG1qaFFjcTFRaSs0eWRMZWw2azNaWEE1RGFx?=
- =?utf-8?B?c2hoWnRnSnd0ZFdpT0tlUTZncXdUcmI3NXpIdXBBQzJic1U2SEVBT2Rld3JL?=
- =?utf-8?B?RHJrSmlhWURlZndja1VSZGFBZU9pdHZTYlpRVTVDOXJFV2FWTDZ5SlIxckc1?=
- =?utf-8?B?STZNVzlMTkxrclM4R1FWaE1TYlY0YUNWTFFoeHhWZjNOWW8wb3ZzVk9RZHJ5?=
- =?utf-8?B?bzcwSFVHWGpjaCsyaEljbTl2S3BXckFXb0RyaEhkQnV5VndaTFplU0VuWDJq?=
- =?utf-8?B?R1RrdFkyc2lTTU00b3F2elNMNnE5MDYvdmlSa0hrMXNiMjVrTVJZeDZMeTBT?=
- =?utf-8?B?a1BMMVVQTXJDcG42L3drUXFVWW9VYkRUaHhPOEJSZ0VaQ0JCTjBkK1lOajJ6?=
- =?utf-8?B?Rm9DZDdWNzZzRnk3T0dhN2hJUFZEcy9yY2pGOG8vajJrTXdkSXE2VFdVbE8z?=
- =?utf-8?B?S29yeFhadmVIeEVZV3dQc1RKdlBRVzBTTEgrT21BckJsN08xeEpXeFUvaEJ5?=
- =?utf-8?B?SFBGSS9FUWlKYURFb0VKQlJrbHVTaGpXRVd4R3RDVHpuV0RYWHRFNDh0aS9i?=
- =?utf-8?B?MmxVQjZQek5QaFQ4eE9EUDBWNDNXYk5ZdWFRcDROWEVlWk11SUJQSEFpdVBG?=
- =?utf-8?B?dEJBSWpTYVRpYVV6Y1FKNVR2SXBZamVseDZERlRJdGc5azhlZkxZdUFUTWV1?=
- =?utf-8?B?RFA0TG1FbnR4SmF5dTArRWdBSDdZTXhLRXNMT0FjZmNCbzBDRnZhN3JGa2ZF?=
- =?utf-8?B?ZG9CZW9iRk1MVXJmZHVrV0U5Nnp6aUFTQjAvQXRJWS9WSFJGZUZ3MlVOSDRN?=
- =?utf-8?B?eTZxbkF6TkE3OFV1UkFyM2tTV0MxYUxEVmdLKzgydVBWa3VFaXNkVHg3RFVP?=
- =?utf-8?B?VHZLQVkxS0hFaDNGdVVGcnVlbEpjL0lxNC85SEVrSHY2Ym1LWTAvTzZOSFlt?=
- =?utf-8?B?VGR0cVVScGJURzNjbDROc3VzYWYyb3dzRHlUM2xGQzhEcnE1YlBLL2czU04y?=
- =?utf-8?B?UUx1M3B4Z3UrQXZhbmhacElULy92MWlnR05YYTYrcGVPUlFkcHVtU1lBRDNM?=
- =?utf-8?B?cmNvS2locC9JRThvSU9pUGdpd01Ja3FzZlM5blNMK3ZPajlXMkNtWDdZYjFy?=
- =?utf-8?B?US9MSzlZZUpmTUw1MUZkRGZFcEZoTUxMS0F4Z1pVRUtvaGd2VnZLdlNPTVNo?=
- =?utf-8?B?c0xwK0hBNy9KL2tyNTNKQXgzOGl6TWJHUnVPUlNJR2dQY1RVM2lCNjNSMnRV?=
- =?utf-8?B?ZFA0WStJQVliOHpYWXVMajk5Zkx1WjhHTllqendhZ0l2VWlXSXhPMVc0WUdP?=
- =?utf-8?B?UGtGeENiZmdWd0RlWmVjRnYrQ3NKM3RTMjdyaUFpNGZWeHNta2YzV1JjQlRO?=
- =?utf-8?Q?hSErqKzkOGYQgzBDcCTy7NR87FBdcq5eXNjbk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OEtrM29URmpJVEgzNGxjenk4MFRvc09qd2tTNzRlZmQ1M2pHazMvK0RSZGRh?=
- =?utf-8?B?R3p3K3Jyd25zVENPb0M3dUNtbi9PZmk2Q0lmdGk2Z0RRUXV6YngvSnFWWVEv?=
- =?utf-8?B?TmVkNGI2V1pGQktxNzY4R3QwcjhBNjU1VVVuVGVqcGZuVXJ6YVp5cmluRmJH?=
- =?utf-8?B?clBVcHVUek1Ra0RsTm5KOE5haXpYNWFLYnYxbVhpNzlNN0FySXBYOVJXVit0?=
- =?utf-8?B?V3lrR0FTQWk5U1dHZHl1WXV0eThuQmRTNGsxcFlRQnlKU21mRXdyeWg2dVVx?=
- =?utf-8?B?WW9UU1p4SkNwMVd3ejBLZ1FBQUhFd0hjL2hqb2hWVmtpZ3JFSm9WUGFtT2xs?=
- =?utf-8?B?bFdocjFURDNRdGx6Nk4wYWpFRVhDbTNsRStVUzZyMHdQKzBrQjYyVTN2Qk1F?=
- =?utf-8?B?bTdGRU5lNkFPNGdJcERuT0RUR1JtelBCZWZhNjJRSUxkdXBMZENzbVR1eEhT?=
- =?utf-8?B?UXYzSWJaWm1KZVNVdmtvMTQydldpQ3dkc0dNUkdySktvdDltd1pGMGhnNXBq?=
- =?utf-8?B?NERMSTFicGJTT3NWaUR6MngxcFB5ZWtEd2dldGQ2cHJ6cWEyQzE0TFYwdnh6?=
- =?utf-8?B?Rmh2ajlmYk1kWUVOUTlHMHJOMGJIdUVaQWZGSWF1L3lVTGZMV2dkZmorbGNs?=
- =?utf-8?B?LzZwYmczVGZwaDVONWpEWE1GTElMSjdGZVNRRk5idFA3R0V6MVVLd1pwaDhR?=
- =?utf-8?B?S0dvTnBZSDVNb3pPWXdzNmZRQk4yMk16QW1GNk9Zd05kTlNPNEZGKyt4L2o5?=
- =?utf-8?B?UllnRVJEb0wzWHJnU09YSnhlbGZOWndUUU9ubFR3SEVLN1p5U21sbG5qdTF4?=
- =?utf-8?B?N3NrWHJHOG9vU05OdktrOHovOEVsWW85dUs2dDdDMnBvOTlLSm9UZjQ5eVlp?=
- =?utf-8?B?VnFNUDY2T2RYN3BmZy9tY1IzRUVOQUpYdGduaU9ZNlVvVEtJWFkrSHFTRnNz?=
- =?utf-8?B?N3FuZlpMOGNNcksvbDIyL0RkRnM1SHNmQlJDQTNjQjFrTzFKNFdmQVlic01w?=
- =?utf-8?B?cEdoZWhQamJwZm9PYmd1OHlDZVZqYTdyMTZSajJIOWRJRWRSOGl2RmdORExu?=
- =?utf-8?B?eng0VUUzSDkxa1RUOEwvZHVHS29ON2hZZE1WSS85TTVybFAwOHJXVDVKRXVI?=
- =?utf-8?B?aEdNZ2hZYUxZNUY3SW1MUWRxWEREbHNBYkN3WGxhQTFXUVVKdWloeWFLUFc3?=
- =?utf-8?B?V2FZckE5dnBZZ2lZQk1MQW4wejFnbTNnQW5kQzNTMHpjdlptVmFiRVRyV3E5?=
- =?utf-8?B?M0wyOFkwaWdPL1krYzA0UXlhak9hYklLTEF1UTV4NFh1UDVZbWF0VHE4anFO?=
- =?utf-8?B?YlZWS0RKVmVzRkpIU0pPYlNwSXJJWG81Sm9URjc1dVlKQnIxdlBZNHNaRmFU?=
- =?utf-8?B?eFFPcEI0enFYQ2hrZEVJUUVnQVZpMEd2eEZKOWtTekIydWt2NkhNTEF2aGdQ?=
- =?utf-8?B?TDU2R0VKNkZnUzJDRFBDUG1VQ1JVbDNyTThESHpDNXBybG9YNS9FNktaUHpu?=
- =?utf-8?B?L1BaUG85cnVKdjVrZlJOcHJqd01tdHFCeW45Ym1EejFUQVNZbVcvNitKTTVk?=
- =?utf-8?B?SitYTzdleSs3Tyt1b3I0K3Nhb0E4cUR5TGNiMEJGQnJLdjJOVEtSQnJEZ0JL?=
- =?utf-8?B?WXF1Y0VVSUhkZlpGeW41cjhLRUQxQ2VLVVd0ZXlOUUUrSnVRSk1WcHJiZHZU?=
- =?utf-8?B?TzVSb3ZmMUxBSXVwZGs2Q05zaS85Nk0wRy9jSzhjYjhFOVhuWVpodzR4aWtk?=
- =?utf-8?B?bVMyaHlsaUxUS0ZhS0J4d3BUMExQYnNHQ0hjclg2UGxrRXJVMnFCQnVzbVhz?=
- =?utf-8?B?UDZ3ejMzSXNWUW9kWHRGNjhxSm9oV2l2bFRqM2NJM2RKbzZ1RUFWbjcwZzFy?=
- =?utf-8?B?MzhNMFNPMFNGTG5MV3NUa1p6b1NZVHZobVprWVNlYXk4QURqeXZVRnBIcWsx?=
- =?utf-8?B?WXZ6NVhNcFhPd1NjZExCa2FHQ2xtTGh3dEhOT3ZVRXBrWVBaWi9BWnljSmdM?=
- =?utf-8?B?NysyNU9VNlNCM1dFVDhaOVJTYmFGN0cwRTc2eURLUjdLNnlvT1BLM2RyNjdq?=
- =?utf-8?B?UnJJai9qblllazlIaHkzVlljWHFDYVd0U2lwbWNWR0lkQXhSTExpaUpnVWUx?=
- =?utf-8?Q?0LbwQ1o5tIbDxYT2NdH8ElpHQ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fbc04fb-29d9-4fd2-b159-08dca750f199
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 17:42:07.4881
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73a441b1-1315-40e8-448b-08dca75149d1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2024 17:44:35.1808
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SIFum/WmDnL0U83+kMexMn25ae7UlBvaJYcu/D8b8SS4M9yJRoUpaq4Q/jQ0hbb2XfUtMX3a6nLLO1OX3mqhEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8832
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2y9dQiYCh+jek1FA5TtGintgmx6QF20y3XO1ReP6r6YIMPO/mUdTk6plvvo2uci+l/Mrm4dagYebPIm1eap7pw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7163
+X-OriginatorOrg: intel.com
 
+> > thus we need to:
+> >
+> > 1) *always* save guest FRED RSP0 in vmx_prepare_switch_to_host().
+> >
+> > 2) *always* restore guest FRED RSP0 in vmx_prepare_switch_to_guest(),
+> >    because sometimes context switches happen but the CPU does NOT
+> >    return to user mode thus the user return framework detects no change=
+.
+> >
+> > So it essentially becomes the same as what the original patch does.
+> >
+> > I guess It's probably not worth the change, how do you think?
+>=20
+> One idea would be to have the kernel write MSR_IA32_FRED_RSP0 on return t=
+o
+> userspace instead of on context switch.  As is, amusingly, there's no nee=
+d to
+> restore the host value if a context switch occurs as the kernel will have=
+ written
+> the new task's value.  RSP0 only needs to be manually restored if the ker=
+nel
+> returns to userspace for the vCPU task.  Using a TI flag to track if RSP0=
+ needs to
+> be loaded would avoid a fair number of WRMSRs in both KVM and the kernel.
 
-On 18/07/2024 15:59, Bartosz Golaszewski wrote:
+I also thought about it (while in the FRED ERETU code path), however
+we will need performance data first, even an extra check
+(ti_work & _TIF_NEED_RSP0_LOAD) seems neglectable, but both return to
+user and context switch are hot paths, and I assume return to user is
+extremely hot.
 
-...
+So let's revisit it at a later time?
 
->>>>> TBH I only observed the issue on AQR115C. I don't have any other model
->>>>> to test with. Is it fine to fix it by implementing
->>>>> aqr115_fill_interface_modes() that would first wait for this register
->>>>> to return non-0 and then call aqr107_fill_interface_modes()?
->>>>
->>>> I am doing a bit more testing. We have seen a few issues with this PHY
->>>> driver and so I am wondering if we also need something similar for the
->>>> AQR113C variant too.
->>>>
->>>> Interestingly, the product brief for these PHYs [0] do show that both
->>>> the AQR113C and AQR115C both support 10M. So I wonder if it is our
->>>> ethernet controller that is not supporting 10M? I will check on this too.
->>>>
->>>
->>> Oh you have an 113c? I didn't get this. Yeah, weird, all docs say it
->>> should support 10M. In fact all AQR PHYs should hence my initial
->>> change.
->>
->>
->> Yes we have an AQR113C. I agree it should support this, but for whatever
->> reason this is not advertised. I do see that 10M is advertised as
->> supported by the network ...
->>
->>    Link partner advertised link modes:  10baseT/Half 10baseT/Full
->>                                         100baseT/Half 100baseT/Full
->>                                         1000baseT/Full
->>
->> My PC that is on the same network supports 10M, but just not this Tegra
->> device. I am checking to see if this is expected for this device.
->>
-> 
-> I sent a patch for you to test. I think that even if it doesn't fully
-> fix the issue you're observing, it's worth picking it up as it reduces
-> the impact of the workaround I introduced.
+> diff --git a/arch/x86/include/asm/entry-common.h
+> b/arch/x86/include/asm/entry-common.h
+> index ce8f50192ae3..76724cc42869 100644
+> --- a/arch/x86/include/asm/entry-common.h
+> +++ b/arch/x86/include/asm/entry-common.h
+> @@ -57,6 +57,11 @@ static inline void arch_exit_to_user_mode_prepare(stru=
+ct
+> pt_regs *regs,
+>         if (unlikely(ti_work & _TIF_NEED_FPU_LOAD))
+>                 switch_fpu_return();
+>=20
+> +       if (cpu_feature_enabled(X86_FEATURE_FRED) &&
+> +           (ti_work & _TIF_NEED_RSP0_LOAD))
+> +               wrmsrns(MSR_IA32_FRED_RSP0,
+> +                       (unsigned long)task_stack_page(current) +
+> + THREAD_SIZE);
+> +
+>  #ifdef CONFIG_COMPAT
+>         /*
+>          * Compat syscalls set TS_COMPAT.  Make sure we clear it before d=
+iff --git
+> a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
+> index c3bd0c0758c9..1674d98a8850 100644
+> --- a/arch/x86/include/asm/switch_to.h
+> +++ b/arch/x86/include/asm/switch_to.h
+> @@ -71,8 +71,7 @@ static inline void update_task_stack(struct task_struct=
+ *task)
+>         this_cpu_write(cpu_tss_rw.x86_tss.sp1, task->thread.sp0);  #else
+>         if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+> -               /* WRMSRNS is a baseline feature for FRED. */
+> -               wrmsrns(MSR_IA32_FRED_RSP0, (unsigned long)task_stack_pag=
+e(task) +
+> THREAD_SIZE);
+> +               set_thread_flag(TIF_NEED_RSP0_LOAD);
+>         } else if (cpu_feature_enabled(X86_FEATURE_XENPV)) {
+>                 /* Xen PV enters the kernel on the thread stack. */
+>                 load_sp0(task_top_of_stack(task));
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c index
+> 5c6bb26463e8..cb7e3bcb001f 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1338,15 +1338,9 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu
+> *vcpu)
+>=20
+>         wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+>=20
+> -       if (guest_can_use(vcpu, X86_FEATURE_FRED)) {
+> -               /*
+> -                * MSR_IA32_FRED_RSP0 is top of task stack, which never c=
+hanges.
+> -                * Thus it should be initialized only once.
+> -                */
+> -               if (unlikely(vmx->msr_host_fred_rsp0 =3D=3D 0))
+> -                       vmx->msr_host_fred_rsp0 =3D read_msr(MSR_IA32_FRE=
+D_RSP0);
+> -               wrmsrl(MSR_IA32_FRED_RSP0, vmx->msr_guest_fred_rsp0);
+> -       }
+> +       if (cpu_feature_enabled(X86_FEATURE_FRED) &&
 
+This check seems unnecessary, I guess you add it to skip the following
+code when FRED is not enabled on host?
 
-Thanks! I will test this tonight.
-
-> I'll be off next week so I'm sending it quickly with the hope it will be useful.
-
-
-OK thanks for letting me know.
-
-Another thought I had, which is also quite timely, is that I have 
-recently been testing a patch [0] as I found that this actually resolves 
-an issue where we occasionally see our device fail to get an IP address.
-
-This was sent out over a year ago and sadly we failed to follow up :-(
-
-Russell was concerned if this would make the function that was being 
-changed fail if it did not have the link (if I am understanding the 
-comments correctly). However, looking at the code now, I see that the 
-aqr107_read_status() function checks if '!phydev->link' before we poll 
-the TX ready status, and so I am wondering if this change is OK? From my 
-testing it does work. I would be interested to know if this may also 
-resolve your issue?
-
-With this change [0] I have been able to do 500 boots on our board and 
-verify that the ethernet controller is able to get an IP address every 
-time. Without this change it would fail to get an IP address anywhere 
-from 1-100 boots typically.
-
-I will test your patch in the same way, but I am wondering if both are 
-trying to address the same sort of issue?
-
-Cheers
-Jon
-
-[0] 
-https://lore.kernel.org/linux-tegra/20230628124326.55732-3-ruppala@nvidia.com/#t
-
--- 
-nvpublic
+> +           guest_can_use(vcpu, X86_FEATURE_FRED))
+> +               wrmsrns(MSR_IA32_FRED_RSP0, vmx->msr_guest_fred_rsp0);
+>  #else
+>         savesegment(fs, fs_sel);
+>         savesegment(gs, gs_sel);
+> @@ -1392,9 +1386,10 @@ static void vmx_prepare_switch_to_host(struct
+> vcpu_vmx *vmx)  #ifdef CONFIG_X86_64
+>         wrmsrl(MSR_KERNEL_GS_BASE, vmx->msr_host_kernel_gs_base);
+>=20
+> -       if (guest_can_use(&vmx->vcpu, X86_FEATURE_FRED)) {
+> +       if (cpu_feature_enabled(X86_FEATURE_FRED) &&
+> +           guest_can_use(&vmx->vcpu, X86_FEATURE_FRED)) {
+>                 vmx->msr_guest_fred_rsp0 =3D read_msr(MSR_IA32_FRED_RSP0)=
+;
+> -               wrmsrl(MSR_IA32_FRED_RSP0, vmx->msr_host_fred_rsp0);
+> +               set_thread_flag(TIF_NEED_RSP0_LOAD);
+>         }
+>  #endif
+>         load_fixmap_gdt(raw_smp_processor_id());
