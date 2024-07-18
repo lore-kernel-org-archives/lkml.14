@@ -1,154 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C53B13B7AF;
-	Thu, 18 Jul 2024 15:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F33C144D0F
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 15:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721318169; cv=none; b=Pw8aEJiend8/JT/QiV0JJEj3dE+ki2NKGKN1B3KLmLGiZPMHm2ajgpxKYxJR+EwjN3E0N9ayUsnfTmdq07BOPnTCfYwDJPno/zXMTEKAfYdqaXXKgMWayLj9f9CXTJtMu3mKDDcgMGV+/Jt+juEGON+4dwJvSoLL8WV4YOZKfak=
+	t=1721318171; cv=none; b=NxTX521kKmQAyg/NZqr0+YRTn4BEJDbumSo1y3uCDp45020VPHif78s90XNOJ9LkgbTJ1XIg0EoUO9468tojeu0ASEuVWT82yhEyKT7hcX8QQSkQlcEbp5PyByA0ID3wgTC9wQUsP76sGvH8r2+ZKMR2RfddHQH/gQut4EhEVsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721318169; c=relaxed/simple;
-	bh=wFUzftDcteRmA2NyKmVxglS13LnS1utkda/P2FIp9y4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oBtEueVtk9o8/lKgRIM/UF38XX/9CIAn+WLUz8dHtOGFtnUmrZZ7ws2hjVqBzFgiKlSSPoAwo+6T69GeAhyzdyQV2AvXI1LVWi1upM8pV798CHE7VJ107+IzQ4zWgxhaeq/c7shjkawIeLBM1ri525KGmO9QkbcgOGigrTT4ZIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/We4EpV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721318171; c=relaxed/simple;
+	bh=1pOANHGT3ZDBfZJaJvyg3dRQGTHF5cppcYVLUfHUi3w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=raavbcLOSqAcV99qykK9YZ7m/hcEvYZ0maKezuK+rEI22Z57+HFPAUzz5HsdV/8U7jd5x+foMwveo2prPJu/7wxT6otDu1QpOP5/b8thPrxnALp9FWMhCfqCunB/9bYnrQpKuF0RdzUys9Ti7du3l1MYlD24U65E7GLKc8oqRhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RalfMmnf; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/We4EpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B90C116B1;
-	Thu, 18 Jul 2024 15:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721318169;
-	bh=wFUzftDcteRmA2NyKmVxglS13LnS1utkda/P2FIp9y4=;
-	h=Date:From:To:Subject:From;
-	b=A/We4EpVLkmBtNutObcnOePbkR1hlJ25HJp7KdxvYECL6I796uRDuyixuchZ9xAdP
-	 s81JdowqonElXN3CO3FFGBTkSyqQoxmGAseD43XboRPlseBxcOWHv0spuDx569RCHi
-	 tRQtGSA9rupij0leRbfIYGo0hmuGSo0VleOPJyIwdUi8Qp523L1u2BVK6N97RiwIz2
-	 i79fgH0Wuow94uOy1k1K+ksl5j1hx1u7i7Kt6t1JprdUV5yooXp9xEmjd3IkcLj38V
-	 t7if0aqAMlAdrSPqGDSyxX2nRTwsdYWq+UJEUdku1uWjyYf14o02pXEKObEsfKRs9V
-	 WjFzCrcWSI4dw==
-Date: Thu, 18 Jul 2024 17:56:03 +0200
-From: Helge Deller <deller@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [GIT PULL] fbdev fixes and cleanups for v6.11-rc1
-Message-ID: <Zpk7E3ZBlh2UdXy2@carbonx1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RalfMmnf"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52ea929ea56so1039561e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 08:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721318168; x=1721922968; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fxgux2vbdZYB6RZEvo07oOPDR4FUj2S7XQtL1IHtKck=;
+        b=RalfMmnfd8Hzx1eaniyp/RsHiZmIyAQGL4S3b+GgM5b03t9vtycPnXGeUGwbRsfPds
+         12QtWTKT4STxESr3Ea31HS/G+QJDnhikM+kDu0JIn8B04FoeePIF6O0NT6CUGjZ68dzH
+         kPWN0dByF2dR+4baU8+RqavouF06ztycPTo46OLuWYDV7JNxMky1Yf0zj0S7ahFpQLhp
+         QKZyrkVPrDXB2My8RKksTsfIvU4nkRv4THU7Q+MPdo2nqCHmnhL+AGsV9WtGuBbc9PiY
+         qGHjE9Z6jhD9aEgYREyZ6FCPlZoq7ybvps3PHDNmqMysied8nfgPqdQ49nXtYwOShIBz
+         cS3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721318168; x=1721922968;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fxgux2vbdZYB6RZEvo07oOPDR4FUj2S7XQtL1IHtKck=;
+        b=Q6WKEIB4ML0yYwz5qA5ppOPXUwmsc34xjKxtdygbo6cnrd/0UNJb30fLTP8LKedUBd
+         SLtQWlHJSwB+2oKcPDHskX+Zmc2yQkdNrqlJYPOZ7vQUy6JEBFHOOH7+Gf2CA2KhbNDU
+         WCIP3wU7jYbnkzgV+JU2obFNVurWHKnEC2KmvbLGTkPE8Ad6M8cNPNXLx9qNrKqnwTsl
+         0DU9ZYe21uBquwlYlKnJIJ2odYAEQCO4naRNfgo1WXKYrRz/6jklAxpspFVlxNINo/8f
+         RrR+Ta0zM2GcAcVOk1dvgirXkhvQDXKi0V5dWdBBQKIqOIT7W01hXSsJaBTcDRZY8V9f
+         GeJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPNmfi8jK4uJN4kk4bneEJuf/XECvoRNN47COq7kozwdKby5sIVVkOZmCjCYyBlTJthnoMnlocxL9Ws1EE+M/W27Ds8SMW01ftz+pY
+X-Gm-Message-State: AOJu0Yw7Eh90GnNiat+rsSLB3/Yehc8Z/2VEdSbG9MAn4YX+QeRU2whc
+	gqJqm8ksW7oswgRj1aV/yq0yu2wHdHOLGQ9/iuF8J0DmJ4KhLkpdZUw/LvuTGM+3W90FFRd5EUq
+	J8g4/Yv7HDLlfEb87ByL5M/4ysQmdx35pdcwl
+X-Google-Smtp-Source: AGHT+IFPE0lghj2YZixrbpHmgxoF0kZ8549vynInTdXVmmjQgeXJvlltx3tprAguDK2P3x48GSK3zddRYlWRwkMyDkE=
+X-Received: by 2002:a05:6512:1318:b0:52c:e05f:9052 with SMTP id
+ 2adb3069b0e04-52ee5435136mr4625806e87.47.1721318167063; Thu, 18 Jul 2024
+ 08:56:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <172070450139.2992819.13210624094367257881.stgit@firesoul>
+ <a4e67f81-6946-47c0-907e-5431e7e01eb1@kernel.org> <CAJD7tkYV3iwk-ZJcr_==V4e24yH-1NaCYFUL7wDaQEi8ZXqfqQ@mail.gmail.com>
+ <100caebf-c11c-45c9-b864-d8562e2a5ac5@kernel.org> <CAJD7tkaBKTiMzSkXfaKO5EO58aN708L4XBS3cX85JvxVpcNkQQ@mail.gmail.com>
+ <c2ac13d7-f280-4be7-929a-d46c1dc7692c@kernel.org>
+In-Reply-To: <c2ac13d7-f280-4be7-929a-d46c1dc7692c@kernel.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 18 Jul 2024 08:55:28 -0700
+Message-ID: <CAJD7tkZ5nxoa7aCpAix1bYOoYiLVfn+aNkq7jmRAZqsxruHYLw@mail.gmail.com>
+Subject: Re: [PATCH V7 1/2] cgroup/rstat: Avoid thundering herd problem by
+ kswapd across NUMA nodes
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: tj@kernel.org, cgroups@vger.kernel.org, shakeel.butt@linux.dev, 
+	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
+	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Thu, Jul 18, 2024 at 1:12=E2=80=AFAM Jesper Dangaard Brouer <hawk@kernel=
+.org> wrote:
+>
+>
+>
+> On 17/07/2024 18.49, Yosry Ahmed wrote:
+> > On Wed, Jul 17, 2024 at 9:36=E2=80=AFAM Jesper Dangaard Brouer <hawk@ke=
+rnel.org> wrote:
+> >>
+> >>
+> >> On 17/07/2024 02.35, Yosry Ahmed wrote:
+> >>> [..]
+> >>>>
+> >>>>
+> >>>> This is a clean (meaning no cadvisor interference) example of kswapd
+> >>>> starting simultaniously on many NUMA nodes, that in 27 out of 98 cas=
+es
+> >>>> hit the race (which is handled in V6 and V7).
+> >>>>
+> >>>> The BPF "cnt" maps are getting cleared every second, so this
+> >>>> approximates per sec numbers.  This patch reduce pressure on the loc=
+k,
+> >>>> but we are still seeing (kfunc:vmlinux:cgroup_rstat_flush_locked) fu=
+ll
+> >>>> flushes approx 37 per sec (every 27 ms). On the positive side
+> >>>> ongoing_flusher mitigation stopped 98 per sec of these.
+> >>>>
+> >>>> In this clean kswapd case the patch removes the lock contention issu=
+e
+> >>>> for kswapd. The lock_contended cases 27 seems to be all related to
+> >>>> handled_race cases 27.
+> >>>>
+> >>>> The remaning high flush rate should also be addressed, and we should
+> >>>> also work on aproaches to limit this like my ealier proposal[1].
+> >>>
+> >>> I honestly don't think a high number of flushes is a problem on its
+> >>> own as long as we are not spending too much time flushing, especially
+> >>> when we have magnitude-based thresholding so we know there is
+> >>> something to flush (although it may not be relevant to what we are
+> >>> doing).
+> >>>
+> >>
+> >> We are "spending too much time flushing" see below.
+> >>
+> >>> If we keep observing a lot of lock contention, one thing that I
+> >>> thought about is to have a variant of spin_lock with a timeout. This
+> >>> limits the flushing latency, instead of limiting the number of flushe=
+s
+> >>> (which I believe is the wrong metric to optimize).
+> >>>
+> >>> It also seems to me that we are doing a flush each 27ms, and your
+> >>> proposed threshold was once per 50ms. It doesn't seem like a
+> >>> fundamental difference.
+> >>>
+> >>
+> >>
+> >> Looking at the production numbers for the time the lock is held for le=
+vel 0:
+> >>
+> >> @locked_time_level[0]:
+> >> [4M, 8M)     623 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@               =
+|
+> >> [8M, 16M)    860 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=
+|
+> >> [16M, 32M)   295 |@@@@@@@@@@@@@@@@@                                   =
+|
+> >> [32M, 64M)   275 |@@@@@@@@@@@@@@@@                                    =
+|
+> >>
+> >> The time is in nanosec, so M corresponds to ms (milliseconds).
+> >>
+> >> With 36 flushes per second (as shown earlier) this is a flush every
+> >> 27.7ms.  It is not unreasonable (from above data) that the flush time
+> >> also spend 27ms, which means that we spend a full CPU second flushing.
+> >> That is spending too much time flushing.
+> >>
+> >> This around 1 sec CPU usage for kswapd is also quite clear in the
+> >> attached grafana graph for when server was rebooted into this V7 kerne=
+l.
+> >>
+> >> I choose 50ms because at the time I saw flush taking around 30ms, and =
+I
+> >> view the flush time as queue service-time.  When arrival-rate is faste=
+r
+> >> than service-time, then a queue will form.  So, choosing 50ms as
+> >> arrival-rate gave me some headroom.  As I mentioned earlier, optimally
+> >> this threshold should be dynamically measured.
+> >
+> > Thanks for the data. Yeah this doesn't look good.
+> >
+> > Does it make sense to just throttle flushers at some point to increase
+> > the chances of coalescing multiple flushers?
+> >
+> > Otherwise I think it makes sense in this case to ratelimit flushing in
+> > general. Although instead of just checking how much time elapsed since
+> > the last flush, can we use something like __ratelimit()?
+> >
+> > This will make sure that we skip flushes when we actually have a high
+> > rate of flushing over a period of time, not because two flushes
+> > happened to be requested in close succession and the flushing rate is
+> > generally low.
+> >
+>
+> I really think "time elapsed since the last flush" is the right solution
+> here.  As, we *do* want to catch the case you describe "two flushes
+> happened to be requested in close succession and the flushing rate is
+> generally low."
+>
+> (After this patch fixing the lock contention triggered by kswapd).
+> The remaining problem with kswapd is that those flushes that doesn't
+> "collide" on the lock, will be flushing in close succession.  And we
+> likely have a generally low flushing rate, until kswapd starts up.
 
-please pull a bunch of usual cleanups for the fbdev drivers for kernel 6.11-rc1.
+I do not disagree, I think I may have misrepresented my intention.
 
-Thanks!
-Helge
+Time since last flush is essentially ratelimiting to 2 flushes per
+(let's say) 50 ms. So if we only have 2 flushes in an entire second,
+but they happen to occur <50ms apart, the latter will be skipped
+(arguably unnecessarily).
 
-----------------------------------------------------------------
-The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670:
+What I am trying to say is to make it more generalized/less-granular,
+and apply ratelimiting when we are actually spending a large portion
+of our time flushing. For example, cap it at 20 flushes per 1s. I
+think __ratelimit() does exactly that, although it's currently mostly
+used to ratelimit warnings, but I think we can reuse it here.
 
-  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
+Ideally, of course, the number would be dynamic as you described
+before, but we can start with a reasonable static value based on data.
+What we do when the limit is hit could be changed later as well. We
+can just skip flushes initially, and later we can be smarter about it
+and throttle them in a way that makes them collide more effectively.
 
-are available in the Git repository at:
-
-  http://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.git tags/fbdev-for-6.11-rc1
-
-for you to fetch changes up to 8b5ea9029b03efda74292c57e0377a98ed0b7434:
-
-  fbdev: viafb: Make I2C terminology more inclusive (2024-07-11 12:07:48 +0200)
-
-----------------------------------------------------------------
-fbdev fixes and cleanups for 6.11-rc1:
-
-- Detect VGA compatibility from VESA attributes [Thomas Zimmermann]
-- Make I2C terminology more inclusive in smscufx and viafb [Easwar Hariharan]
-- Add lots of missing MODULE_DESCRIPTION() macros [Jeff Johnson]
-- Logo code cleanups [Geert Uytterhoeven]
-- Minor fixes by Chen Ni, Kuninori Morimoto, Uwe Kleine-König and Christophe Jaillett
-
-----------------------------------------------------------------
-Chen Ni (1):
-      fbdev: omap2: Return clk_prepare_enable to transfer the error
-
-Christophe JAILLET (1):
-      fbdev: mmp: Constify struct mmp_overlay_ops
-
-Easwar Hariharan (2):
-      fbdev: smscufx: Make I2C terminology more inclusive
-      fbdev: viafb: Make I2C terminology more inclusive
-
-Geert Uytterhoeven (2):
-      video/logo: Make logo data const again
-      video/logo: Remove linux_serial_image comments
-
-Jeff Johnson (11):
-      fbdev: matroxfb: add missing MODULE_DESCRIPTION() macros
-      fbdev: viafb: add missing MODULE_DESCRIPTION() macro
-      fbdev: kyro: add missing MODULE_DESCRIPTION() macro
-      fbdev: goldfishfb: add missing MODULE_DESCRIPTION() macro
-      fbdev: macmodes: add missing MODULE_DESCRIPTION() macro
-      fbdev: vfb: add missing MODULE_DESCRIPTION() macro
-      fbdev: offb: add missing MODULE_DESCRIPTION() macro
-      fbdev: c2p_planar: add missing MODULE_DESCRIPTION() macro
-      fbdev: amifb: add missing MODULE_DESCRIPTION() macro
-      video: console: add missing MODULE_DESCRIPTION() macros
-      video: agp: add remaining missing MODULE_DESCRIPTION() macros
-
-Kuninori Morimoto (2):
-      fbdev: omapdss: use for_each_endpoint_of_node()
-      fbdev: omapfb: use of_graph_get_remote_port()
-
-Thomas Zimmermann (1):
-      fbdev: vesafb: Detect VGA compatibility from screen info's VESA attributes
-
-Uwe Kleine-König (1):
-      fbdev: Drop explicit initialization of struct i2c_device_id::driver_data to 0
-
- drivers/char/agp/ali-agp.c                         |  1 +
- drivers/char/agp/alpha-agp.c                       |  1 +
- drivers/char/agp/amd-k7-agp.c                      |  1 +
- drivers/char/agp/ati-agp.c                         |  1 +
- drivers/char/agp/efficeon-agp.c                    |  1 +
- drivers/char/agp/nvidia-agp.c                      |  1 +
- drivers/char/agp/parisc-agp.c                      |  1 +
- drivers/char/agp/sworks-agp.c                      |  1 +
- drivers/video/console/mdacon.c                     |  1 +
- drivers/video/console/newport_con.c                |  1 +
- drivers/video/console/sticon.c                     |  1 +
- drivers/video/console/vgacon.c                     |  1 +
- drivers/video/fbdev/amifb.c                        |  1 +
- drivers/video/fbdev/c2p_planar.c                   |  1 +
- drivers/video/fbdev/goldfishfb.c                   |  1 +
- drivers/video/fbdev/kyro/fbdev.c                   |  1 +
- drivers/video/fbdev/macmodes.c                     |  1 +
- drivers/video/fbdev/matrox/matroxfb_DAC1064.c      |  1 +
- drivers/video/fbdev/matrox/matroxfb_Ti3026.c       |  1 +
- drivers/video/fbdev/matrox/matroxfb_accel.c        |  1 +
- drivers/video/fbdev/matrox/matroxfb_maven.c        |  2 +-
- drivers/video/fbdev/mmp/hw/mmp_ctrl.c              |  2 +-
- drivers/video/fbdev/offb.c                         |  1 +
- drivers/video/fbdev/omap2/omapfb/dss/dss-of.c      | 15 +-------------
- .../fbdev/omap2/omapfb/dss/omapdss-boot-init.c     |  3 +--
- drivers/video/fbdev/omap2/omapfb/dss/venc.c        |  4 +---
- drivers/video/fbdev/smscufx.c                      |  4 ++--
- drivers/video/fbdev/ssd1307fb.c                    |  8 ++++----
- drivers/video/fbdev/vesafb.c                       |  2 +-
- drivers/video/fbdev/vfb.c                          |  1 +
- drivers/video/fbdev/via/chip.h                     |  8 ++++----
- drivers/video/fbdev/via/dvi.c                      | 24 +++++++++++-----------
- drivers/video/fbdev/via/lcd.c                      |  6 +++---
- drivers/video/fbdev/via/via_aux.h                  |  2 +-
- drivers/video/fbdev/via/via_i2c.c                  | 12 +++++------
- drivers/video/fbdev/via/viafbdev.c                 |  1 +
- drivers/video/fbdev/via/vt1636.c                   |  6 +++---
- drivers/video/logo/pnmtologo.c                     |  4 ++--
- include/linux/linux_logo.h                         |  3 ---
- include/linux/screen_info.h                        | 10 +++++++++
- include/video/mmp_disp.h                           |  4 ++--
- 41 files changed, 78 insertions(+), 64 deletions(-)
+>
+> Some production data from a "slow" period where only kswapd is active:
+>
+> 05:59:32 @ongoing_flusher_cnt[kswapd11]: 1
+> @ongoing_flusher_cnt[kswapd7]: 1
+> @ongoing_flusher_cnt[kswapd3]: 1
+> @ongoing_flusher_cnt[kswapd5]: 1
+> @ongoing_flusher_cnt[kswapd10]: 1
+> @ongoing_flusher_cnt[kswapd6]: 2
+> @ongoing_flusher_cnt[kswapd8]: 2
+> @ongoing_flusher_cnt[kswapd1]: 2
+> @ongoing_flusher_cnt[kswapd9]: 2
+> @ongoing_flusher_cnt[kswapd0]: 2
+> @ongoing_flusher_cnt[kswapd2]: 2
+> @ongoing_flusher_cnt[kswapd4]: 2
+> @ongoing_flusher_cnt[handled_race]: 2
+> @ongoing_flusher_cnt[all]: 14
+> @cnt[tracepoint:cgroup:cgroup_rstat_lock_contended]: 2
+> @cnt[tracepoint:cgroup:cgroup_ongoing_flusher_wait]: 10
+> @cnt[kfunc:vmlinux:cgroup_rstat_flush_locked]: 43
+> @cnt[tracepoint:cgroup:cgroup_rstat_locked]: 51
+>
+> We observe that ongoing_flusher scheme saves/avoids 14 of the flushes
+> great, but we still have 43 flushes in this period.  I think only kswapd
+> is doing the flushing here, so I claim 41 flushes are likely unnecessary
+> (as there are indication of 2 kswapd startups in the period).  Also
+> observe that some of the kswapdNN processes only have
+> ongoing_flusher_cnt 1, which indicate they didn't fully "collide" with
+> an ongoing flusher, while others have 2.
+>
+> --Jesper
