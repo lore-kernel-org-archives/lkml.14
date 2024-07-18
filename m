@@ -1,138 +1,160 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420DA110A;
-	Thu, 18 Jul 2024 00:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC56B17C
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721260980; cv=none; b=h86QYI04oIUW5GeIay9Bgd4eNMmSXqDpzrSKufitNcPTgm/NkPhakct1OqbqKMhyUIP0H06A2WkLamtW7HHE8TB5n7aZ/s1HOs5CPCl2hC6TsvMjG1+D2jQ164yH5sCats1vG5XW31VDtXUaTe98KwZtIWDHCW28g69XuJW1D1c=
+	t=1721261090; cv=none; b=X+rF/+pYMYBwXdpwpbHJhXCtKBS620JKchW6Zc+9RQ1ZCwql4Mt5XayB2oMOkI7/chKjcIgSCtM1nd7FtqePwF8WkftHcrhiv5V0BEsCF828SYb8KXuyVdw1TSvA8q1OJQ21A91euNpB803PIYFxxhEIyRuyllF5lsbLh+pWO/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721260980; c=relaxed/simple;
-	bh=VjUGKZ3qVd+2tzNkMyHtQ4ZoixFDGkxiFILn0GlzxgQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mAChWZ42siDZpge7S5tIugP9S4+Uy1cjvS5xv5yo9O6Omb9Hv3IcyXuM0PnYouqRxmeQnjw3B2Xed4AjvRXD1hQ2v3il10z70JUKzkfVVPK2bBusSv3bXPZlqvByyuLlG3cosvf3J75FD408NkZPnfvgRXoQa5ZzPlZeeWabHFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b693a1.dsl.pool.telekom.hu [::ffff:81.182.147.161])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000073351.0000000066985A7C.001802A6; Thu, 18 Jul 2024 01:57:48 +0200
-Message-ID: <4fc2a95afd8f852c8dff1a95ddc54f56cea5c0ed.camel@irl.hu>
-Subject: Re: [PATCH 3/4] platform/x86: ideapad-laptop: move ymc_trigger_ec
- from lenovo-ymc
-From: Gergo Koteles <soyer@irl.hu>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-  Ike Panhc <ike.pan@canonical.com>,
-  platform-driver-x86@vger.kernel.org,
-  LKML <linux-kernel@vger.kernel.org>
-Date: Thu, 18 Jul 2024 01:57:47 +0200
-In-Reply-To: <828057ef-b941-879e-170e-f4e769d4b77a@linux.intel.com>
-References: <cover.1720515666.git.soyer@irl.hu>
-	 <44f63dfa758c811ae941216874fbb1ec77f4a293.1720515666.git.soyer@irl.hu>
-	 <828057ef-b941-879e-170e-f4e769d4b77a@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 (3.52.3-1.fc40) 
+	s=arc-20240116; t=1721261090; c=relaxed/simple;
+	bh=FAj1MClzOnm7txs8nlFo1G77N9NS2dCzEHAW+o9TMto=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zt6KIGn9UDTc99xIuTrXXdrkEjuajXOHUb2lssRpNnhJfEk/nXZec1zCX4c4ug22kkcnxOOIGBk7vsfI3HFlsEAKH5bZPGr5loMHCtpG6Awpj+pDvB35Bn3QIzge9cdQgX9ZR9+AbkHb5OhpuRxO04QelNXgC1VdMqTyG4Bg3bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=iE6rsGtt; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="iE6rsGtt"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52ea5dc3c79so328763e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1721261086; x=1721865886; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fgh/5TL5RuPEkrIYyZ+YL3lfHWM6eC22E94AhsG1cyU=;
+        b=iE6rsGtt4tI9s13ZeRpYW6N7GXXikpHJOxduC05ahwLSXy2XjgO1QAo78BFEWjMJK3
+         4mJXXJht5D8SGxeNV2uJ0qa5fLR1DMEk3xNA0SpvJnalJiHMul9p7RPQDWKycnbeHGZd
+         Y/kzmRQhyAktb5DcBQkazVsCwEL852ekBlkj0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721261086; x=1721865886;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fgh/5TL5RuPEkrIYyZ+YL3lfHWM6eC22E94AhsG1cyU=;
+        b=mvvzqQ93wEluhEMX18WAj7k0aUXmKFg2TSSgTPjP2GbcU7GVamLzHVaa/OVQMg3/0b
+         dVRr57xhWeGbtswwdwUmaH/d69r7xZhXeCQGkZGbIe3v9S/HdzVmGD5NWRdd7pNjAyWB
+         Nhg6TNwkYNuNNcNricdzhRATal7MNf/1vlN/A9jDubAg9tLl82H6wJ9fb/P+ornGdLhu
+         xw7JOmUOY4IRPI/InQvAim248eu1WqqIUb92efEWrVu3QyceALVTtsswJ0jc+VSK6Mne
+         3biSnl8kYa/TUEUCBIstSIiw5mDLUbI1Nj3PxzYR8fqex5dfXGFHx82qFsWyZZOczIWJ
+         omYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQJ/G0dHTLibyAZD5ErqG86CfPtuklplwki2ELa15mmaphd3gkin0tGmxsXSx+EXNtby5yrp0NfvT5WnrcTrrzLtD/D+wkORJfUkWr
+X-Gm-Message-State: AOJu0Yw7QekifmlC/F6WGdlGQSZViwIR3bMFgWC9PQNQYROoVhAdUocp
+	DVOkDCdWZ59oNFTQv/NWbn+u9udfRp/bkK4vln71l30w0c+nFh0feS6OPDS3V1ddB9dFTJzf+DT
+	CnLCvRA==
+X-Google-Smtp-Source: AGHT+IGRThg8G+QkXJjNDlv9YLdNjO4d95uTZYC3hfPseTqpZwaa0bXPDZCK/SYC8WxLq/H2Hb5rNA==
+X-Received: by 2002:a05:6512:33d3:b0:52c:e3bd:c70b with SMTP id 2adb3069b0e04-52ee53a6f58mr2316604e87.1.1721261085705;
+        Wed, 17 Jul 2024 17:04:45 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc7ff715sm497871066b.161.2024.07.17.17.04.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 17:04:44 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a77c080b521so19664666b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:04:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX8sXyN4i8YQNVj/jREKcQjISRg4zuFsjre1KbQMSi6kMJyChH7LwHUZKKzLJrFBRsSejMhacuRp2aayXOzCFC90Mxr4lv4qrKOH7vB
+X-Received: by 2002:a17:906:40d5:b0:a77:cd3c:e9b7 with SMTP id
+ a640c23a62f3a-a7a0133ac71mr230759566b.57.1721261084140; Wed, 17 Jul 2024
+ 17:04:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240717111358.415712-1-adrian.ratiu@collabora.com>
+ <202407171017.A0930117@keescook> <CAHk-=wi3m98GCv-kXJqRvsjOa+DCFqQux7pcmJW9WR8_n=QPqg@mail.gmail.com>
+ <202407171520.FD49AE35@keescook>
+In-Reply-To: <202407171520.FD49AE35@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 17 Jul 2024 17:04:27 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
+Message-ID: <CAHk-=wi9qsy-bX65ev8jgDzGM+uTk=Vbix32F8SLfUWegajT+w@mail.gmail.com>
+Subject: Re: [PATCH] proc: add config to block FOLL_FORCE in mem writes
+To: Kees Cook <kees@kernel.org>
+Cc: Adrian Ratiu <adrian.ratiu@collabora.com>, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kernel@collabora.com, gbiv@google.com, 
+	inglorion@google.com, ajordanr@google.com, 
+	Doug Anderson <dianders@chromium.org>, Jeff Xu <jeffxu@google.com>, Jann Horn <jannh@google.com>, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000007ccffd061d7a5312"
 
-Hi Ilpo,
+--0000000000007ccffd061d7a5312
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks for the review.
+On Wed, 17 Jul 2024 at 15:24, Kees Cook <kees@kernel.org> wrote:
+>
+> > In particular, this patch would make it easy to make that
+> > SECURITY_PROC_MEM_RESTRICT_FOLL_FORCE config option be a "choice"
+> > where you pick "never, ptrace, always" by just changing the rules in
+> > proc_is_ptracing().
+>
+> So the original patch could be reduced to just the single tristate option
+> instead of 3 tristates? I think that would be a decent middle ground,
+> and IIUC, will still provide the coverage Chrome OS is looking for[1].
 
-On Thu, 2024-07-11 at 11:18 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Tue, 9 Jul 2024, Gergo Koteles wrote:
->=20
-> > Some models need to trigger the EC for the yoga mode control to work
-> > properly. EC triggering consists of a VPC call that needs to be
-> > synchronized. The vpc_mutex is in the ideapad-laptop module, so
-> > synchronization is easier there.
-> >=20
-> > Move the ymc_trigger_ec function to the ideapad-laptop module.
-> >=20
-> > Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> > ---
-> >  drivers/platform/x86/Kconfig          |  1 +
-> >  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++
-> >  drivers/platform/x86/ideapad-laptop.h |  2 ++
-> >  drivers/platform/x86/lenovo-ymc.c     | 34 ++++-----------------------
-> >  4 files changed, 26 insertions(+), 29 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-> > index 665fa9524986..ddfccc226751 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -477,6 +477,7 @@ config LENOVO_YMC
-> >  	tristate "Lenovo Yoga Tablet Mode Control"
-> >  	depends on ACPI_WMI
-> >  	depends on INPUT
-> > +	depends on IDEAPAD_LAPTOP
-> >  	select INPUT_SPARSEKMAP
-> >  	help
-> >  	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE i=
-nput
-> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x=
-86/ideapad-laptop.c
-> > index 464cc5fd0088..4dcdbb153dda 100644
-> > --- a/drivers/platform/x86/ideapad-laptop.c
-> > +++ b/drivers/platform/x86/ideapad-laptop.c
-> > @@ -1615,6 +1615,24 @@ static void ideapad_sync_touchpad_state(struct i=
-deapad_private *priv, bool send_
-> >  	priv->r_touchpad_val =3D value;
-> >  }
-> > =20
-> > +void ideapad_ymc_trigger_ec(void)
-> > +{
-> > +	struct ideapad_private *priv;
-> > +	int ret;
-> > +
-> > +	guard(mutex)(&ideapad_shared_mutex);
-> > +
-> > +	priv =3D ideapad_shared;
-> > +	if (!priv)
-> > +		return;
-> > +
-> > +	scoped_guard(mutex, &priv->vpc_mutex)
->=20
-> It feels the ordering in this series is off because patch 2 add the=20
-> mutex and here you add it into yet another function. If this patch=20
-> would be before the other, the mutex changes could all go into the same=
-=20
-> patch.
->=20
+So here's what I kind of think might be ok.
 
-I (wrongly) thought it would be easier to explain why a new dependency
-is needed.=20
-Mutex changes go into one patch in the v2.
+ENTIRELY UNTESTED! This is more of a "look, something like this,
+perhaps" patch than a real one.
 
+If somebody tests this, and it is ok for Chrome OS, you can consider
+this signed-off-on, but only with actual testing. I might have gotten
+something hroribly wrong.
 
-> > +		ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
-> > +	if (ret)
-> > +		dev_warn(&priv->platform_device->dev, "Could not write YMC: %d\n", r=
-et);
-> > +}
-> > +EXPORT_SYMBOL_GPL(ideapad_ymc_trigger_ec);
->=20
-> This export should be namespaced.
+              Linus
 
-It will be in the v2.
+--0000000000007ccffd061d7a5312
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lyqie9xt0>
+X-Attachment-Id: f_lyqie9xt0
 
->=20
-> I'll have to say I can accept this approach only grudgingly... it feels=
-=20
-> off even if I understand why you have to do this cross driver thing.
->=20
-
-Based on the WMI driver development guide, I will add a notification
-chain in v2 soon. Looks better.
-
-Best Regards,
-Gergo Koteles
-
+IGZzL3Byb2MvYmFzZS5jICAgfCAyMiArKysrKysrKysrKysrKysrKysrKystCiBzZWN1cml0eS9L
+Y29uZmlnIHwgMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hh
+bmdlZCwgNTMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2ZzL3By
+b2MvYmFzZS5jIGIvZnMvcHJvYy9iYXNlLmMKaW5kZXggNzJhMWFjZDAzNjc1Li5mYmU5YTk2YzJk
+OTggMTAwNjQ0Ci0tLSBhL2ZzL3Byb2MvYmFzZS5jCisrKyBiL2ZzL3Byb2MvYmFzZS5jCkBAIC04
+MzUsNiArODM1LDI0IEBAIHN0YXRpYyBpbnQgbWVtX29wZW4oc3RydWN0IGlub2RlICppbm9kZSwg
+c3RydWN0IGZpbGUgKmZpbGUpCiAJcmV0dXJuIHJldDsKIH0KIAorc3RhdGljIGJvb2wgcHJvY19t
+ZW1fZm9sbF9mb3JjZShzdHJ1Y3QgZmlsZSAqZmlsZSwgc3RydWN0IG1tX3N0cnVjdCAqbW0pCit7
+CisjaWYgZGVmaW5lZChDT05GSUdfUFJPQ19NRU1fTk9fRk9SQ0UpCisJcmV0dXJuIGZhbHNlOwor
+I2VsaWYgZGVmaW5lZChDT05GSUdfUFJPQ19NRU1fRk9SQ0VfUFRSQUNFKQorCWJvb2wgcHRyYWNl
+X2FjdGl2ZSA9IGZhbHNlOworCXN0cnVjdCB0YXNrX3N0cnVjdCAqdGFzayA9IGdldF9wcm9jX3Rh
+c2soZmlsZV9pbm9kZShmaWxlKSk7CisKKwlpZiAodGFzaykgeworCQlwdHJhY2VfYWN0aXZlID0g
+dGFzay0+cHRyYWNlICYmIHRhc2stPm1tID09IG1tICYmIHRhc2stPnBhcmVudCA9PSBjdXJyZW50
+OworCQlwdXRfdGFza19zdHJ1Y3QodGFzayk7CisJfQorCXJldHVybiBwdHJhY2VfYWN0aXZlOwor
+I2Vsc2UKKwlyZXR1cm4gdHJ1ZTsKKyNlbmRpZgorfQorCiBzdGF0aWMgc3NpemVfdCBtZW1fcnco
+c3RydWN0IGZpbGUgKmZpbGUsIGNoYXIgX191c2VyICpidWYsCiAJCQlzaXplX3QgY291bnQsIGxv
+ZmZfdCAqcHBvcywgaW50IHdyaXRlKQogewpAQCAtODU1LDcgKzg3Myw5IEBAIHN0YXRpYyBzc2l6
+ZV90IG1lbV9ydyhzdHJ1Y3QgZmlsZSAqZmlsZSwgY2hhciBfX3VzZXIgKmJ1ZiwKIAlpZiAoIW1t
+Z2V0X25vdF96ZXJvKG1tKSkKIAkJZ290byBmcmVlOwogCi0JZmxhZ3MgPSBGT0xMX0ZPUkNFIHwg
+KHdyaXRlID8gRk9MTF9XUklURSA6IDApOworCWZsYWdzID0gd3JpdGUgPyBGT0xMX1dSSVRFIDog
+MDsKKwlpZiAocHJvY19tZW1fZm9sbF9mb3JjZShmaWxlLCBtbSkpCisJCWZsYWdzIHw9IEZPTExf
+Rk9SQ0U7CiAKIAl3aGlsZSAoY291bnQgPiAwKSB7CiAJCXNpemVfdCB0aGlzX2xlbiA9IG1pbl90
+KHNpemVfdCwgY291bnQsIFBBR0VfU0laRSk7CmRpZmYgLS1naXQgYS9zZWN1cml0eS9LY29uZmln
+IGIvc2VjdXJpdHkvS2NvbmZpZwppbmRleCA0MTJlNzZmMTU3NWQuLmIyMDFhZTNmZWVhYiAxMDA2
+NDQKLS0tIGEvc2VjdXJpdHkvS2NvbmZpZworKysgYi9zZWN1cml0eS9LY29uZmlnCkBAIC0xOSw2
+ICsxOSwzOCBAQCBjb25maWcgU0VDVVJJVFlfRE1FU0dfUkVTVFJJQ1QKIAogCSAgSWYgeW91IGFy
+ZSB1bnN1cmUgaG93IHRvIGFuc3dlciB0aGlzIHF1ZXN0aW9uLCBhbnN3ZXIgTi4KIAorY2hvaWNl
+CisJcHJvbXB0ICJBbGxvdyAvcHJvYy9waWQvbWVtIGFjY2VzcyBvdmVycmlkZSIKKwlkZWZhdWx0
+IFBST0NfUElEX01FTV9BTFdBWVNfRk9SQ0UKKwloZWxwCisJICBUcmFkaXRpb25hbGx5IC9wcm9j
+L3BpZC9tZW0gYWxsb3dzIHVzZXJzIHRvIG92ZXJyaWRlIG1lbW9yeQorCSAgcGVybWlzc2lvbnMg
+Zm9yIHVzZXJzIGxpa2UgcHRyYWNlLCBhc3N1bWluZyB0aGV5IGhhdmUgcHRyYWNlCisJICBjYXBh
+YmlsaXR5LgorCisJICBUaGlzIGFsbG93cyBwZW9wbGUgdG8gbGltaXQgdGhhdCAtIGVpdGhlciBu
+ZXZlciBvdmVycmlkZSwgb3IKKwkgIHJlcXVpcmUgYWN0dWFsIGFjdGl2ZSBwdHJhY2UgYXR0YWNo
+bWVudC4KKworCSAgRGVmYXVsdHMgdG8gdGhlIHRyYWRpdGlvbmFsIGJlaGF2aW9yIChmb3Igbm93
+KQorCitjb25maWcgUFJPQ19QSURfTUVNX0FMV0FZU19GT1JDRQorCWJvb2wgIlRyYWRpdGlvbmFs
+IC9wcm9jL3BpZC9tZW0gYmVoYXZpb3IiCisJaGVscAorCSAgVGhpcyBhbGxvd3MgL3Byb2MvcGlk
+L21lbSBhY2Nlc3NlcyB0byBvdmVycmlkZSBtZW1vcnkgbWFwcGluZworCSAgcGVybWlzc2lvbnMg
+aWYgeW91IGhhdmUgcHRyYWNlIGFjY2VzcyByaWdodHMuCisKK2NvbmZpZyBDT05GSUdfUFJPQ19N
+RU1fRk9SQ0VfUFRSQUNFCisJYm9vbCAiUmVxdWlyZSBhY3RpdmUgcHRyYWNlKCkgdXNlIGZvciBh
+Y2Nlc3Mgb3ZlcnJpZGUiCisJaGVscAorCSAgVGhpcyBhbGxvd3MgL3Byb2MvcGlkL21lbSBhY2Nl
+c3NlcyB0byBvdmVycmlkZSBtZW1vcnkgbWFwcGluZworCSAgcGVybWlzc2lvbnMgZm9yIGFjdGl2
+ZSBwdHJhY2VycyBsaWtlIGdkYi4KKworY29uZmlnIENPTkZJR19QUk9DX01FTV9OT19GT1JDRQor
+CWJvb2wgIk5ldmVyIgorCWhlbHAKKwkgIE5ldmVyIG92ZXJyaWRlIG1lbW9yeSBtYXBwaW5nIHBl
+cm1pc3Npb25zCisKK2VuZGNob2ljZQorCiBjb25maWcgU0VDVVJJVFkKIAlib29sICJFbmFibGUg
+ZGlmZmVyZW50IHNlY3VyaXR5IG1vZGVscyIKIAlkZXBlbmRzIG9uIFNZU0ZTCg==
+--0000000000007ccffd061d7a5312--
