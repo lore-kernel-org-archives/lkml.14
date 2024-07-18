@@ -1,184 +1,86 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934C91E495
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 06:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22364D8C3
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 06:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721282934; cv=none; b=UR//4qS2bEeDTdxldrzZ3ut/wORZ2N4qffJNVw2B/psglPHG/YKg+j4dEWTlqNB7nl7Z8iCLzvDT34DwCu7bZQgWxr2vbsqedWt3hzMoatHNZoK0At7sAlTES2nv7AZdw47L2BXocCjtGNyDi5hmvhwbp/rmHoLmnceWc1+bnjI=
+	t=1721282961; cv=none; b=bNved5T92b87i1z+jyOK8+di5uvcv/peNzHHEiEyjzQucKd5PXeZAaGiVixhDAhAfKcpHt8EOE1im3MRlJvCQ7GH8KRQ9v9Y7K3mvjO/9szohLT1EeGi5DSKgacT6DoPA3GTd92ra55QDiXocnQOUNgvAG9PInEEFYgqs+0VcGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721282934; c=relaxed/simple;
-	bh=ZegcCl/GlPv/utyNLL6/bM9sMNKAtaNRsXaLmtQ5CHQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rngQjopJWzJ4Jzt27Phyg8tn15gZRgMnBeLh01l6W4dWpfYuv/D25wPMUXKh3PO2ymY0id1Y5H198ylVl4ow9iMxhiXhKFZsnltXhz4y5tFonhcXNNxfVQMIa806JRYpFEPncu1oLPrNO0DRLHvi4+OATcJodPRHn8pmtOWnJJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=c6QbtYWm; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1721282961; c=relaxed/simple;
+	bh=8TELw1GSGX+NLZTXJBpEVR3AisUwDBU+WRnsu8/phTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aOgm1UU1YUFKujcGMaGqKRP9v6V18KAQdcgeZB9IcN0VDESxgAZyc+VqOEwO1pza53fj5Mbiv0Tb8Ip7sc0rqNy/42qf7uO2HYFWVeeYApr5qc4zJjw51Q0ZYup29bq3oARnXpkEhZaw3P3IMrBxKYi0PocCLQLoW5Et469IsEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=e1SBxS09; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="c6QbtYWm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=FSp2v
-	95tkSIfbt1VFh0n0vhdmzySiMpH/D6OFSlbU5M=; b=c6QbtYWmrEULUyCcd6bfg
-	1Cr+y3kancLBPaDq6S/4YJ5TWmMd++4S0uLWnQoSOiWvYBNwnNbk2d4tfTQ/Nf9a
-	CoGgWq1IOgfi8qMmt/ohQZ7dtGcMp8wKoDxDF4xB/VoiVnTHYcAugpzTaJ8UeRL6
-	GjiMszuQS/LwdAzi0FpWXE=
-Received: from localhost.localdomain (unknown [111.48.69.245])
-	by gzga-smtp-mta-g2-5 (Coremail) with SMTP id _____wD3vzY+sZhmlum7Aw--.54868S2;
-	Thu, 18 Jul 2024 14:07:59 +0800 (CST)
-From: wangdicheng <wangdich9700@163.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-arm-kernel@lists.infradead.org,
-	wangdicheng <wangdich9700@163.com>,
-	wangdicheng <wangdicheng@kylinos.cn>
-Subject: [PATCH v2] ALSA: usb-audio: Fix microphone sound on HD webcam.
-Date: Thu, 18 Jul 2024 14:07:56 +0800
-Message-Id: <20240718060756.15322-1-wangdich9700@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="e1SBxS09"
+X-Envelope-To: shahuang@redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1721282955;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wUojTRMLIjKYQq/hlr2+G8wV6gdnpgRx4UJFibcBjBU=;
+	b=e1SBxS09mQ3CMf4e+UZpBoSQDSzMz1BJzitVzq98YCRnQS3ndTKz7jp+cC68IJ+RNx6VUQ
+	TaAbG1IGb/gycpsjVZrl2K+oYxRLylCdnHuDyeXPA2z7WvmvaUJOwv1GdeoxqR7jH9YAUq
+	6YCpUdssAdsYsyMPD2OrAzqavsge2zI=
+X-Envelope-To: maz@kernel.org
+X-Envelope-To: kvmarm@lists.linux.dev
+X-Envelope-To: broonie@kernel.org
+X-Envelope-To: eauger@redhat.com
+X-Envelope-To: sebott@redhat.com
+X-Envelope-To: cohuck@redhat.com
+X-Envelope-To: james.morse@arm.com
+X-Envelope-To: suzuki.poulose@arm.com
+X-Envelope-To: yuzenghui@huawei.com
+X-Envelope-To: catalin.marinas@arm.com
+X-Envelope-To: will@kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+Date: Wed, 17 Jul 2024 23:09:08 -0700
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Shaoqin Huang <shahuang@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, kvmarm@lists.linux.dev,
+	Mark Brown <broonie@kernel.org>, Eric Auger <eauger@redhat.com>,
+	Sebastian Ott <sebott@redhat.com>,
+	Cornelia Huck <cohuck@redhat.com>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] KVM: arm64: Disable fields that KVM doesn't know
+ how to handle in ID_AA64PFR1_EL1
+Message-ID: <ZpixhBjsqhWTpEQH@linux.dev>
+References: <20240718035017.434996-1-shahuang@redhat.com>
+ <20240718035017.434996-2-shahuang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3vzY+sZhmlum7Aw--.54868S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXw43JFy5tFyrCF45Xw13urg_yoWrCFW3pr
-	1Iya97Jryktr17Xr48CayUu3yrXws2y398Ca4qkwna9ryfK34rta47t3yDAayakrWrC34j
-	qryjy3yqg3y5Gw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piGYLkUUUUU=
-X-CM-SenderInfo: pzdqwv5lfkmliqq6il2tof0z/1tbiRwQgT2V4KWD5UgAAsT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240718035017.434996-2-shahuang@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-I own an external usb Webcam, HD webcam, which had low mic volume and
-inconsistent sound quality. Video works as expected.
+Hi Shaoqin,
 
-(snip)
-[   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
-[   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
-[   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
-[   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
-[   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
-[   96.092610][ 2] [ T3680] usb 5-2.2: Warning! Unlikely big volume range (=4096), cval->res is probably wrong.
-[   96.102436][ 2] [ T3680] usb 5-2.2: [5] FU [Mic Capture Volume] ch = 1, val = 0/4096/1
+On Wed, Jul 17, 2024 at 11:50:14PM -0400, Shaoqin Huang wrote:
+> For some of the fields in the ID_AA64PFR1_EL1 register, KVM doesn't know
+> how to handle them right now. So explicitly disable them in the register
+> accessor, then those fields value will be masked to 0 even if on the
+> hardware the field value is 1.
 
-Set up quirk cval->res to 16 for 256 levels,
-Set GET_SAMPLE_RATE quirk flag to stop trying to get the sample rate.
-Confirmed that happened anyway later due to the backoff mechanism,
-After 3 failures.
+It is probably important to note that the only reason this is safe to do
+from a UAPI POV is that read_sanitised_ftr_reg() doesn't yet return a
+nonzero value for any of these fields.
 
-All audio stream on device interfaces share the same values,
-apart from wMaxPacketSize and tSamFreq :
-
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        3
-      bAlternateSetting       4
-      bNumEndpoints           1
-      bInterfaceClass         1 Audio
-
-Interface Descriptor:
-  bLength                 9
-  bDescriptorType         4
-  bInterfaceNumber        3
-  bAlternateSetting       4
-  bNumEndpoints           1
-  bInterfaceClass         1 Audio
-  bInterfaceSubClass      2 Streaming
-  bInterfaceProtocol      0
-  iInterface              0
-  AudioStreaming Interface Descriptor:
-    bLength                 7
-    bDescriptorType        36
-    bDescriptorSubtype      1 (AS_GENERAL)
-    bTerminalLink           3
-    bDelay                  1 frames
-    wFormatTag         0x0001 PCM
-  AudioStreaming Interface Descriptor:
-    bLength                11
-    bDescriptorType        36
-    bDescriptorSubtype      2 (FORMAT_TYPE)
-    bFormatType             1 (FORMAT_TYPE_I)
-    bNrChannels             1
-    bSubframeSize           2
-    bBitResolution         16
-    bSamFreqType            1 Discrete
-    tSamFreq[ 0]        48000
-  Endpoint Descriptor:
-    bLength                 9
-    bDescriptorType         5
-    bEndpointAddress     0x86  EP 6 IN
-    bmAttributes            5
-      Transfer Type            Isochronous
-      Synch Type               Asynchronous
-      Usage Type               Data
-    wMaxPacketSize     0x0064  1x 100 bytes
-    bInterval               4
-    bRefresh                0
-    bSynchAddress           0
-    AudioStreaming Endpoint Descriptor:
-      bLength                 7
-      bDescriptorType        37
-      bDescriptorSubtype      1 (EP_GENERAL)
-      bmAttributes         0x01
-        Sampling Frequency
-      bLockDelayUnits         0 Undefined
-      wLockDelay         0x0000
-(snip)
-
-Testing patch provides consistent good sound recording quality and volume range.
-
-(snip)
-[   95.473820][ 1] [   T73] usb 5-2.2: new high-speed USB device number 7 using xhci_hcd
-[   95.773974][ 1] [   T73] usb 5-2.2: New USB device found, idVendor=1bcf, idProduct=2281, bcdDevice= 0.05
-[   95.783445][ 1] [   T73] usb 5-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[   95.791872][ 1] [   T73] usb 5-2.2: Product: HD webcam
-[   95.797001][ 1] [   T73] usb 5-2.2: Manufacturer: Sunplus IT Co
-[   95.802996][ 1] [   T73] usb 5-2.2: SerialNumber: 20200513
-[   96.110630][ 3] [ T3680] usbcore: registered new interface driver snd-usb-audio
-[   96.114329][ 7] [ T3677] usb 5-2.2: Found UVC 1.00 device HD webcam (1bcf:2281)
-[   96.167555][ 7] [ T3677] usbcore: registered new interface driver uvcvideo
-
-Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
----
-V1 -> V2: align the space,Update code to v6.8-rc3,and make modifications based on it
----
- sound/usb/mixer.c  | 7 +++++++
- sound/usb/quirks.c | 2 ++
- 2 files changed, 9 insertions(+)
-
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 409fc1164694..d1bdb0b93bda 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1211,6 +1211,13 @@ static void volume_control_quirks(struct usb_mixer_elem_info *cval,
- 			cval->res = 16;
- 		}
- 		break;
-+	case USB_ID(0x1bcf, 0x2281): /* HD Webcam */
-+		if (!strcmp(kctl->id.name, "Mic Capture Volume")) {
-+			usb_audio_info(chip,
-+				"set resolution quirk: cval->res = 16\n");
-+			cval->res = 16;
-+		}
-+		break;
- 	}
- }
- 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 09712e61c606..f222532d4d43 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -2185,6 +2185,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
- 		   QUIRK_FLAG_ALIGN_TRANSFER),
- 	DEVICE_FLG(0x534d, 0x2109, /* MacroSilicon MS2109 */
- 		   QUIRK_FLAG_ALIGN_TRANSFER),
-+	DEVICE_FLG(0x1bcf, 0x2281, /* HD Webcam */
-+		   QUIRK_FLAG_GET_SAMPLE_RATE),
- 
- 	/* Vendor matches */
- 	VENDOR_FLG(0x045e, /* MS Lifecam */
 -- 
-2.25.1
-
+Thanks,
+Oliver
