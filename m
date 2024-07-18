@@ -1,835 +1,727 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3851412E7F;
-	Thu, 18 Jul 2024 02:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746B41878;
+	Thu, 18 Jul 2024 02:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721269349; cv=none; b=nz5lrdIH4UJn+5bY3hxTcuN6yEZe/KhUBgD3XT8k2v73LC3Z9YfTr2GlceQuaEuaggPU2SDxRl5epaRbVs5rr3xR0ymCgI8fUpLGpvVQm4W95tIOD54wueISCMObisRPfKRHI8ds2WltfpzCBA7X9eX+yQykrM9dB4gw/4NMCpI=
+	t=1721269359; cv=none; b=KefAYhveI7L/xzVPyBAPieOIlq64bl6lF35OBJ0c5uSm/Ivt2rqLhplB1kY+9p5Kvas0ld84rbVf6VmyvtqK0KiaTSOLaYPAJxnN2PCqXDRKG5UPXNN2HPlkAWqFahIltwDO2BWsBOtN/oFo16n5QnwsWnYo2gdlQAhrouz/nkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721269349; c=relaxed/simple;
-	bh=MbKfeQ6Kt+FEymZsFS7gca1xcjX20cLNzgxjqSt7NTU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hq8ok3DWQIL+0oPkAkM33BfLxdmLWKx7ZWaLei5igj+o89wjySEewXB6B29LLiauoxmOSpOPHwTwF5hw2dOmlJ6uOJtaD0NNHjxXSgM7X2HyaIr7gL8gxpv5QX3scnh4GF/qXrsLd3ouKcjmmRmTCiELT1oNRnbXCN8cBLTbJ6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1bJ8qE1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721269359; c=relaxed/simple;
+	bh=Z2EgqyX0dteja6pmyZBQ6+wgyaf/zSmY7AEEIdkzu2c=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=tVDGfp3e1ZmRtXJ3Nkdi2hpOev745ND7pcCSUE5/oiml6msAOrxomAjwC+D9ScMnIj3XDpfxnv28TrihCVmruAt3ZZwUn4C6fH8tNm24yk6YAaPdHneJeuntMhKBAcVPAY0RB7DccsdAi0xa1PFEaffzN60P9Tq0I5qZ0nNpNuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NUA/M3Zy; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1bJ8qE1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D2C34C4AF0C;
-	Thu, 18 Jul 2024 02:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721269348;
-	bh=MbKfeQ6Kt+FEymZsFS7gca1xcjX20cLNzgxjqSt7NTU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=M1bJ8qE1cWHDyBtdy3HApsCtSH7pjgshTEORTOWuS2Zg4iL2YuhOHvNIFCBlHyrBB
-	 S0D1hENs4x49E0PAojZGt1HOxP6N+bo4gx/R3rasl/yyQKL8rYqulAgMs3bXI6g97r
-	 UlTI3UnQQGsbjcEae1I5Kyy13UD3p58RzzaE/UWkYvvPs+Iwwsjnz6AgZmgjBlo3mY
-	 +SxpBGj6PKtNd5guHnMKdQUvINuCMsBJnagNnyyATIE9oV90ZIDLTV+n/o3tPwXCAX
-	 30sBKd6OIks9y3m0qq5/jxxyKcN/4L+4TzWpoYbJuNu/7+6fOsgZynT0bSABZAUkNC
-	 AVCqMEI+aNWbA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2CBC3DA63;
-	Thu, 18 Jul 2024 02:22:28 +0000 (UTC)
-From: Cryolitia PukNgae via B4 Relay <devnull+Cryolitia.gmail.com@kernel.org>
-Date: Thu, 18 Jul 2024 10:22:23 +0800
-Subject: [PATCH v4 1/2] hwmon: add GPD devices sensor driver
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NUA/M3Zy"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I12rWJ012853;
+	Thu, 18 Jul 2024 02:22:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XMWebLtRQlSOyOEeqh5om3Vyexczwth7Fx43sXKT7fQ=; b=NUA/M3ZyAwuF7IWo
+	aT2+kZrGmRjD2pikFoDplYW65mqJW5Vs3YWIbEvZMKeGhXdk7dv5hx7mnZ+g79Vk
+	0i+i+22hUtShWDP0t3gzQjjMH0rfHxu91ZeqiTh4hIoE7jhlMHrQ+R6d9TJeQtZu
+	4qujXoINypiSPsA0BjQbZ5cTI6aeEPyOm4mmTuzzusYZtlaC9ZvEUYr8om+KexiD
+	tJCX+tsP7YK/p+R+04Y7e7H1AW2s9Sy9sACgP9Jof5uTxCffIghLjzXJtkW/usHv
+	ucR/TRr5SlUxcd24/ZzEomNMhtAQzuYWG8Ghzu5fP9PETsN1FErqcC3ZlEedoThk
+	rVSU6g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40es1wr3k1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 02:22:12 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46I2MCJC031595
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 02:22:12 GMT
+Received: from [10.239.133.211] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Jul
+ 2024 19:22:08 -0700
+Message-ID: <a1ae3a0c-5a58-4ed5-94c1-d64c512cc87c@quicinc.com>
+Date: Thu, 18 Jul 2024 10:22:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+From: Tao Zhang <quic_taozha@quicinc.com>
+Subject: Re: [PATCH v2 2/3] coresight: Add source filtering for multi-port
+ output
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan
+	<leo.yan@linux.dev>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+References: <20240711081750.21792-1-quic_taozha@quicinc.com>
+ <20240711081750.21792-3-quic_taozha@quicinc.com>
+ <d63cdd7e-69db-4fc4-b98a-d4555a843e05@arm.com>
+Content-Language: en-US
+In-Reply-To: <d63cdd7e-69db-4fc4-b98a-d4555a843e05@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240718-gpd_fan-v4-1-116e5431a9fe@gmail.com>
-References: <20240718-gpd_fan-v4-0-116e5431a9fe@gmail.com>
-In-Reply-To: <20240718-gpd_fan-v4-0-116e5431a9fe@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Cryolitia PukNgae <Cryolitia@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- linux-doc@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>, 
- Yao Zi <ziyao@disroot.org>, 
- =?utf-8?q?Marcin_Str=C4=85gowski?= <marcin@stragowski.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=19940;
- i=Cryolitia@gmail.com; h=from:subject:message-id;
- bh=UojzndR7lK/DLrB7PqYCvB1+zdE65n8NWl5hGHxqx2g=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0VCYlFHUy9wQU5Bd0FJQVQ1ZEYzTDhpb
- zdkQWNzbVlnQm1tSHhoTkw5L1FVem9yNjZsTFhYTEpvbXl4Wk1aCjJUY0hkY3hXL3BqWHNoME13
- TktKQVRNRUFBRUlBQjBXSVFSME5XMHB5dmR3U0JGOENDWStYUmR5L0lxTzNRVUMKWnBoOFlRQUt
- DUkErWFJkeS9JcU8zYyswQi93S2d2UVdwWDRrMnRoM0VaR1Baa0V0OXNqTk5zTFNUUFhsaU4yWg
- p2dkdIU0FKZHdsdGowaHhLa2k5MWZXWHRmM3pRM3N6NU9TQmUweG9sYUZ6cWVmY1NMS1FUekpmS
- zdyTWdheXloCjU0Z0dEUWI2ZTdveUtySjBjZjFocDlKTGtIc2JHKzBQUHcvenJ5SFZWYU5DM0NF
- OWh0aVJ6aHZLcVBJR2hsUWsKWVk2NWhwZU84SDR2M0NSZTh0Y3dyKzZsclpRTWlwVjdMb0oxZFl
- lR1B0OEVQWEdMbElRYmplaEp3aTZTdXJTZQpJSDlwSWJPay9TUC9ZSDBsN3VIMndoMlN3cmN5Qj
- VYL0N0RVp4N1FKL1ZKOHlzMVVwUFNRanAwSjZkRmJiMHhmCk1ERFhNTGsyenJXbUlpTEtJSVlKV
- 3EyWmhJaHpyN2hPTmtaM2tYSUF3UG5ETGw1Vgo9cHpTZwotLS0tLUVORCBQR1AgTUVTU0FHRS0t
- LS0tCg==
-X-Developer-Key: i=Cryolitia@gmail.com; a=openpgp;
- fpr=1C3C6547538D7152310C0EEA84DD0C0130A54DF7
-X-Endpoint-Received: by B4 Relay for Cryolitia@gmail.com/default with
- auth_id=186
-X-Original-From: Cryolitia PukNgae <Cryolitia@gmail.com>
-Reply-To: Cryolitia@gmail.com
-
-From: Cryolitia PukNgae <Cryolitia@gmail.com>
-
-Sensors driver for GPD Handhelds that expose fan reading and control via
-hwmon sysfs.
-
-Shenzhen GPD Technology Co., Ltd. manufactures a series of handheld
-devices. This driver implements these functions through x86 port-mapped IO.
-I have only tested it on my device Win Max 2 2023.
-
-Tested-by: Marcin Strągowski <marcin@stragowski.com>
-Signed-off-by: Cryolitia PukNgae <Cryolitia@gmail.com>
----
- MAINTAINERS             |   6 +
- drivers/hwmon/Kconfig   |  10 +
- drivers/hwmon/Makefile  |   1 +
- drivers/hwmon/gpd-fan.c | 683 ++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 700 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index af4b4c271342..9ced72cec42b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9372,6 +9372,12 @@ F:	drivers/phy/samsung/phy-gs101-ufs.c
- F:	include/dt-bindings/clock/google,gs101.h
- K:	[gG]oogle.?[tT]ensor
- 
-+GPD FAN DRIVER
-+M:	Cryolitia PukNgae <Cryolitia@gmail.com>
-+L:	linux-hwmon@vger.kernel.org
-+S:	Maintained
-+F:	drivers/hwmon/gpd-fan.c
-+
- GPD POCKET FAN DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	platform-driver-x86@vger.kernel.org
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index b60fe2e58ad6..368165a25979 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -727,6 +727,16 @@ config SENSORS_GL520SM
- 	  This driver can also be built as a module. If so, the module
- 	  will be called gl520sm.
- 
-+config SENSORS_GPD
-+	tristate "GPD EC fan control"
-+	depends on X86
-+	help
-+	  If you say yes here you get support for fan readings and
-+	  control over GPD handheld devices.
-+
-+	  Can also be built as a module. In that case it will be
-+	  called gpd-fan.
-+
- config SENSORS_G760A
- 	tristate "GMT G760A"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index b1c7056c37db..91c288451290 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -87,6 +87,7 @@ obj-$(CONFIG_SENSORS_GIGABYTE_WATERFORCE) += gigabyte_waterforce.o
- obj-$(CONFIG_SENSORS_GL518SM)	+= gl518sm.o
- obj-$(CONFIG_SENSORS_GL520SM)	+= gl520sm.o
- obj-$(CONFIG_SENSORS_GSC)	+= gsc-hwmon.o
-+obj-$(CONFIG_SENSORS_GPD)	+= gpd-fan.o
- obj-$(CONFIG_SENSORS_GPIO_FAN)	+= gpio-fan.o
- obj-$(CONFIG_SENSORS_GXP_FAN_CTRL) += gxp-fan-ctrl.o
- obj-$(CONFIG_SENSORS_HIH6130)	+= hih6130.o
-diff --git a/drivers/hwmon/gpd-fan.c b/drivers/hwmon/gpd-fan.c
-new file mode 100644
-index 000000000000..7cf435ef1f1d
---- /dev/null
-+++ b/drivers/hwmon/gpd-fan.c
-@@ -0,0 +1,683 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2024 Cryolitia PukNgae
-+
-+/*
-+ * Based on this repo:
-+ * https://github.com/Cryolitia/gpd-fan-driver
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/dmi.h>
-+#include <linux/hwmon.h>
-+#include <linux/ioport.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define DRIVER_NAME	"gpdfan"
-+
-+// model param, see document
-+static char *gpd_fan_model = "";
-+module_param(gpd_fan_model, charp, 0444);
-+
-+// EC read/write locker
-+// Should never access EC at the same time, otherwise system down.
-+static DEFINE_MUTEX(gpd_fan_lock);
-+
-+// general struct declare start
-+
-+enum FAN_PWM_ENABLE {
-+	DISABLE = 0,
-+	MANUAL = 1,
-+	AUTOMATIC = 2,
-+};
-+
-+struct gpd_driver_priv {
-+	enum FAN_PWM_ENABLE pwm_enable;
-+	u8 pwm_value;
-+
-+	u16 fan_speed_cached;
-+	u8 read_pwm_cached;
-+
-+	unsigned long fan_speed_last_update;
-+	unsigned long read_pwm_last_update;
-+
-+	const struct gpd_model_quirk *const quirk;
-+};
-+
-+struct gpd_model_ec_address {
-+	const u8 addr_port;
-+	const u8 data_port;
-+	const u16 manual_control_enable;
-+	const u16 rpm_read;
-+	const u16 pwm_write;
-+	const u16 pwm_max;
-+};
-+
-+struct gpd_model_quirk {
-+	const char *model_name;
-+	const struct gpd_model_ec_address address;
-+
-+	s32 (*read_rpm)(struct gpd_driver_priv *data);
-+	int (*set_pwm_enable)(struct gpd_driver_priv *data,
-+			      enum FAN_PWM_ENABLE);
-+	s16 (*read_pwm)(struct gpd_driver_priv *data);
-+	int (*write_pwm)(const struct gpd_driver_priv *data, u8 val);
-+};
-+
-+// general struct declare end
-+
-+// model quirk function declare start
-+
-+static s32 gpd_read_rpm(struct gpd_driver_priv *data);
-+static s16 gpd_read_pwm(struct gpd_driver_priv *data);
-+static int gpd_write_pwm(const struct gpd_driver_priv *data, u8 val);
-+
-+static int gpd_win_mini_set_pwm_enable(struct gpd_driver_priv *data,
-+				       enum FAN_PWM_ENABLE pwm_enable);
-+static int gpd_win_mini_write_pwm(const struct gpd_driver_priv *data, u8 val);
-+
-+static s32 gpd_win4_read_rpm(struct gpd_driver_priv *data);
-+
-+static s32 gpd_wm2_read_rpm(struct gpd_driver_priv *data);
-+static s16 gpd_wm2_read_pwm(struct gpd_driver_priv *data);
-+static int gpd_wm2_set_pwm_enable(struct gpd_driver_priv *data,
-+				  enum FAN_PWM_ENABLE enable);
-+static int gpd_wm2_write_pwm(const struct gpd_driver_priv *data, u8 val);
-+
-+// model quirk function declare end
-+
-+// model quirk struct declare start
-+
-+static const struct gpd_model_quirk gpd_win_mini_quirk = {
-+	.model_name	= "win_mini",
-+	.address	= {
-+				.addr_port		= 0x4E,
-+				.data_port		= 0x4F,
-+				.manual_control_enable	= 0x047A,
-+				.rpm_read		= 0x0478,
-+				.pwm_write		= 0x047A,
-+				.pwm_max		= 244,
-+			},
-+	.read_rpm	= gpd_read_rpm,
-+	.set_pwm_enable	= gpd_win_mini_set_pwm_enable,
-+	.read_pwm	= gpd_read_pwm,
-+	.write_pwm	= gpd_win_mini_write_pwm,
-+};
-+
-+static const struct gpd_model_quirk gpd_win4_quirk = {
-+	.model_name	= "win4",
-+	.address	= {
-+				.addr_port		= 0x2E,
-+				.data_port		= 0x2F,
-+				.manual_control_enable	= 0xC311,
-+				.rpm_read		= 0xC880,
-+				.pwm_write		= 0xC311,
-+				.pwm_max		= 127,
-+			},
-+	.read_rpm	= gpd_win4_read_rpm,
-+	// same as GPD Win Mini
-+	.set_pwm_enable	= gpd_win_mini_set_pwm_enable,
-+	.read_pwm	= gpd_read_pwm,
-+	// same as GPD Win Mini
-+	.write_pwm	= gpd_win_mini_write_pwm,
-+};
-+
-+static const struct gpd_model_quirk gpd_wm2_quirk = {
-+	.model_name	= "wm2",
-+	.address	= {
-+				.addr_port		= 0x4E,
-+				.data_port		= 0x4F,
-+				.manual_control_enable	= 0x0275,
-+				.rpm_read		= 0x0218,
-+				.pwm_write		= 0x1809,
-+				.pwm_max		= 184,
-+			},
-+	.read_rpm	= gpd_wm2_read_rpm,
-+	.set_pwm_enable	= gpd_wm2_set_pwm_enable,
-+	.read_pwm	= gpd_wm2_read_pwm,
-+	.write_pwm	= gpd_wm2_write_pwm,
-+};
-+
-+// model quirk struct declare end
-+
-+static const struct dmi_system_id gpd_devices[] = {
-+	{
-+		// GPD Win Mini
-+		// GPD Win Mini with AMD Ryzen 8840U
-+		.matches	= {
-+					DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+					DMI_MATCH(DMI_PRODUCT_NAME, "G1617-01")
-+				},
-+		.driver_data	= &gpd_win_mini_quirk,
-+	},
-+	{
-+		// GPD Win 4 with AMD Ryzen 6800U
-+		.matches	= {
-+					DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+					DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-+					DMI_MATCH(DMI_BOARD_VERSION, "Default string"),
-+				},
-+		.driver_data	= &gpd_win4_quirk,
-+	},
-+	{
-+		// GPD Win 4 with Ryzen 7840U
-+		.matches	= {
-+					DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+					DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-+					DMI_MATCH(DMI_BOARD_VERSION, "Ver. 1.0"),
-+				},
-+		.driver_data	= &gpd_wm2_quirk,
-+	},
-+	{
-+		// GPD Win Max 2 with Ryzen 6800U
-+		// GPD Win Max 2 2023 with Ryzen 7840U
-+		// GPD Win Max 2 2024 with Ryzen 8840U
-+		.matches	= {
-+					DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+					DMI_MATCH(DMI_PRODUCT_NAME, "G1619-04"),
-+				},
-+		.driver_data	= &gpd_wm2_quirk,
-+	},
-+	{}
-+};
-+
-+static const struct gpd_model_quirk *gpd_module_quirks[] = {
-+	&gpd_win_mini_quirk, &gpd_win4_quirk, &gpd_wm2_quirk, NULL
-+};
-+
-+// device EC truly access function start
-+
-+static int gpd_ecram_read(const struct gpd_model_ec_address *address,
-+			  u16 offset, u8 *val)
-+{
-+	int ret;
-+	u16 addr_port = address->addr_port;
-+	u16 data_port = address->data_port;
-+
-+	ret = mutex_lock_interruptible(&gpd_fan_lock);
-+
-+	if (ret)
-+		return ret;
-+
-+	outb(0x2E, addr_port);
-+	outb(0x11, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)((offset >> 8) & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x10, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)(offset & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x12, data_port);
-+	outb(0x2F, addr_port);
-+	*val = inb(data_port);
-+
-+	mutex_unlock(&gpd_fan_lock);
-+	return 0;
-+}
-+
-+static int gpd_ecram_write(const struct gpd_model_ec_address *address,
-+			   u16 offset, u8 value)
-+{
-+	int ret;
-+	u16 addr_port = address->addr_port;
-+	u16 data_port = address->data_port;
-+
-+	ret = mutex_lock_interruptible(&gpd_fan_lock);
-+
-+	if (ret)
-+		return ret;
-+
-+	outb(0x2E, addr_port);
-+	outb(0x11, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)((offset >> 8) & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x10, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)(offset & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x12, data_port);
-+	outb(0x2F, addr_port);
-+	outb(value, data_port);
-+
-+	mutex_unlock(&gpd_fan_lock);
-+	return 0;
-+}
-+
-+// device EC truly access function end
-+
-+// device quirk function implement start
-+
-+static s32
-+gpd_read_cached_fan_speed(struct gpd_driver_priv *data,
-+			  s32 (*read_uncached)(const struct gpd_driver_priv *))
-+{
-+	// Update per 1000 milliseconds
-+	if (time_after(jiffies, data->fan_speed_last_update + HZ)) {
-+		s32 ret = read_uncached(data);
-+
-+		if (ret < 0)
-+			return ret;
-+
-+		data->fan_speed_cached = ret;
-+		data->fan_speed_last_update = jiffies;
-+	}
-+	return data->fan_speed_cached;
-+}
-+
-+static s32
-+gpd_read_cached_pwm(struct gpd_driver_priv *data,
-+		    s16 (*read_uncached)(const struct gpd_driver_priv *))
-+{
-+	// Update per 1000 milliseconds
-+	if (time_after(jiffies, data->read_pwm_last_update + HZ)) {
-+		s16 ret = read_uncached(data);
-+
-+		if (ret < 0)
-+			return ret;
-+
-+		data->read_pwm_cached = ret;
-+		data->read_pwm_last_update = jiffies;
-+	}
-+	return data->read_pwm_cached;
-+}
-+
-+static s32 gpd_read_rpm_uncached(const struct gpd_driver_priv *data)
-+{
-+	u8 high, low;
-+	int ret;
-+	const struct gpd_model_ec_address *address = &data->quirk->address;
-+
-+	ret = gpd_ecram_read(address, address->rpm_read, &high);
-+	if (ret)
-+		return ret;
-+	ret = gpd_ecram_read(address, address->rpm_read + 1, &low);
-+	if (ret)
-+		return ret;
-+
-+	return (u16)high << 8 | low;
-+}
-+
-+static s32 gpd_read_rpm(struct gpd_driver_priv *data)
-+{
-+	return gpd_read_cached_fan_speed(data, gpd_read_rpm_uncached);
-+}
-+
-+static s16 gpd_read_pwm(struct gpd_driver_priv *data)
-+{
-+	return data->pwm_value;
-+}
-+
-+static int gpd_write_pwm(const struct gpd_driver_priv *data, u8 val)
-+{
-+	const struct gpd_model_ec_address *address = &data->quirk->address;
-+	u8 actual;
-+
-+	// PWM value's range in EC is 1 - pwm_max, cast 0 - 255 to it.
-+	actual = val * (address->pwm_max - 1) / 255 + 1;
-+	return gpd_ecram_write(address, address->pwm_write, actual);
-+}
-+
-+static int gpd_win_mini_set_pwm_enable(struct gpd_driver_priv *data,
-+				       enum FAN_PWM_ENABLE pwm_enable)
-+{
-+	switch (pwm_enable) {
-+	case DISABLE:
-+		return gpd_write_pwm(data, 255);
-+	case MANUAL:
-+		return gpd_write_pwm(data, data->pwm_value);
-+	case AUTOMATIC:
-+		return gpd_write_pwm(data, 0);
-+	}
-+	return 0;
-+}
-+
-+static int gpd_win_mini_write_pwm(const struct gpd_driver_priv *data, u8 val)
-+{
-+	if (data->pwm_enable == MANUAL)
-+		return gpd_write_pwm(data, val);
-+	return 0;
-+}
-+
-+static s32 gpd_win4_read_rpm_uncached(const struct gpd_driver_priv *data)
-+{
-+	const struct gpd_model_ec_address *address = &data->quirk->address;
-+	u8 PWMCTR;
-+	s32 ret;
-+
-+	gpd_ecram_read(address, 0x1841, &PWMCTR);
-+	if (PWMCTR != 0x7F)
-+		gpd_ecram_write(address, 0x1841, 0x7F);
-+
-+	ret = gpd_read_rpm_uncached(data);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret == 0) {
-+		//re-init EC
-+		u8 chip_id;
-+
-+		gpd_ecram_read(address, 0x2000, &chip_id);
-+		if (chip_id == 0x55) {
-+			u8 chip_ver;
-+
-+			if (gpd_ecram_read(address, 0x1060, &chip_ver)) {
-+				gpd_ecram_write(address, 0x1060,
-+						chip_ver | 0x80);
-+			}
-+		}
-+	}
-+	return ret;
-+}
-+
-+static s32 gpd_win4_read_rpm(struct gpd_driver_priv *data)
-+{
-+	return gpd_read_cached_fan_speed(data, gpd_win4_read_rpm_uncached);
-+}
-+
-+static s32 gpd_wm2_read_rpm_uncached(const struct gpd_driver_priv *data)
-+{
-+	const struct gpd_model_ec_address *address = &data->quirk->address;
-+
-+	for (u16 pwm_ctr_offset = 0x1841; pwm_ctr_offset <= 0x1843;
-+	     pwm_ctr_offset++) {
-+		u8 PWMCTR;
-+
-+		gpd_ecram_read(address, pwm_ctr_offset, &PWMCTR);
-+		if (PWMCTR != 0xB8)
-+			gpd_ecram_write(address, pwm_ctr_offset, 0xB8);
-+	}
-+	return gpd_read_rpm_uncached(data);
-+}
-+
-+static s32 gpd_wm2_read_rpm(struct gpd_driver_priv *data)
-+{
-+	return gpd_read_cached_fan_speed(data, gpd_wm2_read_rpm_uncached);
-+}
-+
-+static s16 gpd_wm2_read_pwm_uncached(const struct gpd_driver_priv *data)
-+{
-+	const struct gpd_model_ec_address *address = &data->quirk->address;
-+	u8 var;
-+	int ret = gpd_ecram_read(address, address->pwm_write, &var);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return var * 255 / address->pwm_max;
-+}
-+
-+static s16 gpd_wm2_read_pwm(struct gpd_driver_priv *data)
-+{
-+	return gpd_read_cached_pwm(data, gpd_wm2_read_pwm_uncached);
-+}
-+
-+static int gpd_wm2_set_pwm_enable(struct gpd_driver_priv *data,
-+				  enum FAN_PWM_ENABLE enable)
-+{
-+	const struct gpd_model_ec_address *address = &data->quirk->address;
-+	int ret;
-+
-+	switch (enable) {
-+	case DISABLE:
-+		ret = gpd_write_pwm(data, 255);
-+
-+		if (ret)
-+			return ret;
-+
-+		return gpd_ecram_write(address, address->manual_control_enable,
-+				       1);
-+	case MANUAL:
-+		ret = gpd_write_pwm(data, data->pwm_value);
-+
-+		if (ret)
-+			return ret;
-+
-+		return gpd_ecram_write(address, address->manual_control_enable,
-+				       1);
-+	case AUTOMATIC:
-+		ret = gpd_ecram_write(address, address->manual_control_enable,
-+				      0);
-+
-+		// Immediately refresh the PWM value
-+		gpd_read_cached_pwm(data, gpd_wm2_read_pwm_uncached);
-+
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int gpd_wm2_write_pwm(const struct gpd_driver_priv *data, u8 val)
-+{
-+	if (data->pwm_enable != DISABLE)
-+		return gpd_write_pwm(data, val);
-+
-+	return 0;
-+}
-+
-+// device quirk function implement end
-+
-+// hwmon subsystem start
-+
-+static umode_t gpd_fan_hwmon_is_visible(__always_unused const void *drvdata,
-+					enum hwmon_sensor_types type, u32 attr,
-+					__always_unused int channel)
-+{
-+	if (type == hwmon_fan && attr == hwmon_fan_input) {
-+		return 0444;
-+	} else if (type == hwmon_pwm) {
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+		case hwmon_pwm_input:
-+			return 0644;
-+		default:
-+			return 0;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int gpd_fan_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			      u32 attr, __always_unused int channel, long *val)
-+{
-+	struct gpd_driver_priv *data = dev_get_drvdata(dev);
-+
-+	if (type == hwmon_fan) {
-+		switch (attr) {
-+		case hwmon_fan_input:
-+			s32 ret = data->quirk->read_rpm(data);
-+
-+			if (ret < 0)
-+				return ret;
-+
-+			*val = ret;
-+			return 0;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+	if (type == hwmon_pwm) {
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+			*val = data->pwm_enable;
-+			return 0;
-+		case hwmon_pwm_input:
-+			s16 ret = data->quirk->read_pwm(data);
-+
-+			if (ret < 0)
-+				return ret;
-+
-+			*val = ret;
-+			return 0;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+	return -EOPNOTSUPP;
-+}
-+
-+static int gpd_fan_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-+			       u32 attr, __always_unused int channel, long val)
-+{
-+	struct gpd_driver_priv *data = dev_get_drvdata(dev);
-+
-+	if (type == hwmon_pwm) {
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+			if (!in_range(val, 0, 3))
-+				return -EINVAL;
-+			data->pwm_enable = val;
-+			return data->quirk->set_pwm_enable(data,
-+							   data->pwm_enable);
-+		case hwmon_pwm_input:
-+			u8 var = clamp_val(val, 0, 255);
-+
-+			data->pwm_value = var;
-+			return data->quirk->write_pwm(data, var);
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct hwmon_ops gpd_fan_ops = {
-+	.is_visible	= gpd_fan_hwmon_is_visible,
-+	.read		= gpd_fan_hwmon_read,
-+	.write		= gpd_fan_hwmon_write,
-+};
-+
-+static const struct hwmon_channel_info *gpd_fan_hwmon_channel_info[] = {
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
-+	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_INPUT | HWMON_PWM_ENABLE), NULL
-+};
-+
-+static struct hwmon_chip_info gpd_fan_chip_info = {
-+	.ops	= &gpd_fan_ops,
-+	.info	= gpd_fan_hwmon_channel_info
-+};
-+
-+// hwmon subsystem end
-+
-+static int gpd_fan_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct gpd_driver_priv *data;
-+	const struct resource *plat_res;
-+	const struct device *dev_reg;
-+	const struct resource *region_res;
-+
-+	data = dev_get_platdata(&pdev->dev);
-+	if (IS_ERR(data))
-+		return -ENODEV;
-+
-+	plat_res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-+	if (IS_ERR(plat_res))
-+		return dev_err_probe(dev, PTR_ERR(plat_res),
-+				     "Failed to get platform resource\n");
-+
-+	region_res = devm_request_region(dev, plat_res->start,
-+					 resource_size(plat_res), DRIVER_NAME);
-+	if (IS_ERR(region_res))
-+		return dev_err_probe(dev, PTR_ERR(region_res),
-+				     "Failed to request region\n");
-+
-+	dev_reg = devm_hwmon_device_register_with_info(
-+		dev, DRIVER_NAME, data, &gpd_fan_chip_info, NULL);
-+	if (IS_ERR(dev_reg))
-+		return dev_err_probe(dev, PTR_ERR(region_res),
-+				     "Failed to register hwmon device\n");
-+
-+	return 0;
-+}
-+
-+static int gpd_fan_remove(struct platform_device *pdev)
-+{
-+	struct gpd_driver_priv *data = dev_get_platdata(&pdev->dev);
-+
-+	data->pwm_enable = AUTOMATIC;
-+	data->quirk->set_pwm_enable(data, AUTOMATIC);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver gpd_fan_driver = {
-+	.probe	= gpd_fan_probe,
-+	.remove	= gpd_fan_remove,
-+	.driver	= {
-+		.name	= KBUILD_MODNAME,
-+	},
-+};
-+
-+static struct platform_device *gpd_fan_platform_device;
-+
-+static int __init gpd_fan_init(void)
-+{
-+	const struct gpd_model_quirk *match = NULL;
-+
-+	for (const struct gpd_model_quirk **p = gpd_module_quirks; *p; p++) {
-+		if (strcmp(gpd_fan_model, (*p)->model_name) == 0) {
-+			match = *p;
-+			break;
-+		}
-+	}
-+
-+	if (!match)
-+		match = dmi_first_match(gpd_devices)->driver_data;
-+
-+	if (!match)
-+		return -ENODEV;
-+
-+	struct gpd_driver_priv data = {
-+		.pwm_enable		= AUTOMATIC,
-+		.pwm_value		= 255,
-+		.fan_speed_cached	= 0,
-+		.read_pwm_cached	= 0,
-+		.fan_speed_last_update	= jiffies,
-+		.read_pwm_last_update	= jiffies,
-+		.quirk			= match,
-+	};
-+
-+	struct resource gpd_fan_resources[] = {
-+		{
-+			.start	= data.quirk->address.addr_port,
-+			.end	= data.quirk->address.data_port,
-+			.flags	= IORESOURCE_IO,
-+		},
-+	};
-+
-+	gpd_fan_platform_device = platform_create_bundle(
-+		&gpd_fan_driver, gpd_fan_probe, gpd_fan_resources, 1, &data,
-+		sizeof(struct gpd_driver_priv));
-+
-+	if (IS_ERR(gpd_fan_platform_device)) {
-+		pr_warn("Failed to create platform device\n");
-+		return PTR_ERR(gpd_fan_platform_device);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit gpd_fan_exit(void)
-+{
-+	platform_device_unregister(gpd_fan_platform_device);
-+	platform_driver_unregister(&gpd_fan_driver);
-+}
-+
-+module_init(gpd_fan_init)
-+module_exit(gpd_fan_exit)
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Cryolitia <Cryolitia@gmail.com>");
-+MODULE_DESCRIPTION("GPD Devices fan control driver");
-+MODULE_ALIAS("dmi:*:svnGPD:pnG1617-01:*");
-+MODULE_ALIAS("dmi:*:svnGPD:pnG1618-04:*");
-+MODULE_ALIAS("dmi:*:svnGPD:pnG1619-04:*");
-
--- 
-2.45.2
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QtmQ7oEoqOwB58onSHeXH3Pto4S2sFln
+X-Proofpoint-ORIG-GUID: QtmQ7oEoqOwB58onSHeXH3Pto4S2sFln
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-17_19,2024-07-17_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0 priorityscore=1501
+ phishscore=0 clxscore=1015 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407180014
 
 
+On 7/11/2024 9:05 PM, Suzuki K Poulose wrote:
+> On 11/07/2024 09:17, Tao Zhang wrote:
+>> In order to enable the output ports of multi-port output devices,
+>
+> This has nothing to do with multi-port. You wanted to pain the picture
+> of a multi-port device, while the reality is different.
+>
+>> such as static replicator, to correspond to designated sources,
+>> a mechanism for filtering data sources is introduced for the
+>> output ports.
+>>
+>> The specified source will be marked like below in the Devicetree.
+>> test-replicator {
+>>      ... ... ... ...
+>>      out-ports {
+>>          ... ... ... ...
+>>          port@0 {
+>>              reg = <0>;
+>>              xxx: endpoint {
+>>                  remote-endpoint = <&xxx>;
+>>                  filter_src = <&xxx>; <-- To specify the source to
+>>              };                           be filtered out here.
+>>          };
+>>
+>>          port@1 {
+>>              reg = <1>;
+>>              yyy: endpoint {
+>>                  remote-endpoint = <&yyy>;
+>>                  filter_src = <&yyy>; <-- To specify the source to
+>>              };                           be filtered out here.
+>>          };
+>>      };
+>> };
+>>
+>> Then driver will find the expected source marked in the Devicetree, and
+>> save it to the coresight path. When the function needs to filter the
+>> source, it could obtain it from coresight path parameter. Finally,
+>> the output port knows which source it corresponds to, and it also knows
+>> which input port it corresponds to.
+>
+> Minor nit: I think the commit description is full of "How" you are 
+> doing something, while it must rather be: "What and Why?"
+>
+> I would prefer something like :
+>
+> Subject: coresight: Add support for trace filtering by source
+>
+> Some replicators have hard coded filtering of "trace" data, based on the
+> source device. This is different from the trace filtering based on
+> TraceID, available in the standard programmable replicators. e.g.,
+> Qualcomm replicators have filtering based on custom trace protocol
+> format and is not programmable.
+>
+> The source device could be connected to the replicator via intermediate
+> components (e.g., a funnel). Thus we need platform information from
+> the firmware tables to decide the source device corresponding to a
+> given output port from the replicator. Given this affects "trace
+> path building" and traversing the path back from the sink to source,
+> add the concept of "filtering by source" to the generic coresight
+> connection.
+>
+I will update according to your comments to the next version.
+>
+>>
+>> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-core.c  | 125 ++++++++++++++++--
+>>   .../hwtracing/coresight/coresight-platform.c  |  18 +++
+>>   include/linux/coresight.h                     |   5 +
+>>   3 files changed, 135 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-core.c 
+>> b/drivers/hwtracing/coresight/coresight-core.c
+>> index 9fc6f6b863e0..3f02a31b9328 100644
+>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>> @@ -75,15 +75,60 @@ struct coresight_device 
+>> *coresight_get_percpu_sink(int cpu)
+>>   }
+>>   EXPORT_SYMBOL_GPL(coresight_get_percpu_sink);
+>>   +static struct coresight_device *coresight_get_source(struct 
+>> list_head *path)
+>> +{
+>> +    struct coresight_device *csdev;
+>> +
+>> +    if (!path)
+>> +        return NULL;
+>> +
+>> +    csdev = list_first_entry(path, struct coresight_node, link)->csdev;
+>> +    if (csdev->type != CORESIGHT_DEV_TYPE_SOURCE)
+>> +        return NULL;
+>> +
+>> +    return csdev;
+>> +}
+>> +
+>
+> Why is this still here ? Didn't agree to remove this and pass the source
+> directly ?
+
+I agree pass the source directly, but how can we get the source device 
+of the path
+
+without this function? The solution I can think of is to pass source 
+directly from
+
+"coresight_enable"like below.
+
+coresight_enable ---pass source---> coresight_enable_path -> 
+coresight_enable_link
+
+-> coresight_find_out_connection -> coresight_blocks_source
+
+Does this solution meet your expectations? Or do you have a better 
+suggestion?
+
+>
+>> +/**
+>> + * coresight_source_filter - checks whether the connection matches 
+>> the source
+>> + * of path if connection is binded to specific source.
+>> + * @trace_source: The source device of the trace path
+>> + * @conn:      The connection of one outport
+>> + *
+>> + * Return zero if the connection doesn't have a source binded or 
+>> source of the
+>> + * path matches the source binds to connection.
+>> + */
+>> +static int coresight_source_filter(struct coresight_device 
+>> *trace_source,
+>> +            struct coresight_connection *conn)
+>
+> This name is a bit confusing. It doesn't tell you, whether it
+> allows the trace or blocks it.
+>
+>> +{
+>> +    int ret = 0;
+>> +
+>> +    if (!conn->filter_src_dev)
+>> +        return ret;
+>
+> This is not the correct check. It must be :
+>
+> if (!conn->filter_src_fwnode)
+>
+> Because, the device could have disappeared (or not appeared yet). 
+> e.g., (TPDM) driver module unloaded/not - loaded.
+>
+>> +
+>> +    if (!trace_source)
+>
+> Is that possible ?
+>
+>> +        return -1;
+>> +
+>> +    if (conn->filter_src_dev == trace_source)
+>> +        ret = 0;
+>> +    else
+>> +        ret = -1;
+>
+> Couldn't this simply be :
+>
+> /*
+>  * Returns true, if the trace path is not possible through @conn
+>  * for trace originating from @src
+>  */
+> static bool coresight_blocks_source(src, conn)
+> {
+>     return conn->filter_src_fwnode &&
+>         (conn->filter_src_dev != src);
+> }
+I will update to the next version.
+>
+>> +
+>> +    return ret;
+>> +}
+>> +
+>>   static struct coresight_connection *
+>>   coresight_find_out_connection(struct coresight_device *src_dev,
+>> -                  struct coresight_device *dest_dev)
+>> +                  struct coresight_device *dest_dev,
+>> +                  struct coresight_device *trace_source)
+>
+> Please could you rename :
+>
+>     src_dev => csdev
+>     dest_dev => out_dev
+>     trace_source => trace_src ?
+>
+> Having src_dev and trace_source in the same list is confusing.
+I will update to the next version.
+>
+>>   {
+>>       int i;
+>>       struct coresight_connection *conn;
+>>         for (i = 0; i < src_dev->pdata->nr_outconns; i++) {
+>>           conn = src_dev->pdata->out_conns[i];
+>> +        if (coresight_source_filter(trace_source, conn))
+>
+>         if (coresight_blocks_source(trace_source, conn))
+>             continue;
+>
+>> +            continue;
+>>           if (conn->dest_dev == dest_dev)
+>>               return conn;
+>>       }
+>> @@ -251,7 +296,8 @@ static void coresight_disable_sink(struct 
+>> coresight_device *csdev)
+>>     static int coresight_enable_link(struct coresight_device *csdev,
+>>                    struct coresight_device *parent,
+>> -                 struct coresight_device *child)
+>> +                 struct coresight_device *child,
+>> +                 struct coresight_device *trace_source)
+>>   {
+>>       int link_subtype;
+>>       struct coresight_connection *inconn, *outconn;
+>> @@ -259,8 +305,8 @@ static int coresight_enable_link(struct 
+>> coresight_device *csdev,
+>>       if (!parent || !child)
+>>           return -EINVAL;
+>>   -    inconn = coresight_find_out_connection(parent, csdev);
+>> -    outconn = coresight_find_out_connection(csdev, child);
+>> +    inconn = coresight_find_out_connection(parent, csdev, 
+>> trace_source);
+>> +    outconn = coresight_find_out_connection(csdev, child, 
+>> trace_source);
+>>       link_subtype = csdev->subtype.link_subtype;
+>>         if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_MERG && 
+>> IS_ERR(inconn))
+>> @@ -273,15 +319,16 @@ static int coresight_enable_link(struct 
+>> coresight_device *csdev,
+>>     static void coresight_disable_link(struct coresight_device *csdev,
+>>                      struct coresight_device *parent,
+>> -                   struct coresight_device *child)
+>> +                   struct coresight_device *child,
+>> +                   struct coresight_device *trace_source)
+>>   {
+>>       struct coresight_connection *inconn, *outconn;
+>>         if (!parent || !child)
+>>           return;
+>>   -    inconn = coresight_find_out_connection(parent, csdev);
+>> -    outconn = coresight_find_out_connection(csdev, child);
+>> +    inconn = coresight_find_out_connection(parent, csdev, 
+>> trace_source);
+>> +    outconn = coresight_find_out_connection(csdev, child, 
+>> trace_source);
+>>         link_ops(csdev)->disable(csdev, inconn, outconn);
+>>   }
+>> @@ -341,6 +388,9 @@ static void coresight_disable_path_from(struct 
+>> list_head *path,
+>>   {
+>>       u32 type;
+>>       struct coresight_device *csdev, *parent, *child;
+>> +    struct coresight_device *source;
+>> +
+>> +    source = coresight_get_source(path);
+>
+> Grr! This must come from the "caller of the 
+> coresight_disable_path_from()", which was my comment. Please go back
+> and double check the comment on previous version.
+
+How about if I pass the source to " coresight_disable_path_from" 
+directly from
+
+"coresight_enable" or "coresight_disable" like below?
+
+coresight_enable ----|                             |---> 
+coresight_disable_patch_from
+
+                                      |---pass source---|
+
+coresight_disable----|                             |---> 
+coresight_disable_path -> coresight_disable_patch_from
+
+This can ensure that the source passed into coresight_disable_patch_from is
+
+the correct source.
+
+>
+>
+>>         if (!nd)
+>>           nd = list_first_entry(path, struct coresight_node, link);
+>> @@ -375,7 +425,7 @@ static void coresight_disable_path_from(struct 
+>> list_head *path,
+>>           case CORESIGHT_DEV_TYPE_LINK:
+>>               parent = list_prev_entry(nd, link)->csdev;
+>>               child = list_next_entry(nd, link)->csdev;
+>> -            coresight_disable_link(csdev, parent, child);
+>> +            coresight_disable_link(csdev, parent, child, source);
+>>               break;
+>>           default:
+>>               break;
+>> @@ -418,6 +468,9 @@ int coresight_enable_path(struct list_head *path, 
+>> enum cs_mode mode,
+>>       u32 type;
+>>       struct coresight_node *nd;
+>>       struct coresight_device *csdev, *parent, *child;
+>> +    struct coresight_device *source;
+>> +
+>> +    source = coresight_get_source(path);
+>>         list_for_each_entry_reverse(nd, path, link) {
+>>           csdev = nd->csdev;
+>> @@ -456,7 +509,7 @@ int coresight_enable_path(struct list_head *path, 
+>> enum cs_mode mode,
+>>           case CORESIGHT_DEV_TYPE_LINK:
+>>               parent = list_prev_entry(nd, link)->csdev;
+>>               child = list_next_entry(nd, link)->csdev;
+>> -            ret = coresight_enable_link(csdev, parent, child);
+>> +            ret = coresight_enable_link(csdev, parent, child, source);
+>>               if (ret)
+>>                   goto err;
+>>               break;
+>> @@ -619,6 +672,7 @@ static void coresight_drop_device(struct 
+>> coresight_device *csdev)
+>>    * @csdev:    The device to start from.
+>>    * @sink:    The final sink we want in this path.
+>>    * @path:    The list to add devices to.
+>> + * @trace_source: The trace source device of the path.
+>>    *
+>>    * The tree of Coresight device is traversed until @sink is found.
+>>    * From there the sink is added to the list along with all the 
+>> devices that led
+>> @@ -627,7 +681,8 @@ static void coresight_drop_device(struct 
+>> coresight_device *csdev)
+>>    */
+>>   static int _coresight_build_path(struct coresight_device *csdev,
+>>                    struct coresight_device *sink,
+>> -                 struct list_head *path)
+>> +                 struct list_head *path,
+>> +                 struct coresight_device *trace_source)
+>>   {
+>>       int i, ret;
+>>       bool found = false;
+>> @@ -639,7 +694,7 @@ static int _coresight_build_path(struct 
+>> coresight_device *csdev,
+>>         if (coresight_is_percpu_source(csdev) && 
+>> coresight_is_percpu_sink(sink) &&
+>>           sink == per_cpu(csdev_sink, 
+>> source_ops(csdev)->cpu_id(csdev))) {
+>> -        if (_coresight_build_path(sink, sink, path) == 0) {
+>> +        if (_coresight_build_path(sink, sink, path, trace_source) == 
+>> 0) {
+>>               found = true;
+>>               goto out;
+>>           }
+>> @@ -650,8 +705,13 @@ static int _coresight_build_path(struct 
+>> coresight_device *csdev,
+>>           struct coresight_device *child_dev;
+>>             child_dev = csdev->pdata->out_conns[i]->dest_dev;
+>> +
+>> +        if (csdev->pdata->out_conns[i]->filter_src_dev
+>> +            && (csdev->pdata->out_conns[i]->filter_src_dev != 
+>> trace_source))
+>> +            continue;
+>> +
+>>           if (child_dev &&
+>> -            _coresight_build_path(child_dev, sink, path) == 0) {
+>> +            _coresight_build_path(child_dev, sink, path, 
+>> trace_source) == 0) {
+>>               found = true;
+>>               break;
+>>           }
+>> @@ -696,7 +756,7 @@ struct list_head *coresight_build_path(struct 
+>> coresight_device *source,
+>>         INIT_LIST_HEAD(path);
+>>   -    rc = _coresight_build_path(source, sink, path);
+>> +    rc = _coresight_build_path(source, sink, path, source);
+>>       if (rc) {
+>>           kfree(path);
+>>           return ERR_PTR(rc);
+>> @@ -957,6 +1017,14 @@ static int coresight_orphan_match(struct device 
+>> *dev, void *data)
+>>               /* This component still has an orphan */
+>>               still_orphan = true;
+>>           }
+>
+>
+>> +        if ((conn->filter_src_fwnode) && dst_csdev
+>> +            && (conn->filter_src_fwnode == dst_csdev->dev.fwnode)) {
+>> +            conn->filter_src_dev = dst_csdev;
+>> +            if (conn->filter_src_dev->type
+>> +                != CORESIGHT_DEV_TYPE_SOURCE)
+>> +                dev_warn(&conn->filter_src_dev->dev,
+>> +                  "Filter source is not a source device\n");
+>> +        }
+>
+> Have you tested your code with the following order :
+>
+> 1) Build everything as module
+> 2) Load the replicator driver.
+> 3) Load the TPDM driver
+>
+> And are you able to get the trace working ? I suspect it doesn't work. 
+> The csdev->orphan must be used to track if there is any missing link
+> with unresolved "filter_src_dev".
+
+I really didn't consider this test case in my testing. There was a 
+problem with
+
+the logic of the code I modified. If it is modified to the following, 
+can it solve the
+
+test case you proposed?
+
+static int coresight_orphan_match(struct device *dev, void *data)
+{
+     ... ... ...
+     for (i = 0; i < src_csdev->pdata->nr_outconns; i++) {
+         conn = src_csdev->pdata->out_conns[i];
+
+         /*Add the following code to fix filter source device before 
+skip the port*/
++        if ((conn->filter_src_fwnode) && dst_csdev
++            && (conn->filter_src_fwnode == dst_csdev->dev.fwnode)) {
++             conn->filter_src_dev = dst_csdev;
++             if (conn->filter_src_dev->type
++                 != CORESIGHT_DEV_TYPE_SOURCE)
++                 dev_warn(&conn->filter_src_dev->dev,
++                   "Filter source is not a source device\n");
++        }
+
+         /* Skip the port if it's already connected. */
+         if (conn->dest_dev)
+             continue;
+     ... ... ...
+             ret = coresight_add_in_conn(conn);
+             if (ret)
+                 return ret;
+
+               /* Add the following code to make sure the device still 
+orphan if there is a
+
+                 * filter source firmware node but the filter source is 
+null.*/
+
++            if (conn->filter_src_fwnode && !conn->filter_src_dev)
++                still_orphan = true;
+         } else {
+             /* This component still has an orphan */
+             still_orphan = true;
+         }
+     }
+
+     src_csdev->orphan = still_orphan;
+     ... ... ...
+}
+
+>
+>
+>>       }
+>>         src_csdev->orphan = still_orphan;
+>> @@ -974,6 +1042,30 @@ static int coresight_fixup_orphan_conns(struct 
+>> coresight_device *csdev)
+>>                csdev, coresight_orphan_match);
+>>   }
+>>   +/* reset_filter_src - Reset the filter source if the source is 
+>> being removed */
+>> +static int reset_filter_src(struct coresight_device *trace_source,
+>> +                struct coresight_connection *conn)
+>> +{
+>> +    int i;
+>> +    int ret = -1;
+>> +    struct coresight_device *csdev;
+>> +    struct coresight_connection *output_conn;
+>
+> I don't think this is sufficient. I would rather walk through the 
+> entire coresight bus and fixup the filter_src_dev, rather than 
+> traversing the
+> paths. e.g., one of the devices in the path could have been removed.
+> See coresight_clear_default_sink() for e.g. You should have something
+> similar :
+>
+> coresight_clear_filter_source();
+
+That's right. My current understanding is that there are two cases that 
+need to be considered.
+
+#1 Unregister the source device
+
+In this case, we need to walk through the entire coresight bus and fixup 
+the filter_src_dev
+
+#2 Unregister the replicator
+
+Iterate over all output connections to set filter_src_dev and 
+filter_src_fwnode to NULL.
+
+Is this logically correct? I have attached my sample code below, please 
+help review it.
+
++static void coresight_clear_filter_source(struct device *dev, void *data)
++{
++    int i;
++    struct coresight_device *source = data;
++    struct coresight_device *csdev = to_coresight_device(dev);
++
++    for (i = 0; i < csdev->pdata->nr_outconns; ++i) {
++        if (csdev->pdata->out_conns[i]->filter_src_dev == source)
++            csdev->pdata->out_conns[i]->filter_src_dev = NULL;
++    }
+
++}
+
+/* coresight_remove_conns - Remove other device's references to this 
+device */
+static void coresight_remove_conns(struct coresight_device *csdev)
+{
+     int i, j;
+     struct coresight_connection *conn;
+
++    if (csdev->type == CORESIGHT_DEV_TYPE_SOURCE) //walk through the 
+entire coresight bus and fixup the filter_src_dev
++        bus_for_each_dev(&coresight_bustype, NULL, csdev,
++                 coresight_clear_filter_source);
+
+     /*
+      * Remove the input connection references from the destination device
+      * for each output connection.
+      */
+     for (i = 0; i < csdev->pdata->nr_outconns; i++) {
+         conn = csdev->pdata->out_conns[i];
++        if (conn->filter_src_fwnode) { //Iterate over all output 
+connections to set filter_src_dev and filter_src_fwnode to NULL.
++            conn->filter_src_dev = NULL;
++            conn->filter_src_fwnode = NULL;
++        }
+
+         if (!conn->dest_dev)
+             continue;
+
+        ... ... ...
+}
+
+
+Best,
+
+Tao
+
+>
+>
+> Suzuki
+>
+>
+>
+>> +
+>> +    csdev = conn->dest_dev;
+>> +    for (i = 0; i < csdev->pdata->nr_outconns; i++) {
+>> +        output_conn = csdev->pdata->out_conns[i];
+>> +        if (output_conn->filter_src_dev
+>> +            && (output_conn->filter_src_dev == trace_source)) {
+>> +            output_conn->filter_src_dev = NULL;
+>> +            return 0;
+>> +        }
+>> +        ret = reset_filter_src(trace_source, output_conn);
+>> +        if (!ret)
+>> +            return ret;
+>> +    }
+>> +    return ret;
+>> +}
+>> +
+>>   /* coresight_remove_conns - Remove other device's references to 
+>> this device */
+>>   static void coresight_remove_conns(struct coresight_device *csdev)
+>>   {
+>> @@ -986,6 +1078,13 @@ static void coresight_remove_conns(struct 
+>> coresight_device *csdev)
+>>        */
+>
+>
+>>       for (i = 0; i < csdev->pdata->nr_outconns; i++) {
+>>           conn = csdev->pdata->out_conns[i];
+>> +        if (csdev->type == CORESIGHT_DEV_TYPE_SOURCE)
+>> +            reset_filter_src(csdev, conn);
+>> +        if (conn->filter_src_fwnode) {
+>> +            conn->filter_src_dev = NULL;
+>> +            conn->filter_src_fwnode = NULL;
+>> +        }
+>> +
+>>           if (!conn->dest_dev)
+>>               continue;
+>>   diff --git a/drivers/hwtracing/coresight/coresight-platform.c 
+>> b/drivers/hwtracing/coresight/coresight-platform.c
+>> index 64e171eaad82..b3c3e2361d07 100644
+>> --- a/drivers/hwtracing/coresight/coresight-platform.c
+>> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+>> @@ -243,6 +243,24 @@ static int of_coresight_parse_endpoint(struct 
+>> device *dev,
+>>           conn.dest_fwnode = fwnode_handle_get(rdev_fwnode);
+>>           conn.dest_port = rendpoint.port;
+>>   +        /*
+>> +         * Get the firmware node of the filter source through the
+>> +         * reference. This could be used to filter the source in
+>> +         * building path.
+>> +         */
+>> +        conn.filter_src_fwnode =
+>> +            fwnode_find_reference(&ep->fwnode, "filter-src", 0);
+>> +        if (IS_ERR(conn.filter_src_fwnode))
+>> +            conn.filter_src_fwnode = NULL;
+>> +        else {
+>> +            conn.filter_src_dev =
+>> + coresight_find_csdev_by_fwnode(conn.filter_src_fwnode);
+>> +            if (conn.filter_src_dev && (conn.filter_src_dev->type
+>> +                != CORESIGHT_DEV_TYPE_SOURCE))
+>> +                dev_warn(&conn.filter_src_dev->dev,
+>> +                  "Filter source %s is not a source device\n");
+>> +        }
+>> +
+>>           new_conn = coresight_add_out_conn(dev, pdata, &conn);
+>>           if (IS_ERR_VALUE(new_conn)) {
+>>               fwnode_handle_put(conn.dest_fwnode);
+>> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+>> index f09ace92176e..91a689b4514b 100644
+>> --- a/include/linux/coresight.h
+>> +++ b/include/linux/coresight.h
+>> @@ -172,6 +172,9 @@ struct coresight_desc {
+>>    * @dest_dev:    a @coresight_device representation of the component
+>>           connected to @src_port. NULL until the device is created
+>>    * @link: Representation of the connection as a sysfs link.
+>> + * @filter_src_fwnode: filter source component's fwnode handle.
+>> + * @filter_src_dev: a @coresight_device representation of the 
+>> component that
+>> +        needs to be filtered.
+>>    *
+>>    * The full connection structure looks like this, where in_conns store
+>>    * references to same connection as the source device's out_conns.
+>> @@ -200,6 +203,8 @@ struct coresight_connection {
+>>       struct coresight_device *dest_dev;
+>>       struct coresight_sysfs_link *link;
+>>       struct coresight_device *src_dev;
+>> +    struct fwnode_handle *filter_src_fwnode;
+>> +    struct coresight_device *filter_src_dev;
+>>       atomic_t src_refcnt;
+>>       atomic_t dest_refcnt;
+>>   };
+>
