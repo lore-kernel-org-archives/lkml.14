@@ -1,183 +1,138 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D4A1442FB
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 14:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEA413FD8C
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 15:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721314790; cv=none; b=q3d2gIJ+5ZHw62YEy44X3wNIVo9cfDLcMXWBDAragCJ+Wjda9LJNiW2y44WcsqVGxUWGDGWUCjSTziAf/RJ15fs0doPXyPXZauNOhQZiiDPU5CONz7tbgzkmEwev0VDNb4oDiazns60qypopTJeSRNMBJU51Z99At2JC/aylaJk=
+	t=1721314837; cv=none; b=F4HfruQayHbm8Vb3NAKM6jamHv3Zww/DeTi2YkK2ksvPq9ID1TZWqJYgxg8dTPKb7r6K4FrFqACH7uG4NkCT3UJeS2Fdn6ttU7YytGAMVRqUTSl6tl/78+d1Ry5VAlSC+IkkglFk/qoXVJCUNbKKvSnAUfbCHhGp5ASlYD6A3NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721314790; c=relaxed/simple;
-	bh=e3SitwwNRxOezNxrVf7ltI49ObqvXDJq0gyT1yrldMw=;
+	s=arc-20240116; t=1721314837; c=relaxed/simple;
+	bh=QJ+SUPJoerzZDXdVhiOP0FNkBq9YNy4hHYVqXyKrmgg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VA6kZemgDhE+SkyGUXuuIrdK2CKM4i+jB4MGxAtwK1pBPKUTivnos6bFDiI9Y0wJAxeLqj/+UO4CzzNJIqS+cIEzzI9BwdNddHUObFayk8iz1bCTiWsPB75wO78Gm8Jj1JvjQ5gBno9UKWItRvYQWfHvBacApcTnprXjxh/spM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IyNVlFh6; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=py8MDXlyeIUPcN2GG8+wFiNgwgmhWuWyDye4tEdIVn1RmZkDuv6dC1pMa2ldm0lojsXg+Bk1YCZUQD49zMHxfZrNI085ZvcyP9MdVrqcfkA/7IlI8scGq/hvc8UWH5fqwTgHFv1tXLGb2iOrFKTlUCw6foGfY8UHrRKFyj6vl4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eNklWeVo; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IyNVlFh6"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e05f2adab8bso914842276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:59:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eNklWeVo"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3815ad8adc9so160485ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 08:00:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1721314786; x=1721919586; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721314835; x=1721919635; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e3SitwwNRxOezNxrVf7ltI49ObqvXDJq0gyT1yrldMw=;
-        b=IyNVlFh6WVlm4CJANTeN4QYuMVSJotgPnddGLfyzIhovgU8E2MVhcaYcbsSrr/Yes3
-         H8k71X7olXOTCVrrVUgI/vQRc3enP50rktjLmdi0sX7I2RCUUihzKKdfHAuvjgSh3oL5
-         dwBBASADhkLXEjOKKCEmhSdGh29QLzoRWMut0=
+        bh=jiNW0NFwDjnJNbL0EVQWR96cj20wHrygG1T/5zmPgP0=;
+        b=eNklWeVoOnEgqnEwoDh9WaW2N1OCFgXPxkoA3+D0rhBaJKpuTb8umSj71MivISj+gV
+         ++rDPZSn+4ArG4W1NOC9fK8oL04ouNqvcDGZWDiL6FHFZI9VhDoFyfsbVN6jq97p7L2T
+         QojLgx1bMtUgTS7vrzOlgqIu1f03Cm01X0jzVnjylMoPwtdDxrLnh9+OVp+DqXfXm4KE
+         RSD9u4oRZW4fLftEgNsO5lC6saxjDL1oe1xQlJb3eAHia+6i+aa4GUZAzG1GdaVi6sP0
+         KxsJXZoXwWZoxAz0SdV1XhI9axMVY5lnVF7njbobDlz3nenUYtsm3d64uOzJXnnFNRoF
+         MYIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721314786; x=1721919586;
+        d=1e100.net; s=20230601; t=1721314835; x=1721919635;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e3SitwwNRxOezNxrVf7ltI49ObqvXDJq0gyT1yrldMw=;
-        b=tdz5qsjSG+9rZHCDkn2z2u4wAlqE3FOTRYynw5m+uTV8TQcgrFnbQhZyy9srvhxjwn
-         6efpgBwgdcpBkuxsw8DtGWhi33hUst8dayerWvyX7iJuZhsxpGEujQkzBphybO56r58J
-         fixnQdZzksLD8+OuTZsukXKKA043VBERnqP68Mrp9qe/weA4T3LjaUqEdCnZndmnKgfz
-         yPzXqIpHnYw3j57npX4ceQfYwoBjygTnH7nTKpnVdBq9nr0A8nDmaLPhsaGZyF+ZORdm
-         hC7BnRub2KmtbGjasvXzuUUuQ+Dq0JdNuWtqpbOSAoZ9nD75paNIphlQKQjOjDnJCAzo
-         cyTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiNIOBHJBiAn54bnRTDKSwOoBGje9EOLBbw0XvlW4fRzIUs38wEQegVVPbbdoo+6JD5APKSN6aLvWAo/d0ZESUjkpj9gW9FRqDc6rm
-X-Gm-Message-State: AOJu0YwKXhjOwn0XVVsvRj4SRJ5sngGnLrtw+m5D1flt8CdyiVg8G74G
-	ABD76tecAJ1d3nbl/QfX8DuC2RruG+09Jb8k/1BLwCg7V706yAp3MzukDe+8HKZxMAoaQvCmYNA
-	=
-X-Google-Smtp-Source: AGHT+IFsSsL09Dzje4ADgiEGkIYTX8VZlcpCgtM9WIWWbL2OS9/VLjQ/bWoiF2aCgoM6m7bABHM0MQ==
-X-Received: by 2002:a05:6902:2689:b0:e05:d905:63f with SMTP id 3f1490d57ef6-e05ed719537mr6228176276.28.1721314785648;
-        Thu, 18 Jul 2024 07:59:45 -0700 (PDT)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com. [209.85.160.169])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b79c667795sm8715536d6.128.2024.07.18.07.59.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 07:59:44 -0700 (PDT)
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-44a8b140a1bso111831cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:59:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGrZhryo5h0MJ7YSp4KbLkx1zqD5asweeJt5UnOYxoeUmftJdWSt/CfTehv07QsDjehu7afgUgfc65N1dFMcPCFXyQIT6zzjxIo9YC
-X-Received: by 2002:a05:622a:1f88:b0:447:e423:a463 with SMTP id
- d75a77b69052e-44f969881c0mr1553511cf.3.1721314784304; Thu, 18 Jul 2024
- 07:59:44 -0700 (PDT)
+        bh=jiNW0NFwDjnJNbL0EVQWR96cj20wHrygG1T/5zmPgP0=;
+        b=wBfTH4W2CfG0cN+dLFAC1Gc+walLlBZY6psCWj2Yfx6o7ht2dMwTWJD61t6wpCdKAJ
+         EnUzMEKOkixelB/YUJpUBY+GDTBaW+HhmwIumpUFucW1V/3sMWFmKdq4xOzRwwVZybFO
+         2k0ne4KdPLaIlSETyBJ32AGkPhC+tR8ZxLVjEBTsa1avSNUQw/06OniJx1EpEKsjtIXV
+         vaF3cgORlAO/wymVqrLKQUC/TK1YgQYk8+cLkmQctd3KC3bKdeSlgWeeckNIWEOG+CxQ
+         khDOrd4I+iwjWRO4DliyoIAdpvuKZr+xcTT27tz32ban/xlxR9l6Ww9DutQqF7TIUmPK
+         bOwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGSfSgrTCndCrReswKUTgcYjzK0MNjqO16rsQyxO7YhS7H8UUi0m4xkoMiPFdoLrNg3JoD3YR+alrRJL30cn5n82KjZtn1pKs2klq1
+X-Gm-Message-State: AOJu0YymATdvEdvrhqLRot2Ibgvjn5L7vD2uadW41JIV2apydvzduLVn
+	OtHFaXzZTTzgC+sag6V6V8zMsUM0mL+UDDQXxdFnvW7eJTN2k41SDT95giTT4j6QwGKXZAbIx/p
+	N3gkAXvpY8c98SeeEb4zEMFwLQoGVSaOond98
+X-Google-Smtp-Source: AGHT+IFINQCdEWxgT1S6A1vaW2Yn/R5VoRcS40pYz3tledGErujD7+oRP4CLPzb45tUKK4BGzSbCl71wBzeHOhQm3H8=
+X-Received: by 2002:a05:6e02:160e:b0:376:48d1:1764 with SMTP id
+ e9e14a558f8ab-396a0488e89mr2503855ab.17.1721314835044; Thu, 18 Jul 2024
+ 08:00:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3@linaro.org>
- <20240715-x1e80100-crd-backlight-v2-1-31b7f2f658a3@linaro.org>
- <20240715-scorn-canning-a7f23b9e2039@spud> <CAD=FV=U-nOMu-JDQ3T=ZRJ-rZ0BTtyzFVfnzbtCJdbRzAq3YMg@mail.gmail.com>
- <e017259b-bc62-4b57-9276-b834237225e1@kernel.org> <CAD=FV=VY5Ug3TfUo1RctiVQrHUjuod15HA8BxAyWdd_0bK8_Dw@mail.gmail.com>
- <20240718-frightful-naturist-a049ea7c0548@spud>
-In-Reply-To: <20240718-frightful-naturist-a049ea7c0548@spud>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 18 Jul 2024 07:59:32 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VaGXMf6Srix6v=Me35BUN4B6ZHwebycka4Dbavqa5Vbw@mail.gmail.com>
-Message-ID: <CAD=FV=VaGXMf6Srix6v=Me35BUN4B6ZHwebycka4Dbavqa5Vbw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: display: panel: samsung,atna33xc20:
- Document ATNA45AF01
-To: Conor Dooley <conor@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>
+References: <20240718003025.1486232-1-irogers@google.com> <94491b9a-bdf4-453a-9191-25bf431957e0@amd.com>
+In-Reply-To: <94491b9a-bdf4-453a-9191-25bf431957e0@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 18 Jul 2024 08:00:23 -0700
+Message-ID: <CAP-5=fVv9AXJ+6UJgKYyskb7di_o+u1Cqb1iLFjXFDNQeuEzBg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Add support for sysfs event.cpus and cpu event term
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	ananth.narayan@amd.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com, 
+	sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Thu, Jul 18, 2024 at 7:56=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
-te:
+On Thu, Jul 18, 2024 at 6:42=E2=80=AFAM Dhananjay Ugwekar
+<Dhananjay.Ugwekar@amd.com> wrote:
 >
-> On Thu, Jul 18, 2024 at 07:45:57AM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Wed, Jul 17, 2024 at 11:19=E2=80=AFPM Krzysztof Kozlowski <krzk@kern=
-el.org> wrote:
-> > >
-> > > On 18/07/2024 02:21, Doug Anderson wrote:
-> > > > Conor (and/or) Krzysztof and Rob,
-> > > >
-> > > > On Mon, Jul 15, 2024 at 8:31=E2=80=AFAM Conor Dooley <conor@kernel.=
-org> wrote:
-> > > >>
-> > > >> On Mon, Jul 15, 2024 at 02:15:37PM +0200, Stephan Gerhold wrote:
-> > > >>> The Samsung ATNA45AF01 panel is an AMOLED eDP panel that has back=
-light
-> > > >>> control over the DP AUX channel. While it works almost correctly =
-with the
-> > > >>> generic "edp-panel" compatible, the backlight needs special handl=
-ing to
-> > > >>> work correctly. It is similar to the existing ATNA33XC20 panel, j=
-ust with
-> > > >>> a larger resolution and size.
-> > > >>>
-> > > >>> Add a new "samsung,atna45af01" compatible to describe this panel =
-in the DT.
-> > > >>> Use the existing "samsung,atna33xc20" as fallback compatible sinc=
-e existing
-> > > >>> drivers should work as-is, given that resolution and size are dis=
-coverable
-> > > >>> through the eDP link.
-> > > >>>
-> > > >>> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> > > >>
-> > > >> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > > >
-> > > > Can you comment on whether you would consider this bindings a "Fix"
-> > > > since it's a dependency for later patches in this series (which are
-> > > > "Fix"es) to pass dtbs_check? See:
-> > > >
-> > > > https://lore.kernel.org/r/4bca316a-2334-425b-87a6-e1bb241d26b5@lina=
-ro.org
-> > >
-> > > The patch itself is not a fix, for sure, but it might be a dependency=
- of
-> > > a fix (which you wrote above), thus could be pulled to stable as a
-> > > dependency.
-> > >
-> > > I do not care about dtbs_check warnings in stable kernels, mostly
-> > > because dtbs_check warnings depend heavily on dtschema and dtschema
-> > > follows mainline kernel. Basically if you had warnings-free v6.8 but =
-try
-> > > to run dtbs_check now with latest dtschema, your results will differ.
-> > >
-> > > At some point in the future, I could imagine "no new dtbs_check warni=
-ngs
-> > > in stable kernels" requirement or at least preference, but so far I
-> > > don't think there is any benefit.
-> >
-> > In this case it's not about whether it makes it to the stable kernel
-> > but about which main kernel it goes through.
-> >
-> > If we land the bindings in drm-misc-next right now then it'll be a
-> > long time before it makes it into Linus's tree because of the way that
-> > drm-misc-next merges. It will make it to Linus's tree at 6.12. You can
-> > see the drm-misc merging strategy at:
-> >
-> > https://drm.pages.freedesktop.org/maintainer-tools/drm-misc.html
-> >
-> > If we land the dts change (a fix) through the Qualcomm tree as a fix
-> > then it should target 6.11.
-> >
-> > This means that the 6.11 tree will have a dtbs_check error because it
-> > has the dts change (a fix) but not the bindings change (not a fix).
-> >
-> > One way to resolve this would be to treat this bindings as a "fix" and
-> > land it through "drm-misc-fixes". That would make the bindings and
-> > device tree change meet up in Linux 6.11.
-> >
-> > Did I get that all correct?
+> Hello Ian,
 >
-> Is not not fairly established that a dependency for a fix can go onto a
-> fixes branch even if it is not a fix in and of itself?
+> On 7/18/2024 6:00 AM, Ian Rogers wrote:
+> > The need for a sysfs event.cpus file is discussed here:
+> > https://lore.kernel.org/lkml/CAP-5=3DfXXuWchzUK0n5KTH8kamr=3DDQoEni+bUo=
+o8f-4j8Y+eMBg@mail.gmail.com/
+> > following Dhananjay Ugwekar's work on the RAPL /sys/devices/power PMU.
+> > These changes add support for the event.cpus file in sysfs and also a
+> > cpu event term allowing events to have differing CPUs. This was added
+> > in order to test the parsing and map propagation for the sysfs case.
+>
+> Tried applying the patchset on top of v6.10, torvalds/master and tip/mast=
+er,
+> it is failing at patch#2, what is the base commit/branch for this patchse=
+t?
 
-That would certainly be my take on it, but DT folks confirmation was
-requested by Neil in:
+Hi Dhanajay,
 
-https://lore.kernel.org/all/4bca316a-2334-425b-87a6-e1bb241d26b5@linaro.org=
-/
+The latest perf tool work is on the perf-tool-next branch of the
+perf-tool-next.git:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/
 
--Doug
+That said, Kan isn't keen on event.cpus, so  let's have a discussion about =
+it.
+
+Thanks,
+Ian
+
+> Thanks,
+> Dhananjay
+>
+> >
+> > v2: Add support for multiple cpu terms on an event that are
+> >     merged. For example, an event of "l1d-misses/cpu=3D4,cpu=3D5/" will
+> >     now be opened on both CPU 4 and 5 rather than just CPU 4.
+> >
+> > Ian Rogers (6):
+> >   perf pmu: Merge boolean sysfs event option parsing
+> >   perf parse-events: Pass cpu_list as a perf_cpu_map in __add_event
+> >   perf pmu: Add support for event.cpus files in sysfs
+> >   libperf cpumap: Add ability to create CPU from a single CPU number
+> >   perf parse-events: Set is_pmu_core for legacy hardware events
+> >   perf parse-events: Add "cpu" term to set the CPU an event is recorded
+> >     on
+> >
+> >  .../sysfs-bus-event_source-devices-events     |  14 ++
+> >  tools/lib/perf/cpumap.c                       |  10 ++
+> >  tools/lib/perf/include/perf/cpumap.h          |   2 +
+> >  tools/perf/Documentation/perf-list.txt        |   9 +
+> >  tools/perf/util/evsel_config.h                |   1 +
+> >  tools/perf/util/parse-events.c                | 162 ++++++++++++------
+> >  tools/perf/util/parse-events.h                |   3 +-
+> >  tools/perf/util/parse-events.l                |   1 +
+> >  tools/perf/util/pmu.c                         |  92 +++++++---
+> >  tools/perf/util/pmu.h                         |   1 +
+> >  10 files changed, 221 insertions(+), 74 deletions(-)
+> >
