@@ -1,143 +1,78 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3633478C8F
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 09:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F58E28DD1
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 09:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721294415; cv=none; b=LF9uFOA4RSWMHPUp3IvzN+wTPbB+IYZ1BscNMC1V9ep6QcINebxRQN42vxiHM/nWVuBujIHJ3uhDei9iWuRmKik92AzVmLVjzy2VXKlSkz00Ul6QcVQXhqSUj3oeMWITUP9Z3BphNqeAb+3SxMjBxxY09/7nEEYlFAMaMvi4I+0=
+	t=1721294705; cv=none; b=Oi0kLhQm7RtQF3oo+jBusk0Z8kkAKaVfW6V0TBXSNh0IFJtqVUW1dlktEFV8ht7sNtobz74HVBg7ppBz1vp1n7PiExE5eT2ZeTUEKMH7WcaZskob7cSB5gnGqyDSSl81Uvw/EHB2MVpxvozAOV7iou1js2jctgGLFcnD/QyBpng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721294415; c=relaxed/simple;
-	bh=NVmocxKup4CnNxG4HHYvEU51kiKuUcSnBQFJoZmyjlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bmjqf1kIaE8e6SI1m6nRVOMCYn9AuyaM7MS66/rjzLwpkL4+D9BX/dhiHBBAmzsHid5vfOzGUnJo6f6h17mvrq3bs6FDWBs4BN8zsmIPFG9ugS+9jxN1/y9V/KbXtFYAfXoIAiiLGt/VfC52Fq3QNx3a8NFwBnVM2yXz/b1LMK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sUNGz-0002U5-TA; Thu, 18 Jul 2024 11:18:01 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sUNGr-000PqF-MB; Thu, 18 Jul 2024 11:17:53 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1sUNGr-003zXS-1Y;
-	Thu, 18 Jul 2024 11:17:53 +0200
-Date: Thu, 18 Jul 2024 11:17:53 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Russell King <linux@armlinux.org.uk>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Vladimir Zapolskiy <vz@mleia.com>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	imx@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-	openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH 4/9] mtd: devices: add AT24 eeprom support
-Message-ID: <20240718091753.apwsrvmekn2vvo4k@pengutronix.de>
-References: <07b701a9-7b52-45b7-8dba-1c25d77cbf15@linaro.org>
- <mafs0ikxnykpr.fsf@kernel.org>
- <20240702-congenial-vigilant-boar-aeae44@houat>
- <mafs0ed8byj5z.fsf@kernel.org>
- <20240702-mighty-brilliant-eel-b0d9fa@houat>
- <20240708084440.70186564@xps-13>
- <20240709092214.omr7ccphdzdk7z7j@pengutronix.de>
- <20240709114302.3c604ef3@xps-13>
- <20240709103841.7x7n4hdtqrunyoc3@pengutronix.de>
- <20240717101948.2e99f472@xps-13>
+	s=arc-20240116; t=1721294705; c=relaxed/simple;
+	bh=EAUinRQviMvDujUv3R7ipwJOCnMA9iLRBAFx+AvKvtg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=NKIF0GpxepEW111tI8VHp/2bSovxQWMZQpF56rwgBxVAA3VfBLWoxtURWWlkWeTEHDbW8ykneRfiOWa1Vfaq5k+dZ5jZHeLdKv7ldAG/Ctkh915mM7c/271I25qhS+rUsamXz5q3W0CpnjBIzjKrsjaqXM2Q6aYT68NwfXLAxJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8152f0c4e1bso105205239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 02:25:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721294703; x=1721899503;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5rGyXWRLrvwl7ym9gYBnNhfugsOfnDeqOLsViPL9q/g=;
+        b=VnaEX4dsbXFYBh0Smd6hwk1D2brECKvtilSGGben4s0qc2YMuV4ID+TEw/8Z/QBvSk
+         UdLqsUGrR0sPm4sXZ+yh8/0+OomQNvS9Oc2oKmfRl9Fc3o57FrLGHi5dMs07qE2xwm/a
+         FFlR81znjyD2IBeHkYQf/YpCPa+nmjMFIiFbdn2tPUXZjj4CvCWt/H0VjqPAsjwnb6A0
+         ff+/HvXJXJkvQURx2une61ORw5b0fT1h8ofUbnriNhyNpyAcM+8Nf9JUZUzqJykxv9nl
+         ammkyvbbzxgKOcEWG6DDMTDF0/objz6Ni5nrWv6pgoggvjUc7TJhAq0DXjowNnCGnp8s
+         2pwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPCTFvpAgH4M5dF9f65aIzBrrho8bYlEB7B86AC1GzHrvyd5neRjFZ2/TEQsLCiF7XE3j9uVbvSOxlQ+4vMwprcY2ROM4BMiPln3ez
+X-Gm-Message-State: AOJu0YziqekyHZ+t8CIs8G05E5cMhuihCvwKqgX5VpSzIcNw0xyYEZSB
+	vmSLCOFFSzUGY/9pqdafPLLetv0dthiKBOxCF/kcxcBFwWhJ7Iev+IvayTu5PX5BTAjHP95zVXr
+	X+Nh2o8BfP++a6emxBypjUkfhDFgXrh3oZ2FtoQcFvFTaHHFRqgvPNNo=
+X-Google-Smtp-Source: AGHT+IGz25YUIa6vXqL1eZi/FObkUR9B/7QK8k4uQaFLAqvDLyFpspVztyFv/qtJeUG6Z3FXvnmr+ma8VvHFLQjQ3qYbN6/6uMgQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717101948.2e99f472@xps-13>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6e02:1a46:b0:374:9a34:a0a with SMTP id
+ e9e14a558f8ab-395594e4481mr3546915ab.6.1721294702813; Thu, 18 Jul 2024
+ 02:25:02 -0700 (PDT)
+Date: Thu, 18 Jul 2024 02:25:02 -0700
+In-Reply-To: <000000000000233ab00613f17f99@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000050b78b061d822720@google.com>
+Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in sock_map_delete_elem
+From: syzbot <syzbot+4ac2fe2b496abca8fa4b@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
+	jakub@cloudflare.com, john.fastabend@gmail.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Miquel,
+syzbot suspects this issue was fixed by commit:
 
-On 24-07-17, Miquel Raynal wrote:
-> Hi Marco,
-> 
-> > > > > Overall I think the idea of getting rid of these misc/ drivers is goes
-> > > > > into the right direction, but registering directly into NVMEM makes
-> > > > > more sense IMO.    
-> > > > 
-> > > > So you propose to have two places for the partition handling (one for
-> > > > MTD and one for NVMEM) instead of one and moving the code into NVMEM
-> > > > directly?  
-> > > 
-> > > Why two places for the partitions handling? Just one, in NVMEM. Also  
-> > 
-> > Without checking the details I think that converting the MTD
-> > partitioning code into NVMEM partitioning code is a bigger task. As you
-> > said below there are many legacy code paths you need to consider so they
-> > still work afterwards as well.
-> > 
-> > > usually EEPROMs don't require very advanced partitioning schemes,
-> > > unlike flashes (which are the most common MTD devices today).  
-> > 
-> > As said in my cover letter EEPROMs can become quite large and MTD
-> > supports partitioning storage devices which is very handy for large
-> > EEPROMs as well.
-> 
-> Did you had a look at nvmem-layouts ? In particular the fixed-layout.
+commit 98e948fb60d41447fd8d2d0c3b8637fc6b6dc26d
+Author: Jakub Sitnicki <jakub@cloudflare.com>
+Date:   Mon May 27 11:20:07 2024 +0000
 
-Yes I had a look at nvmem-layouts and we use them within a
-mtd-partition. Using them instead of a mtd-partition is not sufficient
-since they:
- 1) don't support user-space write (I send a patch for it but it doesn't
-    seem to be accepted soon).
- 2) If write would be supported the user-space need to write the
-    complete cell e.g. no partial writes.
+    bpf: Allow delete from sockmap/sockhash only if update is allowed
 
-> Is there anything you would like to achieve already that is not
-> possible with nvmem but is with mtd?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15df62b5980000
+start commit:   4c639b6a7b9d selftests: net: move amt to socat for better ..
+git tree:       net
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6d14c12b661fb43
+dashboard link: https://syzkaller.appspot.com/bug?extid=4ac2fe2b496abca8fa4b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153e3f70980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=174ac5d4980000
 
-Please see above.
+If the result looks correct, please mark the issue as fixed by replying with:
 
-Regards,
-  Marco
+#syz fix: bpf: Allow delete from sockmap/sockhash only if update is allowed
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
