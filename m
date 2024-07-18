@@ -1,1108 +1,216 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C168146581;
-	Thu, 18 Jul 2024 22:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8131459ED;
+	Thu, 18 Jul 2024 22:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721340155; cv=none; b=V7yHvbQi/mOxUSs6qtP2p8xgp8xtr1LEJquIZ3+owfM7lozxgEgwjAzjSwisc+vOpYtMmJ4VAs+4fnf1FpdnHg2ae4A5MFMN+xHxTP34WvEPG9QcwwR78HALSef0X1vE2A0VaHipbf3VR82H8FCohkJ78DzCKHvhtb5UQN5xxH0=
+	t=1721340204; cv=none; b=MaFsPYGoKYmVXLwQLk+JawOqtXi1ljzWFp7p+UivLkYE7ymz/YWdWlCBbeH/UvtwEtyw0hbdrRr6EDxiV84VI7a16oLke89yeRac4Jdafz4bz7CJneaF9oVy5Qj2yBJZv4FiLhq3SYOqbtIvggRNunz5atJVx40IBwfVpSZ/7G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721340155; c=relaxed/simple;
-	bh=UzhtEbu+tz9J/8+ptFhhhxHlTbOB0Q3Hu7JCyLELh74=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IrBuLps/1SHRhKgCdd5s12WBHBeYte06+w8Iw0IWhAvMqeyVprTwe6vaWarEzze2BM1+sYZNu+2Uj0VgZTEdD2G9S6dLx5bZqUYg9wNBIJDhLXKl3nKCvGSM5GpbkavNj+PV1J2Q6J1fsvMZhnyv8cAYgmfo9JeEZxpErCIt8z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cpl0Clhg; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721340204; c=relaxed/simple;
+	bh=6OyBPYPMnBJGM+6F64l7Q9yrxKTPe2JBHU7Pq5T3I5Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qke1iKbLk+QtGzEeTw0j3gPSxDp6TJWcQTfF3KEkFI8SXw84BqB3OXgDwuvXeViQCZ+lJWurZumt0HvfgvQRV2j8AaXZtxvPcKmQLGbqjCT3TQC3SeeRMARXsVa4WQvnTMjtj6HVn5j1es5/rqZNPvrV/cY3ncHMEXxmjwsKOZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MhOmgyuM; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpl0Clhg"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4266f535e82so6613235e9.1;
-        Thu, 18 Jul 2024 15:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721340150; x=1721944950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zh6Fum2xbZ0XcVIh4wi5xcGU+5WaLWLG2nZzCt9tKd8=;
-        b=cpl0ClhgWajK11iS4l0mdpmUyAi5ayIer6HrnIi3KgB1ujhCnyzi6BNLWt5WfpnQOP
-         4HknCzbga9e4fqAbH1eU8Dhrit3PClQF4NXUv6MPJt69FKwvkxJ1FqSBim8h7wTCCreM
-         HBcqpp8GWF7nvTDjSePaBujGvBdzfe+MsPC2iUMghbPuQQ6tk3W0I4ZhZrC/uo2Qs5gg
-         QUCQl1ItK3smJHtmGqHLC/kXFpivswWnsolCep4s6znrIFaTJBImyGJtygZlNR2o/cNn
-         x9unJvFjp0jWWDItXAmRmPDzpS5ises/fv2S0cj7eArVnGG6SMWDz7K0QHliqzwREDfd
-         i+Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721340150; x=1721944950;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zh6Fum2xbZ0XcVIh4wi5xcGU+5WaLWLG2nZzCt9tKd8=;
-        b=pKh35t8RPMdf2YlBmIi9z20znpreQh3/51gTi3arNxt2tYw3hnnUYxWCt+Tr2ZNAKQ
-         Hvm6NlksVv/csNZ7u3puiN33BQVSTrauRvGo6WgnrssuT4mjwJVxRUobhUGVwt2jqq8V
-         M7kP0LcqXIT7rEa8Hvbi67Agu7BR8+Jib79VSl263US9a/NfS++4bO0eImg4MD/Qv4YX
-         TLJee/uVorgmMRBXTf9buhkXx9qy37q6G/k1iKOS6B1Hb0Nss8XvXJTRXLee+qMMLEcY
-         0gl8XtDKPXv/hPOWRpL30NVVfmYTI0o8lc8+GOAsMOK08DC9rWuZR9NNQM7DNFoH7oqO
-         ci7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXG/YPgK6qhbPO6RJTIQweMUJ40ols1v+ceUOjvYk7RF20atDsUCZIaSqxKYVuSJhwcmPpq/+IBNOZCYJ1mZzts8TWtHAJWBF4zdWNAs5FRRvkkZpBc3pjOV/+i8p3WhGQu5p2/d8Vlh3Qks583YHAslMNbJjQKB3IouAcIJFfv0k/EeQ==
-X-Gm-Message-State: AOJu0YzFqF5WiT6C9blXTZReWk3D6WQsE0lI3s5w9SctPjz5ged5TwG+
-	K8eHmMQWYYNqraqlY6ndOuHv/L9FfDMagwffY/DpMg++67Cc40E+
-X-Google-Smtp-Source: AGHT+IEK44xM5L98YDApSGhq+WS2VmrZ8FoDPYAH0J8WS4KnQsiMAmHwX3Y6AxrleNntd0YtqpDkfQ==
-X-Received: by 2002:a05:600c:4e14:b0:426:5587:752e with SMTP id 5b1f17b1804b1-427c722f467mr29046275e9.14.1721340149039;
-        Thu, 18 Jul 2024 15:02:29 -0700 (PDT)
-Received: from localhost.localdomain ([2a10:d582:37c5:0:2ab4:ee:97a:e67f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d6936d62sm2739765e9.42.2024.07.18.15.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 15:02:28 -0700 (PDT)
-From: Mudit Sharma <muditsharma.info@gmail.com>
-To: jic23@kernel.org,
-	lars@metafoo.de,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org
-Cc: Mudit Sharma <muditsharma.info@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	mazziesaccount@gmail.com,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Subject: [PATCH v8 2/2] iio: light: ROHM BH1745 colour sensor
-Date: Thu, 18 Jul 2024 23:02:06 +0100
-Message-ID: <20240718220208.331942-2-muditsharma.info@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240718220208.331942-1-muditsharma.info@gmail.com>
-References: <20240718220208.331942-1-muditsharma.info@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MhOmgyuM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721340202; x=1752876202;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=6OyBPYPMnBJGM+6F64l7Q9yrxKTPe2JBHU7Pq5T3I5Y=;
+  b=MhOmgyuM6aODhAeknvLqjFphCY+exYYBMk9Cla+l+AulvPZjHIlC81pD
+   9lQZ9SL2XYTgBWe6oqi7PpLQrAWLZhUKiCF+ZRCat7e9WiuOvQBk/5Wiy
+   EQsXnrC9tcWr5obK39GwpxFl60WJ5lDTDcgaP275W+5kV8tKEO4LQCjdE
+   AS8v+6tmUQv6PzMoqy8aIQbArRq8Sn9aPxAIBto02tqGIPKd/DFzXg6eD
+   Oiepd1pHyxeBZw/VNWu0Cp3Qk6GpBtB/dZOKeVpQGBuOomm3QLkNVmAy9
+   ZZOg517wKhl90rg+baaETG9LtgDDcUb27LLQRdcmLG+t3Oi2dp+shpebd
+   Q==;
+X-CSE-ConnectionGUID: Rctf+VLjQHeH70JJQUX+Pg==
+X-CSE-MsgGUID: m+10Cf4gQD+0prDlXr3nfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="44358579"
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="44358579"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 15:03:04 -0700
+X-CSE-ConnectionGUID: d5eUzs88SN2Wg//5JFQhUQ==
+X-CSE-MsgGUID: LqGUorbFTmiqPfavkBN1zQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="50875778"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.193]) ([10.125.108.193])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 15:03:04 -0700
+Message-ID: <b07c39fab5ac0e32e7768ed3e8a799c8eb68802a.camel@linux.intel.com>
+Subject: Re: [PATCH] cpufreq: queue policy->update work to rt thread to
+ reduce  its schedule latency
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Gaowei Pu <pugaowei@oppo.com>, rafael@kernel.org, viresh.kumar@linaro.org
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 18 Jul 2024 15:03:04 -0700
+In-Reply-To: <20240717063321.629-1-pugaowei@oppo.com>
+References: <20240717063321.629-1-pugaowei@oppo.com>
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add support for BH1745, which is an I2C colour sensor with red, green,
-blue and clear channels. It has a programmable active low interrupt
-pin. Interrupt occurs when the signal from the selected interrupt
-source channel crosses set interrupt threshold high or low level.
+On Wed, 2024-07-17 at 14:33 +0800, Gaowei Pu wrote:
+> Currently we encountered a problem that the cpufreq boost latency
+> is about 10 milliseconds or worse when we boost through cpufreq QOS reque=
+st
+> under high workload scenarios, while the boost latency mainly consumed by
+> schedule latency of policy->update work.
 
-Interrupt source for the device can be configured by enabling the
-corresponding event. Interrupt latch is always enabled when setting
-up interrupt.
+What is the tail latency now after your change?
 
-Add myself as the maintainer for this driver in MAINTAINERS.
+>=20
+> We should ensure the low schedule latency of cpu frequency limits work
+> to meet performance and power demands. so queue the policy->update work
+> to rt thread to reduce its schedule latency.
 
-Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
-Reviewed-by: Ivan Orlov <ivan.orlov0322@gmail.com>
-Reviewed-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
-v7->v8:
-- Code format fixes:
-    - Make register fields easily associable with register name
-    - Avoid reassigning variables used for reading variable value to
-      bit field.
-- Move 'devm_add_action_or_reset()' just after 'power_on()'
-- Drop val2 parameter from 'bh1745_set_scale()' as value of scale is
-  going to be of type IIO_VAL_INT
-v6->v7:
-- Remove trigger registration
-- Code format fixes
-    - Organise register information
-    - Simply return 'dev_err_probe()' in probe functions
-    - Use '/**/' for comments
-    - Clearly label 'readable' and 'writeable' for readable and
-      writeable regmap ranges
-- Drop gain and integration time LU tables and use functions from GTS
-  helper
-- Fix logic in 'bh1745_read_event_config()' and
-  'bh1745_write_event_config()'
-- Better utilise regmap API  
-v5->v6:
-- Fix typo
-- Fix Indentation
-- Drop read in bh1745_set_trigger_state() as configuring all the value
-v4->v5:
-- Provide scale instead of HW gain
-  - Use GTS helpers
-- Code style fixes
-- Add check for part ID during probe
-- Always enable latch when enabling interrupt
-- Use devm_add_action_or_reset() and drop bh1745_remove() function
-- Drop custom DEVICE_ATTR and provide related read_avail and setup
-  interrupt source with event_config
-- Make buffer support independent of IRQ
-- Add power regulator handing with devm_regulator_get_enable()
-- Drop read and write wrappers and use regmap functions directly
-- Add MODULE_DEVICE_TABLE for of_device_id
-v3->v4:
-- Fix formatting:
-  - Remove redundant new line
-  - Use '0x' rather than '0X'
-v2->v3:
-- Squash commit for addition to MAINTAINERS
-- Fix code style for consistency:
-  - New line before last 'return'
-  - Use variable name 'value' instead of 'val' in
-    'bh1745_set_trigger_state()'
-  - Align function parameters to match parenthesis
-  - Avoid use of magic number
-- Use named enum instead of anonymous enum
-- Use 'guard(mutex)(&data->lock)' instead of 'mutex_lock()'
-  'mutex_unlock()'
-- Only initialize 'ret' and 'value' when necessary
-- Fix and optimize logic for `in_interrupt_latch_store()` 
-- Fix error handling in irq , trigger handlers and dev attribute for
-  latch
-v1->v2:
-- No changes
+If my understanding is correct, kthread has a default nice
+value of 0 and is not a rt thread.=C2=A0
 
- MAINTAINERS                |   6 +
- drivers/iio/light/Kconfig  |  13 +
- drivers/iio/light/Makefile |   1 +
- drivers/iio/light/bh1745.c | 883 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 903 insertions(+)
- create mode 100644 drivers/iio/light/bh1745.c
+I think the gain you see is
+your patch created a dedicated kthread work queue on CPU 0.
+The work from policy change no longer have to compete time with other
+requests coming from schedule_work().=20
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ca8f35dfe03..e9ff6f465e7f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19404,6 +19404,12 @@ S:	Supported
- F:	drivers/power/supply/bd99954-charger.c
- F:	drivers/power/supply/bd99954-charger.h
- 
-+ROHM BH1745 COLOUR SENSOR
-+M:	Mudit Sharma <muditsharma.info@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/light/bh1745.c
-+
- ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
- M:	Tomasz Duszynski <tduszyns@gmail.com>
- S:	Maintained
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 9a587d403118..6cde702fa78d 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -114,6 +114,19 @@ config AS73211
- 	 This driver can also be built as a module.  If so, the module
- 	 will be called as73211.
- 
-+config BH1745
-+	tristate "ROHM BH1745 colour sensor"
-+	depends on I2C
-+	select REGMAP_I2C
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	select IIO_GTS_HELPER
-+	help
-+	  Say Y here to build support for the ROHM bh1745 colour sensor.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called bh1745.
-+
- config BH1750
- 	tristate "ROHM BH1750 ambient light sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index a30f906e91ba..939a701a06ac 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_APDS9300)		+= apds9300.o
- obj-$(CONFIG_APDS9306)		+= apds9306.o
- obj-$(CONFIG_APDS9960)		+= apds9960.o
- obj-$(CONFIG_AS73211)		+= as73211.o
-+obj-$(CONFIG_BH1745)		+= bh1745.o
- obj-$(CONFIG_BH1750)		+= bh1750.o
- obj-$(CONFIG_BH1780)		+= bh1780.o
- obj-$(CONFIG_CM32181)		+= cm32181.o
-diff --git a/drivers/iio/light/bh1745.c b/drivers/iio/light/bh1745.c
-new file mode 100644
-index 000000000000..6e5c292aee03
---- /dev/null
-+++ b/drivers/iio/light/bh1745.c
-@@ -0,0 +1,883 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ROHM BH1745 digital colour sensor driver
-+ *
-+ * Copyright (C) Mudit Sharma <muditsharma.info@gmail.com>
-+ *
-+ * 7-bit I2C slave addresses:
-+ *  0x38 (ADDR pin low)
-+ *  0x39 (ADDR pin high)
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/mutex.h>
-+#include <linux/util_macros.h>
-+#include <linux/iio/events.h>
-+#include <linux/regmap.h>
-+#include <linux/bits.h>
-+#include <linux/bitfield.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/iio-gts-helper.h>
-+
-+/* BH1745 configuration registers */
-+
-+/* System control */
-+#define BH1745_SYS_CTRL 0x40
-+#define BH1745_SYS_CTRL_SW_RESET BIT(7)
-+#define BH1745_SYS_CTRL_INTR_RESET BIT(6)
-+#define BH1745_SYS_CTRL_PART_ID_MASK GENMASK(5, 0)
-+#define BH1745_PART_ID 0x0B
-+
-+/* Mode control 1 */
-+#define BH1745_MODE_CTRL1 0x41
-+#define BH1745_CTRL1_MEASUREMENT_TIME_MASK GENMASK(2, 0)
-+
-+/* Mode control 2 */
-+#define BH1745_MODE_CTRL2 0x42
-+#define BH1745_CTRL2_RGBC_EN BIT(4)
-+#define BH1745_CTRL2_ADC_GAIN_MASK GENMASK(1, 0)
-+
-+/* Interrupt */
-+#define BH1745_INTR 0x60
-+#define BH1745_INTR_STATUS BIT(7)
-+#define BH1745_INTR_SOURCE_MASK GENMASK(3, 2)
-+#define BH1745_INTR_ENABLE BIT(0)
-+
-+#define BH1745_PERSISTENCE 0x61
-+
-+/* Threshold high */
-+#define BH1745_TH_LSB 0x62
-+#define BH1745_TH_MSB 0x63
-+
-+/* Threshold low */
-+#define BH1745_TL_LSB 0x64
-+#define BH1745_TL_MSB 0x65
-+
-+/* BH1745 data output regs */
-+#define BH1745_RED_LSB 0x50
-+#define BH1745_RED_MSB 0x51
-+#define BH1745_GREEN_LSB 0x52
-+#define BH1745_GREEN_MSB 0x53
-+#define BH1745_BLUE_LSB 0x54
-+#define BH1745_BLUE_MSB 0x55
-+#define BH1745_CLEAR_LSB 0x56
-+#define BH1745_CLEAR_MSB 0x57
-+
-+#define BH1745_MANU_ID_REG 0x92
-+
-+/* From 16x max HW gain and 32x max integration time */
-+#define BH1745_MAX_GAIN 512
-+
-+enum bh1745_int_source {
-+	BH1745_INTR_SOURCE_RED,
-+	BH1745_INTR_SOURCE_GREEN,
-+	BH1745_INTR_SOURCE_BLUE,
-+	BH1745_INTR_SOURCE_CLEAR,
-+};
-+
-+enum bh1745_gain {
-+	BH1745_ADC_GAIN_1X,
-+	BH1745_ADC_GAIN_2X,
-+	BH1745_ADC_GAIN_16X,
-+};
-+
-+enum bh1745_measurement_time {
-+	BH1745_MEASUREMENT_TIME_160MS,
-+	BH1745_MEASUREMENT_TIME_320MS,
-+	BH1745_MEASUREMENT_TIME_640MS,
-+	BH1745_MEASUREMENT_TIME_1280MS,
-+	BH1745_MEASUREMENT_TIME_2560MS,
-+	BH1745_MEASUREMENT_TIME_5120MS,
-+};
-+
-+enum bh1745_presistence_value {
-+	BH1745_PRESISTENCE_UPDATE_TOGGLE,
-+	BH1745_PRESISTENCE_UPDATE_EACH_MEASUREMENT,
-+	BH1745_PRESISTENCE_UPDATE_FOUR_MEASUREMENT,
-+	BH1745_PRESISTENCE_UPDATE_EIGHT_MEASUREMENT,
-+};
-+
-+static const struct iio_gain_sel_pair bh1745_gain[] = {
-+	GAIN_SCALE_GAIN(1, BH1745_ADC_GAIN_1X),
-+	GAIN_SCALE_GAIN(2, BH1745_ADC_GAIN_2X),
-+	GAIN_SCALE_GAIN(16, BH1745_ADC_GAIN_16X),
-+};
-+
-+static const struct iio_itime_sel_mul bh1745_itimes[] = {
-+	GAIN_SCALE_ITIME_US(5120000, BH1745_MEASUREMENT_TIME_5120MS, 32),
-+	GAIN_SCALE_ITIME_US(2560000, BH1745_MEASUREMENT_TIME_2560MS, 16),
-+	GAIN_SCALE_ITIME_US(1280000, BH1745_MEASUREMENT_TIME_1280MS, 8),
-+	GAIN_SCALE_ITIME_US(640000, BH1745_MEASUREMENT_TIME_640MS, 4),
-+	GAIN_SCALE_ITIME_US(320000, BH1745_MEASUREMENT_TIME_320MS, 2),
-+	GAIN_SCALE_ITIME_US(160000, BH1745_MEASUREMENT_TIME_160MS, 1),
-+};
-+
-+struct bh1745_data {
-+	/*
-+	 * Lock to prevent device setting update or read before
-+	 * related calculations are completed
-+	 */
-+	struct mutex lock;
-+	struct regmap *regmap;
-+	struct device *dev;
-+	struct iio_trigger *trig;
-+	struct iio_gts gts;
-+};
-+
-+static const struct regmap_range bh1745_volatile_ranges[] = {
-+	regmap_reg_range(BH1745_MODE_CTRL2, BH1745_MODE_CTRL2), /* VALID */
-+	regmap_reg_range(BH1745_RED_LSB, BH1745_CLEAR_MSB), /* Data */
-+	regmap_reg_range(BH1745_INTR, BH1745_INTR), /* Interrupt */
-+};
-+
-+static const struct regmap_access_table bh1745_volatile_regs = {
-+	.yes_ranges = bh1745_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(bh1745_volatile_ranges),
-+};
-+
-+static const struct regmap_range bh1745_readable_ranges[] = {
-+	regmap_reg_range(BH1745_SYS_CTRL, BH1745_MODE_CTRL2),
-+	regmap_reg_range(BH1745_RED_LSB, BH1745_CLEAR_MSB),
-+	regmap_reg_range(BH1745_INTR, BH1745_INTR),
-+	regmap_reg_range(BH1745_PERSISTENCE, BH1745_TL_MSB),
-+	regmap_reg_range(BH1745_MANU_ID_REG, BH1745_MANU_ID_REG),
-+};
-+
-+static const struct regmap_access_table bh1745_readable_regs = {
-+	.yes_ranges = bh1745_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(bh1745_readable_ranges),
-+};
-+
-+static const struct regmap_range bh1745_writable_ranges[] = {
-+	regmap_reg_range(BH1745_SYS_CTRL, BH1745_MODE_CTRL2),
-+	regmap_reg_range(BH1745_INTR, BH1745_INTR),
-+	regmap_reg_range(BH1745_PERSISTENCE, BH1745_TL_MSB),
-+};
-+
-+static const struct regmap_access_table bh1745_writable_regs = {
-+	.yes_ranges = bh1745_writable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(bh1745_writable_ranges),
-+};
-+
-+static const struct regmap_config bh1745_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = BH1745_MANU_ID_REG,
-+	.cache_type = REGCACHE_RBTREE,
-+	.volatile_table = &bh1745_volatile_regs,
-+	.wr_table = &bh1745_writable_regs,
-+	.rd_table = &bh1745_readable_regs,
-+};
-+
-+static const struct iio_event_spec bh1745_event_spec[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_EITHER,
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_PERIOD),
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+	},
-+};
-+
-+#define BH1745_CHANNEL(_colour, _si, _addr)                             \
-+	{                                                               \
-+		.type = IIO_INTENSITY, .modified = 1,                   \
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),           \
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE) |   \
-+					   BIT(IIO_CHAN_INFO_INT_TIME), \
-+		.info_mask_shared_by_all_available =                    \
-+			BIT(IIO_CHAN_INFO_SCALE) |                      \
-+			BIT(IIO_CHAN_INFO_INT_TIME),                    \
-+		.event_spec = bh1745_event_spec,                        \
-+		.num_event_specs = ARRAY_SIZE(bh1745_event_spec),       \
-+		.channel2 = IIO_MOD_LIGHT_##_colour, .address = _addr,  \
-+		.scan_index = _si,                                      \
-+		.scan_type = {                                          \
-+			.sign = 'u',                                    \
-+			.realbits = 16,                                 \
-+			.storagebits = 16,                              \
-+			.endianness = IIO_CPU,                          \
-+		},                                                      \
-+	}
-+
-+static const struct iio_chan_spec bh1745_channels[] = {
-+	BH1745_CHANNEL(RED, 0, BH1745_RED_LSB),
-+	BH1745_CHANNEL(GREEN, 1, BH1745_GREEN_LSB),
-+	BH1745_CHANNEL(BLUE, 2, BH1745_BLUE_LSB),
-+	BH1745_CHANNEL(CLEAR, 3, BH1745_CLEAR_LSB),
-+	IIO_CHAN_SOFT_TIMESTAMP(4),
-+};
-+
-+static int bh1745_reset(struct bh1745_data *data)
-+{
-+	return regmap_set_bits(data->regmap, BH1745_SYS_CTRL,
-+			       BH1745_SYS_CTRL_SW_RESET | BH1745_SYS_CTRL_INTR_RESET);
-+}
-+
-+static int bh1745_power_on(struct bh1745_data *data)
-+{
-+	return regmap_set_bits(data->regmap, BH1745_MODE_CTRL2, BH1745_CTRL2_RGBC_EN);
-+}
-+
-+static void bh1745_power_off(void *data_ptr)
-+{
-+	struct bh1745_data *data = data_ptr;
-+	struct device *dev = data->dev;
-+	int ret;
-+
-+	ret = regmap_clear_bits(data->regmap, BH1745_MODE_CTRL2, BH1745_CTRL2_RGBC_EN);
-+	if (ret)
-+		dev_err(dev, "Failed to turn off device\n");
-+}
-+
-+static int bh1745_get_scale(struct bh1745_data *data, int *val, int *val2)
-+{
-+	int ret;
-+	int value;
-+	int gain_sel, int_time_sel;
-+	int gain;
-+	const struct iio_itime_sel_mul *int_time;
-+
-+	ret = regmap_read(data->regmap, BH1745_MODE_CTRL2, &value);
-+	if (ret)
-+		return ret;
-+
-+	gain_sel = FIELD_GET(BH1745_CTRL2_ADC_GAIN_MASK, value);
-+	gain = iio_gts_find_gain_by_sel(&data->gts, gain_sel);
-+
-+	ret = regmap_read(data->regmap, BH1745_MODE_CTRL1, &value);
-+	if (ret)
-+		return ret;
-+
-+	int_time_sel = FIELD_GET(BH1745_CTRL1_MEASUREMENT_TIME_MASK, value);
-+	int_time = iio_gts_find_itime_by_sel(&data->gts, int_time_sel);
-+
-+	return iio_gts_get_scale(&data->gts, gain, int_time->time_us, val, val2);
-+}
-+
-+static int bh1745_set_scale(struct bh1745_data *data, int val)
-+{
-+	struct device *dev = data->dev;
-+	int ret;
-+	int value;
-+	int hw_gain_sel, current_int_time_sel, new_int_time_sel;
-+
-+	ret = regmap_read(data->regmap, BH1745_MODE_CTRL1, &value);
-+	if (ret)
-+		return ret;
-+
-+	current_int_time_sel = FIELD_GET(BH1745_CTRL1_MEASUREMENT_TIME_MASK, value);
-+	ret = iio_gts_find_gain_sel_for_scale_using_time(&data->gts,
-+							 current_int_time_sel,
-+							 val, 0, &hw_gain_sel);
-+	if (ret) {
-+		for (int i = 0; i < data->gts.num_itime; i++) {
-+			new_int_time_sel = data->gts.itime_table[i].sel;
-+
-+			if (new_int_time_sel == current_int_time_sel)
-+				continue;
-+
-+			ret = iio_gts_find_gain_sel_for_scale_using_time(&data->gts,
-+									 new_int_time_sel,
-+									 val, 0,
-+									 &hw_gain_sel);
-+			if (!ret)
-+				break;
-+		}
-+
-+		if (ret) {
-+			dev_dbg(dev, "Unsupported scale value requested: %d\n", val);
-+			return -EINVAL;
-+		}
-+
-+		ret = regmap_write_bits(data->regmap, BH1745_MODE_CTRL1,
-+					BH1745_CTRL1_MEASUREMENT_TIME_MASK,
-+					new_int_time_sel);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return regmap_write_bits(data->regmap, BH1745_MODE_CTRL2,
-+				 BH1745_CTRL2_ADC_GAIN_MASK, hw_gain_sel);
-+}
-+
-+static int bh1745_get_int_time(struct bh1745_data *data, int *val)
-+{
-+	int ret;
-+	int value;
-+	int int_time, int_time_sel;
-+
-+	ret = regmap_read(data->regmap, BH1745_MODE_CTRL1, &value);
-+	if (ret)
-+		return ret;
-+
-+	int_time_sel = FIELD_GET(BH1745_CTRL1_MEASUREMENT_TIME_MASK, value);
-+	int_time = iio_gts_find_int_time_by_sel(&data->gts, int_time_sel);
-+	if (int_time < 0)
-+		return int_time;
-+
-+	*val = int_time;
-+
-+	return 0;
-+}
-+
-+static int bh1745_set_int_time(struct bh1745_data *data, int val, int val2)
-+{
-+	struct device *dev = data->dev;
-+	int ret;
-+	int value;
-+	int current_int_time, current_hwgain_sel, current_hwgain;
-+	int new_hwgain, new_hwgain_sel, new_int_time_sel;
-+	int req_int_time = (1000000 * val) + val2;
-+
-+	if (!iio_gts_valid_time(&data->gts, req_int_time)) {
-+		dev_dbg(dev, "Unsupported integration time requested: %d\n",
-+			req_int_time);
-+		return -EINVAL;
-+	}
-+
-+	ret = bh1745_get_int_time(data, &current_int_time);
-+	if (ret)
-+		return ret;
-+
-+	if (current_int_time == req_int_time)
-+		return 0;
-+
-+	ret = regmap_read(data->regmap, BH1745_MODE_CTRL2, &value);
-+	if (ret)
-+		return ret;
-+
-+	current_hwgain_sel = FIELD_GET(BH1745_CTRL2_ADC_GAIN_MASK, value);
-+	current_hwgain = iio_gts_find_gain_by_sel(&data->gts, current_hwgain_sel);
-+	ret = iio_gts_find_new_gain_by_old_gain_time(&data->gts, current_hwgain,
-+						     current_int_time, req_int_time,
-+						     &new_hwgain);
-+	if (new_hwgain < 0) {
-+		dev_dbg(dev, "No corrosponding gain for requested integration time\n");
-+		return ret;
-+	}
-+
-+	if (ret) {
-+		bool in_range;
-+
-+		new_hwgain = iio_find_closest_gain_low(&data->gts, new_hwgain, &in_range);
-+		if (new_hwgain < 0) {
-+			new_hwgain = iio_gts_get_min_gain(&data->gts);
-+			if (new_hwgain < 0)
-+				return ret;
-+		}
-+
-+		if (!in_range)
-+			dev_dbg(dev, "Optimal gain out of range\n");
-+
-+		dev_dbg(dev, "Scale changed, new hw_gain %d\n", new_hwgain);
-+	}
-+
-+	new_hwgain_sel = iio_gts_find_sel_by_gain(&data->gts, new_hwgain);
-+	if (new_hwgain_sel < 0)
-+		return new_hwgain_sel;
-+
-+	ret = regmap_write_bits(data->regmap, BH1745_MODE_CTRL2, BH1745_CTRL2_ADC_GAIN_MASK,
-+				new_hwgain_sel);
-+	if (ret)
-+		return ret;
-+
-+	new_int_time_sel = iio_gts_find_sel_by_int_time(&data->gts, req_int_time);
-+	if (new_int_time_sel < 0)
-+		return new_int_time_sel;
-+
-+	return regmap_write_bits(data->regmap, BH1745_MODE_CTRL1,
-+				 BH1745_CTRL1_MEASUREMENT_TIME_MASK, new_int_time_sel);
-+}
-+
-+static int bh1745_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan,
-+			   int *val, int *val2, long mask)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+	int value;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		iio_device_claim_direct_scoped(return -EBUSY, indio_dev) {
-+			ret = regmap_bulk_read(data->regmap, chan->address, &value, 2);
-+			if (ret)
-+				return ret;
-+			*val = value;
-+
-+			return IIO_VAL_INT;
-+		}
-+		unreachable();
-+
-+	case IIO_CHAN_INFO_SCALE: {
-+			guard(mutex)(&data->lock);
-+			ret = bh1745_get_scale(data, val, val2);
-+			if (ret)
-+				return ret;
-+
-+			return IIO_VAL_INT;
-+		}
-+
-+	case IIO_CHAN_INFO_INT_TIME: {
-+			guard(mutex)(&data->lock);
-+			*val = 0;
-+			ret = bh1745_get_int_time(data, val2);
-+			if (ret)
-+				return 0;
-+
-+			return IIO_VAL_INT_PLUS_MICRO;
-+		}
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long mask)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	guard(mutex)(&data->lock);
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		return bh1745_set_scale(data, val);
-+
-+	case IIO_CHAN_INFO_INT_TIME:
-+		return bh1745_set_int_time(data, val, val2);
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				      struct iio_chan_spec const *chan,
-+				      long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_INT_TIME:
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_read_thresh(struct iio_dev *indio_dev,
-+			      const struct iio_chan_spec *chan,
-+			      enum iio_event_type type,
-+			      enum iio_event_direction dir,
-+			      enum iio_event_info info, int *val, int *val2)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		switch (dir) {
-+		case IIO_EV_DIR_RISING:
-+			ret = regmap_bulk_read(data->regmap, BH1745_TH_LSB, val, 2);
-+			if (ret)
-+				return ret;
-+
-+			return IIO_VAL_INT;
-+
-+		case IIO_EV_DIR_FALLING:
-+			ret = regmap_bulk_read(data->regmap, BH1745_TL_LSB, val, 2);
-+			if (ret)
-+				return ret;
-+
-+			return IIO_VAL_INT;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	case IIO_EV_INFO_PERIOD:
-+		ret = regmap_read(data->regmap, BH1745_PERSISTENCE, val);
-+		if (ret)
-+			return ret;
-+
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_write_thresh(struct iio_dev *indio_dev,
-+			       const struct iio_chan_spec *chan,
-+			       enum iio_event_type type,
-+			       enum iio_event_direction dir,
-+			       enum iio_event_info info, int val, int val2)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		if (val < 0x0 || val > 0xFFFF)
-+			return -EINVAL;
-+
-+		switch (dir) {
-+		case IIO_EV_DIR_RISING:
-+			ret = regmap_bulk_write(data->regmap, BH1745_TH_LSB, &val, 2);
-+			if (ret)
-+				return ret;
-+
-+			return IIO_VAL_INT;
-+
-+		case IIO_EV_DIR_FALLING:
-+			ret = regmap_bulk_write(data->regmap, BH1745_TL_LSB, &val, 2);
-+			if (ret)
-+				return ret;
-+
-+			return IIO_VAL_INT;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	case IIO_EV_INFO_PERIOD:
-+		if (val < BH1745_PRESISTENCE_UPDATE_TOGGLE ||
-+		    val > BH1745_PRESISTENCE_UPDATE_EIGHT_MEASUREMENT)
-+			return -EINVAL;
-+		ret = regmap_write(data->regmap, BH1745_PERSISTENCE, val);
-+		if (ret)
-+			return ret;
-+
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_read_event_config(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan,
-+				    enum iio_event_type type,
-+				    enum iio_event_direction dir)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+	int value;
-+	int int_src;
-+
-+	ret = regmap_read(data->regmap, BH1745_INTR, &value);
-+	if (ret)
-+		return ret;
-+
-+	if (!FIELD_GET(BH1745_INTR_ENABLE, value))
-+		return 0;
-+
-+	int_src = FIELD_GET(BH1745_INTR_SOURCE_MASK, value);
-+
-+	switch (chan->channel2) {
-+	case IIO_MOD_LIGHT_RED:
-+		if (int_src == BH1745_INTR_SOURCE_RED)
-+			return 1;
-+		return 0;
-+
-+	case IIO_MOD_LIGHT_GREEN:
-+		if (int_src == BH1745_INTR_SOURCE_GREEN)
-+			return 1;
-+		return 0;
-+
-+	case IIO_MOD_LIGHT_BLUE:
-+		if (int_src == BH1745_INTR_SOURCE_BLUE)
-+			return 1;
-+		return 0;
-+
-+	case IIO_MOD_LIGHT_CLEAR:
-+		if (int_src == BH1745_INTR_SOURCE_CLEAR)
-+			return 1;
-+		return 0;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_write_event_config(struct iio_dev *indio_dev,
-+				     const struct iio_chan_spec *chan,
-+				     enum iio_event_type type,
-+				     enum iio_event_direction dir, int state)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int value;
-+
-+	if (state == 0)
-+		return regmap_clear_bits(data->regmap, BH1745_INTR, BH1745_INTR_ENABLE);
-+
-+	if (state == 1) {
-+
-+		/* Latch is always enabled when enabling interrupt */
-+		value = BH1745_INTR_ENABLE;
-+
-+		switch (chan->channel2) {
-+		case IIO_MOD_LIGHT_RED:
-+			return regmap_write(data->regmap, BH1745_INTR,
-+					    value | FIELD_PREP(BH1745_INTR_SOURCE_MASK,
-+							       BH1745_INTR_SOURCE_RED));
-+
-+		case IIO_MOD_LIGHT_GREEN:
-+			return regmap_write(data->regmap, BH1745_INTR,
-+					    value | FIELD_PREP(BH1745_INTR_SOURCE_MASK,
-+							       BH1745_INTR_SOURCE_GREEN));
-+
-+		case IIO_MOD_LIGHT_BLUE:
-+			return regmap_write(data->regmap, BH1745_INTR,
-+					    value | FIELD_PREP(BH1745_INTR_SOURCE_MASK,
-+							       BH1745_INTR_SOURCE_BLUE));
-+
-+		case IIO_MOD_LIGHT_CLEAR:
-+			return regmap_write(data->regmap, BH1745_INTR,
-+					    value | FIELD_PREP(BH1745_INTR_SOURCE_MASK,
-+							       BH1745_INTR_SOURCE_CLEAR));
-+
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int bh1745_read_avail(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, const int **vals,
-+			     int *type, int *length, long mask)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_INT_TIME:
-+		return iio_gts_avail_times(&data->gts, vals, type, length);
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		return iio_gts_all_avail_scales(&data->gts, vals, type, length);
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info bh1745_info = {
-+	.read_raw = bh1745_read_raw,
-+	.write_raw = bh1745_write_raw,
-+	.write_raw_get_fmt = bh1745_write_raw_get_fmt,
-+	.read_event_value = bh1745_read_thresh,
-+	.write_event_value = bh1745_write_thresh,
-+	.read_event_config = bh1745_read_event_config,
-+	.write_event_config = bh1745_write_event_config,
-+	.read_avail = bh1745_read_avail,
-+};
-+
-+static irqreturn_t bh1745_interrupt_handler(int interrupt, void *p)
-+{
-+	struct iio_dev *indio_dev = p;
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+	int value;
-+	int int_src;
-+
-+	ret = regmap_read(data->regmap, BH1745_INTR, &value);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	int_src = FIELD_GET(BH1745_INTR_SOURCE_MASK, value);
-+
-+	if (value & BH1745_INTR_STATUS) {
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_INTENSITY, int_src,
-+						    IIO_EV_TYPE_THRESH,
-+						    IIO_EV_DIR_EITHER),
-+			       iio_get_time_ns(indio_dev));
-+
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+static irqreturn_t bh1745_trigger_handler(int interrupt, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	struct {
-+		u16 chans[4];
-+		s64 timestamp __aligned(8);
-+	} scan;
-+	u16 value;
-+	int ret;
-+	int i;
-+	int j = 0;
-+
-+	for_each_set_bit(i, indio_dev->active_scan_mask, indio_dev->masklength) {
-+		ret = regmap_bulk_read(data->regmap, BH1745_RED_LSB + 2 * i, &value, 2);
-+		if (ret)
-+			goto err;
-+
-+		scan.chans[j++] = value;
-+	}
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, &scan, iio_get_time_ns(indio_dev));
-+
-+err:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int bh1745_setup_triggered_buffer(struct iio_dev *indio_dev,
-+					 struct device *parent,
-+					 int irq)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	struct device *dev = data->dev;
-+	int ret;
-+
-+	ret = devm_iio_triggered_buffer_setup(parent, indio_dev, NULL,
-+					      bh1745_trigger_handler, NULL);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Triggered buffer setup failed\n");
-+
-+	if (irq) {
-+		ret = devm_request_threaded_irq(dev, irq, NULL,
-+						bh1745_interrupt_handler,
-+						IRQF_ONESHOT,
-+						"bh1745_interrupt", indio_dev);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "Request for IRQ failed\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static int bh1745_init(struct bh1745_data *data)
-+{
-+	int ret;
-+	struct device *dev = data->dev;
-+
-+	mutex_init(&data->lock);
-+
-+	ret = devm_iio_init_iio_gts(dev, BH1745_MAX_GAIN, 0, bh1745_gain,
-+				    ARRAY_SIZE(bh1745_gain), bh1745_itimes,
-+				    ARRAY_SIZE(bh1745_itimes), &data->gts);
-+	if (ret)
-+		return ret;
-+
-+	ret = bh1745_reset(data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to reset sensor\n");
-+
-+	ret = bh1745_power_on(data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to turn on sensor\n");
-+
-+	ret = devm_add_action_or_reset(dev, bh1745_power_off, data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add action or reset\n");
-+
-+	return 0;
-+}
-+
-+static int bh1745_probe(struct i2c_client *client)
-+{
-+	int ret;
-+	int value;
-+	int part_id;
-+	struct bh1745_data *data;
-+	struct iio_dev *indio_dev;
-+	struct device *dev = &client->dev;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, indio_dev);
-+	indio_dev->info = &bh1745_info;
-+	indio_dev->name = "bh1745";
-+	indio_dev->channels = bh1745_channels;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->num_channels = ARRAY_SIZE(bh1745_channels);
-+	data = iio_priv(indio_dev);
-+	data->dev = &client->dev;
-+	data->regmap = devm_regmap_init_i2c(client, &bh1745_regmap);
-+	if (IS_ERR(data->regmap))
-+		return dev_err_probe(dev, PTR_ERR(data->regmap),
-+				     "Failed to initialize Regmap\n");
-+
-+	ret = regmap_read(data->regmap, BH1745_SYS_CTRL, &value);
-+	if (ret)
-+		return ret;
-+
-+	part_id = FIELD_GET(BH1745_SYS_CTRL_PART_ID_MASK, value);
-+	if (part_id != BH1745_PART_ID)
-+		dev_warn(dev, "Unknown part ID 0x%x\n", part_id);
-+
-+	ret = devm_regulator_get_enable(dev, "vdd");
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get and enable regulator\n");
-+
-+	ret = bh1745_init(data);
-+	if (ret)
-+		return ret;
-+
-+	ret = bh1745_setup_triggered_buffer(indio_dev, indio_dev->dev.parent, client->irq);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_iio_device_register(dev, indio_dev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register device\n");
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id bh1745_idtable[] = {
-+	{ "bh1745" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, bh1745_idtable);
-+
-+static const struct of_device_id bh1745_of_match[] = {
-+	{ .compatible = "rohm,bh1745" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, bh1745_of_match);
-+
-+static struct i2c_driver bh1745_driver = {
-+	.driver = {
-+		.name = "bh1745",
-+		.of_match_table = bh1745_of_match,
-+	},
-+	.probe = bh1745_probe,
-+	.id_table = bh1745_idtable,
-+};
-+module_i2c_driver(bh1745_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Mudit Sharma <muditsharma.info@gmail.com>");
-+MODULE_DESCRIPTION("BH1745 colour sensor driver");
-+MODULE_IMPORT_NS(IIO_GTS_HELPER);
--- 
-2.43.0
+If the policy change really needs to get ahead
+of other tasks, I think you need a dedicated
+workqueue with alloc_workqueue() using WQ_HIGHPRI flag.
+
+Tim
+
+>=20
+> Signed-off-by: Gaowei Pu <pugaowei@oppo.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 24 ++++++++++++++++++------
+>  include/linux/cpufreq.h   |  4 +++-
+>  2 files changed, 21 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index a45aac17c20f..e6e42a3ba9ab 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1193,7 +1193,7 @@ void refresh_frequency_limits(struct cpufreq_policy=
+ *policy)
+>  }
+>  EXPORT_SYMBOL(refresh_frequency_limits);
+> =20
+> -static void handle_update(struct work_struct *work)
+> +static void handle_update(struct kthread_work *work)
+>  {
+>  	struct cpufreq_policy *policy =3D
+>  		container_of(work, struct cpufreq_policy, update);
+> @@ -1209,7 +1209,7 @@ static int cpufreq_notifier_min(struct notifier_blo=
+ck *nb, unsigned long freq,
+>  {
+>  	struct cpufreq_policy *policy =3D container_of(nb, struct cpufreq_polic=
+y, nb_min);
+> =20
+> -	schedule_work(&policy->update);
+> +	kthread_queue_work(policy->worker, &policy->update);
+>  	return 0;
+>  }
+> =20
+> @@ -1218,7 +1218,7 @@ static int cpufreq_notifier_max(struct notifier_blo=
+ck *nb, unsigned long freq,
+>  {
+>  	struct cpufreq_policy *policy =3D container_of(nb, struct cpufreq_polic=
+y, nb_max);
+> =20
+> -	schedule_work(&policy->update);
+> +	kthread_queue_work(policy->worker, &policy->update);
+>  	return 0;
+>  }
+> =20
+> @@ -1301,15 +1301,25 @@ static struct cpufreq_policy *cpufreq_policy_allo=
+c(unsigned int cpu)
+>  		goto err_min_qos_notifier;
+>  	}
+> =20
+> +	policy->worker =3D kthread_create_worker_on_cpu(cpu, 0, "policy_worker%=
+d", cpu);
+> +	if (IS_ERR(policy->worker)) {
+> +		dev_err(dev, "Failed to create policy_worker%d\n", cpu);
+> +		goto err_max_qos_notifier;
+> +	}
+> +
+> +	sched_set_fifo_low(policy->worker->task);
+>  	INIT_LIST_HEAD(&policy->policy_list);
+>  	init_rwsem(&policy->rwsem);
+>  	spin_lock_init(&policy->transition_lock);
+>  	init_waitqueue_head(&policy->transition_wait);
+> -	INIT_WORK(&policy->update, handle_update);
+> +	kthread_init_work(&policy->update, handle_update);
+> =20
+>  	policy->cpu =3D cpu;
+>  	return policy;
+> =20
+> +err_max_qos_notifier:
+> +	freq_qos_remove_notifier(&policy->constraints, FREQ_QOS_MAX,
+> +				 &policy->nb_max);
+>  err_min_qos_notifier:
+>  	freq_qos_remove_notifier(&policy->constraints, FREQ_QOS_MIN,
+>  				 &policy->nb_min);
+> @@ -1353,7 +1363,9 @@ static void cpufreq_policy_free(struct cpufreq_poli=
+cy *policy)
+>  				 &policy->nb_min);
+> =20
+>  	/* Cancel any pending policy->update work before freeing the policy. */
+> -	cancel_work_sync(&policy->update);
+> +	kthread_cancel_work_sync(&policy->update);
+> +	if (policy->worker)
+> +		kthread_destroy_worker(policy->worker);
+> =20
+>  	if (policy->max_freq_req) {
+>  		/*
+> @@ -1802,7 +1814,7 @@ static unsigned int cpufreq_verify_current_freq(str=
+uct cpufreq_policy *policy, b
+> =20
+>  		cpufreq_out_of_sync(policy, new_freq);
+>  		if (update)
+> -			schedule_work(&policy->update);
+> +			kthread_queue_work(policy->worker, &policy->update);
+>  	}
+> =20
+>  	return new_freq;
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index 20f7e98ee8af..73029daddfc5 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -20,6 +20,7 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/minmax.h>
+> +#include <linux/kthread.h>
+> =20
+>  /*********************************************************************
+>   *                        CPUFREQ INTERFACE                          *
+> @@ -77,8 +78,9 @@ struct cpufreq_policy {
+>  	void			*governor_data;
+>  	char			last_governor[CPUFREQ_NAME_LEN]; /* last governor used */
+> =20
+> -	struct work_struct	update; /* if update_policy() needs to be
+> +	struct kthread_work	update; /* if update_policy() needs to be
+>  					 * called, but you're in IRQ context */
+> +	struct kthread_worker *worker;
+> =20
+>  	struct freq_constraints	constraints;
+>  	struct freq_qos_request	*min_freq_req;
 
