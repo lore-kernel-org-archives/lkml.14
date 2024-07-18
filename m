@@ -1,140 +1,127 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87FC13B7AF
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 12:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A389B12C473;
+	Thu, 18 Jul 2024 12:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721304767; cv=none; b=ux7bTeNeExv6J6HMaN1BBCe+xm27wp9O2Sq6BKmY8nT5RlrMeWSHVqzba8+8WqMMXl2kS6c7AaLrq5rmyFVEeJm1ZX0TmjgAVYEtD3C3fjCnO63u2JcfhnU/XCPMg+/Sq/6x2hGWZTu/4zVnVD61x8+fSDQncXW7rdVPz3kp5aA=
+	t=1721304876; cv=none; b=uOhPVBkxodAulTRUJFDtCpj1/LtZyy04pOgthbu1Yf7AryQ63njaY8zoflxljDJXu/UN1yr3dLvH+JnGbqgOzjNCPOIJRrkPVy/kP2iz+oWKqGnkM3eUmnaU2CWua1CLDHbjNq9zCcYc1mt4w92xjvrzgwShz22oNaQC6a4vBJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721304767; c=relaxed/simple;
-	bh=lDk/OFM9GdPyF5mO3TlS15U51RwuYwspDnGe9beFFBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FE+r34Qt2Np1hDh9HP2088fFydPWAp2pos/RA1KBZuYLQRPCFsUYFO9i3ivVDFGFd/I4Mg8gXX9yfaeVhUPXaia60LzMXB7jpHgMvFOzRgxAjapAm5fy/1Nyvj53rz2Vz32XJ83lWmZzHcEB5Mc/SvjgHwQOw+fgVFGN1RwnB38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tCH/BBnM; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCH/BBnM"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-58f9874aeb4so790587a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 05:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721304763; x=1721909563; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
-        b=tCH/BBnMTu8CG3Gxs5kcYA3zXyCbKxQYHAxqy1GvR4ONT8pi/L+aitwJqnF520xrak
-         HRtSiCC0nGNkSrqw9+yx8Zm6kA9qlEschgYKC/UZWNYcNKHaO8JifGJhKdvjNNfsx8e3
-         X52tcsczT4+V5KYr3UZcFBiSxiTxQJxHGUxolhBpE/3wZmnY5G6JSn7BH8AGOUSvlgns
-         c/16o7S/Tg0HjwlTPDDfsL74WSNBTr0fj5rQpuAaN5a47zr3qxLIkwWzN52rIQQhmWml
-         jK4pM1VymsWYrlh7pA/7No2kc2osE+Ag8IUB8pElBWcOj5k9dm8NTheFFDNlcqlpIaiv
-         BakA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721304763; x=1721909563;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
-        b=ZEz6Db5yAEy0IDoSKdoaIznZks8huXGG7zmW4+yGlj1hoPyqgkWksOzWHsPE33mWJs
-         MSN+g+FIwxLvpy3DJMoK+A8XLF33tB2gFEogDwdSG3jsZjRanUCXh1nldCd2GR1X9QXs
-         toiGkiIKmYmXS944dOz/bWtODKaUQP3OxIRpWMbE90O41NjNDP+aOksomC6DSaA3YtlP
-         d7io6hEvjEbDuJW34ssNTo2dUq+x/GOvLPayTHvjhSnOJUMnTt6zSTFDAxcl9HpyhFpW
-         HqaY9vCTyQC/mrtclObrz0ulh4aonjxG9a0k3sr8qaVQ8AVzVkXRYqWEGHijWVgaCK+i
-         5Teg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIXhHl1i6An3W7tdMZZr5KVArgmgEJzI0aItS8UnngpPxbdPqKOYUltHkFJ2Fjbsa9SF+dXHnkjWng/99SzqrFmW09xdTo0fZrrxO3
-X-Gm-Message-State: AOJu0Yw7nLrSA1iKTc1T0jJBDu9g41lsUy0uK937GDdKyNdk9qfKx5V1
-	Cn4CBz6PFtk1n7v+jrHzlymQIt3ldzwAQddS8ZikME45w5TySkTcKBJPGbauwPk=
-X-Google-Smtp-Source: AGHT+IHpzAvuicnAr0t0F/QpWfgztRHIDCadRZ2CkWua+qXiqi9HeASkOwId5phE5trHQaIlvHyHqg==
-X-Received: by 2002:a05:6402:510f:b0:57c:c166:ba6 with SMTP id 4fb4d7f45d1cf-5a05bfab3c0mr3393413a12.19.1721304762690;
-        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
-Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a1d9a49e32sm654035a12.29.2024.07.18.05.12.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
-Message-ID: <f171ded0-e9db-4bf0-8e1a-e00065becd4e@linaro.org>
-Date: Thu, 18 Jul 2024 14:12:39 +0200
+	s=arc-20240116; t=1721304876; c=relaxed/simple;
+	bh=uyqo4mSCcHzIAODm37Vx3g3wBwQCap9ssibRuJnrQb4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aLb9i9+ljAhJ0o44r59m6RJP2XEObIFg9eiL2WbYzj9JTxDXfKvyRfaAMWUaGabfX4jl0NEgdb6M60Ox2zC6GnH68ls/8Lf09bXSnKz3ha4E+s97ri71Ok6cKS6Ok2F/oUBQhX2MUL2r1uQl7/u9+JhViayRtrSjMpCtPSyB9sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WPrqZ1syjz4f3jYp;
+	Thu, 18 Jul 2024 19:56:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 4BC321A016E;
+	Thu, 18 Jul 2024 19:56:18 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCXezngAplmFObpAQ--.32842S4;
+	Thu, 18 Jul 2024 19:56:18 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: linux-ext4@vger.kernel.org
+Cc: tytso@mit.edu,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	libaokun@huaweicloud.com,
+	Baokun Li <libaokun1@huawei.com>,
+	stable@kernel.org
+Subject: [PATCH] jbd2: stop waiting for space when jbd2_cleanup_journal_tail() returns error
+Date: Thu, 18 Jul 2024 19:53:36 +0800
+Message-Id: <20240718115336.2554501-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/13] PCI: qcom-ep: Modify 'global_irq' and
- 'perst_irq' IRQ device names
-To: manivannan.sadhasivam@linaro.org,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
- <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCXezngAplmFObpAQ--.32842S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1UAw4kWFWkZF1kJw4UCFg_yoW5JrWDpF
+	n3Xa4xArWDu34rtrn2qr4jyry09348uF17Wr95uF48tw1UAwsrtr43ta40vryDCrWkua15
+	ArWUKr13C34jkw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwAKzVCY07xG64k0F24l
+	c7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0x
+	ZFpf9x0JUmjgxUUUUU=
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAHBWaWLvtQkgABsl
 
-On 17.07.2024 7:03 PM, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Currently, the IRQ device name for both of these IRQs doesn't have Qcom
-> specific prefix and PCIe domain number. This causes 2 issues:
-> 
-> 1. Pollutes the global IRQ namespace since 'global' is a common name.
-> 2. When more than one EP controller instance is present in the SoC, naming
-> conflict will occur.
-> 
-> Hence, add 'qcom_pcie_ep_' prefix and PCIe domain number suffix to the IRQ
-> names to uniquely identify the IRQs and also to fix the above mentioned
-> issues.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
+From: Baokun Li <libaokun1@huawei.com>
 
-lgtm
+In __jbd2_log_wait_for_space(), we might call jbd2_cleanup_journal_tail()
+to recover some journal space. But if an error occurs while executing
+jbd2_cleanup_journal_tail() (e.g., an EIO), we don't stop waiting for free
+space right away, we try other branches, and if j_committing_transaction
+is NULL (i.e., the tid is 0), we will get the following complain:
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+============================================
+JBD2: I/O error when updating journal superblock for sdd-8.
+__jbd2_log_wait_for_space: needed 256 blocks and only had 217 space available
+__jbd2_log_wait_for_space: no way to get more journal space in sdd-8
+------------[ cut here ]------------
+WARNING: CPU: 2 PID: 139804 at fs/jbd2/checkpoint.c:109 __jbd2_log_wait_for_space+0x251/0x2e0
+Modules linked in:
+CPU: 2 PID: 139804 Comm: kworker/u8:3 Not tainted 6.6.0+ #1
+RIP: 0010:__jbd2_log_wait_for_space+0x251/0x2e0
+Call Trace:
+ <TASK>
+ add_transaction_credits+0x5d1/0x5e0
+ start_this_handle+0x1ef/0x6a0
+ jbd2__journal_start+0x18b/0x340
+ ext4_dirty_inode+0x5d/0xb0
+ __mark_inode_dirty+0xe4/0x5d0
+ generic_update_time+0x60/0x70
+[...]
+============================================
 
-Konrad
+So only if jbd2_cleanup_journal_tail() returns 1, i.e., there is nothing to
+clean up at the moment, continue to try to reclaim free space in other ways.
+
+Note that this fix relies on commit 6f6a6fda2945 ("jbd2: fix ocfs2 corrupt
+when updating journal superblock fails") to make jbd2_cleanup_journal_tail
+return the correct error code.
+
+Fixes: 8c3f25d8950c ("jbd2: don't give up looking for space so easily in __jbd2_log_wait_for_space")
+Cc: stable@kernel.org
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+ fs/jbd2/checkpoint.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
+index 951f78634adf..7b593591273a 100644
+--- a/fs/jbd2/checkpoint.c
++++ b/fs/jbd2/checkpoint.c
+@@ -86,8 +86,11 @@ __releases(&journal->j_state_lock)
+ 			write_unlock(&journal->j_state_lock);
+ 			if (chkpt) {
+ 				jbd2_log_do_checkpoint(journal);
+-			} else if (jbd2_cleanup_journal_tail(journal) == 0) {
+-				/* We were able to recover space; yay! */
++			} else if (jbd2_cleanup_journal_tail(journal) <= 0) {
++				/*
++				 * We were able to recover space or the
++				 * journal was aborted due to an error.
++				 */
+ 				;
+ 			} else if (tid) {
+ 				/*
+-- 
+2.39.2
+
