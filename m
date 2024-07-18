@@ -1,142 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279D374429
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66EF24211;
+	Thu, 18 Jul 2024 07:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721286369; cv=none; b=ebu5rMmYv1dfTc1MC0XM5+un0MhNlc2lSr3kbaXQriaTQM0Pw6v2OW1W4DqHxl/mIzDPcnmT/I/N1AAzTq2hGQCGkbPd/7groaU0/aKc/WIc9l0JD2hF/cwFJrjC7ebjavpUEIqmzqCV3fg5TqYSA/skXj+WZ0WSuP5KN2dbLZo=
+	t=1721286814; cv=none; b=CoFIHaTHuQiWl+agCAP25w1U/rz8xoGtraeEZhcsxQ7EzaTT7R0jN0/GOCVZnVkaQ+9Fj9WWz4FovkRfubKEdxIS5DJ9QunRnpIpo8bR4aSqPF318Io7zI1n/+XuYoTBiz0jyhVTiYL1x5kv3e1yw9TodB4QqKQqq5Z0sH22Uk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721286369; c=relaxed/simple;
-	bh=uA0JGGjakiMbR9WsA7dhks+DdnDu6St2X1YRdoaTlws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YJc9SSDex5FqPmAID3aqHEv0y1Cw52nvKjHkipJ+K/5LAj7s5qWVAa9C+EBMXjF9h8SKFK/UCiqTd2EdF5DR3LERmC/HiWRQyzYRP4z6vo8RtPy34VEF9KoaGCx4iv+YDz1YPGl99aXBZs8pHdMzCPJ0xSXnkhtHBE/qSCqBbZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JW9XMahH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721286814; c=relaxed/simple;
+	bh=yZ2QaQ6p9Z+RtBrpzPLhsQ3P78x2NI+aDTceKi1qjjw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mtvwv5ef2geoNSiA3bX0wXVDwAavKJJ8gl/sI3tV+ixnMQHdIpTGPBCiv8/kqH0LPJ1SlCkrskupXpNvKLIB1V3RvlfohuK4slV7OuJcxf4giFNQW/allRYObDz+hhMnFQJyT16pKyKGtnHDSrFW2R4ffnK7CyEQCeYSN6t1yl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WyC/VB/u; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JW9XMahH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721286366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LZ1lU4s3MEl0eqBrDrKpVc0POkcvbrGUvI/MYSaxt9I=;
-	b=JW9XMahHpN9JlXItgjKirIQ2J7fVIUqpwRNQJqJ33LLNJo1XiyAYv4U+PB76JJrMFG4ZlI
-	cIW3tBTFdsdN7pf4I9ovUcSWoDwtiwkrH5/asx0b7ooH3hDMlBD9NkS6uEl8HuOG4qis2M
-	9fVbe3VNeTgIznaRJURJMyfuWPR28RQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-121-7NhJeS4cMv-GjG_WjDODaw-1; Thu, 18 Jul 2024 03:06:04 -0400
-X-MC-Unique: 7NhJeS4cMv-GjG_WjDODaw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-426724679f0so7450965e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:06:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721286363; x=1721891163;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LZ1lU4s3MEl0eqBrDrKpVc0POkcvbrGUvI/MYSaxt9I=;
-        b=j3F3Y2rrovfDWVDSrfyiAu0YWuKgyLsm/XxaQFRuDgtimjZFaOzW4sADtF00jFkUvh
-         qonEqHl3LQ+QHhRPjsa0/bn3CCQ5m8fQqqs+qAF02XNANSVpH0Q+/RvkcWaOLt3o3R0w
-         itERBcNfRw94ifF/4h4fEUjcNwC7W1uHRz+7xvnvh2oDcIFOIcv/riSD/JYCkSXbECi8
-         BCbZWuaVkoU5QkH6sKE5VeEiZZRT/FU4JAVNMYaM6uTJRxrhM72z/q1KnPq0tUuHAgRE
-         yaluiAlOUmjvPFdf30MHNJZkcmQWPDud1Anq2UYu27qXJCigdii55a/yrnsl6IOi8B4D
-         ZLgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOm8kjV26IKCp6xoUHhNxPnYT44wrP00G74WR5Yx36NtE9xYp0Nr6hTGDKzV/bE6WKIzEv4fB2ze8kDOK64WDeN2CQqJ0vYbysl4Yp
-X-Gm-Message-State: AOJu0Yzg40Ah1tu1Um8yM2I9LTsoHKA2dbcBs3etorxBw7snGjdXvlt8
-	Fiyr/c7Gm8ckoe3aSBOWEM9wPTma7AlV8J2uF5CjN8uiDeq18XGIIzbzrTSOWRb88GEnj6+GZUP
-	dZ8LuI6yJ6GlhYWM5q6gY7LZDGEt2lUkImdvFDfT3CYM6RismbnbLqU6fpKZSUA==
-X-Received: by 2002:a05:600c:a41:b0:424:a7f1:ba2 with SMTP id 5b1f17b1804b1-427c83abaacmr11056425e9.17.1721286363350;
-        Thu, 18 Jul 2024 00:06:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHa7qUlOIVPtRLS94vJ5+kzoefqLguJcUGf7zXA8087LONGESX8WhOSNJuoCKzvG05hbn781w==
-X-Received: by 2002:a05:600c:a41:b0:424:a7f1:ba2 with SMTP id 5b1f17b1804b1-427c83abaacmr11056155e9.17.1721286362999;
-        Thu, 18 Jul 2024 00:06:02 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427c77f21bdsm23840755e9.29.2024.07.18.00.06.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 00:06:02 -0700 (PDT)
-Message-ID: <93589af2-dcfc-437b-85ca-b0029f4d6401@redhat.com>
-Date: Thu, 18 Jul 2024 09:06:01 +0200
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WyC/VB/u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1721286812; x=1752822812;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yZ2QaQ6p9Z+RtBrpzPLhsQ3P78x2NI+aDTceKi1qjjw=;
+  b=WyC/VB/uDI0T+LZ5oe2hVL/TeCpC76GDq+SviFncyvaZSurXzgRh/xkx
+   XP3EqbUFiYHb1nl12eE+QnYN5MnyAqXX9wMja0ab1106KVQz9ZboS2Ol7
+   CiQuL5YnSU4nnNkCDM94ug4Qssp2cihHqy7zotXmzEGNJmLOoAaaBXZAm
+   UxlcHcOxL5qubxifryvkdZRx7Mbs4agr1p431fHb8FgmBahlz6rVcpFrZ
+   mgr7Kl6H7gO8X2xMp6XfwvhU4P9LcpSwl5KpQYWEp1oDzoZ1jWrLA0HBm
+   6t9iE/8DjdYMPO/gJGPGbLzL2eEQswqePNDqhowX+thvlX4b2CLEx9CFM
+   g==;
+X-CSE-ConnectionGUID: 4xvfPWz5TieNyLJ40wg/zg==
+X-CSE-MsgGUID: 1vgItF1PTx+dbdtiJd3f7g==
+X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
+   d="asc'?scan'208";a="29361118"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Jul 2024 00:13:24 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 18 Jul 2024 00:12:55 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 18 Jul 2024 00:12:54 -0700
+Date: Thu, 18 Jul 2024 08:12:31 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+CC: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the riscv-soc tree
+Message-ID: <20240718-playing-mulberry-a1494425f9ee@wendy>
+References: <20240717081456.57ee0709@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] fbcon: Add an option to disable fbcon in panic.
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Helge Deller <deller@gmx.de>,
- "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Samuel Thibault <samuel.thibault@ens-lyon.org>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-fbdev@vger.kernel.org
-References: <20240717090102.968152-1-jfalempe@redhat.com>
- <20240717090102.968152-3-jfalempe@redhat.com>
- <ZpfdcC2Es9rweHW_@phenom.ffwll.local>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <ZpfdcC2Es9rweHW_@phenom.ffwll.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="LtI7V3OW/Rv8FP1a"
+Content-Disposition: inline
+In-Reply-To: <20240717081456.57ee0709@canb.auug.org.au>
+
+--LtI7V3OW/Rv8FP1a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jul 17, 2024 at 08:14:56AM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> The following commit is also in Linus Torvalds' tree as a different commit
+> (but the same patch):
+>=20
+>   c813ef3c5f6c ("MAINTAINERS: drop riscv list from cache controllers")
+
+Yeah, that's expected. I had one commit as a fix after sending my PRs
+for v6.11, so I sent that one as a patch rather than a PR. I'll drop it
+now, thanks.
 
 
+--LtI7V3OW/Rv8FP1a
+Content-Type: application/pgp-signature; name="signature.asc"
 
-On 17/07/2024 17:04, Daniel Vetter wrote:
-> On Wed, Jul 17, 2024 at 10:48:40AM +0200, Jocelyn Falempe wrote:
->> This is required to avoid conflict between DRM_PANIC, and fbcon. If
->> a drm device already handle panic with drm_panic, it should set
->> the skip_panic field in fb_info, so that fbcon will stay quiet, and
->> not overwrite the panic_screen.
->>
->> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
->> ---
->>   drivers/gpu/drm/drm_fb_helper.c  | 2 ++
->>   drivers/video/fbdev/core/fbcon.c | 7 ++++++-
->>   include/linux/fb.h               | 1 +
->>   3 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
->> index e2e19f49342e..3662d664d8f9 100644
->> --- a/drivers/gpu/drm/drm_fb_helper.c
->> +++ b/drivers/gpu/drm/drm_fb_helper.c
->> @@ -40,6 +40,7 @@
->>   #include <drm/drm_fourcc.h>
->>   #include <drm/drm_framebuffer.h>
->>   #include <drm/drm_modeset_helper_vtables.h>
->> +#include <drm/drm_panic.h>
->>   #include <drm/drm_print.h>
->>   #include <drm/drm_vblank.h>
->>   
->> @@ -524,6 +525,7 @@ struct fb_info *drm_fb_helper_alloc_info(struct drm_fb_helper *fb_helper)
->>   	fb_helper->info = info;
->>   	info->skip_vt_switch = true;
->>   
->> +	info->skip_panic = drm_panic_is_enabled(fb_helper->dev);
->>   	return info;
->>   
->>   err_release:
-> 
-> Bit a bikeshed, but I'd split this patch out since it's for drm's fbdev
-> emulation, not the fbcon core code. With that:
-> 
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+-----BEGIN PGP SIGNATURE-----
 
-Agreed, I considered doing that when writing the patch, but as it was 1 
-line, I kept it with the fbcon change.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZpjAUwAKCRB4tDGHoIJi
+0pSIAQDoo4fV87WN//rrAarrWir9zxyX0CKRh0UogJZ95MSp0wEA904JekTuhfUA
+6v+bjsuEFzweVOfug+XjAtEs2W2y+Qg=
+=Z4J8
+-----END PGP SIGNATURE-----
 
-Thanks,
-
--- 
-
-Jocelyn
-
-> 
-
+--LtI7V3OW/Rv8FP1a--
