@@ -1,155 +1,108 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A003382
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587B3139F
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721261385; cv=none; b=VWuK6Y+yHvlhbeV973RlkVnCKt6ftrQy4EYAP9wBr5QIhR14Jh8T/kAzcIfJcbCw/SeFJqYzRsGggVPBAEkZ4PDaymmWv0Z+LjpFAAsz9C4M1Q541FxLf7cpFdTsBSTr+B0n3tiLbf1owlKCC913by9FTyDulBXp7VGvZkZzL4s=
+	t=1721261899; cv=none; b=uRh9jZ1jbcoE4K7EYX88bnL6zvdnwy+QCpy/8JHn896ttNb6fBCGP4cNGKZlBRwUC3bIm1YQ+WMRFHPErxNkntIIvd2Kkhez6QKdvaV7gSXK8rOJnG8S+kmTHfvUtt1sdHvlCHaMRB9UjrtyogSR3ixDC0MSL0VLZADCvHM/bWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721261385; c=relaxed/simple;
-	bh=wt/qzQuv1Oj3EPYIiGGE45EkZB5VMCHunctx/kbTHDs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n6eG1C+uyzF2O6tYp5Myt8vX/4yoFiTqursgRBP5HOh2QtEMHGuynZlAt9wbZbdLQyF1VoYC9Y318uawV7DnOINwX35se5XN++L2m0MWPo+VfDlqlAX3600tt5uBJqNvGCPYCFxpcMsp7edFLvIR8e1g7KYqB/ZKJG0hlV49wtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=r5Ks8ntI; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1721261899; c=relaxed/simple;
+	bh=LDZP5PjnqCXHTDVJyKWG9YjKqovok23dIPj9ME9VSZs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CA9Gt1GRb/+2cNgfbHTe5wrHwUlk8wzYRUfqntG5iJZNc/Po/iI9xQjm8v27lfclGs+3C9dmQL2G5VilnURTSfQOPqkSHnChC/zpKuflxKpz0G5UqLOT4dHeBwXVVY+rjeUq4kUNAO0YNGRakyj7K5mOpzCGL1iJ8pxX5n99rKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Cs1xMgtU; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="r5Ks8ntI"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7515437ff16so131760a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:09:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cs1xMgtU"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e02b79c6f21so267031276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721261379; x=1721866179; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1721261896; x=1721866696; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8rJ5m7Fl3sMwVskBOOBufRviDL1o9bXQXCNdGsyOVPo=;
-        b=r5Ks8ntIv/VsZHEkEN0l/9vtX0gCAjTa+VtRHWuFEvzkeFPb2HMyUAzcXe9z2D1bEy
-         HMxMghkII2CUHvreh+BdYYv2SOg7Ig/Fx/2tD0D3WKpKwpSlcAyFq6sCnO+flrxen3cV
-         CqSr48F2tkKPgvykR222j+UXOcXDLS2fBtZpA2MPf9kTZimlzYYL+fp8arvUlcN1Wr0m
-         rnZjcGT/x8ZnenMgyXsJgA7LfEuQOOqFuH+Kc3190TiD+im+FkjvBtwRGBYYUOhvCogL
-         figybXj/8qOORMQmBne8JsN9x0ZJWcmcn0P/TAfYxSUHMDULw3lcwxTA3QHmUNv3gkmG
-         GKDg==
+        bh=jR5TgSXxmEkVnQyI32oZApsa806xibThRKsCEzfjQ2s=;
+        b=Cs1xMgtUAuzNnmdLvpW8Og71KU0tYqR6Bq6KOIa/CMDlZFSgUmn8uteqERj+WBaeW/
+         65OW6Y45HIpGtKtfJyWmuPGtwQ5zEclrMUw3LnGFP0zMocI/66KxeoKFBwYYn/7XIlck
+         5HpSLbOZOYUT4oZW+FB+g4bSziuo4QGDGjxV8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721261379; x=1721866179;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1721261896; x=1721866696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8rJ5m7Fl3sMwVskBOOBufRviDL1o9bXQXCNdGsyOVPo=;
-        b=Y0O3BvOslXoZVq1Xez7P+8/WjBB1/wpSHePRK/dK4J3CYVq0t6zothfgOylUWLfFU0
-         m2rOxZ39QCn3j+GkLm6ssfsiE+7uWiI8JHhONYhAon03f2mmimbzXpzsxc6h223alQMQ
-         CiFoUQseXvjxVbOhC4ngUx/KArcujN29daCeBsXjGeP0t+m4YCtp6nySatymvHgIJ4em
-         Mh0ZPafLsfEuiY+8xayMfPn0DSJgZBqS/M/DO/z8t3xEVrsrmbBiMWheBOAXfQHFzMCD
-         //GZopd1Dg0tcNwKd+Hc1+VVwPditInm9Qn4IgSCAr55T32Y2GaVg/BKq9ui6GlKtxKt
-         hsQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhf1ExHRTULy/yqMLr5+qW5JxuTMi0ts2R3R5LSxHYL0x/+N41XlnMustCXyht4/DHdTlD3O0RfgOWNzwcOvyBe5NbVJasKCj3jhpl
-X-Gm-Message-State: AOJu0Yw2Bhx8AMpUYZypvvybb6mOnILeLifveHuMi9BZASzJYjwyqSo6
-	9QA2qRzb0YEspGuk4hzIbhtXKwL6Cf+EeEQ6jLrQSyrbo6QdW8eZMnENKHaPrto=
-X-Google-Smtp-Source: AGHT+IF04MR7Smx6T0rGv8pS1Tq8lRD17LTiRDEIUaK4JAMINqysx/UaUEPbq8Zrh0qjpFKGvNNFwQ==
-X-Received: by 2002:a05:6a20:4325:b0:1bd:2710:de5c with SMTP id adf61e73a8af0-1c3fdd00c67mr4884982637.22.1721261379404;
-        Wed, 17 Jul 2024 17:09:39 -0700 (PDT)
-Received: from localhost (75-172-111-187.tukw.qwest.net. [75.172.111.187])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bbc73a2sm80870995ad.109.2024.07.17.17.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 17:09:38 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: linux-gpio@vger.kernel.org
-Cc: Keerthy <j-keerthy@ti.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] gpio: davinci: handle wakeup-source property, detect wake IRQs
-Date: Wed, 17 Jul 2024 17:09:33 -0700
-Message-ID: <20240718000935.2573288-3-khilman@baylibre.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240718000935.2573288-1-khilman@baylibre.com>
-References: <20240718000935.2573288-1-khilman@baylibre.com>
+        bh=jR5TgSXxmEkVnQyI32oZApsa806xibThRKsCEzfjQ2s=;
+        b=iyGRyPPYFu2bhVNPGcUgt7GLz3ldB7tmBfqSrnENdyiYNgi14JPZLM++xfKvmZlQ3k
+         Yjvzr3Vyg1SWr1uHwgYZ+hE63EXxC95rJW1KLn46IMorW5HpC9hhnV49kRgSfK9ZBOGh
+         /T87EhCz/4khY0CrnA56NHQhHaZ487NkiSd9SNrXjFL4UhSkq1sS1qz5IxJqDMhh0sOl
+         2ZIUNjwLBodAyn1LzJH5sM6+2oqCYKssuIBtAqZE7Pplarf/cQf6C7Udma1xcfrkb51d
+         Xzg41j7eaFG3bzEYjZd3vLj+hBOGaOFs3ovyivkwv5QO4xFSgALt7PqyRwjvhbwYKHbb
+         Iw9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXi8n61ozVP8U7/sIjdgvcDhfyk1LolZkf6PFiZ0iCebIcGyz1ko06HJZKVouYrxItSmXWKO2cDipb+OEVla1SLwUC0+zcLnn4aJMOd
+X-Gm-Message-State: AOJu0YxOrwxwscyQEZt1tOZOLCrToydcJKiHgD+e5c2943FMUkrugBef
+	WKAdV7K50mlfDyhQxO4NiYVtjJINfvkhQwAGcFPm9li6NSSgH5L2XuHBSHbaea9qAwp4JGAB+vM
+	=
+X-Google-Smtp-Source: AGHT+IEmk/H+gZvV+BD2vN0aebiV/Wm4bpa1gA3Ls9qgw0c/6pYKZQ/dSl0vhZ1a77tuJjyDYDdupQ==
+X-Received: by 2002:a05:6902:2b08:b0:e03:41c8:4fbf with SMTP id 3f1490d57ef6-e05feae1051mr1410809276.15.1721261896480;
+        Wed, 17 Jul 2024 17:18:16 -0700 (PDT)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com. [209.85.160.177])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b79c4ba0e0sm3447886d6.28.2024.07.17.17.18.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jul 2024 17:18:15 -0700 (PDT)
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-447f8aa87bfso156611cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:18:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX2J9NpdrM9KveCJu5lkFgTd82v9xL6XJ/XZtxrzS8J1QoJJlYCcC4ect7jXbHRGfItmXA6QFRZY2U0nISrjtC5rAhuOAl/cxTlMXF0
+X-Received: by 2002:a05:622a:2506:b0:447:f5de:bd18 with SMTP id
+ d75a77b69052e-44f925cad76mr430051cf.9.1721261894932; Wed, 17 Jul 2024
+ 17:18:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240717215847.5310-1-robdclark@gmail.com>
+In-Reply-To: <20240717215847.5310-1-robdclark@gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 17 Jul 2024 17:17:58 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XCOKJHJ-yzENpvm_MD34tMR5LRy2m2jYdcWzZXP4pfXQ@mail.gmail.com>
+Message-ID: <CAD=FV=XCOKJHJ-yzENpvm_MD34tMR5LRy2m2jYdcWzZXP4pfXQ@mail.gmail.com>
+Subject: Re: [RFC] drm/panel/simple-edp: Add Samsung ATNA45DC02
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	Rob Clark <robdclark@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If the wakeup-source property is used for the GPIO controller, then
-mark the controller as wakeup capable.
+Hi,
 
-Further, if there are any GPIO IRQs that are marked as wakeup-enabled,
-then mark the GPIO controller as wakeup enabled also.  Since the GPIO
-IRQs that are wake-enabled are dynamic, this is (re)calculated during
-each suspend (and cleared on resume.)
+On Wed, Jul 17, 2024 at 2:58=E2=80=AFPM Rob Clark <robdclark@gmail.com> wro=
+te:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> Just a guess on the panel timings, but they appear to work.
+>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+> This adds the panel I have on my lenovo yoga slim 7x laptop.  I couldn't
+> find any datasheet so timings is just a guess.  But AFAICT everything
+> works fine.
+>
+>  drivers/gpu/drm/panel/panel-edp.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
----
- drivers/gpio/gpio-davinci.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Given that this is a Samsung ATNA<mumble>, is there any chance it's an
+OLED panel? Should it be supported with the Samsung OLED panel driver
+like this:
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 1d0175d6350b..031aa7c30855 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
- #include <linux/clk.h>
-@@ -195,6 +196,7 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 	struct davinci_gpio_controller *chips;
- 	struct davinci_gpio_platform_data *pdata;
- 	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 
- 	pdata = davinci_gpio_get_pdata(pdev);
- 	if (!pdata) {
-@@ -274,6 +276,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	if (of_property_read_bool(np, "wakeup-source"))
-+		device_set_wakeup_capable(dev, true);
-+
- 	return 0;
- }
- 
-@@ -677,7 +682,24 @@ static int davinci_gpio_suspend(struct device *dev)
- 	struct davinci_gpio_controller *chips = dev_get_drvdata(dev);
- 	struct davinci_gpio_platform_data *pdata = dev_get_platdata(dev);
- 	u32 nbank = DIV_ROUND_UP(pdata->ngpio, 32);
-+	struct gpio_chip *chip = &chips->chip;
-+	struct gpio_desc *desc;
-+	bool wkup_set;
-+	int irq;
- 
-+	/*
-+	 * Check if any GPIO IRQs are wakeup enabled.  If so,
-+	 * set the GPIO controller as wakeup enabled also.
-+	 */
-+	for_each_gpio_desc(chip, desc) {
-+		irq = gpiod_to_irq(desc);
-+		wkup_set = irqd_is_wakeup_set(irq_get_irq_data(irq));
-+		if (wkup_set) {
-+			dev_dbg(dev, "%s: IRQ %d wakeup enabled.", __func__, irq);
-+			device_wakeup_enable(dev);
-+			break;
-+		}
-+	}
- 	davinci_gpio_save_context(chips, nbank);
- 
- 	return 0;
-@@ -691,6 +713,9 @@ static int davinci_gpio_resume(struct device *dev)
- 
- 	davinci_gpio_restore_context(chips, nbank);
- 
-+	if (device_may_wakeup(dev))
-+		device_wakeup_disable(dev);
-+
- 	return 0;
- }
- 
--- 
-2.45.2
+https://lore.kernel.org/r/20240715-x1e80100-crd-backlight-v2-0-31b7f2f658a3=
+@linaro.org
 
+-Doug
