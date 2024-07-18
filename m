@@ -1,59 +1,73 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0189F4AEE6;
-	Thu, 18 Jul 2024 05:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A341EF12;
+	Thu, 18 Jul 2024 05:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721279844; cv=none; b=H9E1lx7sdElZcHn05ut5clJF/hvSQre0BZy9sFe+Tdbj9Tu6kgQZImCiannctw38N/h6Lot+paTr2/2k4HctmmxP+Xxf0kVgY9Nz2wZbeRGdh4ujwfAv+jkK2kXzB9nQDu7aQ6WkiHbp6eNHpkEL18OgVqSuZg8qLqJi6b6d8cE=
+	t=1721279962; cv=none; b=R9LlcMF2r1mObeidYz0GjQF2kUSGOcU1ydpBAMrJXj8xfJe3TPTV6ANcm+OOXy7FUvHEX1ku1ZMx6UKTu79AYWuC46z6paLpk7IwmP2k+BTyrs+jRKd1pW7Xrb4TbmH6fWBTCfrrkQ3mIkXMoxZSFzXMT4ETBGqXVFxY+5ps2lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721279844; c=relaxed/simple;
-	bh=oYCQOhzW5lrg1j5fh4CoNyAocZaJm6UppHekj7otYKY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S0kiaDDMOdOf1LdwTeb0WR5L/GHR5aYiaN9q0OxgI8eCaMD2vlkx8m/YLBHiQLukkfLZwYDK6cDcgH1jrMg0TkoQ8yEwu3N7fN83YvJsu7p9PFNkxwFHvhDrafnew9mvoXgNJL+ViY+axY+Uq8m+SdclsiwNqX7AU8RRvCcUg04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iItnTtp2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721279962; c=relaxed/simple;
+	bh=QWjcix4UBqY173raNDfHUqaSdRYRtRmZrlylGT6P4UU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iLIVgBEkc/AhJ3Q8T6I8wGlnmOQS6xpGF1bYpQDpXSkYQy3Kxt2zWVPDim5PQX+fREA19E3L14YWufX7yUOpADnohFQFFTcBHh7rw56EsTgihhFDwq4Y9CWdHNucV0JsFYV7qxrb9RSs4J9NvqHKlswjCacuzouCc/wsDhKCr+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=VFv0Q7qF; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iItnTtp2"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I4GVxH025075;
-	Thu, 18 Jul 2024 05:14:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	96ItovL8caGcz9Vnh4q68hd9rf2sIPQWf77PDCssXcY=; b=iItnTtp2iGWPsIni
-	CezQTYZLomOoJvPgy4CGRGqJWKij06GwkHXPqrdES6YT5hFMZBdBzC1kSmXRUcv4
-	ATo6gH/B01/RGi4OB3LogJsrfAhDjG70DWQPgxiQKVY8XpzaGncYNRYJUOc2Dq9Z
-	IwLQalimiwcUWfQePkJpB/F+hXlR8Q8gHvCwGJ977xv0BETsFy1lhVKwTWXpKVbS
-	pa9bH3jrqIWiDHRtu0+OFxOea03JCoAxBnyErqivd/T4+UQ3OuELCsxtZw9T+vXn
-	5dOhYEr5GyR8F2bCdGn03hrivYplSwH3rKu4ZkOlIiSDGUSotNLYbuSXGAAaqnBP
-	9wiq7Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfpmdr2-1
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="VFv0Q7qF"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I0UNjE023218;
+	Thu, 18 Jul 2024 01:19:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=cCmkJTy8Codzl/zcUHO/dU5Uk4K
+	ZQTPJ4LdvbiN1GV8=; b=VFv0Q7qFaiPtmk2o3+d1oDnYV/DlxtJKKBJXGU4tZtf
+	0OJp7ToMNngmwMh7U2GVexfHVRjpsZsvHgrej67IW7FCl4TCKrg+QdIKxLB3zwQZ
+	k4M1oazV2hs0gskZIla/alYFfh68aeI+GciyoUcL9/un9/OGL5Vfev5xC5Ycuop8
+	fmkkdn5hmL9psLLlxhFjHTNMGfXj8T/2/4XEISkf5uYH/khAZwi01MJB114Gt8xF
+	2gJPY1d+EvYyRX9MLSJlxMtp0DohD1aE3STAOkFQD1WuLgzXFZdLuTX68/jZK+NB
+	D7mlEtKdJaL8sPlyl0QiD25mJpvpMRQDqTeupVtfuzg==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 40dwer69kn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 05:14:10 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46I5E8aO002719
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 05:14:09 GMT
-Received: from hu-pyarlaga-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 17 Jul 2024 22:14:08 -0700
-From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-To: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_mrana@quicinc.com>,
-        <quic_pyarlaga@quicinc.com>
-Subject: [PATCH v2 2/2] PCI: qcom: Avoid DBI and ATU register space mirror to BAR/MMIO region
-Date: Wed, 17 Jul 2024 22:12:58 -0700
-Message-ID: <20240718051258.1115271-3-quic_pyarlaga@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240718051258.1115271-1-quic_pyarlaga@quicinc.com>
-References: <20240718051258.1115271-1-quic_pyarlaga@quicinc.com>
+	Thu, 18 Jul 2024 01:19:04 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 46I5J397021535
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 18 Jul 2024 01:19:03 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 18 Jul
+ 2024 01:19:02 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 18 Jul 2024 01:19:02 -0400
+Received: from kim-VirtualBox.ad.analog.com (KPALLER2-L03.ad.analog.com [10.117.220.49])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 46I5IhgR009768;
+	Thu, 18 Jul 2024 01:18:46 -0400
+From: Kim Seer Paller <kimseer.paller@analog.com>
+To: <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC: Jonathan Cameron <jic23@kernel.org>,
+        David Lechner
+	<dlechner@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Dimitri Fedrau
+	<dima.fedrau@gmail.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob
+ Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+        Michael
+ Hennerich <michael.hennerich@analog.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?=
+	<noname.nuno@gmail.com>,
+        Kim Seer Paller <kimseer.paller@analog.com>
+Subject: [PATCH v8 0/6] Add driver for LTC2664 and LTC2672
+Date: Thu, 18 Jul 2024 13:18:28 +0800
+Message-ID: <20240718051834.32270-1-kimseer.paller@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,238 +76,170 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Anxp24JbzfT8tXhvzINdCnQBdNN3hML5
-X-Proofpoint-GUID: Anxp24JbzfT8tXhvzINdCnQBdNN3hML5
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: JNWrp7v3dOVYBHDAAAh-2MO7_WGJcq_C
+X-Proofpoint-ORIG-GUID: JNWrp7v3dOVYBHDAAAh-2MO7_WGJcq_C
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-18_02,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407180034
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407180035
 
-PARF hardware block which is a wrapper on top of DWC PCIe controller
-mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
-register to get the size of the memory block to be mirrored and uses
-PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
-address of DBI and ATU space inside the memory block that is being
-mirrored.
+Generalize the ABI documentation for DAC. The ABI defined for toggle mode
+channels:
 
-When a memory region which is located above the SLV_ADDR_SPACE_SIZE
-boundary is used for BAR region then there could be an overlap of DBI and
-ATU address space that is getting mirrored and the BAR region. This
-results in DBI and ATU address space contents getting updated when a PCIe
-function driver tries updating the BAR/MMIO memory region. Reference
-memory map of the PCIe memory region with DBI and ATU address space
-overlapping BAR region is as below.
+LTC2664:
+  * out_voltageY_toggle_en
+  * out_voltageY_raw0
+  * out_voltageY_raw1
+  * out_voltageY_symbol
 
-                        |---------------|
-                        |               |
-                        |               |
-        ------- --------|---------------|
-           |       |    |---------------|
-           |       |    |       DBI     |
-           |       |    |---------------|---->DBI_BASE_ADDR
-           |       |    |               |
-           |       |    |               |
-           |    PCIe    |               |---->2*SLV_ADDR_SPACE_SIZE
-           |    BAR/MMIO|---------------|
-           |    Region  |       ATU     |
-           |       |    |---------------|---->ATU_BASE_ADDR
-           |       |    |               |
-        PCIe       |    |---------------|
-        Memory     |    |       DBI     |
-        Region     |    |---------------|---->DBI_BASE_ADDR
-           |       |    |               |
-           |    --------|               |
-           |            |               |---->SLV_ADDR_SPACE_SIZE
-           |            |---------------|
-           |            |       ATU     |
-           |            |---------------|---->ATU_BASE_ADDR
-           |            |               |
-           |            |---------------|
-           |            |       DBI     |
-           |            |---------------|---->DBI_BASE_ADDR
-           |            |               |
-           |            |               |
-        ----------------|---------------|
-                        |               |
-                        |               |
-                        |               |
-                        |---------------|
+LTC2672:
+  * out_currentY_toggle_en
+  * out_currentY_raw0
+  * out_currentY_raw1
+  * out_currentY_symbol
 
-Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
-used for BAR region which is why the above mentioned issue is not
-encountered. This issue is discovered as part of internal testing when we
-tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
-we are trying to fix this.
+Default channels won't have any of the above ABIs. A channel is toggle capable
+if the devicetree 'adi,toggle-mode' flag is set.
 
-As PARF hardware block mirrors DBI and ATU register space after every
-PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, write
-U32_MAX (all 0xFF's) to PARF_SLV_ADDR_SPACE_SIZE register to avoid
-mirroring DBI and ATU to BAR/MMIO region. Write the physical base address
-of DBI and ATU register blocks to PARF_DBI_BASE_ADDR (default 0x0) and
-PARF_ATU_BASE_ADDR (default 0x1000) respectively to make sure DBI and ATU
-blocks are at expected memory locations.
+changes in v8:
 
-The register offsets PARF_DBI_BASE_ADDR_V2, PARF_SLV_ADDR_SPACE_SIZE_V2
-and PARF_ATU_BASE_ADDR are applicable for platforms that use PARF
-Qcom IP rev 1.9.0, 2.7.0 and 2.9.0. PARF_DBI_BASE_ADDR_V2 and
-PARF_SLV_ADDR_SPACE_SIZE_V2 are applicable for PARF Qcom IP rev 2.3.3.
-PARF_DBI_BASE_ADDR and PARF_SLV_ADDR_SPACE_SIZE are applicable for PARF
-Qcom IP rev 1.0.0, 2.3.2 and 2.4.0. Updating the init()/post_init()
-functions of the respective PARF versions to program applicable
-PARF_DBI_BASE_ADDR, PARF_SLV_ADDR_SPACE_SIZE and PARF_ATU_BASE_ADDR
-register offsets. And remove the unused SLV_ADDR_SPACE_SZ macro.
+Bindings:
+  * Fixed mixed indentation in example section for ltc2664 and ltc2672 bindings.
+  * Added Reviewed-by tag for ltc2664 binding.
 
-Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 62 +++++++++++++++++++-------
- 1 file changed, 45 insertions(+), 17 deletions(-)
+changes in v7:
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..845c7641431f 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -45,6 +45,7 @@
- #define PARF_PHY_REFCLK				0x4c
- #define PARF_CONFIG_BITS			0x50
- #define PARF_DBI_BASE_ADDR			0x168
-+#define PARF_SLV_ADDR_SPACE_SIZE		0x16C
- #define PARF_MHI_CLOCK_RESET_CTRL		0x174
- #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
- #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-@@ -52,8 +53,13 @@
- #define PARF_LTSSM				0x1b0
- #define PARF_SID_OFFSET				0x234
- #define PARF_BDF_TRANSLATE_CFG			0x24c
--#define PARF_SLV_ADDR_SPACE_SIZE		0x358
-+#define PARF_DBI_BASE_ADDR_V2			0x350
-+#define PARF_DBI_BASE_ADDR_V2_HI		0x354
-+#define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
-+#define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35C
- #define PARF_NO_SNOOP_OVERIDE			0x3d4
-+#define PARF_ATU_BASE_ADDR			0x634
-+#define PARF_ATU_BASE_ADDR_HI			0x638
- #define PARF_DEVICE_TYPE			0x1000
- #define PARF_BDF_TO_SID_TABLE_N			0x2000
- #define PARF_BDF_TO_SID_CFG			0x2c00
-@@ -107,9 +113,6 @@
- /* PARF_CONFIG_BITS register fields */
- #define PHY_RX0_EQ(x)				FIELD_PREP(GENMASK(26, 24), x)
- 
--/* PARF_SLV_ADDR_SPACE_SIZE register value */
--#define SLV_ADDR_SPACE_SZ			0x10000000
--
- /* PARF_MHI_CLOCK_RESET_CTRL register fields */
- #define AHB_CLK_EN				BIT(0)
- #define MSTR_AXI_CLK_EN				BIT(1)
-@@ -324,6 +327,39 @@ static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
- 	dw_pcie_dbi_ro_wr_dis(pci);
- }
- 
-+static void qcom_pcie_configure_dbi_base(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (pci->dbi_phys_addr)
-+		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-+							PARF_DBI_BASE_ADDR);
-+
-+	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-+}
-+
-+static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (pci->dbi_phys_addr) {
-+		writel(lower_32_bits(pci->dbi_phys_addr), pcie->parf +
-+							PARF_DBI_BASE_ADDR_V2);
-+		writel(upper_32_bits(pci->dbi_phys_addr), pcie->parf +
-+						PARF_DBI_BASE_ADDR_V2_HI);
-+	}
-+
-+	if (pci->atu_phys_addr) {
-+		writel(lower_32_bits(pci->atu_phys_addr), pcie->parf +
-+							PARF_ATU_BASE_ADDR);
-+		writel(upper_32_bits(pci->atu_phys_addr), pcie->parf +
-+							PARF_ATU_BASE_ADDR_HI);
-+	}
-+
-+	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2);
-+	writel(U32_MAX, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_V2_HI);
-+}
-+
- static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
- {
- 	u32 val;
-@@ -540,8 +576,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
- 
- static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
- {
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_base(pcie);
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
-@@ -628,8 +663,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_base(pcie);
- 
- 	/* MAC PHY_POWERDOWN MUX DISABLE  */
- 	val = readl(pcie->parf + PARF_SYS_CTRL);
-@@ -811,13 +845,11 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 
--	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
- 		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-@@ -913,8 +945,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	/* change DBI base address */
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	/* MAC PHY_POWERDOWN MUX DISABLE  */
- 	val = readl(pcie->parf + PARF_SYS_CTRL);
-@@ -1123,14 +1154,11 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	u32 val;
- 	int i;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
- 
--	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-+	qcom_pcie_configure_dbi_atu_base(pcie);
- 
- 	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
- 	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+Bindings:
+  * Reverted DAC bindings to original conditional requirements.
+  * Added Reviewed-by tag for dac.yaml.
+
+changes in v6:
+
+Bindings:
+  * Added clarification description for output-range-microvolt property and
+    modified conditional logic for output-range-microvolt for ltc2664 binding.
+  * Simplified schema validation logic for DAC binding.
+  * Added Reviewed-by tag for ltc2672 binding.
+
+changes in v5:
+
+ltc2664:
+  * Removed return statement for error code in ltc2664_dac_code_read making it a
+    void function.
+  * Refactored voltage regulator error handling and logic setting for vref_mv.
+  * Added Reviewed-by tag.
+
+Bindings:
+  * Added dac.yaml and generalized DAC common properties.
+  * Modified ltc2664 binding adding constraints for the adi,manual-span-operation-config
+    and output-range-microvolt properties.
+
+changes in v4:
+
+ltc2664:
+  * Added comments for each field in the ltc2664_chan struct.
+  * Changed global_toggle data type to bool and updated vref and rfsadj variables
+    to include units.
+  * Added 0,0 entry in ltc2672_span_helper to removed the id field from the
+    ltc2664_chip_info struct.
+  * Used mul_u64_u32_div helper function from linux/math64.h to avoid integer
+    overflow during scale calculation.
+  * Refactored code to use a single template for channel instead of separate
+    channel arrays.
+  * Used the devm_regulator_get_enable_read_voltage API for simplifying voltage
+    retrieval.
+
+ABI:
+  sysfs-bus-iio:
+    * Added commit message for the ABI changes.
+  sysfs-bus-iio-dac:
+    * Updated the description of toggle_en to clarify autonomous toggling.
+    * Fixed inconsistent use of spacing and tabs.
+
+Bindings:
+  * Dropped Reviewed-by tag.
+  * Updated the description for both bindings to include both 12-bit and 16-bit
+    versions.
+
+changes in v3:
+
+ltc2664:
+  * Added span sanity check for no match.
+  * Initialized the variable 'span' to fix build warning.
+  * Added Reported-by and Closes by tag.
+
+ABI:
+  * Modified descriptions to make it more generalize.
+  * Removed MAINTAINERS file entry.
+
+Bindings:
+  * Changed clr-gpios to reset-gpios.
+  * Added output range and reset code description for 'adi,manual-span-operation-config'
+    property in ltc2664 binding.
+  * Removed the $ref for 'adi,output-range-microamp' due to dt-schema warning
+    in ltc2672 binding. Added Reported-by and Closes by tag.
+  * Modified io-channels description and added maxItems constraint.
+
+changes in v2:
+
+ltc2664:
+  * Updated struct ltc2664_chip_info to include device-specific data for scale,
+    offset, measurement type, internal vref, manual span support, and rfsadj
+    support.
+  * Added a read-only extended info attribute powerdown_mode to indicate the
+    state that the DAC output enters when the device is powered down.
+  * Refactored code for setting the span into separate function and directly
+    returning the span.
+  * Adjusted memory allocation for st->iio_channels to include null terminator.
+  * Spaces have been added after { and before }. Each pair of values is now
+    placed on a separate line.
+
+ABI:
+  * Generalized the ABI documentation for DAC.
+  * Added DAC 42kohm_to_gnd powerdown mode.
+
+Bindings:
+  * Created separate bindings for ltc2664 and ltc2672.
+  * Added v-pos-supply and v-neg-supply regulator properties.
+  * Renamed vref-supply to ref-supply based on the datasheet.
+  * Added io-channels property and specifying the pin for multiplexer output.
+  * Added vdd0-vdd4 supply properties for ltc2672, although they are not
+    currently supported in the driver.
+  * Changed clr-gpios description based on the datasheet.
+  * Used 4 spaces for example indentation.
+
+Kim Seer Paller (6):
+  iio: ABI: Generalize ABI documentation for DAC
+  iio: ABI: add DAC 42kohm_to_gnd powerdown mode
+  dt-bindings: iio: dac: Generalize DAC common properties
+  dt-bindings: iio: dac: Add adi,ltc2664.yaml
+  dt-bindings: iio: dac: Add adi,ltc2672.yaml
+  iio: dac: ltc2664: Add driver for LTC2664 and LTC2672
+
+ Documentation/ABI/testing/sysfs-bus-iio       |   1 +
+ Documentation/ABI/testing/sysfs-bus-iio-dac   |  61 ++
+ .../ABI/testing/sysfs-bus-iio-dac-ltc2688     |  31 -
+ .../bindings/iio/dac/adi,ltc2664.yaml         | 181 +++++
+ .../bindings/iio/dac/adi,ltc2672.yaml         | 160 ++++
+ .../devicetree/bindings/iio/dac/dac.yaml      |  50 ++
+ MAINTAINERS                                   |  10 +
+ drivers/iio/dac/Kconfig                       |  11 +
+ drivers/iio/dac/Makefile                      |   1 +
+ drivers/iio/dac/ltc2664.c                     | 735 ++++++++++++++++++
+ 10 files changed, 1210 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ltc2664.yaml
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ltc2672.yaml
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/dac.yaml
+ create mode 100644 drivers/iio/dac/ltc2664.c
+
+
+base-commit: 1ebab783647a9e3bf357002d5c4ff060c8474a0a
 -- 
-2.25.1
+2.34.1
 
