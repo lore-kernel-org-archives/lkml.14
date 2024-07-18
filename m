@@ -1,255 +1,177 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909281DFFB
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 01:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49941B86CB
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 01:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721265001; cv=none; b=OE/5XD65wyqd88AyBY4n9eqVQ6bOoTJ9vdV6Z7cZzp3AIc/rr7B2ljNFLOF/xdCzQjqFu2yB2og/0BK+rAA7rbHOhRjHgxNYLsGXmTJGWXIMRtRaazlj5na8uDlfaDByZnwvDuY9fuCMY0filxeKDih8+2zdx/FKigg5hH+uPeU=
+	t=1721265627; cv=none; b=JQUyWf8EG/mgnllc45NlWr4BLhqHv2SP5HKjsiVLKgVnOthOWTjRfrA5NoBcFpPhIY1LlyM3sypcbR8mvfGz4YP+Q+vypS9SMhqxUymrsc4R0gL48zZQnxVzvhLsZPuNHLfPAte6tQvs2NwQo1YRb1bd91pzMmdK087SH+ZPVV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721265001; c=relaxed/simple;
-	bh=UeqdEqQ9qaqakkZP50KbE0lEAt7K9mATOftkyIAZ5no=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cw+HXJO9Fs3vY8w6CkT8XfxS5zr72SojPK4fBGPiHxRPR4WHu7D/NVKUzg2kjb+bdrpUfYGW/CLJFLs05Me0D+7FABqz4GS7HP/Yuv/VUCZoy7hPUaithEnnfFR3o0velRLGh7G8Oma7ijqlOU/MFbGAEy4hiE1I8aLnsrdUPcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mHvQQSxJ; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mHvQQSxJ"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-44a8b140a1bso151861cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 18:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721264998; x=1721869798; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JMJuhChikF4wLeOBxp1PV2NNfAI2pBpeeewnSnEI4VI=;
-        b=mHvQQSxJvJCF0R5IblScC8QinYv6mb30jXdR/vtIkVqD3fWca4xopYcOJI/C3HmnOw
-         TkLxVLXpwLs/3sckbQTgimpcTWKQNg7Id/au5xbOTsXjbDTbsmX0ZlxKuXOql6NUX4NU
-         tGoZ0D360+GdfQepvTlvTDazgemRzpDyy1zqQldFhY1Xseua97637Cs5gtkfCUWhLJ03
-         NrhODM+ZW1v1Py4tLjwUyfwevHk6RiKLBEXpU9tph4qI59sOzL51YpV/8LcABwvBkteO
-         wMabcYzZShfJA6njWd0Y8qp3MT8Jzn9MLXEMjKjp9a9SnAmqc01oRhNDiwM2eUSP1SR8
-         3tkg==
+	s=arc-20240116; t=1721265627; c=relaxed/simple;
+	bh=xbyOXpcyZ/7pT8s2/UyGXvPdeLwgsn9/dfDJe+UFmP4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UcTecF+QxFg5PlfT9hM1tf+Jr1RgIr5ivziZR1OIDR2pOugNyhBSiz5eCTbd/ziSYwAp5RMtX7ttmul/4/MjevgtrAvjYUSORzqA9Okvnjhi8Atb3QCz11s+cTBfC8x2d4MDuuwhnDaGP3wY0AQke0LtNUqmGxDANe86HrmHzCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f682b4694aso38588039f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 18:20:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721264998; x=1721869798;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JMJuhChikF4wLeOBxp1PV2NNfAI2pBpeeewnSnEI4VI=;
-        b=DoARSFARLX2QxdOb4F/Y6vQkJSU2bE3rV9Ewudmg5O6Sb6trtTS7I+N4dZ7UeO4WSS
-         0awFDy5Muk05kqth2CyODR8X/XXQycw23v8XR/qLo++l5lELy2hhTabQyMP2vcUFcWVo
-         cpRNtlmRaeaPk8zTDbK0yBSj7MSN/ulIHGosZws+CI+ysjhM+XdghSzykeNLbpvTt/yP
-         eeFhEgJSdaN0wMjqmll+Bl26xPwmMyzeAsMFX8Gs4a8UBxeFGqEW7nPDOy2qlNVyQobs
-         OLGaq2oetCZHlTwQL8tuoUvFPgWfFpEMIPjFUDqcEJDOiSyc7b2Us4DJ1tiuul6qwZSh
-         2RKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjFt3sL6ASouTWomB8c/GMD9FFcC0ShJe93az0BueYHeFw70nLrRM4NO00WEtCQe74N3GY6MCRw33VtcI5fsi5KD3EhnO8py5jy5Zd
-X-Gm-Message-State: AOJu0YwQzhqlFfsod+Hy344tFRI4auPMDM2AqQNbLNBOFX65Y5Bxunzu
-	Vb1xlq+hnqIuyNnenC8kWeW8jZUJTzlcXnBkinFXbu8MLYnvrgQr9bfPCjyPbogpFYOIdiYLmtW
-	TaSHm1vctyqelqOPYdwfVcW33H9Li3wnqeGKI
-X-Google-Smtp-Source: AGHT+IEZhvA4xdp3JDyHouO5xbLvgcqjQtJ68LnXmSiZSDoBs5IOa7uIURj+JfJnO87UzHFxvFPd5/pxTPCSC15wyGA=
-X-Received: by 2002:a05:622a:17ce:b0:447:e04d:51b1 with SMTP id
- d75a77b69052e-44f923eff22mr662261cf.11.1721264998174; Wed, 17 Jul 2024
- 18:09:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721265625; x=1721870425;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PxjsblxnH5iuA7NfAqwmspI+mx3z20tnA2XR1wlHmO8=;
+        b=ZmR2RQoeyjJ1ePK8wDImMDTDYxoF7SIPjA5I61K/61LfOYnZ5N2XAkWMJDcpy3Rebj
+         4+esfhbzl66pP4kNT5rJffeQgsQHS9d9AoAmLH98cxKwYezqyy4AGXpI5j8eWKF+HKvm
+         wB68MPh+DgLdwaeDN9DBoRMokcRSdiUjthCy13iK0yblKbPejQRbiEYpMXv4o6oAp54o
+         bAWfyKN/X9wdR8B4AnQSdwegrrZRpo7gzBKMpRmzVShoQGrMiUIAsLRJjRZWCjHkJAir
+         mY/HC2wmQG8VOQGYp83Pawche2pmP0HLkWUTbsukAJj2MztJ9qlzkMtMxN9+XxY7Shcg
+         SKgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGMDB9xVuRYPecCha+YuOtIsJx6XIG1wHiNTA4pcVSz/K4gl50fWFA/3YPexNjZC0qVrK5rAMJjZHDodKt7TizpuSaP+5KnaoKAkUI
+X-Gm-Message-State: AOJu0YxM9LGRvd2Y4gKc8e8Z9gO3KWGHY9HxyFz6FP2QzfNtTjhUDld4
+	51R4JPjffDc1l2KVvgyuw4hH2ylNTaKwcpWpuh8mmt8crgLwwybv88CMyu42NE7hucfDa+e1Fe6
+	UoQF8wk6myDXf7dnvm3uu4srHDgQus0hJoviRTzLMZ0rxoBrzTuoOUmA=
+X-Google-Smtp-Source: AGHT+IHvzSWERrgqmpHFd9R48m18q44H+dXyjzOcKvjljWu3+t9iCua050UU8igmgPyN0Aw9P+7aH3B2dz42plKypis44oN/8Grk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710234222.2333120-1-jthoughton@google.com>
- <DS0PR11MB637397059B5DAE2AA7B819BCDCA12@DS0PR11MB6373.namprd11.prod.outlook.com>
- <CADrL8HUv+RvazbOyx+NJ1oNd8FdMGd_T61Kjtia1cqJsN=WiOA@mail.gmail.com> <DS0PR11MB63735DAF7F168405D120A5C6DCA32@DS0PR11MB6373.namprd11.prod.outlook.com>
-In-Reply-To: <DS0PR11MB63735DAF7F168405D120A5C6DCA32@DS0PR11MB6373.namprd11.prod.outlook.com>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 17 Jul 2024 18:09:21 -0700
-Message-ID: <CADrL8HWM-DX48GudKuc-N5KizZCqy-RvppejzktmtHS62VbaeA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/18] KVM: Post-copy live migration for guest_memfd
-To: "Wang, Wei W" <wei.w.wang@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Sean Christopherson <seanjc@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, David Matlack <dmatlack@google.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, Peter Xu <peterx@redhat.com>
+X-Received: by 2002:a05:6638:3015:b0:4b9:2092:c7c9 with SMTP id
+ 8926c6da1cb9f-4c215ce0877mr171422173.5.1721265624823; Wed, 17 Jul 2024
+ 18:20:24 -0700 (PDT)
+Date: Wed, 17 Jul 2024 18:20:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000021e299061d7b6219@google.com>
+Subject: [syzbot] [io-uring?] general protection fault in __io_remove_buffers
+From: syzbot <syzbot+2074b1a3d447915c6f1c@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 17, 2024 at 8:03=E2=80=AFAM Wang, Wei W <wei.w.wang@intel.com> =
-wrote:
->
-> On Wednesday, July 17, 2024 1:10 AM, James Houghton wrote:
-> > You're right that, today, including support for guest-private memory
-> > *only* indeed simplifies things (no async userfaults). I think your str=
-ategy for
-> > implementing post-copy would work (so, shared->private conversion fault=
-s for
-> > vCPU accesses to private memory, and userfaultfd for everything else).
->
-> Yes, it works and has been used for our internal tests.
->
-> >
-> > I'm not 100% sure what should happen in the case of a non-vCPU access t=
-o
-> > should-be-private memory; today it seems like KVM just provides the sha=
-red
-> > version of the page, so conventional use of userfaultfd shouldn't break
-> > anything.
->
-> This seems to be the trusted IO usage (not aware of other usages, emulate=
-d device
-> backends, such as vhost, work with shared pages). Migration support for t=
-rusted device
-> passthrough doesn't seem to be architecturally ready yet. Especially for =
-postcopy,
-> AFAIK, even the legacy VM case lacks the support for device passthrough (=
-not sure if
-> you've made it internally). So it seems too early to discuss this in deta=
-il.
+Hello,
 
-We don't migrate VMs with passthrough devices.
+syzbot found the following issue on:
 
-I still think the way KVM handles non-vCPU accesses to private memory
-is wrong: surely it is an error, yet we simply provide the shared
-version of the page. *shrug*
+HEAD commit:    d67978318827 Merge tag 'x86_cpu_for_v6.11_rc1' of git://gi..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1178e9e9980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e206d588252bd3ff
+dashboard link: https://syzkaller.appspot.com/bug?extid=2074b1a3d447915c6f1c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e07d9e980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16adf045980000
 
->
-> >
-> > But eventually guest_memfd itself will support "shared" memory,
->
-> OK, I thought of this. Not sure how feasible it would be to extend gmem f=
-or
-> shared memory. I think questions like below need to be investigated:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f34b31760156/disk-d6797831.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a92e51d8d32e/vmlinux-d6797831.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/000a6a162550/bzImage-d6797831.xz
 
-An RFC for it got posted recently[1]. :)
+The issue was bisected to:
 
-> #1 what are the tangible benefits of gmem based shared memory, compared t=
-o the
->      legacy shared memory that we have now?
+commit 87585b05757dc70545efb434669708d276125559
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Wed Mar 13 02:24:21 2024 +0000
 
-For [1], unmapping guest memory from the direct map.
+    io_uring/kbuf: use vm_insert_pages() for mmap'ed pbuf ring
 
-> #2 There would be some gaps to make gmem usable for shared pages. For
->       example, would it support userspace to map (without security concer=
-ns)?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16458ba5980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=15458ba5980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11458ba5980000
 
-At least in [1], userspace would be able to mmap it, but KVM would
-still not be able to GUP it (instead going through the normal
-guest_memfd path).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2074b1a3d447915c6f1c@syzkaller.appspotmail.com
+Fixes: 87585b05757d ("io_uring/kbuf: use vm_insert_pages() for mmap'ed pbuf ring")
 
-> #3 if gmem gets extended to be something like hugetlb (e.g. 1GB), would i=
-t result
->      in the same issue as hugetlb?
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 PID: 35 Comm: kworker/u8:2 Not tainted 6.10.0-syzkaller-01155-gd67978318827 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Workqueue: iou_exit io_ring_exit_work
+RIP: 0010:__io_remove_buffers+0xac/0x700 io_uring/kbuf.c:341
+Code: 42 80 3c 28 00 74 08 48 89 df e8 5f 02 5b fd 4d 89 fe 48 89 6c 24 40 48 89 5c 24 18 48 8b 1b 48 83 c3 0e 48 89 d8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 3b 05 00 00 44 0f b7 3b 49 8d 7c 24 16
+RSP: 0018:ffffc90000ab7840 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000002 RCX: ffff888017a8da00
+RDX: ffff888017a8da00 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 1ffff110052be8e4 R08: ffffffff849ddaa4 R09: 1ffff110052be8e3
+R10: dffffc0000000000 R11: ffffed10052be8e4 R12: ffff8880295f4700
+R13: dffffc0000000000 R14: ffff8880295f4720 R15: ffff8880295f4720
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555589c12650 CR3: 000000000e132000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ io_put_bl io_uring/kbuf.c:378 [inline]
+ io_destroy_buffers+0x14e/0x490 io_uring/kbuf.c:392
+ io_ring_ctx_free+0xa00/0x1070 io_uring/io_uring.c:2613
+ io_ring_exit_work+0x80f/0x8a0 io_uring/io_uring.c:2844
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd40 kernel/workqueue.c:3390
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__io_remove_buffers+0xac/0x700 io_uring/kbuf.c:341
+Code: 42 80 3c 28 00 74 08 48 89 df e8 5f 02 5b fd 4d 89 fe 48 89 6c 24 40 48 89 5c 24 18 48 8b 1b 48 83 c3 0e 48 89 d8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 3b 05 00 00 44 0f b7 3b 49 8d 7c 24 16
+RSP: 0018:ffffc90000ab7840 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000002 RCX: ffff888017a8da00
+RDX: ffff888017a8da00 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 1ffff110052be8e4 R08: ffffffff849ddaa4 R09: 1ffff110052be8e3
+R10: dffffc0000000000 R11: ffffed10052be8e4 R12: ffff8880295f4700
+R13: dffffc0000000000 R14: ffff8880295f4720 R15: ffff8880295f4720
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555589c12650 CR3: 000000000e132000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1)
+   5:	74 08                	je     0xf
+   7:	48 89 df             	mov    %rbx,%rdi
+   a:	e8 5f 02 5b fd       	call   0xfd5b026e
+   f:	4d 89 fe             	mov    %r15,%r14
+  12:	48 89 6c 24 40       	mov    %rbp,0x40(%rsp)
+  17:	48 89 5c 24 18       	mov    %rbx,0x18(%rsp)
+  1c:	48 8b 1b             	mov    (%rbx),%rbx
+  1f:	48 83 c3 0e          	add    $0xe,%rbx
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
+  2f:	84 c0                	test   %al,%al
+  31:	0f 85 3b 05 00 00    	jne    0x572
+  37:	44 0f b7 3b          	movzwl (%rbx),%r15d
+  3b:	49 8d 7c 24 16       	lea    0x16(%r12),%rdi
 
-Good question. At the end of the day, the problem is that GUP relies
-on host mm page table mappings, and HugeTLB can't map things with
-PAGE_SIZE PTEs.
 
-At least as of [1], given that KVM doesn't GUP guest_memfd memory, we
-don't rely on the host mm page table layout, so we don't have the same
-problem.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-For VMMs that want to catch userspace (or non-GUP kernel) accesses via
-a guest_memfd VMA, then it's possible it has the same issue. But for
-VMMs that don't care to catch these kinds of accesses (the kind of
-user that would use KVM Userfault to implement post-copy), it doesn't
-matter.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-[1]: https://lore.kernel.org/kvm/20240709132041.3625501-1-roypat@amazon.co.=
-uk/
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
->
-> The support of using gmem for shared memory isn't in place yet, and this =
-seems
-> to be a dependency for the support being added here.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-Perhaps I've been slightly preemptive. :) I still think there's useful
-discussion here.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-> > and
-> > (IIUC) it won't use VMAs, so userfaultfd won't be usable (without chang=
-es
-> > anyway). For a non-confidential VM, all memory will be "shared", so sha=
-red-
-> > >private conversions can't help us there either.
-> > Starting everything as private almost works (so using private->shared
-> > conversions as a notification mechanism), but if the first time KVM att=
-empts to
-> > use a page is not from a vCPU (and is from a place where we cannot easi=
-ly
-> > return to userspace), the need for "async userfaults"
-> > comes back.
->
-> Yeah, this needs to be resolved for KVM userfaults. If gmem is used for p=
-rivate
-> pages only, this wouldn't be an issue (it will be covered by userfaultfd)=
-.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-We're on the same page here.
-
->
->
-> >
-> > For this use case, it seems cleaner to have a new interface. (And, as f=
-ar as I can
-> > tell, we would at least need some kind of "async userfault"-like mechan=
-ism.)
-> >
-> > Another reason why, today, KVM Userfault is helpful is that userfaultfd=
- has a
-> > couple drawbacks. Userfaultfd migration with HugeTLB-1G is basically
-> > unusable, as HugeTLB pages cannot be mapped at PAGE_SIZE. Some discussi=
-on
-> > here[1][2].
-> >
-> > Moving the implementation of post-copy to KVM means that, throughout
-> > post-copy, we can avoid changes to the main mm page tables, and we only
-> > need to modify the second stage page tables. This saves the memory need=
-ed
-> > to store the extra set of shattered page tables, and we save the perfor=
-mance
-> > overhead of the page table modifications and accounting that mm does.
->
-> It would be nice to see some data for comparisons between kvm faults and =
-userfaultfd
-> e.g., end to end latency of handling a page fault via getting data from t=
-he source.
-> (I didn't find data from the link you shared. Please correct me if I miss=
-ed it)
-
-I don't have an A/B comparison for kernel end-to-end fault latency. :(
-But I can tell you that with 32us or so network latency, it's not a
-huge difference (assuming Anish's series[2]).
-
-The real performance issue comes when we are collapsing the page
-tables at the end. We basically have to do ~2x of everything (TLB
-flushes, etc.), plus additional accounting that HugeTLB/THP does
-(adjusting refcount/mapcount), etc. And one must optimize how the
-unmap MMU notifiers are called so as to not stall vCPUs unnecessarily.
-
-[2]: https://lore.kernel.org/kvm/20240215235405.368539-1-amoorthy@google.co=
-m/
-
->
->
-> > We don't necessarily need a way to go from no-fault -> fault for a page=
-, that's
-> > right[4]. But we do need a way for KVM to be able to allow the access t=
-o
-> > proceed (i.e., go from fault -> no-fault). IOW, if we get a fault and c=
-ome out to
-> > userspace, we need a way to tell KVM not to do that again.
-> > In the case of shared->private conversions, that mechanism is toggling =
-the memory
-> > attributes for a gfn.  For conventional userfaultfd, that's using
-> > UFFDIO_COPY/CONTINUE/POISON.
-> > Maybe I'm misunderstanding your question.
->
-> We can come back to this after the dependency discussion above is done. (=
-If gmem is only
-> used for private pages, the support for postcopy, including changes requi=
-red for VMMs, would
-> be simpler)
+If you want to undo deduplication, reply with:
+#syz undup
