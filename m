@@ -1,176 +1,57 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C300658AD0
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 19:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2A953E22
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 19:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721329549; cv=none; b=Vn5ugaPessm6c8ja/NJ+nJ6/RuCDamQRFhRhGuVnJ9a9M4IFMFoHx1zYPk2XVDJMs+QbqTXaQrjjCk+KCGVcfg8YGMoct+y7VvhsFWdk5EY13/OljNTDRV7pwyIBQxZNl+cCQiT3ktDBxTMnvZrk23G/TBUhIX5IPOMT+Izqpa8=
+	t=1721330064; cv=none; b=Qulwkcy2UnorTfQ+C+ZBOsn+9xBhM/LuwLC8fiQUuaqnTWG6fxk3nf05mgpqiH6QqvhRu56/TiTcDBO0PBcGkQ11uz3zYdcrtQGaWZTfjh9Nc/KmtmAunTPtAdYSjNyzLwBFomDWecZQK9UjZQN/1vnrB51k+X172iffHh21Lug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721329549; c=relaxed/simple;
-	bh=LEpFXGHY09CKdjCqSNurpdIygGze9RqWT6Dpe3rXGqo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MFm/Sg6ehFg3+KzvXLkiJH081lQ5WBBqeFApijYO+Xb+Y3Q2Y2IGkLdTuEAr/DjydczVZNq/HTpc514ErpoJi8XTCHinBDizCcYlE8p0nWWrwP6E3gQ458W1G1Qi57Adaqh7/XJrFiqSEslshmHCiRGkVUUSPuY86D0MrnvUEeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xY4Q+itR; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1721330064; c=relaxed/simple;
+	bh=hjw2ZHoWiAAWYOiH3UPbafpIIzKkmrgLJRhk4yJ82G8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EHYjz21uvU+T4iYIcPcCi292ztTgfMCLRPVOh0FdqbxEqIqDEy2IInOD+4QBSoA7L3Hm/VbFg2Oau/3eUUvDdJONAyjHayE+CGedwMp1GQk81oo5euXakpTXgX0jvlQCrdtapA1J9i2qZndxj7gYipsj4BL3814whqpRnryZUg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnX7RWM6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xY4Q+itR"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eedebccfa4so13291441fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 12:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721329546; x=1721934346; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=beieGnkYMyeR1aFjFu8NC1zTKlJgT0GM9SMQS29saYE=;
-        b=xY4Q+itRPJ6Gtn1KDIoObq2ba4QTDLs61ras+xiAKy2fNtESbBUvhh+SpyK0lZmfkZ
-         +axZ2c71hba8ISYSCWHfhduIbeduGZ4IuspcqjBgTg6HFDyADeCmuYDL07Kyhk71xHQ0
-         qT93JtXQ7S0ktjOnRY9U1kjnbbcteoD8QQ1MbIO7n5gSLg8B5e4N7dutxCFSldeVD3wj
-         f0id/6XZRsPdsAUvaS4WwCP/u1a/QcegRVJiICnfw9iWoUk/wQ6WJoSedpTbu/HMRaG+
-         3YVoTWBkSrLH7u8i8fuzHfR3lTn0LQUgkBEA+UxUGwE8Y6DnSPmQMS2g2vE1NiQpmw8d
-         SMoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721329546; x=1721934346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=beieGnkYMyeR1aFjFu8NC1zTKlJgT0GM9SMQS29saYE=;
-        b=AdZu4wAIA26cQDGV5W8ZOe5Rzf7x4o+eYHr9oulBSm+kI0U3kqExwWP6jGGhcNRkfS
-         0N46JzUSlJzfppkNN3I+omHel5W57AZc46O9IdlYhnv55pdx1dOqp7fnQjDCR0sIwbiO
-         teT1HWyfTBOcNHmDltv4gJEYis7AYS7bt5d/VemJ0sh66fGPuusHrGCjey2hD1kx61rE
-         0L9IvnGH3dv2hJrhi8RDv5+djW4J/L7Zcd2obqyuJMtXFPt9kXeyvvkBKDyfPTXQO9nC
-         d5boVKmqbZTB16Nq9Io89MsSzfaTmZVqLLgb4EQZ583V43A+YcAAdu0nMTP2HnFQtbbr
-         0ZWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxOl8JFpmY+kt8ib2r8C+ymRvn1rJepLLNhy4FbVChlrH5lxe9dFsUjH8eFLr6sPaAsudihvBCG8HLgBsLfv7XWAqemdFZnWlySqQR
-X-Gm-Message-State: AOJu0Yxwi+1FHFuuq1JTHRXXeQanp91ChIGqaDnrar0n9pd9qbxGwo4T
-	UAugLVNVaTLXmsxeFhnuUwqoTxf+CsE6qq2oHyDpIuySeLfeypfvCNQHREwJf7WWTTQvn3StYhR
-	PM53+lh3eo2eWDb/og7dULO9xFv2cMV5nvcup0g==
-X-Google-Smtp-Source: AGHT+IGUVlI419Uq8uMTqzcmy7TKFkjT+FFh+z/2kkfsM1qDzqBSIRxHRwTuhYYGoQDDhRwTWQuYaw4MRfjnP3MtX7E=
-X-Received: by 2002:a2e:908b:0:b0:2ee:d96b:83a with SMTP id
- 38308e7fff4ca-2ef05c76889mr23211431fa.18.1721329545770; Thu, 18 Jul 2024
- 12:05:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnX7RWM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6971C116B1;
+	Thu, 18 Jul 2024 19:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721330063;
+	bh=hjw2ZHoWiAAWYOiH3UPbafpIIzKkmrgLJRhk4yJ82G8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tnX7RWM6+lksDboMwSPGdwb6e1sP9iabDwBZJMh8Hf52hZp7aIkbYsSgMLf5FVQSg
+	 172/yMT7pomiTNl4lyzg40Pl7x6KkeaAGFpyHkGiapiKCHpvnf+eshnv3j88hMvL3e
+	 qxnbC1jmXLRytwvPzLHSTYTMUhtGfbbMVElDQTcjspSRyP18mmfWDPI4jIuG0svlKZ
+	 MdxGIcMymW6gy8EYCRSD3YVVJQE/rGmqMZC09bZC3b6Dj/NOBlWhgYZb5fIUtKOhmS
+	 qmX/GBLjhYthQy8iK/CLyhNTWbHSPJRbRiW8FQXPiYinHxU1CDJX9zmDx5el29FVtF
+	 /+xkFq4al4JzQ==
+Date: Thu, 18 Jul 2024 13:14:20 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: stuart hayes <stuart.w.hayes@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	linux-nvme@lists.infradead.org, Hannes Reinecke <hare@suse.de>,
+	Martin Wilck <martin.wilck@suse.com>,
+	Ayush Siddarath <ayush.siddarath@dell.com>
+Subject: Re: [PATCH v4] nvme_core: scan namespaces asynchronously
+Message-ID: <ZplpjJqx0lySDzx-@kbusch-mbp.dhcp.thefacebook.com>
+References: <20240717185550.22102-1-stuart.w.hayes@gmail.com>
+ <Zpgtr33uqbMogK7c@kbusch-mbp.dhcp.thefacebook.com>
+ <6629583d-4681-49bc-8a7c-a87c3051c30b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708075023.14893-1-brgl@bgdev.pl> <20240708075023.14893-4-brgl@bgdev.pl>
- <7c0140be-4325-4005-9068-7e0fc5ff344d@nvidia.com> <CAMRc=McF93F6YsQ+eT9oOe+c=2ZCQ3rBdj+-3Ruy8iO1B-syjw@mail.gmail.com>
- <CAMRc=Mc=8Sa76TOZujMMZcaF2Dc8OL_HKo=gXuj-YALaH4zKHg@mail.gmail.com>
- <6e12f5a5-8007-4ddc-a5ad-be556656af71@nvidia.com> <CAMRc=MdvsKeYEEvf2w3RxPiR=yLFXDwesiQ75JHTU-YEpkF-ZA@mail.gmail.com>
- <874f68e3-a5f4-4771-9d40-59d2efbf2693@nvidia.com> <CAMRc=MeKdg-MnO_kNkgpwbuSgL0mfAw8HveGFKFwUeNd6379bQ@mail.gmail.com>
- <5e432afa-5a00-46bd-b722-4bf8f875fc39@nvidia.com>
-In-Reply-To: <5e432afa-5a00-46bd-b722-4bf8f875fc39@nvidia.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 18 Jul 2024 21:05:34 +0200
-Message-ID: <CAMRc=McCa3qUL5Mjxn2TVUeJzqaBaDCx52z8i7hfO=tfYFGgWA@mail.gmail.com>
-Subject: Re: [RESEND PATCH net-next v3 3/4] net: phy: aquantia: wait for the
- GLOBAL_CFG to start returning real values
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Brad Griffis <bgriffis@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6629583d-4681-49bc-8a7c-a87c3051c30b@gmail.com>
 
-On Thu, Jul 18, 2024 at 7:42=E2=80=AFPM Jon Hunter <jonathanh@nvidia.com> w=
-rote:
->
->
-> On 18/07/2024 15:59, Bartosz Golaszewski wrote:
->
-> ...
->
-> >>>>> TBH I only observed the issue on AQR115C. I don't have any other mo=
-del
-> >>>>> to test with. Is it fine to fix it by implementing
-> >>>>> aqr115_fill_interface_modes() that would first wait for this regist=
-er
-> >>>>> to return non-0 and then call aqr107_fill_interface_modes()?
-> >>>>
-> >>>> I am doing a bit more testing. We have seen a few issues with this P=
-HY
-> >>>> driver and so I am wondering if we also need something similar for t=
-he
-> >>>> AQR113C variant too.
-> >>>>
-> >>>> Interestingly, the product brief for these PHYs [0] do show that bot=
-h
-> >>>> the AQR113C and AQR115C both support 10M. So I wonder if it is our
-> >>>> ethernet controller that is not supporting 10M? I will check on this=
- too.
-> >>>>
-> >>>
-> >>> Oh you have an 113c? I didn't get this. Yeah, weird, all docs say it
-> >>> should support 10M. In fact all AQR PHYs should hence my initial
-> >>> change.
-> >>
-> >>
-> >> Yes we have an AQR113C. I agree it should support this, but for whatev=
-er
-> >> reason this is not advertised. I do see that 10M is advertised as
-> >> supported by the network ...
-> >>
-> >>    Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> >>                                         100baseT/Half 100baseT/Full
-> >>                                         1000baseT/Full
-> >>
-> >> My PC that is on the same network supports 10M, but just not this Tegr=
-a
-> >> device. I am checking to see if this is expected for this device.
-> >>
-> >
-> > I sent a patch for you to test. I think that even if it doesn't fully
-> > fix the issue you're observing, it's worth picking it up as it reduces
-> > the impact of the workaround I introduced.
->
->
-> Thanks! I will test this tonight.
->
-> > I'll be off next week so I'm sending it quickly with the hope it will b=
-e useful.
->
->
-> OK thanks for letting me know.
->
-> Another thought I had, which is also quite timely, is that I have
-> recently been testing a patch [0] as I found that this actually resolves
-> an issue where we occasionally see our device fail to get an IP address.
->
-> This was sent out over a year ago and sadly we failed to follow up :-(
->
-> Russell was concerned if this would make the function that was being
-> changed fail if it did not have the link (if I am understanding the
-> comments correctly). However, looking at the code now, I see that the
-> aqr107_read_status() function checks if '!phydev->link' before we poll
-> the TX ready status, and so I am wondering if this change is OK? From my
-> testing it does work. I would be interested to know if this may also
-> resolve your issue?
->
-> With this change [0] I have been able to do 500 boots on our board and
-> verify that the ethernet controller is able to get an IP address every
-> time. Without this change it would fail to get an IP address anywhere
-> from 1-100 boots typically.
->
-> I will test your patch in the same way, but I am wondering if both are
-> trying to address the same sort of issue?
->
+On Wed, Jul 17, 2024 at 09:10:23PM -0500, stuart hayes wrote:
+> I agree, you aren't missing anything.  Thank you very much!  If you want
+> me to submit a new patch with this and Thomas' changes, let me know.
 
-The patch you linked does not fix the suspend/resume either. :(
-
-Bartosz
-
-> Cheers
-> Jon
->
-> [0]
-> https://lore.kernel.org/linux-tegra/20230628124326.55732-3-ruppala@nvidia=
-.com/#t
->
-> --
-> nvpublic
+No problem, I've folded in Thomas's suggestions as well, pushed to
+nvme-6.11. Thanks!
