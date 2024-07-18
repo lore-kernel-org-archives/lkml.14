@@ -1,278 +1,102 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-8.mail.web4u.cz (smtp7.web4u.cz [81.91.87.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A551420DF
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 14:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E181422AD;
+	Thu, 18 Jul 2024 14:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.91.87.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721313670; cv=none; b=G9HPretF4k7sPuxiWZkiW7I95GTm0CaQNbw1DjL7rQOZ0QpY0mSkLZeLSSVn3aMprEre9Ee7MtwcOfBI97u+ORyzIgRlB6g3meUZLWap3QOfoRSrN1Q3mGrwyGEJBBwT6TITZwovxpgNTHiw2S0l58SacVJWQ/Ow1ktQbj1qzA4=
+	t=1721313677; cv=none; b=JuU/5tLO5G67vIifbpCHukqxI15UBJ8kPay5GJylxrw/3wWWfSJ9pb1rHMCqdU5ihwzulQ/hc6bQmlpAJ59YkUzHnQA6wLVqMvNB/0p1cwJPmL7Wng/igAdUCm+G+4HEwMld8FwzMPlQjfvtpkahpkH3ZsUFwZSgFrpf0zl8+bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721313670; c=relaxed/simple;
-	bh=8iksS6ZFnv53ZcAghL65KYmsNJMU8ft6S6eoiAhZaOk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=N8FWKITAnv894QkE8MW4hSVx+djq4jBH29ztGdsNfTKXUqE9LaRg3Gg3X7rF6cd4BpSJ4VebODId8+KA/UcThX01vzDG7BDpiM6CSsivpMk1tSARedi2natsx536XlJ/NHk63lgoF3EO4iTrVrceNTL2r6Utk3EfioJ5G+dxUks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=HgVax8GW; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="HgVax8GW"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3686b554cfcso91892f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1721313666; x=1721918466; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=d5zeQJ5Ow3UH0+RdZ7WJRjKIJGbUGTjL+v0QPQ6ApNI=;
-        b=HgVax8GWSB4R1kltVA/DXD5F3bYvs9nzcMo1TE75KXYE4mZNQsa7M4YXog31whlRoO
-         wNpaLOwqMIHbGcmstQU2Lwzp/khKUTLoQrZlz8tz7F1FjAaRghMZcuraCYbOHfDMPcXF
-         1vGgXDVJu6f+/Xp8nynyuzd6GYuaMZCE+flQ9LqUTKTh/KeuSM4Ym5BJ3qoDeukfrlIq
-         0XEzsmF2M/5Mp978T+woQvLKlkhiv3Vlnck+HETRVLcZKjLKhFJapu2Dd4UjxbW8vurn
-         OiRCcDf+Ch0B8yRglLobsL7MeCFPGSb8WyqQkVctOeRGzW540/rf0v/d/cFFWXIM5ArV
-         FyMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721313666; x=1721918466;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d5zeQJ5Ow3UH0+RdZ7WJRjKIJGbUGTjL+v0QPQ6ApNI=;
-        b=pxVWF8lKN8tam82D+vkwLTwSRPkFY/YS7IKu77dTE4UsdAjMf7YTNMoHwPpOvrArcy
-         kvUfEa32DY43+0kOUnq11IHrVhphRLEJ6v2uazJWWZgni0hHey6e4EpZ0xwffJihnQp3
-         oeIVh6/FhJVza3J/XCejlcEjw2JIuU/f12evzBpfhzezfcyvJTm5zop4DqbfbpjdQVQW
-         +8TZyZcnBBvcGWNUKE1CMq2RDEETHLeHH4HYb3i0MTGNAvcOCMwo5hnEAaIfp3aBmkW1
-         hvGlCRbBmV136yFTYPU+ZgQ+Qw0sakykbjsiKEd1I2F3eNUpIKLXp/ast11LURDYgjDn
-         gn6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWD0T2bFaPx/mBTMG3ltJdndrAXyHjLoGN4Aqnw3pnG7ghE4zAQ/Ncj+dSdcSUpnSBbNyTzTw9Cr5p5YJnHmIwuvM1+hPtfDwfb5vRW
-X-Gm-Message-State: AOJu0YxZpxOCc6/vg8n/BEFud23EHp0w1dPNHKDeMkbzVQXfO+COqF6Q
-	iBJQe6gbB+wx7k9Nq2RfEoGPqXRjtHay5gH31YZ98uGurONVtS0Yj52farT0T1w=
-X-Google-Smtp-Source: AGHT+IHLLY7FV8d3TW5DeDftcP9CR4qKgZexsCdXD1McSEmqtB8zHI2JozSns5pNcAAnLe1mJiEB7g==
-X-Received: by 2002:a5d:59a2:0:b0:367:9073:3496 with SMTP id ffacd0b85a97d-3683160e527mr4242349f8f.29.1721313666237;
-        Thu, 18 Jul 2024 07:41:06 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.144])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3685043637fsm1903132f8f.66.2024.07.18.07.41.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 07:41:05 -0700 (PDT)
-Message-ID: <fd8078cb-fe1c-4aef-9e83-be2baa529720@tuxon.dev>
-Date: Thu, 18 Jul 2024 17:41:03 +0300
+	s=arc-20240116; t=1721313677; c=relaxed/simple;
+	bh=piSSvhcOXa7lk50JaJgPTy2qVuOMxR5seC/zJ+ZV1iI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dwxyn2KUUmb8pwPZq3ORySCPy0yOyn2T1AsDZhJVMgm38kLdXDM2uNmuUBKkUTXBHIe8IixPM5bBRhF7ENG+KoCYbfb4C/y/gbTSzuMC/Yrd2G4KnE0VNO/cbV0c6BjyJ/1Q8X1oEs4UHZcAZ7kUD94q0DzMwlBOnOPQbdu+x1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=foxlink.cz; spf=pass smtp.mailfrom=foxlink.cz; arc=none smtp.client-ip=81.91.87.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=foxlink.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxlink.cz
+Received: from mx-8.mail.web4u.cz (localhost [IPv6:::1])
+	by mx-8.mail.web4u.cz (Postfix) with ESMTP id 1ED6B1FFCBF;
+	Thu, 18 Jul 2024 16:30:54 +0200 (CEST)
+Received: from kettlebell.localdomain (unknown [193.86.188.206])
+	(Authenticated sender: m.liska@foxlink.cz)
+	by mx-8.mail.web4u.cz (Postfix) with ESMTPA id E55901FF9DF;
+	Thu, 18 Jul 2024 16:30:53 +0200 (CEST)
+From: m.liska@foxlink.cz
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	acme@kernel.org,
+	irogers@google.com,
+	Martin Liska <martin.liska@hey.com>
+Subject: [PATCH] perf script: add --addr2line option
+Date: Thu, 18 Jul 2024 16:30:09 +0200
+Message-ID: <20240718143009.197851-1-m.liska@foxlink.cz>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-Subject: Re: [PATCH v2 03/11] clk: renesas: clk-vbattb: Add VBATTB clock
- driver
-To: Stephen Boyd <sboyd@kernel.org>, alexandre.belloni@bootlin.com,
- conor+dt@kernel.org, geert+renesas@glider.be, krzk+dt@kernel.org,
- lee@kernel.org, magnus.damm@gmail.com, mturquette@baylibre.com,
- p.zabel@pengutronix.de, robh@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rtc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240716103025.1198495-1-claudiu.beznea.uj@bp.renesas.com>
- <20240716103025.1198495-4-claudiu.beznea.uj@bp.renesas.com>
- <2abcd440664067d95b1ac0e765ad55a3.sboyd@kernel.org>
- <e3103f07-ce8a-4c34-af5c-bb271c7ec99a@tuxon.dev>
- <4cacf090dc56c3ffd15bccd960065769.sboyd@kernel.org>
-Content-Language: en-US
-In-Reply-To: <4cacf090dc56c3ffd15bccd960065769.sboyd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-W4U-Auth: 873ed7be6bc925f4f6c218afcc7769815718d707
 
+From: Martin Liska <martin.liska@hey.com>
 
+Similarly to other subcommands (like report, top), it would be handy to
+provide a path for addr2line command.
+---
+ tools/perf/Documentation/perf-script.txt |  3 +++
+ tools/perf/builtin-script.c              | 10 +++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-On 18.07.2024 03:39, Stephen Boyd wrote:
-> Quoting claudiu beznea (2024-07-17 01:31:20)
->> Hi, Stephen,
->>
->> On 17.07.2024 01:28, Stephen Boyd wrote:
->>> Quoting Claudiu (2024-07-16 03:30:17)
->>>> diff --git a/drivers/clk/renesas/clk-vbattb.c b/drivers/clk/renesas/clk-vbattb.c
->>>> new file mode 100644
->>>> index 000000000000..8effe141fc0b
->>>> --- /dev/null
->>>> +++ b/drivers/clk/renesas/clk-vbattb.c
->>>> @@ -0,0 +1,212 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * VBATTB clock driver
->>>> + *
->>>> + * Copyright (C) 2024 Renesas Electronics Corp.
->>>> + */
->>>> +
->>>> +#include <linux/cleanup.h>
->>>> +#include <linux/clk.h>
->>>
->>> Prefer clk providers to not be clk consumers.
->>
->> I added it here to be able to use devm_clk_get_optional() as it was
->> proposed to me in v1 to avoid adding a new binding for bypass and detect if
->> it's needed by checking the input clock name.
->>
-> 
-> Understood.
-> 
->>
->>>
->>> I also wonder if this is really a mux, 
->>
->> It's a way to determine what type of clock (crystal oscillator or device
->> clock) is connected to RTXIN/RTXOUT pins of the module
->> (the module block diagram at [1]) based on the clock name. Depending on the
->> type of the clock connected to RTXIN/RTXOUT we need to select the XC or
->> XBYP as input for the mux at [1].
->>
->> [1] https://gcdnb.pbrd.co/images/QYsCvhfQlX6n.png
-> 
-> That diagram shows a mux block, so at least something in there is a mux.
-> From what I can tell the binding uses clock-names to describe the mux.
-> What I'd like to avoid is using clk_get() to determine how to configure
-> the mux. That's because clk_get() is a clk consumer API, and because we
-> want clk providers to be able to register clks without making sure that
-> the entire parent chain has been registered first. Eventually, we'd like
-> clk_get() to probe defer if the clk is an orphan. Having clk providers
-> use clk_get() breaks that pretty quickly.
-> 
->>
->>
->>> and either assigned-clock-parents should be used, 
->>> or the clk_ops should have an init routine that looks at
->>> which parent is present by determining the index and then use that to
->>> set the mux. The framework can take care of failing to set the other
->>> parent when it isn't present.
->>
->>
->> On the board, at any moment, it will be only one clock as input to the
->> VBATTB clock (either crystal oscillator or a clock device). If I'm getting
->> you correctly, this will involve describing both clocks in some scenarios.
->>
->> E.g. if want to use crystal osc, I can use this DT description:
->>
->> vbattclk: clock-controller@1c {
->>         compatible = "renesas,r9a08g045-vbattb-clk";
->>         reg = <0 0x1c 0 0x10>;
->>         clocks = <&vbattb_xtal>;
->>         clock-names = "xin";
->>         #clock-cells = <0>;
->>         status = "disabled";
->> };
->>
->> vbattb_xtal: vbattb-xtal {
->>         compatible = "fixed-clock";
->>         #clock-cells = <0>;
->>         clock-frequency = <32768>;
->> };
->>
->> If external clock device is to be used, I should describe a fake clock too:
->>
->> vbattclk: clock-controller@1c {
->>         compatible = "renesas,r9a08g045-vbattb-clk";
->>         reg = <0 0x1c 0 0x10>;
->>         clocks = <&vbattb_xtal>, <&ext_clk>;
-> 
-> Is vbattb_xtal the fake clk? If so, I'd expect this to be
-> 
-> 	clocks = <0>, <&ext_clk>;
-> 
-> so that we don't have a useless clk node.
-> 
->>         clock-names = "xin", "clkin";
->>         #clock-cells = <0>;
->>         status = "disabled";
->> };
->>
->> vbattb_xtal: vbattb-xtal {
->>         compatible = "fixed-clock";
->>         #clock-cells = <0>;
->>         clock-frequency = <0>;
->> };
->>
->> ext_clk: ext-clk {
->>         compatible = "fixed-clock";
->>         #clock-cells = <0>;
->>         clock-frequency = <32768>;
->> };
->>
->> Is this what you are suggesting?
->>
-> 
-> Sort of. Ignoring the problem with the subnode for the clk driver, I
-> don't really like having clock-names that don't match the hardware pin
-> names. From the diagram you provided, it looks like clock-names should
-> be "bclk" and "rtxin" for the bus clock and the rtxin signal. Then the
-> clock-cells should be "1" instead of "0", and the mux should be one of
-> those provided clks and "xc" and "xbyp" should be the other two. If that
-> was done, then assigned-clocks could be used to assign the parent of the
-> mux.
-> 
-> #define VBATTBCLK          0
-> #define VBATTB_XBYP        1
-> #define VBATTB_XC          2
-> 
->     vbattb: vbattb@1005c000 {
->         compatible = "renesas,r9a08g045-vbattb";
->         reg = <0x1005c000 0x1000>;
->         ranges = <0 0 0x1005c000 0 0x1000>;
->         interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
->         interrupt-names = "tampdi";
->         clocks = <&cpg CPG_MOD R9A08G045_VBAT_BCLK>, <&ext_clk>;
->         clock-names = "bclk", "rtxin";
->         power-domains = <&cpg>;
->         resets = <&cpg R9A08G045_VBAT_BRESETN>;
->         #clock-cells = <1>;
->         assigned-clocks = <&vbattb VBATTBCLK>;
-> 	assigned-clock-parents = <&vbattb VBATTB_XBYP>;
->         renesas,vbattb-load-nanofarads = <12500>;
->     };
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index ff086ef05a0c..5abb960c4960 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -369,6 +369,9 @@ OPTIONS
+ --demangle-kernel::
+ 	Demangle kernel symbol names to human readable form (for C++ kernels).
+ 
++--addr2line=<path>::
++	Path to addr2line binary.
++
+ --header
+ 	Show perf.data header.
+ 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c16224b1fef3..301ea1c98e36 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3897,7 +3897,7 @@ int cmd_script(int argc, const char **argv)
+ 	};
+ 	struct utsname uts;
+ 	char *script_path = NULL;
+-	const char *dlfilter_file = NULL;
++	const char *dlfilter_file = NULL, *addr2line_path = NULL;
+ 	const char **__argv;
+ 	int i, j, err = 0;
+ 	struct perf_script script = {
+@@ -4052,6 +4052,8 @@ int cmd_script(int argc, const char **argv)
+ 			"Enable symbol demangling"),
+ 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
+ 			"Enable kernel symbol demangling"),
++	OPT_STRING(0, "addr2line", &addr2line_path, "path",
++			"addr2line binary to use for line numbers"),
+ 	OPT_STRING(0, "time", &script.time_str, "str",
+ 		   "Time span of interest (start,stop)"),
+ 	OPT_BOOLEAN(0, "inline", &symbol_conf.inline_name,
+@@ -4138,6 +4140,12 @@ int cmd_script(int argc, const char **argv)
+ 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
+ 		scripting_max_stack = itrace_synth_opts.callchain_sz;
+ 
++	if (addr2line_path) {
++		symbol_conf.addr2line_path = strdup(addr2line_path);
++		if (!symbol_conf.addr2line_path)
++			return -ENOMEM;
++	}
++
+ 	/* make sure PERF_EXEC_PATH is set for scripts */
+ 	set_argv_exec_path(get_argv_exec_path());
+ 
+-- 
+2.45.2
 
-I think I got it now. Thank you for the detailed explanation.
-
-> 
-> One last thing that I don't really understand is why this needs to be a
-> clk provider. In the diagram, the RTC is also part of vbattb, so it
-> looks odd to have this node be a clk provider with #clock-cells at all.
-
-I did it like this because the RTC is a different IP mapped at it's own
-address and considering the other VBATTB functionalities (tamper, SRAM)
-might be implemented at some point.
-
-I also failed to notice that RTC might not work w/o bclk being enabled
-(thanks for pointing it).
-
-I saw that diagram more like describing the always-on power domain
-(PD_VBATTB) where the VBATTB logic and RTC resides. That power domain is
-backed by battery. From HW manual [1]: "PD_VBATT domain is the area where
-the RTC/backup register is located, works on battery power when the power
-of PD_VCC and PD_ISOVCC domain are turned off."
-
-[1]
-https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rz-mpus/rzg3s-general-purpose-microprocessors-single-core-arm-cortex-a55-11-ghz-cpu-and-dual-core-cortex-m33-250
-
-> Is it the case that if the rtxin pin is connected, you mux that over,
-> and if the pin is disconnected you mux over the internal oscillator? 
-
-From the description here at [2] I'm getting that the "32-KHz clock
-oscillator" block is used when crystal oscillator is connected to RTXIN,
-RTXOUT pins and it is skipped if external clock device is connected.
-
-[2] https://i2.paste.pics/RFKJ0.png?rand=Xq8w1RLDvZ
-
-> I'm
-> really wondering why a clk provider is implemented at all. Why not just
-> hit the registers directly from the RTC driver depending on a
-> devm_clk_get_optional() call?
-
-I did it like this because the RTC is a different IP mapped at it's own
-address with it's own interrupts, clock, power domain and considering that
-the other VBATTB functionalities (tamper, SRAM) might be used at some point
-in future. At the same time I failed to noticed the VBATTB clock might be
-needed for RTC.
-
-Do you consider better to just take a regmap to VBATTB from RTC driver and
-set the VBATTB from RTC driver itself?
-
-Thank you,
-Claudiu Beznea
