@@ -1,110 +1,89 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C469146599;
-	Thu, 18 Jul 2024 23:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D861146599
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 23:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721344694; cv=none; b=EJ8AnH6VFGF6F4ZdRbIK+ad9iFiHQRM9qXo3H9kSTOiJ5RhZopvCXyvpheJbUt0o/OCNCKm90Ph1VthfZnImVfZsrul81D4KObqmuDOu1ApGP0rWvd0Pog+LSQZPATPIVI4PJ18F7aB4K+FgTt3ILTvXM6lI8zJQEj0ZXrUhiJc=
+	t=1721344797; cv=none; b=QpuvlEmlC1h60WnijbinitjWoLV8TRCjPlDs57b6hz/SohttfFOU2AHHpJ6k4K66+4xXRPsh9OCSF8lcPHdKunThS1U7GodmkkMl1fX6e04BVAgbAlDHZNojUSu7iZqRa6mLMR6whuQOFXBSsPX5aFKEW9hZhi1FpcT74/99sEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721344694; c=relaxed/simple;
-	bh=2JBzsHda1J1U5jMvpS9Q+LbRz69BUu1Ay8embQrCzHo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=KY450pS6M8S0alidCgkL0oyCqGmwD/bF8U5fsCMVZBCF56JsVx1fQmTm/+q6SIkb7rk4jrPRWu7dW5fzIfLrSt5/ZEqxzAm8AfbWdTcuXwD5bJyPiadNPnJykQklJsKRU/rOOTts9CLURbO7OMwymK8cQBJSOwyoIgFUadw1wFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Veshcnca; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721344797; c=relaxed/simple;
+	bh=/8T4PAISqcESgB5019gqovV4B7u+0FLU2jNEhDiyOuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GtragcD80FPCbVpKEPRdKC+DfQT1FecnlNU0+6800yEqFnc6PFSYBvd2shBm7cz9vvBBQfZeRqH39Dyy4c6ugm5id/I7HRuUgEKF2uAzBy2gRQKsyCscD8Z7ZfLFTMazHLKs7CaTNSI0zwb3iYFeal0ohrFMkeMGUCRZaz5MTOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MtDJgCeA; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Veshcnca"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46IF2SJo029179;
-	Thu, 18 Jul 2024 23:17:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=JEB4y2v+1AWVQ5lu+Qmj49
-	sje/vzHJWbPjhA22ZTVpI=; b=Veshcnca5vwq213RgPQRuZ4SZO7iS+rNvHzboE
-	q1yCFejmYW6cTcnsxTvQzMYelTZDSPUunskwJ9isj1bcQZFzgWnqa9dx/6bVch34
-	ounRazxdVas7R1A5VL7/qngTdw6VVlagaLhIuBq1Y/UZOGs2eMUAMBJdOxaZ9jyj
-	fRmgD4Y766uZr5E6HX93iqkAcfuxEchlGjKFhLHTxP0u0ImtBZTB14glTJqTxL6h
-	II5XCf6qsptDJTEtLQIQct2As7aFu52y8eypj6ljYkcHhuurnqM1mVKOv9XOl7K+
-	3EBvY0kee54+B2gAL7HuY3TSIWyWKa3PbDBU+aSR3N1E05zA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwj1pw5e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 23:17:59 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46INHwwC002056
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 23:17:58 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Jul
- 2024 16:17:58 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 18 Jul 2024 16:17:52 -0700
-Subject: [PATCH] mips: sibyte: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MtDJgCeA"
+X-Envelope-To: pasha.tatashin@soleen.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1721344793;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dOtxshDQKvEp2cqRUuCoshYKYABr2QosoOtr17LvFVU=;
+	b=MtDJgCeAW0oSsSYJNnn4q4Gf1asfEn1tIFvjuIol1BkJT74qI6ix1bkMpy3bmOistNC1pn
+	oMFryEg1mlkEOgmFBnQ0sD0GawsTJDfiCJDlZzju81Edly7s15Xce/QfWYubCc8TFuirUz
+	xaJTBxmJKD2Ul0eRNS250pUKYSJePMM=
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: jpoimboe@kernel.org
+X-Envelope-To: kent.overstreet@linux.dev
+X-Envelope-To: peterz@infradead.org
+X-Envelope-To: nphamcs@gmail.com
+X-Envelope-To: cerasuolodomenico@gmail.com
+X-Envelope-To: surenb@google.com
+X-Envelope-To: lizhijian@fujitsu.com
+X-Envelope-To: willy@infradead.org
+X-Envelope-To: vbabka@suse.cz
+X-Envelope-To: ziy@nvidia.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-mm@kvack.org
+Date: Thu, 18 Jul 2024 16:19:44 -0700
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: akpm@linux-foundation.org, jpoimboe@kernel.org, 
+	kent.overstreet@linux.dev, peterz@infradead.org, nphamcs@gmail.com, 
+	cerasuolodomenico@gmail.com, surenb@google.com, lizhijian@fujitsu.com, willy@infradead.org, 
+	vbabka@suse.cz, ziy@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3] vmstat: Kernel stack usage histogram
+Message-ID: <dz2ryasq3bbshlayah4dja3esvpwu5hzftgaapzbmjf42n7gzk@qs4wfnuuixtu>
+References: <20240530170259.852088-1-pasha.tatashin@soleen.com>
+ <cq7537bswpnbsmeiw3rh4ffrgqky4iufsaurukpk2flxts6jcu@6ctttkclvf3f>
+ <CA+CK2bCuiDAv05Xu6OuKB=gqJ5NM20F_uUyJV8E=XH=r47ik=Q@mail.gmail.com>
+ <i66bzhgnbql7bvuteqttpijml3ze3nngxapv32k7paqv25c5th@wd37oaastkvz>
+ <usfcwyq76np42s5b2rpzgjrvvtdpwakaum7ayy4zumaa73ke3u@txbukb2464bl>
+ <CA+CK2bBm4COW+jZifyjFEyJNcW1cAXWYzCpuO81jL3YziKxfRw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240718-md-mips-arch-mips-sibyte-common-v1-1-49b29b0555eb@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJ+imWYC/yXNSw7CMAxF0a1UHmOpCaACW0EM8nGJJZJUdkFFV
- fdOgNk7k/tWUBImhUu3gtCLlWtpMLsOQnLlTsixGWxvD/1gTpgjZp4UnYT0X8r+PROGmnMtOIS
- jiefe781ooVUmoZGX38P11uydEnpxJaRv98HluWB2OpPAtn0AEJdxs5AAAAA=
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC: <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.14.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: aPpEAgIKQo1k1PFfkSAcWi26QZhb9AGq
-X-Proofpoint-ORIG-GUID: aPpEAgIKQo1k1PFfkSAcWi26QZhb9AGq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-18_16,2024-07-18_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
- mlxscore=0 impostorscore=0 clxscore=1011 priorityscore=1501 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2407180157
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bBm4COW+jZifyjFEyJNcW1cAXWYzCpuO81jL3YziKxfRw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Since commit 1fffe7a34c89 ("script: modpost: emit a warning when the
-description is missing"), a module without a MODULE_DESCRIPTION() will
-result in a warning with make W=1. The following warning is being
-observed when ARCH=mips and CONFIG_SIBYTE_TBPROF=m:
+Hi Pasha,
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/mips/sibyte/common/sb_tbprof.o
+On Wed, Jul 17, 2024 at 12:50:00PM GMT, Pasha Tatashin wrote:
+> On Wed, Jun 12, 2024 at 2:50 PM Shakeel Butt <shakeel.butt@linux.dev> wrote:
+> >
+[...]
+> > >
+> > > One more question: Is there any concern in making
+> > > CONFIG_DEBUG_STACK_USAGE not a debug feature i.e. enable in default
+> > > kernels instead of just debug kernels?
+> 
+> We enabled it in Google ProdKernel. There is some overhead when
+> threads are exiting, because we are looking for the first non-zero
+> byte, but that is minimal. We haven't observed any performance impact
+> on our fleet.
+>
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
-
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-I'm trying to fix all of these issues in 6.11, so please take this
-through your "for current" path instead of your "for next" path. If
-you don't have a "for current" path, Greg KH has indicated he'll pick
-up the stragglers before the 6.11 rc-final.
----
- arch/mips/sibyte/common/sb_tbprof.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/sibyte/common/sb_tbprof.c b/arch/mips/sibyte/common/sb_tbprof.c
-index af5333986900..149a9151bc0b 100644
---- a/arch/mips/sibyte/common/sb_tbprof.c
-+++ b/arch/mips/sibyte/common/sb_tbprof.c
-@@ -589,4 +589,5 @@ module_exit(sbprof_tb_cleanup);
- 
- MODULE_ALIAS_CHARDEV_MAJOR(SBPROF_TB_MAJOR);
- MODULE_AUTHOR("Ralf Baechle <ralf@linux-mips.org>");
-+MODULE_DESCRIPTION("Support for ZBbus profiling");
- MODULE_LICENSE("GPL");
-
----
-base-commit: 51835949dda3783d4639cfa74ce13a3c9829de00
-change-id: 20240718-md-mips-arch-mips-sibyte-common-7c51d90b31f2
-
+So, you would support making CONFIG_DEBUG_STACK_USAGE enabled by
+default, right?
