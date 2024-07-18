@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D14145B2E;
-	Thu, 18 Jul 2024 18:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D31A1465B0;
+	Thu, 18 Jul 2024 18:39:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721327946; cv=none; b=nW4+mWM0ZDaQxcCAxkZnF/g2IqoCKnSfMoPwXJO8rUsHud4AQUDHLxFwDqgNtI/rqa6/GWkYPm7h3CBRJG39AEaMIioxMFIhqHl9gwDYhHwuBi/Q2j9Di/oQN/SnmupLQm346hxeyGmnsppoEYgpmNzHRGQ+BNDDShzIxvLyREE=
+	t=1721327948; cv=none; b=DTFeguBPVv0vhqO1mab8HH+cFE6b55WYK4hvPt27S0oRbW4Neq+knVS2i6gfLthJnf6FEhrmWgqEwsfJLFqY1Ke2x/oqFQjUPE07wmY2VPDtYyJAVyDdo7vW9hyHrMZyYwy5KRi4Sg4C7jCUidThkx2WIBll9SXDsqpIe37QZ2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721327946; c=relaxed/simple;
-	bh=ACN+c+OUSS88q5YfwTB3fUaoX6Vg2tC9+WAXZw5zYNM=;
+	s=arc-20240116; t=1721327948; c=relaxed/simple;
+	bh=e0vgFlwHlvru+f+rCR32okwKf7RewDkQqcDhM+tDLmc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=WyE9NcXQh0KJXDqkoMSFz16PjGQyaP7rmJv8N/Mk+8ErIadjjU+bcbB11u6ZBYt1WnZ8FsDdngIjUmwjobK9TcoKw3Vs6gC7cfgAUz90LE9dud0waLDrL47mfWbAol2NYw66TB88ETxu22Kf+jP9tZpYDkKomJvQ3VTJbeFRQ5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OCabCZ7H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DYBLyHwX; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ZTZ6DsO/k4TM5iLPq+yGUFDSg/DsYwLWVZEgP8+17LqloP+B4bkqcxT/eYl6ROs3rFK+EvTqHKB9XrBOKcwb/W3xbdstGb/87uYp2aQZ/L4QycwbSXUM48SJjItu4p2uXJYpbllC+c2Hz+vkJi1Eg/OSGt4RrzpR16e6NleLvi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t7p3MMEw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QjoeS1Bw; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OCabCZ7H";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DYBLyHwX"
-Date: Thu, 18 Jul 2024 18:39:00 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t7p3MMEw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QjoeS1Bw"
+Date: Thu, 18 Jul 2024 18:39:02 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1721327940;
+	s=2020; t=1721327942;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3IQds72TBJ8V5I3uXRGzRxWjK68D5TF+2wXwKIkTw2U=;
-	b=OCabCZ7H4UiMSx/A2QJSH0RrgkaZZmul0ASFMP4ilgPKpevdFrSYu4ZTO2IAUk2mbur04G
-	yNLLDo22WTgWmmJC4fLal9lx9yNfw0P2Eiu9MaQhqp4rqlYULN81iAMsZ7I1NqavedsvZD
-	frMWhBOg/fl7rhitFSu5FoTA75fgliSlOOsjg4wA29H1T8fS22ypvywh9SRK3cu+7ER+1J
-	RSzjUdu3gujSENEWumbw49FbdxVEEAZ8P1w9VR0WkyzhVUY+fpP1M/i06FWT9wOquQ7i26
-	7hTeBMmoI8RYv023IffELdSYNWygVmwnwda5basDjaCSxyLugUeRMyRmApfVBA==
+	bh=ZOPKSU72oampH9mr/t/5ioV8AQZPkU3vzzkagIWb8iA=;
+	b=t7p3MMEwIw3Rqnb870AjQ74Z9MW/m5otgGGns8eCV+rmD2ZL1R5szAMzCCuuDD07SBVuPO
+	1PiGe7K9GRDG/8GHTXKJzH8mzp0x/iEQn/i6JwHI+ImQDlDZ2ywC4NsnpIPt6z8seGg9xc
+	xzkAoPaUvuKJR4wG0QVa88aO8C8WE1UixAobfDzN1mVK+draretb+TE9bQRwUhcxLNEjO6
+	B5BHuAC6nTXoWK0DNa8KkuF2q6uoYgTUBWqKk51jbQrsRZn1seEqZ9mFDi7RkSPUiRiuuQ
+	oehDGRcdJS+vNx140SlMrpj5JRuFI1gBzvbsuTVgAGv1buydOTLoIfWvtXZSjg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1721327940;
+	s=2020e; t=1721327942;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3IQds72TBJ8V5I3uXRGzRxWjK68D5TF+2wXwKIkTw2U=;
-	b=DYBLyHwXkigw8eRikHOErwSjqvFnMe96ZeRxNqNOfNrmPkr6FzxAxvQcxopkaWXnocWWt2
-	fRCfgKaomogV9yBQ==
+	bh=ZOPKSU72oampH9mr/t/5ioV8AQZPkU3vzzkagIWb8iA=;
+	b=QjoeS1BwTEdRj0HAr33s6KEmnOXvlH6x0Jdmn+ziC+Dip6QrCi6KfS/wnjrP7mlt7oFnhM
+	XzPhLTA/AdpP1TDA==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] irqchip/mbigen: Remove
- platform_msi_create_device_domain() fallback
+Subject: [tip: irq/msi] irqchip/gic-v3-its: Provide MSI parent infrastructure
 Cc: Thomas Gleixner <tglx@linutronix.de>,
  "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
  Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240623142235.333333826@linutronix.de>
-References: <20240623142235.333333826@linutronix.de>
+In-Reply-To: <20240623142234.903076277@linutronix.de>
+References: <20240623142234.903076277@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <172132794032.2215.2090194082423724020.tip-bot2@tip-bot2>
+Message-ID: <172132794200.2215.17671709508258006821.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,121 +68,155 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     752e021f5b9be0ad42752deaa241ae631f293f9f
-Gitweb:        https://git.kernel.org/tip/752e021f5b9be0ad42752deaa241ae631f293f9f
+Commit-ID:     48f71d56e2b87839052d2a2ec32fc97a79c3e264
+Gitweb:        https://git.kernel.org/tip/48f71d56e2b87839052d2a2ec32fc97a79c3e264
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sun, 23 Jun 2024 17:18:48 +02:00
+AuthorDate:    Sun, 23 Jun 2024 17:18:36 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 18 Jul 2024 20:31:20 +02:00
+CommitterDate: Thu, 18 Jul 2024 20:31:19 +02:00
 
-irqchip/mbigen: Remove platform_msi_create_device_domain() fallback
+irqchip/gic-v3-its: Provide MSI parent infrastructure
 
-Now that ITS provides the MSI parent domain, remove the unused fallback
-code.
+To support per device MSI domains the ITS must provide MSI parent domain
+functionality.
+
+Provide the basic skeleton for this:
+
+   - msi_parent_ops
+   - child domain init callback
+   - the MSI parent flag set in irqdomain::flags
+
+This does not make ITS a functional parent domain as there is no bit set in
+the bus_select_mask yet, but it provides the base to implement PCI and
+platform MSI support gradually on top.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240623142235.333333826@linutronix.de
+Link: https://lore.kernel.org/r/20240623142234.903076277@linutronix.de
 
 
 
 ---
- drivers/irqchip/irq-mbigen.c | 74 +----------------------------------
- 1 file changed, 4 insertions(+), 70 deletions(-)
+ drivers/irqchip/Kconfig                     |  1 +-
+ drivers/irqchip/Makefile                    |  2 +-
+ drivers/irqchip/irq-gic-common.h            |  3 ++-
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c | 31 ++++++++++++++++++++-
+ drivers/irqchip/irq-gic-v3-its.c            |  5 +++-
+ 5 files changed, 41 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/irqchip/irq-gic-v3-its-msi-parent.c
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index db0fa80..093fd42 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -180,64 +180,6 @@ static int mbigen_domain_translate(struct irq_domain *d, struct irq_fwspec *fwsp
- 	return -EINVAL;
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 2bf8d94..b51863f 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -41,6 +41,7 @@ config ARM_GIC_V3
+ config ARM_GIC_V3_ITS
+ 	bool
+ 	select GENERIC_MSI_IRQ
++	select IRQ_MSI_LIB
+ 	default ARM_GIC_V3
+ 
+ config ARM_GIC_V3_ITS_PCI
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 72c7f62..6e4f771 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -32,7 +32,7 @@ obj-$(CONFIG_ARCH_REALVIEW)		+= irq-gic-realview.o
+ obj-$(CONFIG_IRQ_MSI_LIB)		+= irq-msi-lib.o
+ obj-$(CONFIG_ARM_GIC_V2M)		+= irq-gic-v2m.o
+ obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-v3-mbi.o irq-gic-common.o
+-obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v3-its-platform-msi.o irq-gic-v4.o
++obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v3-its-platform-msi.o irq-gic-v4.o irq-gic-v3-its-msi-parent.o
+ obj-$(CONFIG_ARM_GIC_V3_ITS_PCI)	+= irq-gic-v3-its-pci-msi.o
+ obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
+ obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
+diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+index f407cce..eb4a220 100644
+--- a/drivers/irqchip/irq-gic-common.h
++++ b/drivers/irqchip/irq-gic-common.h
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/of.h>
+ #include <linux/irqdomain.h>
++#include <linux/msi.h>
+ #include <linux/irqchip/arm-gic-common.h>
+ 
+ struct gic_quirk {
+@@ -29,6 +30,8 @@ void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+ void gic_enable_of_quirks(const struct device_node *np,
+ 			  const struct gic_quirk *quirks, void *data);
+ 
++extern const struct msi_parent_ops gic_v3_its_msi_parent_ops;
++
+ #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING    (1 << 0)
+ #define RDIST_FLAGS_RD_TABLES_PREALLOCATED     (1 << 1)
+ #define RDIST_FLAGS_FORCE_NON_SHAREABLE        (1 << 2)
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+new file mode 100644
+index 0000000..cdc0844
+--- /dev/null
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (C) 2022 Linutronix GmbH
++// Copyright (C) 2022 Intel
++
++#include "irq-gic-common.h"
++#include "irq-msi-lib.h"
++
++#define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
++				 MSI_FLAG_USE_DEF_CHIP_OPS)
++
++#define ITS_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
++				 MSI_FLAG_PCI_MSIX      |	\
++				 MSI_FLAG_MULTI_PCI_MSI |	\
++				 MSI_FLAG_PCI_MSI_MASK_PARENT)
++
++static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
++				  struct irq_domain *real_parent, struct msi_domain_info *info)
++{
++	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
++		return false;
++
++	return true;
++}
++
++const struct msi_parent_ops gic_v3_its_msi_parent_ops = {
++	.supported_flags	= ITS_MSI_FLAGS_SUPPORTED,
++	.required_flags		= ITS_MSI_FLAGS_REQUIRED,
++	.bus_select_token	= DOMAIN_BUS_NEXUS,
++	.prefix			= "ITS-",
++	.init_dev_msi_info	= its_init_dev_msi_info,
++};
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 3c755d5..d770d6a 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -38,6 +38,7 @@
+ #include <asm/exception.h>
+ 
+ #include "irq-gic-common.h"
++#include "irq-msi-lib.h"
+ 
+ #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+ #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+@@ -3688,6 +3689,7 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
  }
  
--/* The following section will go away once ITS provides a MSI parent */
--
--static struct irq_chip mbigen_irq_chip = {
--	.name =			"mbigen-v2",
--	.irq_mask =		irq_chip_mask_parent,
--	.irq_unmask =		irq_chip_unmask_parent,
--	.irq_eoi =		mbigen_eoi_irq,
--	.irq_set_type =		mbigen_set_type,
--	.irq_set_affinity =	irq_chip_set_affinity_parent,
--};
--
--static int mbigen_irq_domain_alloc(struct irq_domain *domain,
--					unsigned int virq,
--					unsigned int nr_irqs,
--					void *args)
--{
--	struct irq_fwspec *fwspec = args;
--	irq_hw_number_t hwirq;
--	unsigned int type;
--	struct mbigen_device *mgn_chip;
--	int i, err;
--
--	err = mbigen_domain_translate(domain, fwspec, &hwirq, &type);
--	if (err)
--		return err;
--
--	err = platform_msi_device_domain_alloc(domain, virq, nr_irqs);
--	if (err)
--		return err;
--
--	mgn_chip = platform_msi_get_host_data(domain);
--
--	for (i = 0; i < nr_irqs; i++)
--		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
--				      &mbigen_irq_chip, mgn_chip->base);
--
--	return 0;
--}
--
--static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
--				   unsigned int nr_irqs)
--{
--	platform_msi_device_domain_free(domain, virq, nr_irqs);
--}
--
--static const struct irq_domain_ops mbigen_domain_ops = {
--	.translate	= mbigen_domain_translate,
--	.alloc		= mbigen_irq_domain_alloc,
--	.free		= mbigen_irq_domain_free,
--};
--
--static void mbigen_write_msg(struct msi_desc *desc, struct msi_msg *msg)
--{
--	mbigen_write_msi_msg(irq_get_irq_data(desc->irq), msg);
--}
--
--/* End of to be removed section */
--
- static void mbigen_domain_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
- {
- 	arg->desc = desc;
-@@ -268,20 +210,12 @@ static const struct msi_domain_template mbigen_msi_template = {
- static bool mbigen_create_device_domain(struct device *dev, unsigned int size,
- 					struct mbigen_device *mgn_chip)
- {
--	struct irq_domain *domain = dev->msi.domain;
--
--	if (WARN_ON_ONCE(!domain))
-+	if (WARN_ON_ONCE(!dev->msi.domain))
- 		return false;
+ static const struct irq_domain_ops its_domain_ops = {
++	.select			= msi_lib_irq_domain_select,
+ 	.alloc			= its_irq_domain_alloc,
+ 	.free			= its_irq_domain_free,
+ 	.activate		= its_irq_domain_activate,
+@@ -4993,6 +4995,9 @@ static int its_init_domain(struct its_node *its)
  
--	if (irq_domain_is_msi_parent(domain)) {
--		return msi_create_device_irq_domain(dev, MSI_DEFAULT_DOMAIN,
--						    &mbigen_msi_template, size,
--						    NULL, mgn_chip->base);
--	}
--
--	/* Remove once ITS provides MSI parent */
--	return !!platform_msi_create_device_domain(dev, size, mbigen_write_msg,
--						   &mbigen_domain_ops, mgn_chip);
-+	return msi_create_device_irq_domain(dev, MSI_DEFAULT_DOMAIN,
-+					    &mbigen_msi_template, size,
-+					    NULL, mgn_chip->base);
+ 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
+ 
++	inner_domain->msi_parent_ops = &gic_v3_its_msi_parent_ops;
++	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
++
+ 	return 0;
  }
  
- static int mbigen_of_create_domain(struct platform_device *pdev,
