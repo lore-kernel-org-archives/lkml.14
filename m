@@ -1,126 +1,117 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1DB75804;
-	Thu, 18 Jul 2024 07:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22D61B86F1;
+	Thu, 18 Jul 2024 07:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721288977; cv=none; b=A/6bAGVuzKEHHaDK0bgVrM94EDUEnX7qp6wc9oL7rH1ecTq6Tzuqjrhts2Gwmqj0pamELtcNWoJy7NMSUqWheEk4ezpH7ZKRZSTLctvFiA7KTHtodH5hBa7T439ufWHU9Zg2wcPXRF0BdooA6EBRl5GIMcr/rk7vHcuvEj876rU=
+	t=1721289143; cv=none; b=DTtymNZNHHtUAiPiptIXBTO0N0QT/rtiXNd5PaW9q70ot+vnTZ9I7NmkEpA9Rgre9DZAzabXv3Zoh6ww3oGb7tn1Ep4IZK1RveMsWza5Usql70YoZQbIUbVCG4P3evNHwzJ4V8kwjk0Mth7yOxAx0uVHsHHSIccMQZU9XLTApG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721288977; c=relaxed/simple;
-	bh=QTc8Un5upPXJIhlGhjl7ubZAXV0Z5YsCy7aukHFflpU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ao0hJHzCiH6fY1ttr2nuGpk65CVhXbGxsRPKdSMO9I5bChe1dkIVkeUnZ+mT0FmSnx2HxfBl9v+VoZunRWH75ipTLYt54XgaGeYDvTM6IEr0e6yWvON+NQwDJefXYa+QXbLrR0QcqaV0TzIEIcobPIj3hwmeQyPXHo4VS6QyP5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdIxMQxy; arc=none smtp.client-ip=209.85.166.170
+	s=arc-20240116; t=1721289143; c=relaxed/simple;
+	bh=DiV0p5o4n1qcmrSq9TJa++YItZSe+uOXJNWLTngzDTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lfk12w64nn+iofFdBE/LJbFaE8FoN+Mas29vv4UWS1XH3m2BihkHUtRNFwLoJwV6bYy/f3jd7RD7gyfhNYzLN/XySWTQayyELskhlKynYtgQTy4UWHIAe4hugqPiGVNHFHVOsnWzNN/dCM4aQSNQvSp0ynqPDqaG4DTbFJ4PrKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LdlbP7h4; arc=none smtp.client-ip=209.85.161.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdIxMQxy"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-389ccd2f0abso1650085ab.2;
-        Thu, 18 Jul 2024 00:49:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdlbP7h4"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5c669a0b5d1so244961eaf.3;
+        Thu, 18 Jul 2024 00:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721288975; x=1721893775; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=crzw/d+f/3t32IpPYEw2grNnNxXUQHVB18xLlsRWPEY=;
-        b=gdIxMQxyiu7Nc8EV8zTLksENKj8iP2ymL/eP//Q6Z+19cHN245hwZSIRIymEod9d9s
-         8YrOrPrlvn3bNCz0yjHisgQ8mXL8gBSCBLyDK82E+bJ1m0nJvJEq6QVlGtYX0xtPNnTv
-         rNoKR7+BquiV5nGmyKyv2Xpr2YGnMpkV1J7UbpfYIZoHx32DarQnqrZ/7gquFzIrMeDT
-         cJGRYmzwMueAI4MgFR+4IFrL+/bXmh8GKAIu3TMlP2IYD05k96VseVxUg/mb5LzPkR56
-         aKf1Lukonvi1JmEyTxpYE6oFiJDU2sAlPGl6xYF8GPFsjuGZ9QYkSgn90dT296vRDM+c
-         y/ow==
+        d=gmail.com; s=20230601; t=1721289141; x=1721893941; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HeudbiUTX343qNiEURPI5YAOVpjxRDTmOUF5CU1l3Yg=;
+        b=LdlbP7h4ojVhNqvV54h1lhiB01lnQHVM8tLTtEExrNXI6oPZl/tbaLSa08jDrc74cH
+         wGi46MwUGmkvN6yx/wa8W0FPyhdng63d+M5W9XhFut89/CuZ2jyFAQ03wSQCPWyUT5tR
+         WejUK9NPHbUy0SgP4Ylg6zNJAeOpQulup8xPl4L3iI4TwNg1+w+LoRbrXYtD/ovUGXG+
+         x2zRv1knWke3eYv+iiiekOYEJxM9mwRmUdG5DedVd/sXC4/MmJcECM1/coZprVXlJvEA
+         nFhIEcRXnSgOJyWwWZ0h+MblyCPraMLDTVWy4G0kVw0e+bRyCNPp5YbL2bYijrAQ0/jB
+         6mrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721288975; x=1721893775;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1721289141; x=1721893941;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=crzw/d+f/3t32IpPYEw2grNnNxXUQHVB18xLlsRWPEY=;
-        b=WjlNhiwyhR5BZijLf605hmR9fKC7Wvo34Icdp06GMKS7nWsFVuXoJL6JFkoeOugDr7
-         gcsZ/9emYb65C94YRnSsJ1ZxRkapkfUvgHfKaBMg1rKGZecZsv0TjcuUrRz5s6DsT19v
-         nqlKOoM1YSf49kwvRc1VjCn40Xk7a+hDH8TyDdyQwCj8sLUpOI0NhiovS1oUB7TF6NEi
-         dYmkUW4BJ8PyAHDpi9NABNesdBcnkZqc1v6Tu6VaXoHbv8ItnGcloTh/mzgkPtqFxaCv
-         kg/wG9SuCAVAcsmo4cYs3znNFa2l88JqQd62mfBMhY7XyFoX9rDbvrf8+6fx/WNntY2l
-         fS8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU1bnFxv/l3/HP/MYhnHXjedrYl1DRct1EC9Ap0ETDr1NfcC+gdsD95E8uVBtQa2KJ9XTwyZ6Ri8G8DAvAlTUKHnxiuvOsRQOAvT1sK
-X-Gm-Message-State: AOJu0Yx/MIskDE2L4/dtniVUbBxnmd3WEYMBbIEXYnfuvYhZUMnt+JDT
-	ZP/hJUYsijWAINIx1WPW4MbdywpmS5kt2WCRTvsfheWW23MHyBlNTtjEO8ep
-X-Google-Smtp-Source: AGHT+IHhOYm6z/NSf5t5yzcsvPFJDNLCfFlR456J19tntfH6MwJnRzpPZIdSaAhucLvT6UOspsTChw==
-X-Received: by 2002:a92:c542:0:b0:397:2481:7acd with SMTP id e9e14a558f8ab-39724817c3cmr1211545ab.10.1721288974064;
-        Thu, 18 Jul 2024 00:49:34 -0700 (PDT)
-Received: from sis-tammy.. ([2402:7500:4d8:362f:664:b744:64a4:16d8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7d2bcsm9656642b3a.99.2024.07.18.00.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 00:49:33 -0700 (PDT)
-From: tammy tseng <tammy0524@gmail.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tammy tseng <tammy0524@gmail.com>
-Subject: [PATCH] hid: add patch for sis multitouch format
-Date: Thu, 18 Jul 2024 15:48:03 +0800
-Message-ID: <20240718074804.1316064-1-tammy0524@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=HeudbiUTX343qNiEURPI5YAOVpjxRDTmOUF5CU1l3Yg=;
+        b=M8we5Mx63qwNLmWCjZE2oMb4jsWa6TroVZ3hMDqrKEsjgNnSJwLQPInRyi3BJxOHab
+         hhBMlCno95aQPXaGooKNV2YAIjOygAHOMYlE+dlDENBk4gWaGxJcz0XqqNSzrFFNhydJ
+         6trIvulDyksh+hu8HQmzTjm9Ar2VJWNDL9ec8dBoX2oxwEZFktQJ3SmAehyFGntZYb5L
+         ZDN3swI/GKDhtIbp062DCnxqoK3rt9k3+C5VUCHtrguq5HGRQNNa14Vcog1enYNk4Nuh
+         tgU2rGSE4Ta0LcmuvWCO5Nn61OE8GncHFnX+e71jY4dWV0C3BhiaPlwEpGLzMBQxmqPW
+         SxRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWt+0wwHHnaEapZocPQZ+4mYpgSMo0oZIbaEGBKErYcB0oXt76FS33CTgK5vGpXautD5TUi16gs/qDHueYMSywpQmLmO4tlRJyOmM8IZaWev2Y/wrRJYhC0HApJCT9O14XesgXv5XExrQX8OBLhOp+I2r/d8WRPZTgNXlhWHCtTNHtf+Q==
+X-Gm-Message-State: AOJu0Yzo7jqSZR3rmY9RU/4HfmGJA9s6Qwk3uxVFw8Ndb9mqUfAllVJ5
+	Yehrgb1pfrNgjxoqmzI9xXkXQ6ojMWIPhqKBBaLTAhSKYb1wA7Gv+OuOKqt5qf22365HB6TdwnP
+	zmLVqTwG4pgpi5tuEfatDMdtmBxU=
+X-Google-Smtp-Source: AGHT+IElzIEx7wtVYpF6wTHWDFLynANwFo8IX6K7B+fK3JlWZ76v8o9Oz+rqmBzF/VNzFntcaCU7zaa6RIubG5h0QfU=
+X-Received: by 2002:a05:6820:270f:b0:5cd:2e7:cc6 with SMTP id
+ 006d021491bc7-5d41cade049mr4827457eaf.8.1721289140922; Thu, 18 Jul 2024
+ 00:52:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240715110251.261844-1-heiko@sntech.de> <20240715110251.261844-4-heiko@sntech.de>
+ <CANAwSgS_ZaEkt5-kKud9OwdN4za+xvW5SoBr34EmOdU2OQJWnw@mail.gmail.com> <8a16eb6a29a39719ba4e4c43bae3b6ec@manjaro.org>
+In-Reply-To: <8a16eb6a29a39719ba4e4c43bae3b6ec@manjaro.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Thu, 18 Jul 2024 13:22:03 +0530
+Message-ID: <CANAwSgRZR8cM9qDD0Xn5ims4GX+PNMQ1+PEMBDQtZq2GxFd6Rw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: fix the pcie refclock
+ oscillator on Rock 5 ITX
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, mturquette@baylibre.com, sboyd@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-The patch is to add quirks for sis multitouch format
+Hi Dragan,
 
-Signed-off-by: tammy tseng <tammy0524@gmail.com>
----
- drivers/hid/hid-multitouch.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Thu, 18 Jul 2024 at 13:02, Dragan Simic <dsimic@manjaro.org> wrote:
+>
+> Hello Anand,
+>
+> On 2024-07-18 09:26, Anand Moon wrote:
+> > On Mon, 15 Jul 2024 at 16:35, Heiko Stuebner <heiko@sntech.de> wrote:
+> >>
+> >> The Rock 5 ITX uses two PCIe controllers to drive both a M.2 slot and
+> >> its
+> >> SATA controller with 2 lanes each. The supply for the refclk
+> >> oscillator is
+> >> the same that supplies the M.2 slot, but the SATA controller port is
+> >> supplied by a different rail.
+> >>
+> >> This leads to the effect that if the PCIe30x4 controller for the M.2
+> >> probes first, everything works normally. But if the PCIe30x2
+> >> controller
+> >> that is connected to the SATA controller probes first, it will hang on
+> >> the first DBI read as nothing will have enabled the refclock before.
+> >
+> > I just checked the rk3588-rock-5-itx.dts in the linux-next.
+> > You have not enabled sata0 and sata2, which might be the problem
+> > for the SATA controller not getting initialized.
+>
+> Rock 5 ITX doesn't use RK5588's built-in SATA interfaces, so that's
+> fine.
+> Please have a look at the board schematic, it uses a separate PCI
+> Express
+> SATA controller for its four SATA ports.
+>
+yes, But I am referring to sata node not enabled which enable the PHY_TYPE_SATA.
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 56fc78841f24..9f49bc7a157c 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -212,6 +212,7 @@ static void mt_post_parse(struct mt_device *td, struct mt_application *app);
- #define MT_CLS_GOOGLE				0x0111
- #define MT_CLS_RAZER_BLADE_STEALTH		0x0112
- #define MT_CLS_SMART_TECH			0x0113
-+#define MT_CLS_SIS				0x0457
- 
- #define MT_DEFAULT_MAXCONTACT	10
- #define MT_MAX_MAXCONTACT	250
-@@ -396,6 +397,11 @@ static const struct mt_class mt_classes[] = {
- 			MT_QUIRK_CONTACT_CNT_ACCURATE |
- 			MT_QUIRK_SEPARATE_APP_REPORT,
- 	},
-+	{ .name = MT_CLS_SIS,
-+		.quirks = MT_QUIRK_NOT_SEEN_MEANS_UP |
-+			MT_QUIRK_ALWAYS_VALID |
-+			MT_QUIRK_CONTACT_CNT_ACCURATE,
-+	},
- 	{ }
- };
- 
-@@ -1787,6 +1793,9 @@ static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 	if (mtclass->quirks & MT_QUIRK_FIX_CONST_CONTACT_ID)
- 		mt_fix_const_fields(hdev, HID_DG_CONTACTID);
- 
-+	if (hdev->vendor == USB_VENDOR_ID_SIS_TOUCH)
-+		hdev->quirks |= HID_QUIRK_NOGET;
-+
- 	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
- 	if (ret)
- 		return ret;
-@@ -2243,6 +2252,11 @@ static const struct hid_device_id mt_devices[] = {
- 		HID_DEVICE(BUS_USB, HID_GROUP_MULTITOUCH_WIN_8, USB_VENDOR_ID_GOOGLE,
- 			USB_DEVICE_ID_GOOGLE_WHISKERS) },
- 
-+	/* sis */
-+	{ .driver_data = MT_CLS_SIS,
-+		HID_DEVICE(HID_BUS_ANY, HID_GROUP_ANY, USB_VENDOR_ID_SIS_TOUCH,
-+			HID_ANY_ID) },
-+
- 	/* Generic MT device */
- 	{ HID_DEVICE(HID_BUS_ANY, HID_GROUP_MULTITOUCH, HID_ANY_ID, HID_ANY_ID) },
- 
--- 
-2.43.0
+see rk3588-coolpi-cm5-evb.dts and rk3588-edgeble-neu6a-io.dtsi
+rk3588-quartzpro64.dts
+which have sata port on board.
 
+&sata0 {
+        status = "okay";
+};
+
+Thanks
+-Anand
