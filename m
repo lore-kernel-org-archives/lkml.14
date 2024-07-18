@@ -1,264 +1,216 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E05145B1F
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 21:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721339842; cv=none; b=e1NqQwFj8QMasYyy+USEvRhWILVlvt8Xeej4Dbs4Sy/TiQl068vCsn3/xyu9Rz/Bz1zSoP5A3ANvos/Ly2icxwoPDcMr82+tAuT8/raRx7JwrFuvZ2BH5hyI4gD6IwKT38dJe8ToiSWFuTCpbcwmc9mDB4upi99ePIG+k8B4xZU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721339842; c=relaxed/simple;
-	bh=VkQpN60GcRBqBD4ybwlP2k2+Vn+Caes8BT6nK9Loess=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t1wrg0mhUrpt8jzsqafaDhwFOZatfJHDTc9fRUUFa7SVFqsrMnJd5RZyeap7NZPBaiXVx6w+Ol0i67wsIErVk+eGnveYefTns1f+NJnksXYAS3kIi+eW5lV+MQp1HPNw6vXQsgyEPSnf0dLKSCYGgeiFEIeJCUZNMqloWVMbVrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UTAhKufj; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A049145FE0
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 21:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721339847; cv=fail; b=uKQGD0DEGkvLJr5FcM2gJ+HUZoKUcOX7D5GBx+Ph9INtl/7TQJbezj1zkKNTsxGGZyRMLk2PE9kxVHRvdASN/hXWkVdkH+09dxEulbVet+zHeIlo/kRSjoVq0Djscixb2mBPv5PHFWaiAx+1Radn/m7lXjDqL4Z9SuUALHiZFEE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721339847; c=relaxed/simple;
+	bh=ILaAMQ6WGwekV+wAv7r77dwAhpMS+ieyxpwTfFJBOX8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DRyZ4qZ1x6O3iiNR5kjznhm2/JIHhRQTd9U//8gfoXluxRpO3A5ZITCRaKqCm++6F7jaB9VplDj1+DfmF3EPdvw85xa7Q1GyJ+KdjNNZMytaBfovMw8ZTOjVm4vyBHm7SdOVradZ99FP1qcUmisFlzdeZGn3WJ1wfIegjRc2qq4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IfXLaLQM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=myYAjk82; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UTAhKufj"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-80a2939265cso40596539f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 14:57:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IfXLaLQM";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="myYAjk82"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46ILtj7V032540;
+	Thu, 18 Jul 2024 21:56:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	corp-2023-11-20; bh=LvzFpjyPQojRy9/1p4YWOEooEssTFuA5K+Jz3OaLzNE=; b=
+	IfXLaLQMRlLUQr0sP0mekfzLrtlDVCbAFUbokW1xJAGJdvuZk0bVjYxL+opMvq/C
+	1L9MnuavbEfjTBRb+vtQwl6kIstGlqdIG97FUCSDfQYjX9JDwiPYNJgo9UYE2WPI
+	qr5JfGlNZIJm+tNl8ycVZXsV1075rg7zB3w3mUEdGwmU7Hq0NXEN9Q9gWS7Gp0zQ
+	Exp/GtFwp3EWPeRJagCeoJjSrl8OvFOCdX3Lw6ZyqFxmDlk6EeMguAonWTcjpkKp
+	em+h9onc5IkTMlmS5jWO2OE97ShFtxi1n/eHpbKYwzDOqrzxskB6Uuhku7DgHZOi
+	/aWrhTPXvbqY51h/gnLeag==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40fbcvg01k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jul 2024 21:56:54 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46ILpjxk021805;
+	Thu, 18 Jul 2024 21:56:53 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 40dwev6f95-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jul 2024 21:56:53 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vkvmHJ/05RYO76nt5B4kMnuahJ2fgM0VGKF9k3QAwk8Rmw6TrWko1FAdl/WqXY1yUIBw1nRipZjIAlwpKxELpd0U6OLPvwGQ7gkwX+2Fa1HiygnO0wIfrAyi9RjnmIF1a47xpU6XAoQn5iKn54ulvaT0PfCc3cCjN8JpCV9MMqrUFzqXYTfikQefDGBrCst9h+pq97eyE7i/i4MqJC1YzV6Oj/YaTGrJ3Z0gb6q+F4/cmPACvLeJr67JB8S0Oo+vCKFfOtni/8Uk9aqPpibb7B8ovI58RY8JxrgZHRwqD0y6dCr/APBhbHIdUJGNTvj7z7hriftCmTwcm3xITohnkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LvzFpjyPQojRy9/1p4YWOEooEssTFuA5K+Jz3OaLzNE=;
+ b=D5sJf8kRpTozMOAUOKeQKSf1v6KNN5INHfaCPJAn5VHLU/eUU2fQ4u5wevDP3M6WMOIGHG1vxhG7WfSbvMfjp6gFuPHNAaDphHZrrM1Qy6CFjN2fBluFDAe1L7B6je//DsBtemb1QuvNjAxzfN0iSsyn83qzMADxGy78YPKSO4T7OOV9q57nZTUUT+KEyuM3Npe6JUqLNuwVQ+CWW2NFqB9fHS0zyJO/qSDjQ/6KZ6+uBikjQdwlVWO2os10FVldJLi4791RaeY/0uf8ZXZqUUSOOwjAF7sAvcMKXvphTfj1+Dwij01qLIwsaSfaAE6AxFcKvWBf/f7lKT2jt9H8tQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1721339838; x=1721944638; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ESReBtfRYbWAFdqZsiENsIRpb4yAg4v5BmBq8aEhHNc=;
-        b=UTAhKufjD+aRC1s/ocxQSEPt7eBXf8t/e2UViV1fFYkJDNe8SJlX9RHjRTxuIJZkuD
-         /jjXRXGrW2B06pklbGUQu4e5Gz21wUB0BFIvlNTxhnrVGpYt712Sce6E011lNeqMCQKw
-         XcWvEDf4wlCx28udFqR/xyclg/HSvV3U/+1og=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721339838; x=1721944638;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ESReBtfRYbWAFdqZsiENsIRpb4yAg4v5BmBq8aEhHNc=;
-        b=Ih399Tm8JCglPZes3n/q3TZ3tnRt0qMbaU7MNZ2T+1xguTSUvilRt7XwC1CSPuPggF
-         m+2CTx9ivJ/UafmKXXqZ4q82xSJ3c8ArY5fiLTRT/Dx+hBArF4RvXjD2OIWjYCG7ilD1
-         Hjr2mJ+iW5/AzzGyVu0X6PmvQQwRMHBdSiMv5VJnMx5iJ6a6Y6a48TOm8/LCaGnPf8fo
-         mJQaRaGx6iXIbhbZ0DCyrwWKoZ17TYlpEUqAkrvmjUcFjZV/zvvsmvVtPqBtSG6xcXsU
-         H4bh3xKOH/Oqwl54DcxJT9I4/Th/pxvtSt2Fg2iTku0D2k5tT/0KV4gUU7zZEKsYzcKh
-         rU9A==
-X-Forwarded-Encrypted: i=1; AJvYcCW/bUI3JHB6KsWuBHXNiHDt29ICFvSOAmkqLBMWurOszCBYqCvjsYu5HnNQOq5rtCCCcF5Wz0oTZX5sC9/u68IkvtYjrzXaIE+GFrwp
-X-Gm-Message-State: AOJu0Yxe6mvhjMEWMWHaAFpNaeBgnjHAWor4eGsnA2WlFvlqVzzw2Eyg
-	e+DcRjrkZEr4fq0NUcij48+aEWu5MJalCbPL5yCXrIFArqsCfE5gVPrv6a7crw==
-X-Google-Smtp-Source: AGHT+IEAXH4Y2cTf5yDjSgxvPlXvU2z3xqhyqDWVlhaZnNGznQBBP9bqXzFNgQppD3BxzBsvfarEwg==
-X-Received: by 2002:a05:6602:6422:b0:7f6:76f2:e359 with SMTP id ca18e2360f4ac-81710040e70mr906632339f.4.1721339838507;
-        Thu, 18 Jul 2024 14:57:18 -0700 (PDT)
-Received: from localhost (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with UTF8SMTPSA id 8926c6da1cb9f-4c2342bf50asm40510173.5.2024.07.18.14.57.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 14:57:18 -0700 (PDT)
-Date: Thu, 18 Jul 2024 21:57:17 +0000
-From: Matthias Kaehlcke <mka@chromium.org>
-To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Cc: gregkh@linuxfoundation.org, javier.carrasco@wolfvision.net,
-	benjamin.bara@skidata.com, macpaul.lin@mediatek.com,
-	linux.amoon@gmail.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, git@amd.com
-Subject: Re: [PATCH v2 2/2] usb: misc: onboard_usb_dev: add Microchip usb5744
- SMBus programming support
-Message-ID: <ZpmPvaknDw2cGnOQ@google.com>
-References: <1721244223-3194869-1-git-send-email-radhey.shyam.pandey@amd.com>
- <1721244223-3194869-3-git-send-email-radhey.shyam.pandey@amd.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LvzFpjyPQojRy9/1p4YWOEooEssTFuA5K+Jz3OaLzNE=;
+ b=myYAjk826TfuGgTUHIjfnF619IViud4XFubcsNVkDGJM/3GIa4TAd6MQE2IMNY+0ftBN6G9i46BcvNzd3jm3s3IZ7ulfrv82lxJOOJVNPIkF2kxdKnbNpUVPPje+LJnIvPYPIn1bEGLLo5QldOQ5DsjGAVh7lfbm1jT5qlc36bk=
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
+ by CO6PR10MB5651.namprd10.prod.outlook.com (2603:10b6:303:14e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.20; Thu, 18 Jul
+ 2024 21:56:51 +0000
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::a088:b5e0:2c1:78a0]) by BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::a088:b5e0:2c1:78a0%3]) with mapi id 15.20.7784.017; Thu, 18 Jul 2024
+ 21:56:51 +0000
+Message-ID: <1b3e9102-7d1f-43df-b6a0-9da84bc9ec12@oracle.com>
+Date: Thu, 18 Jul 2024 17:56:49 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xen: fix multicall debug data referencing
+To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org,
+        kernel test robot <lkp@intel.com>
+References: <20240718062100.5357-1-jgross@suse.com>
+Content-Language: en-US
+From: boris.ostrovsky@oracle.com
+In-Reply-To: <20240718062100.5357-1-jgross@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR03CA0013.namprd03.prod.outlook.com
+ (2603:10b6:208:23a::18) To BLAPR10MB5009.namprd10.prod.outlook.com
+ (2603:10b6:208:321::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1721244223-3194869-3-git-send-email-radhey.shyam.pandey@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5009:EE_|CO6PR10MB5651:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9c6cb470-93fb-4682-c17c-08dca77487b0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?Zlh2L3dRQjB4NEtyZXVsVjlPSXVnQzAxaW5KRzVQVW9KMmluUTRSWkE1UXFO?=
+ =?utf-8?B?dWUzNDNsNGRYVnRFa1BobXB5enhiY0lNRFBydEZJWXdhOWNoZTIramRrcUhY?=
+ =?utf-8?B?REZuZzZJOGhXZU9hNUZRZ2R1S1h5Si90V3JXZDhLRml1ZktXTEhKK3l5b1Nk?=
+ =?utf-8?B?VjBBc2JEWXdVZGpRRkpQdW0weHZmNEFEWGRWeSsxMmVCZllCQWNwYWw0V0Iz?=
+ =?utf-8?B?akpLTzRwSnN5VlQ5TU9lUTVKcWowbDFPTUdadElTMEY4WDRVRkVuKy9pcDkz?=
+ =?utf-8?B?NGFMakczZU9iMVY1T3NWRSt0a3hQcWRudkVHaGtKVlhieVNxYmhrL3lqcUFN?=
+ =?utf-8?B?SEFmcGNsU2RBdFp6UXRuQm82d1MyWkM3K0FKeWdBbnlFc1VjblJoc2NCb1Qz?=
+ =?utf-8?B?VUZHbEhlcTJOdmFVNlY4elFkSEQ1NVF2MXpyR1I2c1VqRFJSYWVHQ0t5ME9j?=
+ =?utf-8?B?VkZVV2dyYXBFc3NHUUpkR1VlOGNoM1J1SGxPdUtMd1lDY3QwZ2kyRGtTOWhO?=
+ =?utf-8?B?dGJuZjB3Q0o4bTVnTHpkNzBYMVROVVJIRU5JNFNqRVRsQVdDSk1DWEQ1c0to?=
+ =?utf-8?B?dm5FZ1I2RzRnSmFGQVdFQTZqOFVEZzFncCt1SjgwaG52UWo3dk0ydStQWlFp?=
+ =?utf-8?B?QWVDUko3WUZRa3libjlFVCszMjd1Ulk0Q29yUE1WeUdyckovRnJNSENtc0Rx?=
+ =?utf-8?B?OW1lcnU5R2ZyUFhSb1dxUW1vYmRETDQ1cEVGSFl6RlVwZ09Eb3NpR1VwbXVI?=
+ =?utf-8?B?djh1K2RubDFreEZyTUtSb1EybjNwcnY2eXJERVFYVzJrT3NBSVc2WHFZRGh1?=
+ =?utf-8?B?V2wyK25GeVBMTFBvWStSN1luZlJFYUJ6VHRsaXJwMFp3VVE1WnY5aG5IRXQ2?=
+ =?utf-8?B?em8yWXE1Ums1YzJRQnpGU3U1K0hYNGU3czV1VUpLVkdPcnByY21jSnhCTVRX?=
+ =?utf-8?B?M3lwN1V6VGd5UFhPVTFSK25WVXkzSjlNL0c3KzV4TDhCbHRhRWs1RzFCMkZT?=
+ =?utf-8?B?Y2Y1QW1vUmIxRlBsemFWWXhQUFpmL0tqaktuR1FxVnZmYkphSTRnbExWSDEr?=
+ =?utf-8?B?Y1Rjd1lDdUgydnZKTnhsb1ViQlJaaFd5dGhvQ1c4Vyt6YnZhTUVyRjZ3alZ0?=
+ =?utf-8?B?TmdyeVFOMlJFZmxnREx6ZU0wUHUwWjdIVEMzRnRVbWo5SWZzREFDblpLRnJa?=
+ =?utf-8?B?elFCdWZoZ0pQQWNsM2VmWUdjc0M3VDE2b1VRS2JKQitvOEdnUVlUUGIrVGtY?=
+ =?utf-8?B?NktTSUhZck9wK1FteGR1cEJwSmZQNm9CaFhwemJhNThvUXhuYTEvWGdwOUc3?=
+ =?utf-8?B?a1k3bUZnVGd1bkFwTzJZRms4d3dDWEM1cDdxZWlvekxxbTF5WnFKNENJRXFw?=
+ =?utf-8?B?VVUyREtnWXBNaUhkRzRiWHlueHl0RjNTSEtScUZSbkJ1N3gxdkRTTzdQNkxk?=
+ =?utf-8?B?Q3BFZG5BNzF1cEVKRnkyWmxvdm1PMWhsQm1kN3RVV1lrQ2NuK2FIODg3ajBM?=
+ =?utf-8?B?MTZkZzVWRk5na2JKTWhkNUlaRlE0Ym1aODZiZlowKzU1UVN6bnQ0TVRTTTBw?=
+ =?utf-8?B?YkVLNmtmeTA0ZW5McUQwRFJPVjN0STM5QU5ycUg5cyt2ejNGNWt0L1o5dXE1?=
+ =?utf-8?B?NkxFRHFnV1lSVUt3OHRUWWZSOHRTaEw5Q0xST29DZnJBNFdvZnB5Y2Y3WStw?=
+ =?utf-8?B?RzRLTVFzdUxCZmJLTjVTbWdZL2U0NUlFdEQybis2TmNwYlA5QlZPdDBkWFA2?=
+ =?utf-8?Q?0vZK7OoK4nfWvsv3GE=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?NXl2WityTmpyRTFwaGswSEhCcEdsOWxqRzcyVlpzZ2Rha0x3MzV1V0dqTGdw?=
+ =?utf-8?B?Q09mczE3dFN1ZFNVTXljYys3ZFdwdURNV2pEYTJsTXdaeHp2ejZZaUVEeEJZ?=
+ =?utf-8?B?dDloaS9odzBZSEhqdTBZM0hvTTFkaU5vUWJmeTFjNVFpS2dGR25SS2tCWjlz?=
+ =?utf-8?B?dm1hcjlvTTl1anpqOXE3TlVSR1JMWE8rM283MVJ0K3M4b0hlL1lUZjJHT2ZS?=
+ =?utf-8?B?TGgzSENUM0xxUUg0V1Uycmk4L1dkTlU1YnZsS2lnTURrbmJUSWZHR3V2UXQ1?=
+ =?utf-8?B?TmYwUlBYaWdUdGhHMXRCVWFqbkRnYmw0L1BCY1UxaXNLSzVySUhFMU9MdGVB?=
+ =?utf-8?B?RlZjT2lCcDN0b0xpcVZ3anR4NlVDZTNPR3NYbm5YV2sxbDFySlFtZXE2V2Fw?=
+ =?utf-8?B?WVVycGdWQnBjL2hHb0tBWGxPdHIvaUgwVkZFUFM5QlVmd0dyUGlqZXB3enJT?=
+ =?utf-8?B?ekVRdEdEN2diN0ZBMFVtRVJhTnJ6WUgwM2FJaDNJUkNML0JPNDJWTXYvek9V?=
+ =?utf-8?B?V01QRkhrUkVmU05Va0k3VzlUclpDWFpJd2lsRXJPYTBMYVFiWTR5Um04WVg1?=
+ =?utf-8?B?K0Fac1JPTkNjK2xtOFEvMkkxSllHNU0wSEM1bGRGVHNBeVJnTUg2SWJDS2cv?=
+ =?utf-8?B?Q3kzeWR1S3ZtenBoWEhnSU8zTnpCUStlemlBODA5aS9nbXY3bU4zdkFvbDBl?=
+ =?utf-8?B?WVIxSGpqekZrczNhT0V4MzFqS0hiSE9kbVl2TXo4TDhBbXBxYnV2V3hFNUpO?=
+ =?utf-8?B?dmV3MkoxRmdYN0FEeGxhL0VNQms0ZkpUSUxPTnM3RG5qV2lRN3ZSMHFEZDNu?=
+ =?utf-8?B?dEJndGtvWWhYVjFHc1cyZGdRclQ0VDhPcjBFWkNNbkF5cXc4ZmhaTWs2Wi8r?=
+ =?utf-8?B?cTI4UG9JdXUrNDF1NnZBbEw2WnV2KzhTbXpCT2JlR0Q2alB6RkllU2hCdW9M?=
+ =?utf-8?B?NmpkcXYvbGplOHJ4QUR0N3RuSGxPeUNGQUtmMmMyWU45L2llYXBXSncydzNj?=
+ =?utf-8?B?UVRydDJTdGxLei9FUWwxaSt6ZlBoUkZIak5HZDZWelhoUC94cDU3U2xLaXBp?=
+ =?utf-8?B?Q3NDUldjaFVtQTJxcWxyakhsM28xcWVzTTcraVRCTER4c3NaWTYvTk84eElF?=
+ =?utf-8?B?WW5CL0pEeE0xNHY5eG1OaTZHNDFQZU9nem5wZG9oUlRmdXhQSmR4c0lTUEJx?=
+ =?utf-8?B?VVg5WE1XUVUzejhpd2dpM25hejJiVHl5UmhiSExrdmxpNTExbzA4OU5HRUpK?=
+ =?utf-8?B?OG4rT1RHUS8vWDYyaEFEeHY2bldYL2NKNEgwOEdTWnk3ZXNLOXowMnY5ZS9Q?=
+ =?utf-8?B?dHFOSUpkUHBOSXVnUjhSd09sejdiUk9EcDZMbGJocHRhZmlDUlNOeEorUHdj?=
+ =?utf-8?B?d1dndWRHRVpHanpERWp0RjJ0ZDkrdmZOZUY0MldwSlRHL1d1aEN4MUNORG1o?=
+ =?utf-8?B?WVB1bGN3ZG5OQTZwR3hFTUE3UVNTeXBCWjlvbkZYV282L2ErZkMvclhSamdm?=
+ =?utf-8?B?MlNTZktBVE0vdklMRlVsejliSi95bUpBRkxJZWszOWF2clphS1lhTGN3SVhs?=
+ =?utf-8?B?aWMyVTUyOHdVa0crclhxTS9RZk55Y0sxRmNJSUpDRkEyQ1Rab0s1TGUwc3lI?=
+ =?utf-8?B?ZytZbzBiUHRLTTBVeG9TbkxMYmQ4R2MrVWxPYjgzekszdUgyT2MwdjVlaXdV?=
+ =?utf-8?B?L2Z6bExuVUlzTnMrTnJJTkozTGhoWnZUcWZCT0NuT0pqS0tFOW5OOTdTTHRO?=
+ =?utf-8?B?V096RDQzZG5YNm9EcDB0LzROUXJuSDd0cjJZcVhGUWozVyt0ZjJWdlpId0pV?=
+ =?utf-8?B?eUVVTWJZcWN3MlVrYXNNdVRjc2N3cXp4Qld0S2NTd2lFMXF6TXU5UkNQOWZL?=
+ =?utf-8?B?K2NWK3ZRYWovSGFFNTRia2V2WXVzc1ZJTk1vNnlQNkpNU0hzK0Y0VjVGb3pr?=
+ =?utf-8?B?Y3FGVmZ6SGpFRFZqRU80SmgrWm5NTUdKZHJYeEdOM0RnQnVWVXVQbzhyOVFB?=
+ =?utf-8?B?Qnp5QVRwZFI4RzByVExUcm9zVEd4cEFNczdodGFWTUoxZVNEQU9hR0ZQZVdU?=
+ =?utf-8?B?bWFVNzg5VGFtOWxhUVhMSTV0ZHRrb0dCd0oxSDEvcmZoaE5jdkFzdGlkTURX?=
+ =?utf-8?B?a05VaUdIN2NjT0tZMWRYckxTTk5EUzk5dmVFb01ydmo5VlNkUkhoVmVxZTdt?=
+ =?utf-8?B?MlE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	BIqN5uHiQWWA78a+YPOti0aWJnphvNhSEv0uEfk8h5pDCxALCMp6Mp1yxcFLDX5LAeTQsL/rLmi19YOkCI9jFsepDTDQYWIuh5b7YVbkYHUZTUVMyhB5T2jxE5rrAzeBnUlufGzfhtAAEQRGJnt1TxneENrSfC1V2bA2lLTidspVILN0dN0qYoloTiDIq+41pG2GN9+QwEZzV0fU1XhGTXxknJo7BsmhM2WPyjjIVhg7b1Tre2BzAJzs1P3w94Ab6xoYK0OvZpk6pPUS3Y+/A5RKDMF7rgzXhIfmjbkabiokMsYGLEWDhVzAtbsqDGBcFeestdd3nJufk6x99+NfCRzv0IGsIhVgew8YxuPl9chtpgQOe44FRWzNpuKjiU7OUez2T0OyICzvDo5BFXv0W8SdJ6qI+C28syG/3aHvNClpPkxelA/ohF3sVprEYz9dO460Qz+j7ye0mrJfvLlGNGnJD6W6qTJplptHTAS8ahnbrO9CiAL3wm6SiuRpxmr/eu8LJMPKgIwvXCGuoT/js7/oRdpFpzca/Zdym5kkUp65OMnQd/F2wE6H6wmUgiLv1v03G2D3AhAGBYnoBC5ctnelxdEb3BdpDgLbLu9cvGk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c6cb470-93fb-4682-c17c-08dca77487b0
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 21:56:51.5189
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oYue77NpG1SSxYaok/Z+q/w4Ro5m5IBdzCpo3SVeUlUxVyo0n7dETE/5oD9Wa6v0cjGEUz1zZiJW8WwzXWGwteakDLAJXF1V/vgFD+po6lk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5651
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-18_15,2024-07-18_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
+ definitions=main-2407180147
+X-Proofpoint-ORIG-GUID: IEKc1_mTnskhuzF_AUI6rKZnh8_Z-AOF
+X-Proofpoint-GUID: IEKc1_mTnskhuzF_AUI6rKZnh8_Z-AOF
 
-Hi,
 
-On Thu, Jul 18, 2024 at 12:53:43AM +0530, Radhey Shyam Pandey wrote:
-> usb5744 supports SMBus Configuration and it may be configured via the
-> SMBus slave interface during the hub start-up configuration stage.
-> 
-> To program it driver uses i2c-bus phandle (added in commit '02be19e914b8
-> dt-bindings: usb: Add support for Microchip usb5744 hub controller') to
-> get i2c client device and then based on usb5744 compatible check calls
-> usb5744 i2c default initialization sequence.
-> 
-> Apart from the USB command attach, prevent the hub from suspend.
-> when the USB Attach with SMBus (0xAA56) command is issued to the hub,
-> the hub is getting enumerated and then it puts in a suspend mode.
-> This causes the hub to NAK any SMBus access made by the SMBus Master
-> during this period and not able to see the hub's slave address while
-> running the "i2c probe" command.
-> 
-> Prevent the MCU from the putting the HUB in suspend mode through
-> register write. The BYPASS_UDC_SUSPEND bit (Bit 3) of the RuntimeFlags2
-> register at address 0x411D controls this aspect of the hub. The
-> BYPASS_UDC_SUSPEND bit in register 0x411Dh must be set to ensure that the
-> MCU is always enabled and ready to respond to SMBus runtime commands.
-> This register needs to be written before the USB attach command is issued.
-> 
-> The byte sequence is as follows:
-> Slave addr: 0x2d           00 00 05 00 01 41 1D 08
-> Slave addr: 0x2d           99 37 00
-> Slave addr: 0x2d           AA 56 00
-> 
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-> ---
-> Changes for v2:
-> - Move power on reset delay to separate patch.
-> - Switch to compatible based check for calling usb5755
->   onboard_dev_5744_i2c_init(). This is done to make
->   onboard_dev_5744_i2c_init() as static.
-> - Fix subsystem "usb: misc: onboard_usb_dev:..."
-> - Use #define for different register bits instead of magic values.
-> - Use err_power_off label name.
-> - Modified commit description to be in sync with v2 changes.
-> ---
->  drivers/usb/misc/onboard_usb_dev.c | 56 ++++++++++++++++++++++++++++++
->  drivers/usb/misc/onboard_usb_dev.h | 12 +++++++
->  2 files changed, 68 insertions(+)
-> 
-> diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-> index 94d5424841fd..4f3845f35ac4 100644
-> --- a/drivers/usb/misc/onboard_usb_dev.c
-> +++ b/drivers/usb/misc/onboard_usb_dev.c
-> @@ -11,6 +11,7 @@
->  #include <linux/err.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/init.h>
-> +#include <linux/i2c.h>
->  #include <linux/kernel.h>
->  #include <linux/list.h>
->  #include <linux/module.h>
-> @@ -297,10 +298,40 @@ static void onboard_dev_attach_usb_driver(struct work_struct *work)
->  		pr_err("Failed to attach USB driver: %pe\n", ERR_PTR(err));
->  }
->  
-> +static int onboard_dev_5744_i2c_init(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	int ret;
-> +
+On 7/18/24 2:21 AM, Juergen Gross wrote:
+> The recent adding of multicall debug mixed up the referencing of
+> the debug data. A __percpu tagged pointer can't be initialized with a
+> plain pointer, so use another percpu variable for the pointer and set
+> it on each new cpu via a function.
+>
+> Fixes: 942d917cb92a ("xen: make multicall debug boot time selectable")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202407151106.5s7Mnfpz-lkp@intel.com/
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-Please explain what the purpose of this sequence is. It is described
-in the commit message, however that is not directly available to a
-reader of the code.
 
-> +	char wr_buf[7] = {USB5744_CREG_MEM_ADDR, USB5744_CREG_MEM_NBYTES,
+IIUIC we only need data until SMP is initialized, so setting per-cpu 
+pointer just on cpu0 may be sufficient. Not sure where to do this though.
 
-IIUC USB5744_CREG_MEM_NBYTES is the number of registers written to the
-configuration register by this specific command, it could be different
-for other commands. If that is correct then I think this shouldn't be
-a constant but a literal plus a comment.
+But this works as well.
 
-> +			  USB5744_CREG_WRITE, USB5744_CREG_NBYTES,
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-Similar as above, USB5744_CREG_NBYTES should be a literal + comment, or
-alternatively something like USB5744_CREG_SIZE, assuming the width of
-all registers is one byte.
 
-It would also be an option to add a wrapper onboard_dev_5744_write_creg(),
-that encapsulates writing a configuration register. Not strictly need
-since currently only one register is written.
-
-> +			  USB5744_CREG_RUNTIMEFLAGS2,
-> +			  USB5744_CREG_RUNTIMEFLAGS2_LSB,
-> +			  USB5744_CREG_BYPASS_UDC_SUSPEND};
-> +
-> +	ret = i2c_smbus_write_block_data(client, 0, sizeof(wr_buf), wr_buf);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "BYPASS_UDC_SUSPEND bit configuration failed\n");
-> +
-> +	ret = i2c_smbus_write_word_data(client, USB5744_CREG_ACCESS,
-> +					USB5744_CREG_ACCESS_LSB);
-
-This is a command ("Configuration Register Access command", this should be
-reflected in the name, as for USB5744_CMD_ATTACH.
-
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Configuration Register Access Command failed\n");
-> +
-> +	/* Send SMBus command to boot hub. */
-> +	ret = i2c_smbus_write_word_data(client, USB5744_CMD_ATTACH,
-> +					USB5744_CMD_ATTACH_LSB);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "USB Attach with SMBus command failed\n");
-> +
-> +	return ret;
-
-	return 0;
-> +}
-> +
->  static int onboard_dev_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct onboard_dev *onboard_dev;	
-> +	struct device_node *i2c_node;
->  	int err;
->  
->  	onboard_dev = devm_kzalloc(dev, sizeof(*onboard_dev), GFP_KERNEL);
-> @@ -340,6 +371,27 @@ static int onboard_dev_probe(struct platform_device *pdev)
->  	if (err)
->  		return err;
->  
-> +	i2c_node = of_parse_phandle(pdev->dev.of_node, "i2c-bus", 0);
-> +	if (i2c_node) {
-> +		struct i2c_client *client;
-> +
-> +		client = of_find_i2c_device_by_node(i2c_node);
-> +		of_node_put(i2c_node);
-> +
-> +		if (!client) {
-> +			err = -EPROBE_DEFER;
-> +			goto err_power_off;
-> +		}
-> +
-> +		if (of_device_is_compatible(pdev->dev.of_node, "usb424,2744") ||
-> +		    of_device_is_compatible(pdev->dev.of_node, "usb424,5744"))
-> +			err = onboard_dev_5744_i2c_init(client);
-> +
-> +		put_device(&client->dev);
-> +		if (err < 0)
-> +			goto err_power_off;
-> +	}
-> +
->  	/*
->  	 * The USB driver might have been detached from the USB devices by
->  	 * onboard_dev_remove() (e.g. through an 'unbind' by userspace),
-> @@ -351,6 +403,10 @@ static int onboard_dev_probe(struct platform_device *pdev)
->  	schedule_work(&attach_usb_driver_work);
->  
->  	return 0;
-> +
-> +err_power_off:
-> +	onboard_dev_power_off(onboard_dev);
-> +	return err;
->  }
->  
->  static void onboard_dev_remove(struct platform_device *pdev)
-> diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
-> index 82c76a0b3346..5744c589b90f 100644
-> --- a/drivers/usb/misc/onboard_usb_dev.h
-> +++ b/drivers/usb/misc/onboard_usb_dev.h
-> @@ -8,6 +8,18 @@
->  
->  #define MAX_SUPPLIES 2
->  
-> +#define USB5744_CMD_ATTACH			0xAA
-> +#define USB5744_CMD_ATTACH_LSB			0x56
-> +#define USB5744_CREG_ACCESS			0x99
-> +#define USB5744_CREG_ACCESS_LSB			0x37
-> +#define USB5744_CREG_MEM_ADDR			0x00
-> +#define USB5744_CREG_MEM_NBYTES			0x05
-> +#define USB5744_CREG_WRITE			0x00
-> +#define USB5744_CREG_NBYTES			0x01
-> +#define USB5744_CREG_RUNTIMEFLAGS2		0x41
-> +#define USB5744_CREG_RUNTIMEFLAGS2_LSB		0x1D
-> +#define USB5744_CREG_BYPASS_UDC_SUSPEND		BIT(3)
-> +
-
-These defines are specific to the Microchip 5744 hub, there is no need
-for them to be defined in the include of the onboard_usb_dev driver.
-Please move them to the .c file
-
-Thanks
-
-Matthias
