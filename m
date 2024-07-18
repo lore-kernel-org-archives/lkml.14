@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322D214884F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F41149001;
 	Thu, 18 Jul 2024 21:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721337175; cv=none; b=iZrvAjII5XzNKmO0h/LI21r0aenayRGU86XW4LIYctgIiKgrpy+6SbLOU1SR5axpgE13ydNn/ueIxWY4WVrTyxir8eIgUd7F+jkSMdjvcxdjFXz800bKLGFH1U1LHXFoc0bF9Qv5nKoymLydZRk4U0m/soCVzc6TLazrkTohBjY=
+	t=1721337175; cv=none; b=S5L4qYTDWHdKf9kt4fHfVpjj9C2gfeuRbgP6rGVq7RMyJ2Nhzf1K1cK1jJfvvpO1HGHa32KZSHdIfOULkIbek/1DP9Gr1X8KVP3lz97RIPuEArUzwfM98joHSh8qwZN9R86+jzsVuZaPaqifPkqoXa0gYiSMiY75G4XpKriz6Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721337175; c=relaxed/simple;
-	bh=oN/6G2YjqIL0Q1hGMug5N8fuxYVefiTEs3HboNcccPg=;
+	bh=n7vjM6VKLvDpTADUO+TuE9+LJHPWdcTUwDTi4gVrsXg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IBqkuTmreMZEFVpYUTONzlPEjC2iHnsdPAAkdBup8r6w4yi1Q2AyyYB92i7H7Yoen5sdtGyK0MKNl1rQ8rRj38PlPrspk8Ul/n3W+jiKwKxUDDwqmLskEVYnlalEeN6dETvj2iUSJMomuG2FQCDCUd2th0gPRgHRszlrRh+msZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WnNkOmgq; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=aKbCmfKewtSJdEFziBQcPN2rVi9rMoQGxphGyx2spBRZnJijz14ZHRD0spymhvR3CRfEtm2K47YlRRrp729xH4/uKX4A0RQIt03n5XgDYleTc2FUhpAItkPViFVIuTy5tqsMfjiakaEUi032p8BIkfj5sMq8237rFp9bHoBhqg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KVjklG+/; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnNkOmgq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KVjklG+/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721337173; x=1752873173;
+  t=1721337174; x=1752873174;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=oN/6G2YjqIL0Q1hGMug5N8fuxYVefiTEs3HboNcccPg=;
-  b=WnNkOmgqYgajFJpC6f6DfeYHpOjOIJWjBhMUZoE3iMsC7EEYYd3Qo8id
-   lMr0pUyjGncHd8Iu6+W6HnKxb9nbyhY1g/ScwlKVUDVVvXxWco8QeXRUW
-   +tpeHCrTd9Vk7cPwi8DiYajXurQkB8vlO65DV14AhSQzpWN3u6jh/VSnJ
-   9URh9BXpbz+gf3YsAUVrv8LK4iuyNtse3jt8FBf+n9V/n/oVO/au34FOE
-   YZFFwguBsQ53SEoOq/Q+773FFrcYNIcYy8vqIl7VZbmRutonunUVUVDuk
-   ageOp77UEFVdKMZhPLOZZ80zMVuL788ybejO8rYiBkmS5AiqW4GOnsZoj
-   g==;
-X-CSE-ConnectionGUID: FqJERYKqSaS011oEuBfeFA==
-X-CSE-MsgGUID: +UbttxdkRJq3i0HHPF/nww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="22697445"
+  bh=n7vjM6VKLvDpTADUO+TuE9+LJHPWdcTUwDTi4gVrsXg=;
+  b=KVjklG+/HBcxoUUwL/bcmYktIAOfNnnEZOb7ncQ1j3lZ0sVNx6CsOgTC
+   9VpfLLyarwyCRD+cKcplRHUHnLtsivkbwuzyTpMNnM1amKzkPR5i63GKa
+   T8IhpbAB2K2FiDVRECUq/3rnbn15xm59eVcW/+IguhdRY1gjVlbtPdeFZ
+   3aE5wG5Ys62tn8K4Ma1gxBDqSSpANa3qW965B2JxxPjht1nlr1UIW7Thj
+   v4zNM4yQV7448r5w8Lhan7XJimw/RCf7hBQC2ZQICcSS8pofoVxfMDKXf
+   olts/l+njH9cBWY3kxepmc/p80/4uSDAqBbxmADDeseeSPn8l4cApUjYW
+   A==;
+X-CSE-ConnectionGUID: Y+TJf6+RQUCUIuSd1qwfZQ==
+X-CSE-MsgGUID: RL5Uk/HrSbaZFUh/6KkrcA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="22697461"
 X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
-   d="scan'208";a="22697445"
+   d="scan'208";a="22697461"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:48 -0700
-X-CSE-ConnectionGUID: te1hf0gLSrqBt8QQtON4sw==
-X-CSE-MsgGUID: A3/MeiVoR1iGVJPR+MLh0g==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:50 -0700
+X-CSE-ConnectionGUID: oe2DluFTSC2erUIVfyUjfA==
+X-CSE-MsgGUID: 0zVaDotTR8W72YO0y5PCWw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
-   d="scan'208";a="55760411"
+   d="scan'208";a="55760420"
 Received: from ccbilbre-mobl3.amr.corp.intel.com (HELO rpedgeco-desk4..) ([10.124.223.76])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:48 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:49 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -56,9 +56,9 @@ Cc: kai.huang@intel.com,
 	yan.y.zhao@intel.com,
 	rick.p.edgecombe@intel.com,
 	Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: [PATCH v4 12/18] KVM: x86/tdp_mmu: Support mirror root for TDP MMU
-Date: Thu, 18 Jul 2024 14:12:24 -0700
-Message-Id: <20240718211230.1492011-13-rick.p.edgecombe@intel.com>
+Subject: [PATCH v4 14/18] KVM: x86/tdp_mmu: Propagate building mirror page tables
+Date: Thu, 18 Jul 2024 14:12:26 -0700
+Message-Id: <20240718211230.1492011-15-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240718211230.1492011-1-rick.p.edgecombe@intel.com>
 References: <20240718211230.1492011-1-rick.p.edgecombe@intel.com>
@@ -72,8 +72,8 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Add the ability for the TDP MMU to maintain a mirror of a separate
-mapping.
+Integrate hooks for mirroring page table operations for cases where TDX
+will set PTEs or link page tables.
 
 Like other Coco technologies, TDX has the concept of private and shared
 memory. For TDX the private and shared mappings are managed on separate
@@ -81,68 +81,65 @@ EPT roots. The private half is managed indirectly through calls into a
 protected runtime environment called the TDX module, where the shared half
 is managed within KVM in normal page tables.
 
-In order to handle both shared and private memory, KVM needs to learn to
-handle faults and other operations on the correct root for the operation.
-KVM could learn the concept of private roots, and operate on them by
-calling out to operations that call into the TDX module. But there are two
-problems with that:
-1. Calls into the TDX module are relatively slow compared to the simple
-   accesses required to read a PTE managed directly by KVM.
-2. Other Coco technologies deal with private memory completely differently
-   and it will make the code confusing when being read from their
-   perspective. Special operations added for TDX that set private or zap
-   private memory will have nothing to do with these other private memory
-   technologies. (SEV, etc).
+Since calls into the TDX module are relatively slow, walking private page
+tables by making calls into the TDX module would not be efficient. Because
+of this, previous changes have taught the TDP MMU to keep a mirror root,
+which is separate, unmapped TDP root that private operations can be
+directed to. Currently this root is disconnected from any actual guest
+mapping. Now add plumbing to propagate changes to the "external" page
+tables being mirrored. Just create the x86_ops for now, leave plumbing the
+operations into the TDX module for future patches.
 
-To handle these, instead teach the TDP MMU about a new concept "mirror
-roots". Such roots maintain page tables that are not actually mapped,
-and are just used to traverse quickly to determine if the mid level page
-tables need to be installed. When the memory be mirrored needs to actually
-be changed, calls can be made to via x86_ops.
+Add two operations for setting up external page tables, one for linking
+new page tables and one for setting leaf PTEs. Don't add any op for
+configuring the root PFN, as TDX handles this itself. Don't provide a
+way to set permissions on the PTEs also, as TDX doesn't support it.
 
-  private KVM page fault   |
-      |                    |
-      V                    |
- private GPA               |     CPU protected EPTP
-      |                    |           |
-      V                    |           V
- mirror PT root            |     external PT root
-      |                    |           |
-      V                    |           V
-   mirror PT   --hook to propagate-->external PT
-      |                    |           |
-      \--------------------+------\    |
-                           |      |    |
-                           |      V    V
-                           |    private guest page
-                           |
-                           |
-     non-encrypted memory  |    encrypted memory
-                           |
+This results in MMU "mirroring" support that is very targeted towards TDX.
+Since it is likely there will be no other user, the main benefit of making
+the support generic is to keep TDX specific *looking* code outside of the
+MMU. As a generic feature it will make enough sense from TDX's
+perspective. For developers unfamiliar with TDX arch it can express the
+general concepts such that they can continue to work in the code.
 
-Leave calling out to actually update the private page tables that are being
-mirrored for later changes. Just implement the handling of MMU operations
-on to mirrored roots.
+TDX MMU support will exclude certain MMU operations, so only plug in the
+mirroring x86 ops where they will be needed. For setting/linking, only
+hook tdp_mmu_set_spte_atomic() which is used for mapping and linking
+PTs. Don't bother hooking tdp_mmu_iter_set_spte() as it is only used for
+setting PTEs in operations unsupported by TDX: splitting huge pages and
+write protecting. Sprinkle KVM_BUG_ON()s to document as code that these
+paths are not supported for mirrored page tables. For zapping operations,
+leave those for near future changes.
 
-In order to direct operations to correct root, add root types
-KVM_DIRECT_ROOTS and KVM_MIRROR_ROOTS. Tie the usage of mirrored/direct
-roots to private/shared with conditionals. It could also be implemented by
-making the kvm_tdp_mmu_root_types and kvm_gfn_range_filter enum bits line
-up such that conversion could be a direct assignment with a case. Don't do
-this because the mapping of private to mirrored is confusing enough. So it
-is worth not hiding the logic in type casting.
+Many operations in the TDP MMU depend on atomicity of the PTE update.
+While the mirror PTE on KVM's side can be updated atomically, the update
+that happens inside the external operations (S-EPT updates via TDX module
+call) can't happen atomically with the mirror update. The following race
+could result during two vCPU's populating private memory:
 
-Cleanup the mirror root in kvm_mmu_destroy() instead of the normal place
-in kvm_mmu_free_roots(), because the private root that is being cannot be
-rebuilt like a normal root. It needs to persist for the lifetime of the VM.
+* vcpu 1: atomically update 2M level mirror EPT entry to be present
+* vcpu 2: read 2M level EPT entry that is present
+* vcpu 2: walk down into 4K level EPT
+* vcpu 2: atomically update 4K level mirror EPT entry to be present
+* vcpu 2: set_exterma;_spte() to update 4K secure EPT entry => error
+          because 2M secure EPT entry is not populated yet
+* vcpu 1: link_external_spt() to update 2M secure EPT entry
 
-The TDX module will also need to be provided with page tables to use for
-the actual mapping being mirrored by the mirrored page tables. Allocate
-these in the mapping path using the recently added
-kvm_mmu_alloc_external_spt().
+Prevent this by setting the mirror PTE to FROZEN_SPTE while the reflect
+operations are performed. Only write the actual mirror PTE value once the
+reflect operations have completed. When trying to set a PTE to present and
+encountering a frozen SPTE, retry the fault.
 
-Don't support 2M page for now. This is avoided by forcing 4k pages in the
-fault. Add a KVM_BUG_ON() to verify.
+By doing this the race is prevented as follows:
+* vcpu 1: atomically update 2M level EPT entry to be FROZEN_SPTE
+* vcpu 2: read 2M level EPT entry that is FROZEN_SPTE
+* vcpu 2: find that the EPT entry is frozen
+          abandon page table walk to resume guest execution
+* vcpu 1: link_external_spt() to update 2M secure EPT entry
+* vcpu 1: atomically update 2M level EPT entry to be present (unfreeze)
+* vcpu 2: resume guest execution
+          Depending on vcpu 1 state, vcpu 2 may result in EPT violation
+          again or make progress on guest execution
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 Co-developed-by: Kai Huang <kai.huang@intel.com>
@@ -153,267 +150,208 @@ Co-developed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
 v4:
- - Use true instead of 1 when setting role.is_mirror (Binbin)
- - Handle case of invalid direct root, but valid mirror root (Yan)
- - Log typos
+ - Fix external/mirror naming in code and commit log (Binbin)
+ - Fix removes/frozen naming in log (Binbin)
+ - Log/comment typo (Binbin)
+ - No functional chagnge from v3
 
 v3:
- - Change subject from "Make mmu notifier callbacks to check
-   kvm_process" to "Propagate attr_filter to MMU notifier callbacks"
-   (Paolo)
- - Remove no longer used for_each_tdp_mmu_root() (Binbin)
+ - Rename mirrored->external (Paolo)
+ - Better comment on logic that bugs if doing tdp_mmu_set_spte() on
+   present PTE. (Paolo)
+ - Move zapping KVM_BUG_ON() to proper patch
+ - Use spte_to_child_sp() (Paolo)
+ - Drop unnessary comment in __tdp_mmu_set_spte_atomic() (Paolo)
+ - Rename pfn->pfn_for_gfn to match remove_external_pte in next patch.
+ - Rename REMOVED_SPTE to FROZEN_SPTE (Paolo)
 
 v2:
- - Use newly added kvm_process_to_root_types()
+ - Split from "KVM: x86/tdp_mmu: Support TDX private mapping for TDP MMU"
+ - Rename x86_ops from "private" to "reflect"
+ - In response to "sp->mirrored_spt" rename helpers to "mirrored"
+ - Drop unused old_pfn and new_pfn in handle_changed_spte()
+ - Drop redundant is_shadow_present_pte() check in __tdp_mmu_set_spte_atomic
+ - Adjust some warnings and KVM_BUG_ONs
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/mmu.h              | 16 ++++++++++++
- arch/x86/kvm/mmu/mmu.c          | 12 ++++++++-
- arch/x86/kvm/mmu/tdp_mmu.c      | 34 ++++++++++++++++++++------
- arch/x86/kvm/mmu/tdp_mmu.h      | 43 ++++++++++++++++++++++++++++++---
- 5 files changed, 94 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/kvm-x86-ops.h |  2 +
+ arch/x86/include/asm/kvm_host.h    |  7 +++
+ arch/x86/kvm/mmu/tdp_mmu.c         | 97 ++++++++++++++++++++++++++----
+ 3 files changed, 94 insertions(+), 12 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index 566d19b02483..3ef19fcb5e42 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -95,6 +95,8 @@ KVM_X86_OP_OPTIONAL_RET0(set_tss_addr)
+ KVM_X86_OP_OPTIONAL_RET0(set_identity_map_addr)
+ KVM_X86_OP_OPTIONAL_RET0(get_mt_mask)
+ KVM_X86_OP(load_mmu_pgd)
++KVM_X86_OP_OPTIONAL(link_external_spt)
++KVM_X86_OP_OPTIONAL(set_external_spte)
+ KVM_X86_OP(has_wbinvd_exit)
+ KVM_X86_OP(get_l2_tsc_offset)
+ KVM_X86_OP(get_l2_tsc_multiplier)
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 1730f94c9742..b142ef6e6676 100644
+index b142ef6e6676..a17b672b1923 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -460,6 +460,7 @@ struct kvm_mmu {
- 	int (*sync_spte)(struct kvm_vcpu *vcpu,
- 			 struct kvm_mmu_page *sp, int i);
- 	struct kvm_mmu_root_info root;
-+	hpa_t mirror_root_hpa;
- 	union kvm_cpu_role cpu_role;
- 	union kvm_mmu_page_role root_role;
+@@ -1738,6 +1738,13 @@ struct kvm_x86_ops {
+ 	void (*load_mmu_pgd)(struct kvm_vcpu *vcpu, hpa_t root_hpa,
+ 			     int root_level);
  
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 63179a4fba7b..4f6c86294f05 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -128,6 +128,15 @@ void kvm_mmu_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
- 
- static inline int kvm_mmu_reload(struct kvm_vcpu *vcpu)
- {
-+	/*
-+	 * Checking root.hpa is sufficient even when KVM has mirror root.
-+	 * We can have either:
-+	 * (1) mirror_root_hpa = INVALID_PAGE, root.hpa = INVALID_PAGE
-+	 * (2) mirror_root_hpa = root,         root.hpa = INVALID_PAGE
-+	 * (3) mirror_root_hpa = root1,        root.hpa = root2
-+	 * We don't ever have:
-+	 *     mirror_root_hpa = INVALID_PAGE, root.hpa = root
-+	 */
- 	if (likely(vcpu->arch.mmu->root.hpa != INVALID_PAGE))
- 		return 0;
- 
-@@ -328,4 +337,11 @@ static inline gfn_t kvm_gfn_direct_bits(const struct kvm *kvm)
- {
- 	return kvm->arch.gfn_direct_bits;
- }
++	/* Update external mapping with page table link. */
++	int (*link_external_spt)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
++				void *external_spt);
++	/* Update the external page table from spte getting set. */
++	int (*set_external_spte)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
++				 kvm_pfn_t pfn_for_gfn);
 +
-+static inline bool kvm_is_addr_direct(struct kvm *kvm, gpa_t gpa)
-+{
-+	gpa_t gpa_direct_bits = gfn_to_gpa(kvm_gfn_direct_bits(kvm));
-+
-+	return !gpa_direct_bits || (gpa & gpa_direct_bits);
-+}
- #endif
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 2f7f372a4bfe..2c73360533c2 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3704,7 +3704,10 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
- 	int r;
+ 	bool (*has_wbinvd_exit)(void);
  
- 	if (tdp_mmu_enabled) {
--		kvm_tdp_mmu_alloc_root(vcpu);
-+		if (kvm_has_mirrored_tdp(vcpu->kvm) &&
-+		    !VALID_PAGE(mmu->mirror_root_hpa))
-+			kvm_tdp_mmu_alloc_root(vcpu, true);
-+		kvm_tdp_mmu_alloc_root(vcpu, false);
- 		return 0;
- 	}
- 
-@@ -6290,6 +6293,7 @@ static int __kvm_mmu_create(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu)
- 
- 	mmu->root.hpa = INVALID_PAGE;
- 	mmu->root.pgd = 0;
-+	mmu->mirror_root_hpa = INVALID_PAGE;
- 	for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
- 		mmu->prev_roots[i] = KVM_MMU_ROOT_INFO_INVALID;
- 
-@@ -7265,6 +7269,12 @@ int kvm_mmu_vendor_module_init(void)
- void kvm_mmu_destroy(struct kvm_vcpu *vcpu)
- {
- 	kvm_mmu_unload(vcpu);
-+	if (tdp_mmu_enabled) {
-+		read_lock(&vcpu->kvm->mmu_lock);
-+		mmu_free_root_page(vcpu->kvm, &vcpu->arch.mmu->mirror_root_hpa,
-+				   NULL);
-+		read_unlock(&vcpu->kvm->mmu_lock);
-+	}
- 	free_mmu_pages(&vcpu->arch.root_mmu);
- 	free_mmu_pages(&vcpu->arch.guest_mmu);
- 	mmu_free_memory_caches(vcpu);
+ 	u64 (*get_l2_tsc_offset)(struct kvm_vcpu *vcpu);
 diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 19bd891702a9..5af7355ef015 100644
+index 748fdacc719c..116dc3e9bdb3 100644
 --- a/arch/x86/kvm/mmu/tdp_mmu.c
 +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -95,10 +95,15 @@ void kvm_tdp_mmu_put_root(struct kvm *kvm, struct kvm_mmu_page *root)
- static bool tdp_mmu_root_match(struct kvm_mmu_page *root,
- 			       enum kvm_tdp_mmu_root_types types)
- {
-+	if (WARN_ON_ONCE(!(types & KVM_VALID_ROOTS)))
-+		return false;
-+
- 	if (root->role.invalid)
- 		return types & KVM_INVALID_ROOTS;
-+	if (likely(!is_mirror_sp(root)))
-+		return types & KVM_DIRECT_ROOTS;
- 
--	return true;
-+	return types & KVM_MIRROR_ROOTS;
+@@ -440,6 +440,59 @@ static void handle_removed_pt(struct kvm *kvm, tdp_ptep_t pt, bool shared)
+ 	call_rcu(&sp->rcu_head, tdp_mmu_free_sp_rcu_callback);
  }
  
- /*
-@@ -233,7 +238,7 @@ static void tdp_mmu_init_child_sp(struct kvm_mmu_page *child_sp,
- 	tdp_mmu_init_sp(child_sp, iter->sptep, iter->gfn, role);
- }
- 
--void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
-+void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu, bool mirror)
- {
- 	struct kvm_mmu *mmu = vcpu->arch.mmu;
- 	union kvm_mmu_page_role role = mmu->root_role;
-@@ -241,6 +246,9 @@ void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
- 	struct kvm *kvm = vcpu->kvm;
- 	struct kvm_mmu_page *root;
- 
-+	if (mirror)
-+		role.is_mirror = true;
-+
- 	/*
- 	 * Check for an existing root before acquiring the pages lock to avoid
- 	 * unnecessary serialization if multiple vCPUs are loading a new root.
-@@ -292,8 +300,12 @@ void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu)
- 	 * and actually consuming the root if it's invalidated after dropping
- 	 * mmu_lock, and the root can't be freed as this vCPU holds a reference.
- 	 */
--	mmu->root.hpa = __pa(root->spt);
--	mmu->root.pgd = 0;
-+	if (mirror) {
-+		mmu->mirror_root_hpa = __pa(root->spt);
-+	} else {
-+		mmu->root.hpa = __pa(root->spt);
-+		mmu->root.pgd = 0;
-+	}
- }
- 
- static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
-@@ -1117,8 +1129,8 @@ static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
-  */
- int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
- {
-+	struct kvm_mmu_page *root = tdp_mmu_get_root_for_fault(vcpu, fault);
- 	struct kvm *kvm = vcpu->kvm;
--	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
- 	struct tdp_iter iter;
- 	struct kvm_mmu_page *sp;
- 	int ret = RET_PF_RETRY;
-@@ -1156,13 +1168,18 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
- 		 */
- 		sp = tdp_mmu_alloc_sp(vcpu);
- 		tdp_mmu_init_child_sp(sp, &iter);
-+		if (is_mirror_sp(sp))
-+			kvm_mmu_alloc_external_spt(vcpu, sp);
- 
- 		sp->nx_huge_page_disallowed = fault->huge_page_disallowed;
- 
--		if (is_shadow_present_pte(iter.old_spte))
-+		if (is_shadow_present_pte(iter.old_spte)) {
-+			/* Don't support large page for mirrored roots (TDX) */
-+			KVM_BUG_ON(is_mirror_sptep(iter.sptep), vcpu->kvm);
- 			r = tdp_mmu_split_huge_page(kvm, &iter, sp, true);
--		else
-+		} else {
- 			r = tdp_mmu_link_sp(kvm, &iter, sp, true);
-+		}
- 
- 		/*
- 		 * Force the guest to retry if installing an upper level SPTE
-@@ -1817,7 +1834,8 @@ int kvm_tdp_mmu_get_walk(struct kvm_vcpu *vcpu, u64 addr, u64 *sptes,
- u64 *kvm_tdp_mmu_fast_pf_get_last_sptep(struct kvm_vcpu *vcpu, gfn_t gfn,
- 					u64 *spte)
- {
--	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
-+	/* Fast pf is not supported for mirrored roots  */
-+	struct kvm_mmu_page *root = tdp_mmu_get_root(vcpu, KVM_DIRECT_ROOTS);
- 	struct tdp_iter iter;
- 	tdp_ptep_t sptep = NULL;
- 
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
-index 8980c869e39c..5b607adca680 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.h
-+++ b/arch/x86/kvm/mmu/tdp_mmu.h
-@@ -10,7 +10,7 @@
- void kvm_mmu_init_tdp_mmu(struct kvm *kvm);
- void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm);
- 
--void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu);
-+void kvm_tdp_mmu_alloc_root(struct kvm_vcpu *vcpu, bool private);
- 
- __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
- {
-@@ -21,11 +21,48 @@ void kvm_tdp_mmu_put_root(struct kvm *kvm, struct kvm_mmu_page *root);
- 
- enum kvm_tdp_mmu_root_types {
- 	KVM_INVALID_ROOTS = BIT(0),
--
--	KVM_VALID_ROOTS = BIT(1),
-+	KVM_DIRECT_ROOTS = BIT(1),
-+	KVM_MIRROR_ROOTS = BIT(2),
-+	KVM_VALID_ROOTS = KVM_DIRECT_ROOTS | KVM_MIRROR_ROOTS,
- 	KVM_ALL_ROOTS = KVM_VALID_ROOTS | KVM_INVALID_ROOTS,
- };
- 
-+static inline enum kvm_tdp_mmu_root_types kvm_gfn_range_filter_to_root_types(struct kvm *kvm,
-+							     enum kvm_gfn_range_filter process)
++static void *get_external_spt(gfn_t gfn, u64 new_spte, int level)
 +{
-+	enum kvm_tdp_mmu_root_types ret = 0;
++	if (is_shadow_present_pte(new_spte) && !is_last_spte(new_spte, level)) {
++		struct kvm_mmu_page *sp = spte_to_child_sp(new_spte);
 +
-+	if (!kvm_has_mirrored_tdp(kvm))
-+		return KVM_DIRECT_ROOTS;
++		WARN_ON_ONCE(sp->role.level + 1 != level);
++		WARN_ON_ONCE(sp->gfn != gfn);
++		return sp->external_spt;
++	}
 +
-+	if (process & KVM_FILTER_PRIVATE)
-+		ret |= KVM_MIRROR_ROOTS;
-+	if (process & KVM_FILTER_SHARED)
-+		ret |= KVM_DIRECT_ROOTS;
++	return NULL;
++}
 +
-+	WARN_ON_ONCE(!ret);
++static int __must_check set_external_spte_present(struct kvm *kvm, tdp_ptep_t sptep,
++						 gfn_t gfn, u64 old_spte,
++						 u64 new_spte, int level)
++{
++	bool was_present = is_shadow_present_pte(old_spte);
++	bool is_present = is_shadow_present_pte(new_spte);
++	bool is_leaf = is_present && is_last_spte(new_spte, level);
++	kvm_pfn_t new_pfn = spte_to_pfn(new_spte);
++	int ret = 0;
 +
++	KVM_BUG_ON(was_present, kvm);
++
++	lockdep_assert_held(&kvm->mmu_lock);
++	/*
++	 * We need to lock out other updates to the SPTE until the external
++	 * page table has been modified. Use FROZEN_SPTE similar to
++	 * the zapping case.
++	 */
++	if (!try_cmpxchg64(sptep, &old_spte, FROZEN_SPTE))
++		return -EBUSY;
++
++	/*
++	 * Use different call to either set up middle level
++	 * external page table, or leaf.
++	 */
++	if (is_leaf) {
++		ret = static_call(kvm_x86_set_external_spte)(kvm, gfn, level, new_pfn);
++	} else {
++		void *external_spt = get_external_spt(gfn, new_spte, level);
++
++		KVM_BUG_ON(!external_spt, kvm);
++		ret = static_call(kvm_x86_link_external_spt)(kvm, gfn, level, external_spt);
++	}
++	if (ret)
++		__kvm_tdp_mmu_write_spte(sptep, old_spte);
++	else
++		__kvm_tdp_mmu_write_spte(sptep, new_spte);
 +	return ret;
 +}
 +
-+static inline struct kvm_mmu_page *tdp_mmu_get_root_for_fault(struct kvm_vcpu *vcpu,
-+							      struct kvm_page_fault *fault)
-+{
-+	if (unlikely(!kvm_is_addr_direct(vcpu->kvm, fault->addr)))
-+		return root_to_sp(vcpu->arch.mmu->mirror_root_hpa);
+ /**
+  * handle_changed_spte - handle bookkeeping associated with an SPTE change
+  * @kvm: kvm instance
+@@ -548,7 +601,8 @@ static void handle_changed_spte(struct kvm *kvm, int as_id, gfn_t gfn,
+ 		kvm_set_pfn_accessed(spte_to_pfn(old_spte));
+ }
+ 
+-static inline int __must_check __tdp_mmu_set_spte_atomic(struct tdp_iter *iter,
++static inline int __must_check __tdp_mmu_set_spte_atomic(struct kvm *kvm,
++							 struct tdp_iter *iter,
+ 							 u64 new_spte)
+ {
+ 	u64 *sptep = rcu_dereference(iter->sptep);
+@@ -561,15 +615,25 @@ static inline int __must_check __tdp_mmu_set_spte_atomic(struct tdp_iter *iter,
+ 	 */
+ 	WARN_ON_ONCE(iter->yielded || is_frozen_spte(iter->old_spte));
+ 
+-	/*
+-	 * Note, fast_pf_fix_direct_spte() can also modify TDP MMU SPTEs and
+-	 * does not hold the mmu_lock.  On failure, i.e. if a different logical
+-	 * CPU modified the SPTE, try_cmpxchg64() updates iter->old_spte with
+-	 * the current value, so the caller operates on fresh data, e.g. if it
+-	 * retries tdp_mmu_set_spte_atomic()
+-	 */
+-	if (!try_cmpxchg64(sptep, &iter->old_spte, new_spte))
+-		return -EBUSY;
++	if (is_mirror_sptep(iter->sptep) && !is_frozen_spte(new_spte)) {
++		int ret;
 +
-+	return root_to_sp(vcpu->arch.mmu->root.hpa);
-+}
++		ret = set_external_spte_present(kvm, iter->sptep, iter->gfn,
++						iter->old_spte, new_spte, iter->level);
++		if (ret)
++			return ret;
++	} else {
++		/*
++		 * Note, fast_pf_fix_direct_spte() can also modify TDP MMU SPTEs
++		 * and does not hold the mmu_lock.  On failure, i.e. if a
++		 * different logical CPU modified the SPTE, try_cmpxchg64()
++		 * updates iter->old_spte with the current value, so the caller
++		 * operates on fresh data, e.g. if it retries
++		 * tdp_mmu_set_spte_atomic()
++		 */
++		if (!try_cmpxchg64(sptep, &iter->old_spte, new_spte))
++			return -EBUSY;
++	}
+ 
+ 	return 0;
+ }
+@@ -599,7 +663,7 @@ static inline int __must_check tdp_mmu_set_spte_atomic(struct kvm *kvm,
+ 
+ 	lockdep_assert_held_read(&kvm->mmu_lock);
+ 
+-	ret = __tdp_mmu_set_spte_atomic(iter, new_spte);
++	ret = __tdp_mmu_set_spte_atomic(kvm, iter, new_spte);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -624,7 +688,8 @@ static inline int __must_check tdp_mmu_zap_spte_atomic(struct kvm *kvm,
+ 	 * Delay processing of the zapped SPTE until after TLBs are flushed and
+ 	 * the FROZEN_SPTE is replaced (see below).
+ 	 */
+-	ret = __tdp_mmu_set_spte_atomic(iter, FROZEN_SPTE);
++	ret = __tdp_mmu_set_spte_atomic(kvm, iter, FROZEN_SPTE);
 +
-+static inline struct kvm_mmu_page *tdp_mmu_get_root(struct kvm_vcpu *vcpu,
-+						    enum kvm_tdp_mmu_root_types type)
-+{
-+	if (unlikely(type == KVM_MIRROR_ROOTS))
-+		return root_to_sp(vcpu->arch.mmu->mirror_root_hpa);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -681,6 +746,14 @@ static u64 tdp_mmu_set_spte(struct kvm *kvm, int as_id, tdp_ptep_t sptep,
+ 	old_spte = kvm_tdp_mmu_write_spte(sptep, old_spte, new_spte, level);
+ 
+ 	handle_changed_spte(kvm, as_id, gfn, old_spte, new_spte, level, false);
 +
-+	return root_to_sp(vcpu->arch.mmu->root.hpa);
-+}
++	/*
++	 * Users that do non-atomic setting of PTEs don't operate on mirror
++	 * roots, so don't handle it and bug the VM if it's seen.
++	 */
++	if (is_mirror_sptep(sptep))
++		KVM_BUG_ON(is_shadow_present_pte(new_spte), kvm);
 +
- bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool flush);
- bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp);
- void kvm_tdp_mmu_zap_all(struct kvm *kvm);
+ 	return old_spte;
+ }
+ 
 -- 
 2.34.1
 
