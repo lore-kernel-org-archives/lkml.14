@@ -1,78 +1,78 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1CB13AA51
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 10:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5882413BC1B
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 10:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721300363; cv=none; b=u37pizUTDZ6NBYqlSQbcx9CwlGD/UBlVUZpRSVQsmWNednXEYTb3R2+0Hv/Gjqhu2755ga+/87kId6Gpcyasqo34yqAA81zvCRWSLf2utvUsLC0LeGfHh+uv7pa1iKZ2oln3JZqzgN/2J0duM43F5vc6HhW7RLuiHoCJUcswSvk=
+	t=1721300366; cv=none; b=QKc8+2U2csf+vgAhaWKho9ywMR/X/KvheyydqIWpm5HFPySBvzk7/UXeG1EO23IOXrttiLxFYZ3RacmSQw42KBv8O9iT1XnZ9FdudiUOYX3zhnC1oWqgu+HL60folvs+tazwiap3goShxvXdRdCXJJ3qM5bsZw2Fnf+OK7tbzXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721300363; c=relaxed/simple;
-	bh=Z5xwROHzxoXWJTzZ5jfEtK825wqYsYEDnx+2qEPVX30=;
+	s=arc-20240116; t=1721300366; c=relaxed/simple;
+	bh=U/J985KPM3uGLbgJOUAnar+YfMSKg/u9BONrfMtJS7A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DB3dYmTVJHfsvpWT0rVOlfu/ETJXJBgBTG7T1QC3bVsWVIhg34yFDi3QMGU/1PCJDGWkEjWBZbmkheU7yyX8TLMMzQlbBpI/k2pmHS1cSziZQlhOxl8owoitFDONkDl1UaOH4UGtUwT2swblnPndpWMvZeVCgpAuRCGTnkpLmdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z5eI1VcQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X4rbEJ+Y; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z5eI1VcQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X4rbEJ+Y; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=IZFyZZQk1u1Wm5zSZLD+sXTu0XmIVLKLubqLqdIRDpksxit8vBuNmsi8Z4Dd8NdxfR0OE6j4Ga9m97zes3EdW2LNCvZrORNKVVuEdv0JvmHEpG3UPY0qXCtEM8UmZWYqWoSwP2BokS0ULNeRQSwZNWSnNvr2bNzn0HxQVSe+AkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sFCULHDi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5QSTbzcB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sFCULHDi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5QSTbzcB; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z5eI1VcQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X4rbEJ+Y";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z5eI1VcQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X4rbEJ+Y"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sFCULHDi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5QSTbzcB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sFCULHDi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5QSTbzcB"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 407C91FBBE;
-	Thu, 18 Jul 2024 10:59:20 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BC3251FBCD;
+	Thu, 18 Jul 2024 10:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721300360; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721300362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6sPGyH5z7l/pm0TX/hh9KWyWWpcRI/yb9hB1nzYK2f0=;
-	b=z5eI1VcQIrnLNx2Z0oK330o9OEByJyUoURwS49Ys44trBlZ/l7ix0vn9EWT1GWuyZGhjUs
-	r2LtEo47jmzw0u57xl9/9M8Q4UxrQIwAjGjEYaGcxEfach1ESHp437POhkkzYPZCF5ZD9y
-	Y2LHEodX4at6FpHiaDavKdKcccmTfqA=
+	bh=uA6OghgZH0iRGnLvFrby5KN/hDL1p1cPRMCb0kQhP1A=;
+	b=sFCULHDiYLCidOxZWgtfh+8VF1osEgqzbFRVwpMV9QRjNlbaZ3kT8iCeHMxAJ5Ws8ceVFG
+	crJawzL+uzhe8HxDL94Smc0nLVnBgybmnC3WTBa8z75qmnOu06PefkJVJDi0r3AGR7lm3O
+	bDd4hTQNl5F0P1anhubvcKH3KCVrjjs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721300360;
+	s=susede2_ed25519; t=1721300362;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6sPGyH5z7l/pm0TX/hh9KWyWWpcRI/yb9hB1nzYK2f0=;
-	b=X4rbEJ+Yn1vnB9FjpFiteKUi4ZJqJ/ZU1kpljjScD/+NNRgV18aVF/aYxaHV6hClFIckw8
-	3Yf5i9Bv93dYvSBg==
+	bh=uA6OghgZH0iRGnLvFrby5KN/hDL1p1cPRMCb0kQhP1A=;
+	b=5QSTbzcBcLeISf+fa8flAihLmfARAv/AUKET9MsutkpyhqD68D3LrgM4+taA+r4HbIPTo5
+	nU2ZnLM9vGHpwnCQ==
 Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1721300360; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1721300362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6sPGyH5z7l/pm0TX/hh9KWyWWpcRI/yb9hB1nzYK2f0=;
-	b=z5eI1VcQIrnLNx2Z0oK330o9OEByJyUoURwS49Ys44trBlZ/l7ix0vn9EWT1GWuyZGhjUs
-	r2LtEo47jmzw0u57xl9/9M8Q4UxrQIwAjGjEYaGcxEfach1ESHp437POhkkzYPZCF5ZD9y
-	Y2LHEodX4at6FpHiaDavKdKcccmTfqA=
+	bh=uA6OghgZH0iRGnLvFrby5KN/hDL1p1cPRMCb0kQhP1A=;
+	b=sFCULHDiYLCidOxZWgtfh+8VF1osEgqzbFRVwpMV9QRjNlbaZ3kT8iCeHMxAJ5Ws8ceVFG
+	crJawzL+uzhe8HxDL94Smc0nLVnBgybmnC3WTBa8z75qmnOu06PefkJVJDi0r3AGR7lm3O
+	bDd4hTQNl5F0P1anhubvcKH3KCVrjjs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1721300360;
+	s=susede2_ed25519; t=1721300362;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6sPGyH5z7l/pm0TX/hh9KWyWWpcRI/yb9hB1nzYK2f0=;
-	b=X4rbEJ+Yn1vnB9FjpFiteKUi4ZJqJ/ZU1kpljjScD/+NNRgV18aVF/aYxaHV6hClFIckw8
-	3Yf5i9Bv93dYvSBg==
+	bh=uA6OghgZH0iRGnLvFrby5KN/hDL1p1cPRMCb0kQhP1A=;
+	b=5QSTbzcBcLeISf+fa8flAihLmfARAv/AUKET9MsutkpyhqD68D3LrgM4+taA+r4HbIPTo5
+	nU2ZnLM9vGHpwnCQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2F5E7136F7;
-	Thu, 18 Jul 2024 10:59:19 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9C885136F7;
+	Thu, 18 Jul 2024 10:59:21 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YEPXB4f1mGbnVAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 18 Jul 2024 10:59:19 +0000
+	id cFt8IYn1mGbnVAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Thu, 18 Jul 2024 10:59:21 +0000
 From: Oscar Salvador <osalvador@suse.de>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -85,9 +85,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Vlastimil Babka <vbabka@suse.cz>,
 	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 6/9] mm: Make hugetlb mappings go through mm_get_unmapped_area_vmflags
-Date: Thu, 18 Jul 2024 12:59:00 +0200
-Message-ID: <20240718105903.19617-7-osalvador@suse.de>
+Subject: [PATCH 8/9] arch/s390: Clean up hugetlb definitions
+Date: Thu, 18 Jul 2024 12:59:02 +0200
+Message-ID: <20240718105903.19617-9-osalvador@suse.de>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240718105903.19617-1-osalvador@suse.de>
 References: <20240718105903.19617-1-osalvador@suse.de>
@@ -98,10 +98,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+X-Spam-Flag: NO
+X-Spam-Score: 1.20
+X-Spamd-Result: default: False [1.20 / 50.00];
 	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
 	NEURAL_HAM_SHORT(-0.20)[-0.999];
 	MIME_GOOD(-0.10)[text/plain];
@@ -109,144 +109,214 @@ X-Spamd-Result: default: False [-2.80 / 50.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
 	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
 	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+X-Spam-Level: *
 
-Hugetlb mappings will no longer be special cased but rather go through
-the generic mm_get_unmapped_area_vmflags function.
-For that to happen, let us remove the .get_unmapped_area from
-hugetlbfs_file_operations struct, and hint __get_unmapped_area
-that it should not send hugetlb mappings through thp_get_unmapped_area_vmflags
-but through mm_get_unmapped_area_vmflags.
+s390 redefines functions that are already defined (and the same)
+in include/asm-generic/hugetlb.h.
+Do as the other architectures: 1) include include/asm-generic/hugetlb.h
+2) drop the already defined functions in the generic hugetlb.h and
+3) use the __HAVE_ARCH_HUGE_* macros to define our own.
 
-Create also a function called hugetlb_mmap_check_and_align() where a
-couple of safety checks are being done and the addr is aligned to
-the huge page size.
-Otherwise we will have to do this in every single function, which
-duplicates quite a lot of code.
+This gets rid of quite some code.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- fs/hugetlbfs/inode.c    | 22 ++++++++++++++--------
- include/linux/hugetlb.h |  8 +++-----
- mm/mmap.c               | 15 ++++++++++++++-
- 3 files changed, 31 insertions(+), 14 deletions(-)
+ arch/s390/include/asm/hugetlb.h | 58 +++++++++------------------------
+ include/asm-generic/hugetlb.h   |  8 +++++
+ 2 files changed, 24 insertions(+), 42 deletions(-)
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 81dab95f67ed..d02b4bc6c5e9 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -257,15 +257,22 @@ generic_hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 			pgoff, flags);
- }
+diff --git a/arch/s390/include/asm/hugetlb.h b/arch/s390/include/asm/hugetlb.h
+index ce5f4fe8be4d..f01b101c80b7 100644
+--- a/arch/s390/include/asm/hugetlb.h
++++ b/arch/s390/include/asm/hugetlb.h
+@@ -12,21 +12,24 @@
+ #include <linux/pgtable.h>
+ #include <asm/page.h>
  
--#ifndef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
--static unsigned long
--hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
--			  unsigned long len, unsigned long pgoff,
--			  unsigned long flags)
-+unsigned long
-+hugetlb_mmap_check_and_align(struct file *file, unsigned long addr,
-+			     unsigned long len, unsigned long flags)
- {
--	return generic_hugetlb_get_unmapped_area(file, addr, len, pgoff, flags);
-+	unsigned long addr0 = 0;
-+	struct hstate *h = hstate_file(file);
-+
-+	if (len & ~huge_page_mask(h))
-+		return -EINVAL;
-+	if ((flags & MAP_FIXED) && prepare_hugepage_range(file, addr, len))
-+		return -EINVAL;
-+	if (addr)
-+		addr0 = ALIGN(addr, huge_page_size(h));
-+
-+	return addr0;
- }
--#endif
+-#define hugetlb_free_pgd_range			free_pgd_range
+ #define hugepages_supported()			(MACHINE_HAS_EDAT1)
+ 
++#define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
+ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 		     pte_t *ptep, pte_t pte, unsigned long sz);
+ void __set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 		     pte_t *ptep, pte_t pte);
+-pte_t huge_ptep_get(pte_t *ptep);
+-pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
++#define __HAVE_ARCH_HUGE_PTEP_GET
++extern pte_t huge_ptep_get(pte_t *ptep);
++#define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
++extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 			      unsigned long addr, pte_t *ptep);
  
  /*
-  * Someone wants to read @bytes from a HWPOISON hugetlb @page from @offset.
-@@ -1302,7 +1309,6 @@ static const struct file_operations hugetlbfs_file_operations = {
- 	.read_iter		= hugetlbfs_read_iter,
- 	.mmap			= hugetlbfs_file_mmap,
- 	.fsync			= noop_fsync,
--	.get_unmapped_area	= hugetlb_get_unmapped_area,
- 	.llseek			= default_llseek,
- 	.fallocate		= hugetlbfs_fallocate,
- 	.fop_flags		= FOP_HUGE_PAGES,
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 1c7b0b32ff7e..9183ef95dfb6 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -555,11 +555,9 @@ static inline struct hstate *hstate_inode(struct inode *i)
+  * If the arch doesn't supply something else, assume that hugepage
+  * size aligned regions are ok without further preparation.
+  */
++#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+ static inline int prepare_hugepage_range(struct file *file,
+ 			unsigned long addr, unsigned long len)
+ {
+@@ -45,6 +48,7 @@ static inline void arch_clear_hugetlb_flags(struct folio *folio)
  }
- #endif /* !CONFIG_HUGETLBFS */
+ #define arch_clear_hugetlb_flags arch_clear_hugetlb_flags
  
--#ifdef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
--unsigned long hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
--					unsigned long len, unsigned long pgoff,
--					unsigned long flags);
--#endif /* HAVE_ARCH_HUGETLB_UNMAPPED_AREA */
-+unsigned long
-+hugetlb_mmap_check_and_align(struct file *file, unsigned long addr,
-+			     unsigned long len, unsigned long flags);
++#define __HAVE_ARCH_HUGE_PTE_CLEAR
+ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 				  pte_t *ptep, unsigned long sz)
+ {
+@@ -54,12 +58,14 @@ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 		set_pte(ptep, __pte(_SEGMENT_ENTRY_EMPTY));
+ }
  
- unsigned long
- generic_hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 09131b705e7b..8130b25b8cf5 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1860,6 +1860,7 @@ __get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
- 				  unsigned long, unsigned long, unsigned long)
- 				  = NULL;
++#define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
+ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 					  unsigned long address, pte_t *ptep)
+ {
+ 	return huge_ptep_get_and_clear(vma->vm_mm, address, ptep);
+ }
  
-+	bool is_hugetlb = false;
- 	unsigned long error = arch_mmap_check(addr, len, flags);
- 	if (error)
- 		return error;
-@@ -1868,6 +1869,9 @@ __get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
- 	if (len > TASK_SIZE)
- 		return -ENOMEM;
++#define  __HAVE_ARCH_HUGE_PTEP_SET_ACCESS_FLAGS
+ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 					     unsigned long addr, pte_t *ptep,
+ 					     pte_t pte, int dirty)
+@@ -72,6 +78,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 	return changed;
+ }
  
-+	if (file && is_file_hugepages(file))
-+		is_hugetlb = true;
-+
- 	if (file) {
- 		if (file->f_op->get_unmapped_area)
- 			get_area = file->f_op->get_unmapped_area;
-@@ -1885,11 +1889,20 @@ __get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
++#define __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 					   unsigned long addr, pte_t *ptep)
+ {
+@@ -79,69 +86,36 @@ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 	__set_huge_pte_at(mm, addr, ptep, pte_wrprotect(pte));
+ }
  
- 	if (get_area) {
- 		addr = get_area(file, addr, len, pgoff, flags);
--	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
-+	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && !is_hugetlb) {
- 		/* Ensures that larger anonymous mappings are THP aligned. */
- 		addr = thp_get_unmapped_area_vmflags(file, addr, len,
- 						     pgoff, flags, vm_flags);
- 	} else {
-+		/*
-+		 * Consolidate hugepages checks in one place, and also align addr
-+		 * to hugepage size.
-+		 */
-+		if (is_hugetlb) {
-+			addr = hugetlb_mmap_check_and_align(file, addr, len, flags);
-+			if (IS_ERR_VALUE(addr))
-+				return addr;
-+		}
- 		addr = mm_get_unmapped_area_vmflags(current->mm, file, addr, len,
- 						    pgoff, flags, vm_flags);
- 	}
+-static inline pte_t mk_huge_pte(struct page *page, pgprot_t pgprot)
+-{
+-	return mk_pte(page, pgprot);
+-}
+-
++#define __HAVE_ARCH_HUGE_PTE_NONE
+ static inline int huge_pte_none(pte_t pte)
+ {
+ 	return pte_none(pte);
+ }
+ 
++#define __HAVE_ARCH_HUGE_PTE_NONE_MOSTLY
+ static inline int huge_pte_none_mostly(pte_t pte)
+ {
+ 	return huge_pte_none(pte);
+ }
+ 
+-static inline int huge_pte_write(pte_t pte)
+-{
+-	return pte_write(pte);
+-}
+-
+-static inline int huge_pte_dirty(pte_t pte)
+-{
+-	return pte_dirty(pte);
+-}
+-
+-static inline pte_t huge_pte_mkwrite(pte_t pte)
+-{
+-	return pte_mkwrite_novma(pte);
+-}
+-
+-static inline pte_t huge_pte_mkdirty(pte_t pte)
+-{
+-	return pte_mkdirty(pte);
+-}
+-
+-static inline pte_t huge_pte_wrprotect(pte_t pte)
+-{
+-	return pte_wrprotect(pte);
+-}
+-
+-static inline pte_t huge_pte_modify(pte_t pte, pgprot_t newprot)
+-{
+-	return pte_modify(pte, newprot);
+-}
+-
++#define __HAVE_ARCH_HUGE_PTE_MKUFFD_WP
+ static inline pte_t huge_pte_mkuffd_wp(pte_t pte)
+ {
+ 	return pte;
+ }
+ 
++#define __HAVE_ARCH_HUGE_PTE_CLEAR_UFFD_WP
+ static inline pte_t huge_pte_clear_uffd_wp(pte_t pte)
+ {
+ 	return pte;
+ }
+ 
++#define __HAVE_ARCH_HUGE_PTE_UFFD_WP
+ static inline int huge_pte_uffd_wp(pte_t pte)
+ {
+ 	return 0;
+ }
+ 
+-static inline bool gigantic_page_runtime_supported(void)
+-{
+-	return true;
+-}
++#include <asm-generic/hugetlb.h>
+ 
+ #endif /* _ASM_S390_HUGETLB_H */
+diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+index 6dcf4d576970..0b89d36a4310 100644
+--- a/include/asm-generic/hugetlb.h
++++ b/include/asm-generic/hugetlb.h
+@@ -42,20 +42,26 @@ static inline pte_t huge_pte_modify(pte_t pte, pgprot_t newprot)
+ 	return pte_modify(pte, newprot);
+ }
+ 
++#ifndef __HAVE_ARCH_HUGE_PTE_MKUFFD_WP
+ static inline pte_t huge_pte_mkuffd_wp(pte_t pte)
+ {
+ 	return huge_pte_wrprotect(pte_mkuffd_wp(pte));
+ }
++#endif
+ 
++#ifndef __HAVE_ARCH_HUGE_PTE_CLEAR_UFFD_WP
+ static inline pte_t huge_pte_clear_uffd_wp(pte_t pte)
+ {
+ 	return pte_clear_uffd_wp(pte);
+ }
++#endif
+ 
++#ifndef __HAVE_ARCH_HUGE_PTE_UFFD_WP
+ static inline int huge_pte_uffd_wp(pte_t pte)
+ {
+ 	return pte_uffd_wp(pte);
+ }
++#endif
+ 
+ #ifndef __HAVE_ARCH_HUGE_PTE_CLEAR
+ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+@@ -106,10 +112,12 @@ static inline int huge_pte_none(pte_t pte)
+ #endif
+ 
+ /* Please refer to comments above pte_none_mostly() for the usage */
++#ifndef __HAVE_ARCH_HUGE_PTE_NONE_MOSTLY
+ static inline int huge_pte_none_mostly(pte_t pte)
+ {
+ 	return huge_pte_none(pte) || is_pte_marker(pte);
+ }
++#endif
+ 
+ #ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
+ static inline int prepare_hugepage_range(struct file *file,
 -- 
 2.45.2
 
