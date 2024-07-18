@@ -1,238 +1,346 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F33C144D0F
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 15:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E6113B7AF
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 15:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721318171; cv=none; b=NxTX521kKmQAyg/NZqr0+YRTn4BEJDbumSo1y3uCDp45020VPHif78s90XNOJ9LkgbTJ1XIg0EoUO9468tojeu0ASEuVWT82yhEyKT7hcX8QQSkQlcEbp5PyByA0ID3wgTC9wQUsP76sGvH8r2+ZKMR2RfddHQH/gQut4EhEVsc=
+	t=1721318260; cv=none; b=e4mah33vgKowSH8LvrSgVC78LeKh+H2uz2hh4G60xMeEPj8PJkjUZeh28DjjWbRA+52iutvkj8ks/ZcwxHji/qRmAu8VEo0PYqk4Q+Zp/FfPxLk7KD7emFJpp31gDsd4kBV/KRjJ9JL5Rzbr35Xiy8J26E1JKNrBlXvUeUhVjas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721318171; c=relaxed/simple;
-	bh=1pOANHGT3ZDBfZJaJvyg3dRQGTHF5cppcYVLUfHUi3w=;
+	s=arc-20240116; t=1721318260; c=relaxed/simple;
+	bh=sl2oiMooUMCsWoNkqPbfasyYma43SDKzi9XVVqT4ees=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=raavbcLOSqAcV99qykK9YZ7m/hcEvYZ0maKezuK+rEI22Z57+HFPAUzz5HsdV/8U7jd5x+foMwveo2prPJu/7wxT6otDu1QpOP5/b8thPrxnALp9FWMhCfqCunB/9bYnrQpKuF0RdzUys9Ti7du3l1MYlD24U65E7GLKc8oqRhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RalfMmnf; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=f7Z7wFhQRXXdgVWU2+Igtp8DzG7NrmMLra8eCC/79gGdD0/AWquJK2Fjfn+DXeiShrQgInEliTR6n3WmXhuGOGi5eF06QVBNm8H730AYP7gl9Tyd9O3okU367AMn7fLpVjjL4fYas4FqizhsDoHP3TUNW8AEYoUDIMGx7bhzsCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EJT+bzOi; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RalfMmnf"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52ea929ea56so1039561e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 08:56:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EJT+bzOi"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fc587361b6so9965825ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 08:57:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721318168; x=1721922968; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fxgux2vbdZYB6RZEvo07oOPDR4FUj2S7XQtL1IHtKck=;
-        b=RalfMmnfd8Hzx1eaniyp/RsHiZmIyAQGL4S3b+GgM5b03t9vtycPnXGeUGwbRsfPds
-         12QtWTKT4STxESr3Ea31HS/G+QJDnhikM+kDu0JIn8B04FoeePIF6O0NT6CUGjZ68dzH
-         kPWN0dByF2dR+4baU8+RqavouF06ztycPTo46OLuWYDV7JNxMky1Yf0zj0S7ahFpQLhp
-         QKZyrkVPrDXB2My8RKksTsfIvU4nkRv4THU7Q+MPdo2nqCHmnhL+AGsV9WtGuBbc9PiY
-         qGHjE9Z6jhD9aEgYREyZ6FCPlZoq7ybvps3PHDNmqMysied8nfgPqdQ49nXtYwOShIBz
-         cS3w==
+        d=linaro.org; s=google; t=1721318258; x=1721923058; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ofpb1acQLPPapQsKk29WrwkJyQ4QlooroHX/LncNk8=;
+        b=EJT+bzOiWP70WKN3gC4bPeLk02n5vAYhwC5mbaW53hq5/cU1QgeZw4/aRPUKDBXpOF
+         zC4jByOKr2n1FM9zhxO0r7DfStQHBlAW/V5HKWpHdtWtZJU5Rx6iDWpmH83Hpfyelsci
+         HzrZ7TNcaKJCOAqHkrHMEgJhpGmnmJI5fN8lOHYa29gqyq0HW7J3VpFO1dstjnrHS3zB
+         2vzPf2p4lUAGQlou9R2uQ/G7SkDaPZ0dYkxTzMzGK6IsH5mhfN3mLG9PiQN0FmOiej0I
+         CvyxJtpq2/cqpj/P6Y8Z9EtCEXnCGIUy4QRTVWGW4OYx8TlZbEsCRtphZ+0ggybggNS+
+         fmew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721318168; x=1721922968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fxgux2vbdZYB6RZEvo07oOPDR4FUj2S7XQtL1IHtKck=;
-        b=Q6WKEIB4ML0yYwz5qA5ppOPXUwmsc34xjKxtdygbo6cnrd/0UNJb30fLTP8LKedUBd
-         SLtQWlHJSwB+2oKcPDHskX+Zmc2yQkdNrqlJYPOZ7vQUy6JEBFHOOH7+Gf2CA2KhbNDU
-         WCIP3wU7jYbnkzgV+JU2obFNVurWHKnEC2KmvbLGTkPE8Ad6M8cNPNXLx9qNrKqnwTsl
-         0DU9ZYe21uBquwlYlKnJIJ2odYAEQCO4naRNfgo1WXKYrRz/6jklAxpspFVlxNINo/8f
-         RrR+Ta0zM2GcAcVOk1dvgirXkhvQDXKi0V5dWdBBQKIqOIT7W01hXSsJaBTcDRZY8V9f
-         GeJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPNmfi8jK4uJN4kk4bneEJuf/XECvoRNN47COq7kozwdKby5sIVVkOZmCjCYyBlTJthnoMnlocxL9Ws1EE+M/W27Ds8SMW01ftz+pY
-X-Gm-Message-State: AOJu0Yw7Eh90GnNiat+rsSLB3/Yehc8Z/2VEdSbG9MAn4YX+QeRU2whc
-	gqJqm8ksW7oswgRj1aV/yq0yu2wHdHOLGQ9/iuF8J0DmJ4KhLkpdZUw/LvuTGM+3W90FFRd5EUq
-	J8g4/Yv7HDLlfEb87ByL5M/4ysQmdx35pdcwl
-X-Google-Smtp-Source: AGHT+IFPE0lghj2YZixrbpHmgxoF0kZ8549vynInTdXVmmjQgeXJvlltx3tprAguDK2P3x48GSK3zddRYlWRwkMyDkE=
-X-Received: by 2002:a05:6512:1318:b0:52c:e05f:9052 with SMTP id
- 2adb3069b0e04-52ee5435136mr4625806e87.47.1721318167063; Thu, 18 Jul 2024
- 08:56:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721318258; x=1721923058;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7ofpb1acQLPPapQsKk29WrwkJyQ4QlooroHX/LncNk8=;
+        b=ubdKoqNV1a6IeG3nVEg0LvB3mOipsIT6nyWunyd1SztskCcOeP93Xa14S2EP66NMKa
+         F0NiDni4EJikRCnA9chItPgk95rzVU7MU7HAxOFNRzd6oagFn0WjgBCs1UgjM/EAaX2k
+         L5ElvsWF+XxQLyFepBIqD8mwczTs78jFwUStlaGt5X4dC2nk++lPqRrFmHD33cXCyOxI
+         Cyj1UV7haoqclorLcyDlwpChKGjHFXNdJt+BiWFm66M9n4MDT9mRD8PkA6yh4OK72ohJ
+         nVnCRcpodEArQIGashYlaqpykpcKBmoH9CDSSYLnt6QpVbh/Q746Rxd+mH6lG0BvcSgu
+         pndg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEZC2Cj0QT/sBAaEF5HlW70utl2WNqcXmRhn6K+0/3m6gX9vV9VlbND+ssaaE+GPSoj16YHktCVeSoNl+2Ne03q77TMSPBCgHEdVvG
+X-Gm-Message-State: AOJu0YxLctcPDdyX+lz3RZRqO8RIyvAhHH8lYnzq/wBXTEjbkfRcxSY5
+	S61a2T7YSE25lpyMXoDO/dH2AqE4bVgoJVAOO6bBoy0ujv5nJSPn5PE7yT2YUCReNR9CMR76gsA
+	OuOarLNVqavyLMrg0OhQc16gaKBgNtjtdFiOP8A==
+X-Google-Smtp-Source: AGHT+IGbdfGXPO7hQ91Vsor93o1jCzZy+QtCw+WCkF/HJmGy/VuDHRrY6xUrccW6dwxFPcKAOkKuD45Jqge2sKBipkU=
+X-Received: by 2002:a17:90a:514f:b0:2c9:7e9d:8424 with SMTP id
+ 98e67ed59e1d1-2cb52931aa8mr4312618a91.30.1721318257799; Thu, 18 Jul 2024
+ 08:57:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <172070450139.2992819.13210624094367257881.stgit@firesoul>
- <a4e67f81-6946-47c0-907e-5431e7e01eb1@kernel.org> <CAJD7tkYV3iwk-ZJcr_==V4e24yH-1NaCYFUL7wDaQEi8ZXqfqQ@mail.gmail.com>
- <100caebf-c11c-45c9-b864-d8562e2a5ac5@kernel.org> <CAJD7tkaBKTiMzSkXfaKO5EO58aN708L4XBS3cX85JvxVpcNkQQ@mail.gmail.com>
- <c2ac13d7-f280-4be7-929a-d46c1dc7692c@kernel.org>
-In-Reply-To: <c2ac13d7-f280-4be7-929a-d46c1dc7692c@kernel.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 18 Jul 2024 08:55:28 -0700
-Message-ID: <CAJD7tkZ5nxoa7aCpAix1bYOoYiLVfn+aNkq7jmRAZqsxruHYLw@mail.gmail.com>
-Subject: Re: [PATCH V7 1/2] cgroup/rstat: Avoid thundering herd problem by
- kswapd across NUMA nodes
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: tj@kernel.org, cgroups@vger.kernel.org, shakeel.butt@linux.dev, 
-	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
-	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240626060724.28862-1-quic_jinlmao@quicinc.com> <20240626060724.28862-3-quic_jinlmao@quicinc.com>
+In-Reply-To: <20240626060724.28862-3-quic_jinlmao@quicinc.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Thu, 18 Jul 2024 16:57:26 +0100
+Message-ID: <CAJ9a7Vi8yE9mEbP3pPoE4xXxgomiqz6N_vz35PmFEH2tYcv=xw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] coresight: Add support to get preferred id for
+ system trace sources
+To: Mao Jinlong <quic_jinlmao@quicinc.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, James Clark <james.clark@arm.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Tingwei Zhang <quic_tingweiz@quicinc.com>, Yuanfang Zhang <quic_yuanfang@quicinc.com>, 
+	Tao Zhang <quic_taozha@quicinc.com>, songchai <quic_songchai@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 18, 2024 at 1:12=E2=80=AFAM Jesper Dangaard Brouer <hawk@kernel=
-.org> wrote:
->
->
->
-> On 17/07/2024 18.49, Yosry Ahmed wrote:
-> > On Wed, Jul 17, 2024 at 9:36=E2=80=AFAM Jesper Dangaard Brouer <hawk@ke=
-rnel.org> wrote:
-> >>
-> >>
-> >> On 17/07/2024 02.35, Yosry Ahmed wrote:
-> >>> [..]
-> >>>>
-> >>>>
-> >>>> This is a clean (meaning no cadvisor interference) example of kswapd
-> >>>> starting simultaniously on many NUMA nodes, that in 27 out of 98 cas=
-es
-> >>>> hit the race (which is handled in V6 and V7).
-> >>>>
-> >>>> The BPF "cnt" maps are getting cleared every second, so this
-> >>>> approximates per sec numbers.  This patch reduce pressure on the loc=
-k,
-> >>>> but we are still seeing (kfunc:vmlinux:cgroup_rstat_flush_locked) fu=
-ll
-> >>>> flushes approx 37 per sec (every 27 ms). On the positive side
-> >>>> ongoing_flusher mitigation stopped 98 per sec of these.
-> >>>>
-> >>>> In this clean kswapd case the patch removes the lock contention issu=
-e
-> >>>> for kswapd. The lock_contended cases 27 seems to be all related to
-> >>>> handled_race cases 27.
-> >>>>
-> >>>> The remaning high flush rate should also be addressed, and we should
-> >>>> also work on aproaches to limit this like my ealier proposal[1].
-> >>>
-> >>> I honestly don't think a high number of flushes is a problem on its
-> >>> own as long as we are not spending too much time flushing, especially
-> >>> when we have magnitude-based thresholding so we know there is
-> >>> something to flush (although it may not be relevant to what we are
-> >>> doing).
-> >>>
-> >>
-> >> We are "spending too much time flushing" see below.
-> >>
-> >>> If we keep observing a lot of lock contention, one thing that I
-> >>> thought about is to have a variant of spin_lock with a timeout. This
-> >>> limits the flushing latency, instead of limiting the number of flushe=
-s
-> >>> (which I believe is the wrong metric to optimize).
-> >>>
-> >>> It also seems to me that we are doing a flush each 27ms, and your
-> >>> proposed threshold was once per 50ms. It doesn't seem like a
-> >>> fundamental difference.
-> >>>
-> >>
-> >>
-> >> Looking at the production numbers for the time the lock is held for le=
-vel 0:
-> >>
-> >> @locked_time_level[0]:
-> >> [4M, 8M)     623 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@               =
-|
-> >> [8M, 16M)    860 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=
-|
-> >> [16M, 32M)   295 |@@@@@@@@@@@@@@@@@                                   =
-|
-> >> [32M, 64M)   275 |@@@@@@@@@@@@@@@@                                    =
-|
-> >>
-> >> The time is in nanosec, so M corresponds to ms (milliseconds).
-> >>
-> >> With 36 flushes per second (as shown earlier) this is a flush every
-> >> 27.7ms.  It is not unreasonable (from above data) that the flush time
-> >> also spend 27ms, which means that we spend a full CPU second flushing.
-> >> That is spending too much time flushing.
-> >>
-> >> This around 1 sec CPU usage for kswapd is also quite clear in the
-> >> attached grafana graph for when server was rebooted into this V7 kerne=
-l.
-> >>
-> >> I choose 50ms because at the time I saw flush taking around 30ms, and =
-I
-> >> view the flush time as queue service-time.  When arrival-rate is faste=
-r
-> >> than service-time, then a queue will form.  So, choosing 50ms as
-> >> arrival-rate gave me some headroom.  As I mentioned earlier, optimally
-> >> this threshold should be dynamically measured.
-> >
-> > Thanks for the data. Yeah this doesn't look good.
-> >
-> > Does it make sense to just throttle flushers at some point to increase
-> > the chances of coalescing multiple flushers?
-> >
-> > Otherwise I think it makes sense in this case to ratelimit flushing in
-> > general. Although instead of just checking how much time elapsed since
-> > the last flush, can we use something like __ratelimit()?
-> >
-> > This will make sure that we skip flushes when we actually have a high
-> > rate of flushing over a period of time, not because two flushes
-> > happened to be requested in close succession and the flushing rate is
-> > generally low.
-> >
->
-> I really think "time elapsed since the last flush" is the right solution
-> here.  As, we *do* want to catch the case you describe "two flushes
-> happened to be requested in close succession and the flushing rate is
-> generally low."
->
-> (After this patch fixing the lock contention triggered by kswapd).
-> The remaining problem with kswapd is that those flushes that doesn't
-> "collide" on the lock, will be flushing in close succession.  And we
-> likely have a generally low flushing rate, until kswapd starts up.
+Hi,
 
-I do not disagree, I think I may have misrepresented my intention.
-
-Time since last flush is essentially ratelimiting to 2 flushes per
-(let's say) 50 ms. So if we only have 2 flushes in an entire second,
-but they happen to occur <50ms apart, the latter will be skipped
-(arguably unnecessarily).
-
-What I am trying to say is to make it more generalized/less-granular,
-and apply ratelimiting when we are actually spending a large portion
-of our time flushing. For example, cap it at 20 flushes per 1s. I
-think __ratelimit() does exactly that, although it's currently mostly
-used to ratelimit warnings, but I think we can reuse it here.
-
-Ideally, of course, the number would be dynamic as you described
-before, but we can start with a reasonable static value based on data.
-What we do when the limit is hit could be changed later as well. We
-can just skip flushes initially, and later we can be smarter about it
-and throttle them in a way that makes them collide more effectively.
-
+On Wed, 26 Jun 2024 at 07:07, Mao Jinlong <quic_jinlmao@quicinc.com> wrote:
 >
-> Some production data from a "slow" period where only kswapd is active:
+> Dynamic trace id was introduced in coresight subsystem, so trace id is
+> allocated dynamically. However, some hardware ATB source has static trace
+> id and it cannot be changed via software programming. For such source,
+> it can call coresight_get_source_traceid to get the fixed trace id from
+> device node and pass id to coresight_trace_id_get_system_id to reserve
+> the id.
 >
-> 05:59:32 @ongoing_flusher_cnt[kswapd11]: 1
-> @ongoing_flusher_cnt[kswapd7]: 1
-> @ongoing_flusher_cnt[kswapd3]: 1
-> @ongoing_flusher_cnt[kswapd5]: 1
-> @ongoing_flusher_cnt[kswapd10]: 1
-> @ongoing_flusher_cnt[kswapd6]: 2
-> @ongoing_flusher_cnt[kswapd8]: 2
-> @ongoing_flusher_cnt[kswapd1]: 2
-> @ongoing_flusher_cnt[kswapd9]: 2
-> @ongoing_flusher_cnt[kswapd0]: 2
-> @ongoing_flusher_cnt[kswapd2]: 2
-> @ongoing_flusher_cnt[kswapd4]: 2
-> @ongoing_flusher_cnt[handled_race]: 2
-> @ongoing_flusher_cnt[all]: 14
-> @cnt[tracepoint:cgroup:cgroup_rstat_lock_contended]: 2
-> @cnt[tracepoint:cgroup:cgroup_ongoing_flusher_wait]: 10
-> @cnt[kfunc:vmlinux:cgroup_rstat_flush_locked]: 43
-> @cnt[tracepoint:cgroup:cgroup_rstat_locked]: 51
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
+>  .../hwtracing/coresight/coresight-platform.c  | 25 +++++++++++++
+>  drivers/hwtracing/coresight/coresight-stm.c   |  2 +-
+>  drivers/hwtracing/coresight/coresight-tpda.c  |  2 +-
+>  .../hwtracing/coresight/coresight-trace-id.c  | 35 ++++++++++++-------
+>  .../hwtracing/coresight/coresight-trace-id.h  | 11 +++++-
+>  include/linux/coresight.h                     |  1 +
+>  6 files changed, 61 insertions(+), 15 deletions(-)
 >
-> We observe that ongoing_flusher scheme saves/avoids 14 of the flushes
-> great, but we still have 43 flushes in this period.  I think only kswapd
-> is doing the flushing here, so I claim 41 flushes are likely unnecessary
-> (as there are indication of 2 kswapd startups in the period).  Also
-> observe that some of the kswapdNN processes only have
-> ongoing_flusher_cnt 1, which indicate they didn't fully "collide" with
-> an ongoing flusher, while others have 2.
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 9d550f5697fa..df169f3f367e 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -183,6 +183,17 @@ static int of_coresight_get_cpu(struct device *dev)
+>         return cpu;
+>  }
 >
-> --Jesper
+> +/*
+> + * of_coresight_get_trace_id: Get the atid of a source device.
+> + *
+> + * Returns 0 on success.
+> + */
+> +static int of_coresight_get_trace_id(struct device *dev, u32 *id)
+
+name this "of_coresight_get_static_trace_id"
+
+> +{
+> +
+> +       return of_property_read_u32(dev->of_node, "arm,trace-id", id);
+
+should be "arm,static-trace-id" for consistency.
+
+> +}
+> +
+>  /*
+>   * of_coresight_parse_endpoint : Parse the given output endpoint @ep
+>   * and fill the connection information in @pdata->out_conns
+> @@ -315,6 +326,11 @@ static inline int of_coresight_get_cpu(struct device *dev)
+>  {
+>         return -ENODEV;
+>  }
+> +
+> +static inline int of_coresight_get_trace_id(struct device *dev, u32 *id)
+> +{
+> +       return -ENODEV;
+> +}
+>  #endif
+>
+>  #ifdef CONFIG_ACPI
+> @@ -794,6 +810,15 @@ int coresight_get_cpu(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(coresight_get_cpu);
+>
+> +int coresight_get_source_traceid(struct device *dev, u32 *id)
+
+This should be coresight_get_static_traceid.
+
+> +{
+> +       if (!is_of_node(dev->fwnode))
+> +               return -EINVAL;
+> +
+> +       return of_coresight_get_trace_id(dev, id);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_get_source_traceid);
+> +
+>  struct coresight_platform_data *
+>  coresight_get_platform_data(struct device *dev)
+>  {
+> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+> index e1c62820dfda..34fab2ce9a76 100644
+> --- a/drivers/hwtracing/coresight/coresight-stm.c
+> +++ b/drivers/hwtracing/coresight/coresight-stm.c
+> @@ -901,7 +901,7 @@ static int __stm_probe(struct device *dev, struct resource *res)
+>                 goto stm_unregister;
+>         }
+>
+> -       trace_id = coresight_trace_id_get_system_id();
+> +       trace_id = coresight_trace_id_get_system_id(TRACE_ID_ANY);
+
+implement a coresight_trace_id_get_static_system_id() function and
+drop this change
+
+>         if (trace_id < 0) {
+>                 ret = trace_id;
+>                 goto cs_unregister;
+> diff --git a/drivers/hwtracing/coresight/coresight-tpda.c b/drivers/hwtracing/coresight/coresight-tpda.c
+> index 7739bc7adc44..46161cadb9e5 100644
+> --- a/drivers/hwtracing/coresight/coresight-tpda.c
+> +++ b/drivers/hwtracing/coresight/coresight-tpda.c
+> @@ -251,7 +251,7 @@ static int tpda_init_default_data(struct tpda_drvdata *drvdata)
+>          * same trace-id. When TPDA does packetization, different
+>          * port will have unique channel number for decoding.
+>          */
+> -       atid = coresight_trace_id_get_system_id();
+> +       atid = coresight_trace_id_get_system_id(TRACE_ID_ANY);
+
+and here
+
+>         if (atid < 0)
+>                 return atid;
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> index af5b4ef59cea..59194f60362c 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> @@ -75,21 +75,26 @@ static int coresight_trace_id_find_odd_id(struct coresight_trace_id_map *id_map)
+>   * Allocate new ID and set in use
+>   *
+>   * if @preferred_id is a valid id then try to use that value if available.
+> - * if @preferred_id is not valid and @prefer_odd_id is true, try for odd id.
+> + * if TRACE_ID_WANT_PREFERRED is set, @preferred_id must be free, otherwise return
+> + * error -EINVAL.
+> + * if @preferred_id is not valid and TRACE_ID_WANT_ODD is true, try for odd id.
+>   *
+>   * Otherwise allocate next available ID.
+>   */
+>  static int coresight_trace_id_alloc_new_id(struct coresight_trace_id_map *id_map,
+> -                                          int preferred_id, bool prefer_odd_id)
+> +                          int preferred_id, unsigned int flags)
+>  {
+>         int id = 0;
+>
+>         /* for backwards compatibility, cpu IDs may use preferred value */
+> -       if (IS_VALID_CS_TRACE_ID(preferred_id) &&
+> -           !test_bit(preferred_id, id_map->used_ids)) {
+> -               id = preferred_id;
+> -               goto trace_id_allocated;
+> -       } else if (prefer_odd_id) {
+> +       if (IS_VALID_CS_TRACE_ID(preferred_id)) {
+> +               if (!test_bit(preferred_id, id_map->used_ids)) {
+> +                       id = preferred_id;
+> +                       goto trace_id_allocated;
+> +               } else if (WARN((flags & TRACE_ID_WANT_PREFERRED), "Trace ID %d is used.\n",
+> +                                       preferred_id))
+> +                       return -EINVAL;
+> +       } else if (flags & TRACE_ID_WANT_ODD) {
+>         /* may use odd ids to avoid preferred legacy cpu IDs */
+>                 id = coresight_trace_id_find_odd_id(id_map);
+>                 if (id)
+> @@ -175,7 +180,7 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
+>          */
+>         id = coresight_trace_id_alloc_new_id(id_map,
+>                                              CORESIGHT_LEGACY_CPU_TRACE_ID(cpu),
+> -                                            false);
+> +                                            TRACE_ID_ANY);
+>         if (!IS_VALID_CS_TRACE_ID(id))
+>                 goto get_cpu_id_out_unlock;
+>
+> @@ -222,14 +227,20 @@ static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id
+>         DUMP_ID_MAP(id_map);
+>  }
+>
+> -static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *id_map)
+> +static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *id_map,
+> +                               int preferred_id)
+
+Add a trace_id flags parameter here and call in with flags already set
+
+>  {
+>         unsigned long flags;
+>         int id;
+> +       unsigned int traceid_flags = 0;
+>
+>         spin_lock_irqsave(&id_map_lock, flags);
+> +
+>         /* prefer odd IDs for system components to avoid legacy CPU IDS */
+> -       id = coresight_trace_id_alloc_new_id(id_map, 0, true);
+> +       traceid_flags = TRACE_ID_WANT_ODD;
+> +       traceid_flags |= preferred_id > 0 ? TRACE_ID_WANT_PREFERRED : 0;
+> +
+
+move the flags calculations to the calling functions
+
+> +       id = coresight_trace_id_alloc_new_id(id_map, preferred_id, traceid_flags);
+>         spin_unlock_irqrestore(&id_map_lock, flags);
+>
+>         DUMP_ID(id);
+> @@ -269,9 +280,9 @@ int coresight_trace_id_read_cpu_id(int cpu)
+>  }
+>  EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id);
+>
+> -int coresight_trace_id_get_system_id(void)
+> +int coresight_trace_id_get_system_id(int id)
+>  {
+> -       return coresight_trace_id_map_get_system_id(&id_map_default);
+
+drop the change to this function header and the call becomes
+trace_id_map_get_system_id(&id_map_default, 0, TRACE_ID_PREFER_ODD)
+
+> +       return coresight_trace_id_map_get_system_id(&id_map_default, id);
+>  }
+>  EXPORT_SYMBOL_GPL(coresight_trace_id_get_system_id);
+>
+
+Add in a  coresight_trace_id_get_system_static_id(int trace_id) API
+function and call
+trace_id_map_get_system_id(&id_map_default, trace_id, TRACE_ID_REQ_STATIC)
+
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+> index 3797777d367e..a236cf87c169 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+> @@ -61,6 +61,12 @@ struct coresight_trace_id_map {
+>         DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+>  };
+>
+> +enum trace_id_flags {
+> +       TRACE_ID_ANY = 0x0,
+> +       TRACE_ID_WANT_ODD = 0x1,
+TRACE_ID_PREFER_ODD
+
+> +       TRACE_ID_WANT_PREFERRED = 0x2,
+
+TRACE_ID_REQ_STATIC
+
+> +};
+
+These flags can move to the coresight-trace-id.c file.
+
+>  /* Allocate and release IDs for a single default trace ID map */
+>
+>  /**
+> @@ -118,9 +124,12 @@ int coresight_trace_id_read_cpu_id(int cpu);
+>   *
+>   * Used to allocate IDs for system trace sources such as STM.
+>   *
+> + * @id: Preferred id value. If id is TRACE_ID_ANY, get a free id from id map.
+> + * If id is greater than TRACE_ID_ANY, get a preferred id.
+> + *
+>   * return: Trace ID or -EINVAL if allocation is impossible.
+>   */
+> -int coresight_trace_id_get_system_id(void);
+> +int coresight_trace_id_get_system_id(int id);
+>
+>  /**
+>   * Release an allocated system trace ID.
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index f09ace92176e..0599303be326 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -643,6 +643,7 @@ void coresight_relaxed_write64(struct coresight_device *csdev,
+>  void coresight_write64(struct coresight_device *csdev, u64 val, u32 offset);
+>
+>  extern int coresight_get_cpu(struct device *dev);
+> +extern int coresight_get_source_traceid(struct device *dev, u32 *id);
+>
+>  struct coresight_platform_data *coresight_get_platform_data(struct device *dev);
+>  struct coresight_connection *
+> --
+> 2.41.0
+>
+
+Regards
+
+Mike
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
