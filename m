@@ -1,58 +1,84 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F67729422
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 03:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3581579D2
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 03:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721274556; cv=none; b=qw9hBLiYFWFtpn0xQEkj8Ue6ZaupR23ErgA/CtUkdF9bWONK+1pFUSLC4Zk0bpGrkXkGJR+IZkjfeDt1Wy1kcfweTDt1Q620cQXPKYAPBELcSukePuWo077U++ojdepKQqZhmVNFgo8Ub5AIrw8HS8yP+6X/bcA4RvpdXRUWDqk=
+	t=1721274610; cv=none; b=DN740IrmYsOvRAk9HFc7VHl/faYDA1+dVVshzWXE8YmHlLUwzAFff6EI8qcd7QeEjo8I9/6nAvzq8FjbOIGx7dzOMRBVDNj6yQo8lYYEEKn16epR0T3KO2zOD3PxWU8gTurL4oz9ks9LTPGgh/PENgXG4gt/itHIYYFT4vbrUB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721274556; c=relaxed/simple;
-	bh=ckbfWJjz+54NYPngTBO5HEX2BPlYpiYBXK60K41e/z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEisUsboQYvzn0JGB54sGMMAQVVkwgp0vFWl2MCJHt3w4EkMBHYhj3GYCB6L8xVkwUTZcOyZWjbi7PE6j/r0HFoqPfaoOH/D2Wz/AMZ2ksdHffLeRJuIHVe8r7DMhRItfaBAivELXQF5HIZeR6c3Z2A/vP2GMyPr74+JNejVtlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 4EAC368AA6; Thu, 18 Jul 2024 05:49:10 +0200 (CEST)
-Date: Thu, 18 Jul 2024 05:49:10 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 1/2] dma: call unconditionally to unmap_page and
- unmap_sg callbacks
-Message-ID: <20240718034910.GB31912@lst.de>
-References: <cover.1721219730.git.leon@kernel.org> <f9f0e270c077c5a3225f114bf9f7df18a6f9693a.1721219730.git.leon@kernel.org>
+	s=arc-20240116; t=1721274610; c=relaxed/simple;
+	bh=UVhbin2h8kH7gkcKkUqbr+ik+FV8pkbCMXoISG3lcfE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IU8hxeVAXxBO0MkRBV5FAALtJboyWWUlb+YaaNVAXLESaU+Gkji5qqKbjaDRpbInwtFUrUtoN5JGzphFuwo8VWwJN7DpdYYKtmKHA+UFVCfoBR6Zl4IhB1Zz2bgaBg0acSQRtBZU7lQqjrjd+ap1G1HJ6AW65fyeWvfAkg53VCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WPdx33lvqz1JCft;
+	Thu, 18 Jul 2024 11:45:11 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 31B2C140109;
+	Thu, 18 Jul 2024 11:50:04 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
+ 2024 11:50:03 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <linux@armlinux.org.uk>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <bhe@redhat.com>,
+	<vgoyal@redhat.com>, <dyoung@redhat.com>, <arnd@arndb.de>, <afd@ti.com>,
+	<linus.walleij@linaro.org>, <akpm@linux-foundation.org>,
+	<eric.devolder@oracle.com>, <gregkh@linuxfoundation.org>,
+	<javierm@redhat.com>, <deller@gmx.de>, <robh@kernel.org>,
+	<hbathini@linux.ibm.com>, <thunder.leizhen@huawei.com>,
+	<chenjiahao16@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<kexec@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v3 0/3] crash: Fix x86_32 memory reserve dead loop bug
+Date: Thu, 18 Jul 2024 11:54:41 +0800
+Message-ID: <20240718035444.2977105-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9f0e270c077c5a3225f114bf9f7df18a6f9693a.1721219730.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Wed, Jul 17, 2024 at 03:37:10PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Almost all users of ->map_page()/map_sg() callbacks implement
-> ->unmap_page()/unmap_sg() callbacks too. One user which doesn't do it,
-> is dummy DMA ops interface, and the use of this interface is to fail
-> the operation and in such case, there won't be any call to
-> ->unmap_page()/unmap_sg().
-> 
-> This patch removes the existence checks of ->unmap_page()/unmap_sg()
-> and calls to it directly to create symmetrical interface to
-> ->map_page()/map_sg().
+Fix two bugs for x86_32 crash memory reserve, and prepare to apply generic
+crashkernel reservation to 32bit system. Then use generic interface to
+simplify crashkernel reservation for ARM32.
 
-I don't think you even need this any more, do you?
+changes in v3:
+- Fix it as Baoquan suggested.
+- Update the commit message.
+
+changes in v2:
+- Peel off the other two patches.
+- Update the commit message and fix tag.
+
+Jinjie Ruan (3):
+  crash: Fix x86_32 crash memory reserve dead loop bug
+  crash: Fix x86_32 crash memory reserve dead loop bug at high
+  ARM: Use generic interface to simplify crashkernel reservation
+
+ arch/arm/Kconfig                       |  3 ++
+ arch/arm/include/asm/crash_reserve.h   | 24 ++++++++++
+ arch/arm/kernel/setup.c                | 63 ++++----------------------
+ arch/arm64/include/asm/crash_reserve.h |  2 +
+ arch/riscv/include/asm/crash_reserve.h |  2 +
+ arch/x86/include/asm/crash_reserve.h   |  1 +
+ kernel/crash_reserve.c                 |  5 +-
+ 7 files changed, 44 insertions(+), 56 deletions(-)
+ create mode 100644 arch/arm/include/asm/crash_reserve.h
+
+-- 
+2.34.1
 
