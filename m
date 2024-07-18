@@ -1,130 +1,274 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C448C06;
-	Thu, 18 Jul 2024 10:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D103612C46D;
+	Thu, 18 Jul 2024 10:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721297560; cv=none; b=Z99vQC0w1s5iwCvCECWTTEGivL6i+IwNsjRrLhAnpOpI/nV44nCEqzAwa2P8sjZqNKCq9y/WT3CyJTjxxdB1sISf7cDJZI3pwxADux/BTV0Tt7sHPOPY+SiHZAhP4xdYVj+qbCRQXN9wGUGptdPIlepESuxiIAY6Iu6cddCFZqQ=
+	t=1721297617; cv=none; b=KXAgbb8n+jNik2tuzUlyDW+ohVbWC1zcGUN2dG0x98OcwnJLizqQtWMkNCWKmf1tpCQ6+bXafKGOPWnLyPPhWpHLNUtnkIfpBk1M+hhzuBt3RkbYQetq4suUNOKZqzSlzlScVaLzbVoxpSmI8OKyYxZ+A09bV1aK9Chawwv+ZYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721297560; c=relaxed/simple;
-	bh=KY9GmeigUT2A3/Vsw1Iw7TBh+WH4pXgIITVAi38kpRc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=cHH+lvto//sxM9hPRgSF+3JbgfB9BrQi3bP8uA6RSkS9+3hROSBKfWXnDOATKf7Q7k5Wkkh81oQHqwwARGNRGirS0zPZ/MUwNEPjYuaeEWn/FaUAhSS9R+H9DTO47LpL2wxkPxrOqh6zy4HKvFjPnI4xZyvhewiUDgX6wZx+GNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=online.de; spf=pass smtp.mailfrom=online.de; dkim=pass (2048-bit key) header.d=online.de header.i=frank.scheiner@online.de header.b=Gt2sJXq+; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=online.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=online.de
+	s=arc-20240116; t=1721297617; c=relaxed/simple;
+	bh=R3Xl2ulng1qAC+aJtbMR94fFWC6W2dXLXgdRmegLgWQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O3cZXbiL99T7Jl+AUgnC1dQw0gCu3AEZRtyhBnF0jnO/Xc+ZAfFHpZcBBAukkuobBm1c4zSRieHFfI7ufajrcmG6Y6w6AFPXv5qGScwnnagkPAR1mZ2kOIyAQYIPQX7/nLd8IQM2zohAnTkBGSalLH/wrRN7PmA8V9hy9479NzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q8AOWycx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=online.de header.i=frank.scheiner@online.de header.b="Gt2sJXq+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=online.de;
-	s=s42582890; t=1721297553; x=1721902353;
-	i=frank.scheiner@online.de;
-	bh=KY9GmeigUT2A3/Vsw1Iw7TBh+WH4pXgIITVAi38kpRc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Gt2sJXq+CWgB0cuaWN+i1WdPz4OBu0Bi0JMFuFeYFcFwdTy/ARHjLE7yTcUoJrhW
-	 BsfoWGjRPnIWx3oqp4c1luYxjgntudJtnrHA2oKJ9jFoJOD5rB+xnjl+rwS/p/q1j
-	 f1vzuuRJokJcQZLxs8C/OCLFmgsxAJjRCQ7TW5dCtZBDy2v3iQ60Gk8q8e+Fose6d
-	 t402+cCguZppHe8GbEq2zpKaJR9I2Jzb4OY3ehbAhrp2zqWNUyzzq5gCKxqP8m0+u
-	 8IoUw9ze9qn3rcy1Kmvb5fF2wJ1KmId5YGJAGe3eHkbVfzPDil96q+NCSqSslCG5Z
-	 eEX+4b3/9nzvENcbDw==
-X-UI-Sender-Class: 6003b46c-3fee-4677-9b8b-2b628d989298
-Received: from [192.168.178.30] ([79.200.220.73]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MHmuE-1saQRE04H8-00HCUb; Thu, 18 Jul 2024 12:06:15 +0200
-Message-ID: <8dcb5d36-fc38-46f3-bb97-0e4e335c313b@online.de>
-Date: Thu, 18 Jul 2024 12:06:12 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q8AOWycx"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I30Wdf024108;
+	Thu, 18 Jul 2024 10:13:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=eR8901HJO9WITQXSspzaYXad
+	3fJdO0EezwyJ9Xn459I=; b=Q8AOWycxxTaFrfPR+SH/hQf0nTv3AeJvra0O4mSj
+	WMFap5FNqsR/h66kTqWBIYk6rX/p/kLjoqi/TY9aHhF83eTO/NFGzSS87xBvcH2z
+	lCa4CBvuZC+Rgyrwn/6I6QvWLTNiw9H6PjykkmCzErCCW6FMmz2VLhthEjmtEizL
+	q6vSdcIjLnLivGDi7J6YcUBmSJ8RcnX8qSBqRRm1vJaaxbdCpo0gyrjeU+nyX5KJ
+	cXiuULlc0hD6Q+GQwx+9Tizimqe1G5gSfgOJE93pJs6apJ+3Jyh68BMO2ANZbs80
+	SpcBkJvSlkBDgHi6Z4ZCYLmHR/MwEApubaoHrhN/iGiKOg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfnn592-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 10:13:26 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46IADPOL017215
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 10:13:25 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 18 Jul 2024 03:13:21 -0700
+Date: Thu, 18 Jul 2024 15:43:18 +0530
+From: Pavan Kondeti <quic_pkondeti@quicinc.com>
+To: Will Deacon <will@kernel.org>, Vidya Sagar <vidyas@nvidia.com>
+CC: Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki"
+	<rafael@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        Manikanta Maddireddy
+	<mmaddireddy@nvidia.com>,
+        Shanker Donthineni <sdonthineni@nvidia.com>,
+        Krishna Thota <kthota@nvidia.com>, Joerg Roedel <joro@8bytes.org>
+Subject: Re: [Query] ACS enablement in the DT based boot flow
+Message-ID: <f551eecc-33fa-4729-b004-64a532493705@quicinc.com>
+References: <PH8PR12MB667446D4A4CAD6E0A2F488B5B83F2@PH8PR12MB6674.namprd12.prod.outlook.com>
+ <20240410192840.GA2147526@bhelgaas>
+ <20240428072318.GA11447@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: torvalds@linux-foundation.org
-Cc: =?UTF-8?B?VG9tw6HFoSBHbG96YXI=?= <tglozar@gmail.com>,
- linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-ia64@vger.kernel.org, t2@t2sde.org,
- debian-ia64 <debian-ia64@lists.debian.org>
-References: <CAHk-=wjV_O2g_K19McjGKrxFxMFDqex+fyGcKc3uac1ft_O2gg@mail.gmail.com>
-Subject: Re: Linux 6.10
-Content-Language: en-US
-From: Frank Scheiner <frank.scheiner@online.de>
-In-Reply-To: <CAHk-=wjV_O2g_K19McjGKrxFxMFDqex+fyGcKc3uac1ft_O2gg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Q/HDgBgt8vDzzKiEs0Tdykgw+sZKbcEH1kFFE/a65ijK2jI80cH
- zTh5iWQbCSmiM8XcL/O63E9j+yedh9EJ/aMm6PJDu1C3vka8pgo+bY/e6q3+vvgaJIjLJxr
- BLzRcAxMHzIhFfomRkxeNEsUuHcUS9BEmimMeLj7kAHJtj08zcDoUlOujWbMgMbHneoFP3q
- qCFngMfJZNhlKzXrImEtA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:fq/vFAUCl5E=;nEruqZeqr+KGt9a5kffg276cqpV
- NNYciQi2b9nwc5NIi50N5qBnRaJG+Snhm+1x9qK8oA5u55+AjmOpUMq1at/cBLWPm8GdrRgEr
- Z/DPFRSTO4AaGPEiK+lktc9fN4U/j1Tm3AFwDYouXVjLjqpuLJu/OZhHGtqbJQ2EE4+uQ73hl
- BUE0h9AC9/30XfTKdfgjZsOGNUb5NWG2Li6xUrfI9TiKNyJ3EB2/yZBsjp0CvP46l9+3pIYj4
- RWyLj6v2EQKXxs5tu+3W+d5rkkrtdzF3TGilKirve5eZY472cv8mAzSXivKytMzL3wIkmsvZA
- BWqadfUvR52mBY1rudUHyCCobauMBbDrYU7/avb9Hb76NHYJpBgTOrk1OY8lfCf9nmHsOMJIz
- xOa5oPdHpqmcDeiLWKO53OtMSEkCM0zKE/WSk5odOpo3Jc/ZMtFWSVJOqiGeqhtej2lTMMmI1
- 4dtskTrR5zaK91eaDBktRe3bqLusWMuGJJ4cEzIPzoi0Qf3S0l66Bla80AoY5GsiBorsqQL1z
- GBFb1QSXwvnEQfnnfjX2BbOxmQo1H82dc/E6KqwnsjbySJ+JT4TQGXn2Ro4jMlQbKZarvNovh
- nhutqg2hN92n31keEsvcygl/qFfZRf7abuZ746SU1lE3COqcxKotj+bU34dVhYV4JTuDS/NSg
- M3VyPicauCdhcRsODzZ6lhtol2sLo42wsxksFCd4ymSm0A2Fj4eZ//pG9VI8rZZcD4fE7ARX+
- LpEfaDOhOWyXO/Zui7KNOCv8XdDuugOVw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240428072318.GA11447@willie-the-truck>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: iDxlsnbsC8QinLVrS0tGPOoz8_Quukl9
+X-Proofpoint-ORIG-GUID: iDxlsnbsC8QinLVrS0tGPOoz8_Quukl9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-18_06,2024-07-17_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 clxscore=1011 spamscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2407180066
 
-Dear all,
+Hi Vidya/Will,
 
-a little later than usual, here comes the update on Linux/ia64 for v6.10:
+On Sun, Apr 28, 2024 at 08:23:18AM +0100, Will Deacon wrote:
+> On Wed, Apr 10, 2024 at 02:28:40PM -0500, Bjorn Helgaas wrote:
+> > [+cc Will, Joerg]
+> > 
+> > On Mon, Apr 01, 2024 at 10:40:15AM +0000, Vidya Sagar wrote:
+> > > Hi folks,
+> > > ACS (Access Control Services) is configured for a PCI device through
+> > > pci_enable_acs().  The first thing pci_enable_acs() checks for is
+> > > whether the global flag 'pci_acs_enable' is set or not.  The global
+> > > flag 'pci_acs_enable' is set by the function pci_request_acs().
+> > > 
+> > > pci_enable_acs() function is called whenever a new PCI device is
+> > > added to the system
+> > > 
+> > >  pci_enable_acs+0x4c/0x2a4
+> > >  pci_acs_init+0x38/0x60
+> > >  pci_device_add+0x1a0/0x670
+> > >  pci_scan_single_device+0xc4/0x100
+> > >  pci_scan_slot+0x6c/0x1e0
+> > >  pci_scan_child_bus_extend+0x48/0x2e0
+> > >  pci_scan_root_bus_bridge+0x64/0xf0
+> > >  pci_host_probe+0x18/0xd0
+> > > 
+> > > In the case of a system that boots using device-tree blob,
+> > > pci_request_acs() is called when the device driver binds with the
+> > > respective device
+> > > 
+> > > of_iommu_configure+0xf4/0x230
+> > > of_dma_configure_id+0x110/0x340
+> > > pci_dma_configure+0x54/0x120
+> > > really_probe+0x80/0x3e0
+> > > __driver_probe_device+0x88/0x1c0
+> > > driver_probe_device+0x3c/0x140
+> > > __device_attach_driver+0xe8/0x1e0
+> > > bus_for_each_drv+0x78/0xf0
+> > > __device_attach+0x104/0x1e0
+> > > device_attach+0x14/0x30
+> > > pci_bus_add_device+0x50/0xd0
+> > > pci_bus_add_devices+0x38/0x90
+> > > pci_host_probe+0x40/0xd0
+> > > 
+> > > Since the device addition always happens first followed by the
+> > > driver binding, this flow effectively makes sure that ACS never gets
+> > > enabled.
+> > > 
+> > > Ideally, I would expect the pci_request_acs() get called (probably
+> > > by the OF framework itself) before calling pci_enable_acs().
+> > > 
+> > > This happens in the ACPI flow where pci_request_acs() is called
+> > > during IORT node initialization (i.e. iort_init_platform_devices()
+> > > function).
+> > > 
+> > > Is this understanding correct? If yes, would it make sense to call
+> > > pci_request_acs() during OF initialization (similar to IORT
+> > > initialization in ACPI flow)?
+> > 
+> > Your understanding looks correct to me.  My call graph notes, FWIW:
+> > 
+> >   mem_init
+> >     pci_iommu_alloc                   # x86 only
+> >       amd_iommu_detect                # init_state = IOMMU_START_STATE
+> >         iommu_go_to_state(IOMMU_IVRS_DETECTED)
+> >           state_next
+> >             switch (init_state)
+> >             case IOMMU_START_STATE:
+> >               detect_ivrs
+> >                 pci_request_acs
+> >                   pci_acs_enable = 1  # <--
+> >       detect_intel_iommu
+> >         pci_request_acs
+> >           pci_acs_enable = 1          # <--
+> > 
+> >   pci_scan_single_device              # PCI enumeration
+> >     ...
+> >       pci_init_capabilities
+> >         pci_acs_init
+> >           pci_enable_acs
+> >             if (pci_acs_enable)       # <--
+> >               pci_std_enable_acs
+> > 
+> >   __driver_probe_device
+> >     really_probe
+> >       pci_dma_configure               # pci_bus_type.dma_configure
+> >         if (OF)
+> >           of_dma_configure
+> >             of_dma_configure_id
+> >               of_iommu_configure
+> >                 pci_request_acs       # <-- 6bf6c24720d3
+> >                 iommu_probe_device
+> >         else if (ACPI)
+> >           acpi_dma_configure
+> >             acpi_dma_configure_id
+> >               acpi_iommu_configure_id
+> >                 iommu_probe_device
+> > 
+> > The pci_request_acs() in of_iommu_configure(), which happens too late
+> > to affect pci_enable_acs(), was added by 6bf6c24720d3 ("iommu/of:
+> > Request ACS from the PCI core when configuring IOMMU linkage"), so I
+> > cc'd Will and Joerg.  I don't know if that *used* to work and got
+> > broken somehow, or if it never worked as intended.
+> 
+> I don't have any way to test this, but I'm supportive of having the same
+> flow for DT and ACPI-based flows. Vidya, are you able to cook a patch?
+> 
 
-Well, nothing special to report in this cycle compared to the last cycle
-(see last update on [1] for details).
+I ran into a similar observation while testing a PCI device assignment
+to a VM. In my configuration, the virtio-iommu is enumerated over the
+PCI transport. So, I am thinking we can't hook pci_request_acs() to an
+IOMMU driver. Does the below patch makes sense?
 
-[1]:
-https://lore.kernel.org/lkml/d308ad95-bee4-4401-a6f5-27bcf5bcc52d@web.de/
+The patch is tested with a VM and I could see ACS getting enabled and
+separate IOMMU groups are created for the devices attached under
+PCIe root port(s).
 
-No new regressions were detected on any of the tested ia64 machines and
-platforms (HP Sim on Ski) we have available for testing. Again no system
-support was lost during this cycle. Everything works as expected.
+The RC/devices with ACS quirks are not suffering from this problem as we 
+short circuit ACS capability detection checking in
+pci_acs_enabled()->pci_dev_specific_acs_enabled() . May be this is one
+of the reason why this was not reported/observed by some platforms with
+DT.
 
-Tomas maintains the ia64 patchset for Linux on [2] and is currently
-working on some EPIC updates. Please note the new URL. You can always
-find the per Linux release (candidate) source code used for regular
-testing on [3]. Please use the `[...]-w-ia64` branches.
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index b908fe1ae951..0eeb7abfbcfa 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -123,6 +123,13 @@ bool pci_host_of_has_msi_map(struct device *dev)
+ 	return false;
+ }
+ 
++bool pci_host_of_has_iommu_map(struct device *dev)
++{
++	if (dev && dev->of_node)
++		return of_get_property(dev->of_node, "iommu-map", NULL);
++	return false;
++}
++
+ static inline int __of_pci_pci_compare(struct device_node *node,
+ 				       unsigned int data)
+ {
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4c367f13acdc..ea6fcdaf63e2 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -889,6 +889,7 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
+ 	dev_set_msi_domain(&bus->dev, d);
+ }
+ 
++bool pci_host_of_has_iommu(struct device *dev);
+ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ {
+ 	struct device *parent = bridge->dev.parent;
+@@ -951,6 +952,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	    !pci_host_of_has_msi_map(parent))
+ 		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+ 
++	if (pci_host_of_has_iommu_map(parent))
++		pci_request_acs();
++
+ 	if (!parent)
+ 		set_dev_node(bus->bridge, pcibus_to_node(bus));
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index cafc5ab1cbcb..7eceed71236a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2571,6 +2571,7 @@ struct device_node;
+ struct irq_domain;
+ struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus);
+ bool pci_host_of_has_msi_map(struct device *dev);
++bool pci_host_of_has_iommu_map(struct device *dev);
+ 
+ /* Arch may override this (weak) */
+ struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
+@@ -2579,6 +2580,7 @@ struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
+ static inline struct irq_domain *
+ pci_host_bridge_of_msi_domain(struct pci_bus *bus) { return NULL; }
+ static inline bool pci_host_of_has_msi_map(struct device *dev) { return false; }
++static inline bool pci_host_of_has_iommu_map(struct device *dev) { return false; }
+ #endif  /* CONFIG_OF */
+ 
+ static inline struct device_node *
 
-[2]: https://github.com/linux-ia64/linux-ia64/
+Thanks,
+Pavan
 
-[3]: https://github.com/johnny-mnemonic/linux-ia64/
 
-****
-
-In an earlier report I already mentioned our autobuilder that
-cross-builds Linux stable releases and release candidates on x86 for
-ia64 and also tests HP-Sim kernels within Ski (see [4] for an example
-run). This continues to be helpful in detecting issues in stable kernels
-early on and even catched two issues recently. But those two also were
-the only ones found so far in the roughly 6 months this has been
-established.
-
-[4]: https://github.com/linux-ia64/linux-stable-rc/actions/runs/9984893242
-
-To also better cover the new developments outside of the kernel, this
-now got a commpanion autobuilder that cross-builds ia64 toolchain parts
-for us with T2 based on the regular snapshots of binutils, gcc and glibc
-(see [5] for an example run).
-
-[5]:
-https://github.com/johnny-mnemonic/toolchain-autobuilds/actions/runs/99849=
-83546
-
-****
-
-No new additions to the selection of Linux distributions for ia64 this
-time. In the meantime Debian on ia64 became history. Farewell.
-
-****
-
-Thank you all for your hard work on Linux!
-
-Cheers,
-Frank et al
