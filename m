@@ -1,145 +1,120 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897A312D1FA
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 11:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C9D1BF37
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 11:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721301657; cv=none; b=ocSbpBCAbW190ZSjFpKmEOVgMIxwxSyHsauw6WswgKj7IJveVKaw6wRyp9X8KXkW3ziPK3D2IatfTLmcOpwIiyIK1rO0GBtcLDw+JTgFDZninDyTsmPUzQZZCvw77AG9Srtl/LlDEGmCvZdjcHRBx40+cEV1TZayrL5Gqx/291Y=
+	t=1721301720; cv=none; b=YLUVmtBSMh8DF7CXW76w8m9uaBp40fJqoX2Jt7mF2ZzxYW/kbXO8zOTiMF2A6FFAv7dDREQW8rHVUmhB9oLqBw84CkdUMLtn5SMCrOXhSPgffLWyi5LOaUELmJcAo3Wp1Fkb5JlieccGKKsXbU0uz7FDpNkU3yXp5nZ6WkU6DKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721301657; c=relaxed/simple;
-	bh=IfHDXa9N/+7SF+YoRUEpyGweRKIae/m5inzkjl9K83w=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=r2TguJTAdkU3+CeeQog9dGSvCcYjM8yL6+Ui8x1qKZQfOI1OLexaU5YWh4bgNWKuDbpBcK1M9/GRWNaMHVc6+nxM/kntizQZ2+jUfKNclaDduLpZNkSmJrHQTOWtzWcLROI4wpFHydy6SHhN9ZJo51jc/0T4KKcvcGXsURwXwM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bqD0ebCp; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1721301720; c=relaxed/simple;
+	bh=9u2xO8O8w/KgZ6vvG0BximWwsjHat7wfHyp4RII6BAM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaiRb0Q6gCjtNnI4r4GoDraQIA+9QbhTD4MWz1MkebfiezA8rMfQYGb4UcgXykBXQULHjNqlG5oNsvYJnmQ/vBi0cHgrhOcpHEz7X2JoM+FQRyExRS3P/uPSUHTTEzTEI191lj9kowSwAQYFPe8vvAna870WKabXiIKlzzBicfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wwHM3JRQ; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bqD0ebCp"
-X-Envelope-To: vbabka@suse.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721301652;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9PnGey5McE5FQao9lIF/IWdEuDxFp9LqXLKRL3lwW64=;
-	b=bqD0ebCpwiJakwQbd+nu95d613nzy6ckidLCqOh2xzUWixV8sspQhYrFGmBO4lP2F8YbaV
-	vJsJcRBQpJz1J6bGdbQ6zZzGHdqteuftrI4r/zUckUk7tJaFoaU/TPsRcH/Cogx77BP7LD
-	/PFM+cvX0x1spMxK4SPBiwDisYj3KgM=
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: nphamcs@gmail.com
-X-Envelope-To: songmuchun@bytedance.com
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: mhocko@kernel.org
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wwHM3JRQ"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46IBLZkS097792;
+	Thu, 18 Jul 2024 06:21:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1721301695;
+	bh=FUWCt+twmOe4jXbCQ1UPrlBJg5YbwLAUu2Ie3X9EI/M=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=wwHM3JRQeq197wQ7LCtAGc22ZO7nTZYb6r5wI+MwtE34WlNOKgrihGFR+oKK34uCV
+	 YzK8IzcCQEnpiyHHwTf9LQMilxJ4TUgrV7cHy3TzZTwFGQZq7kxAoYxZVDxGWaSZtq
+	 pMm0ukXDPhxNCTpr8nNDmJZ32Il1AJyJyi8XqJXM=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46IBLZnq098999
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 18 Jul 2024 06:21:35 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 18
+ Jul 2024 06:21:34 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 18 Jul 2024 06:21:34 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46IBLYJm023443;
+	Thu, 18 Jul 2024 06:21:34 -0500
+Date: Thu, 18 Jul 2024 06:21:34 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Kousik Sanagavarapu <five231003@gmail.com>
+CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Santosh Shilimkar
+	<ssantosh@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Julia Lawall
+	<julia.lawall@inria.fr>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 0/4] Do device node auto cleanup in drivers/soc/ti/
+Message-ID: <20240718112134.txuimtlg62375jaw@musky>
+References: <20240707055341.3656-1-five231003@gmail.com>
+ <Zpg41yZRHPv9w0Lg@five231003>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm: list_lru: fix UAF for memory cgroup
-Date: Thu, 18 Jul 2024 19:20:14 +0800
-Message-Id: <E0A7CC1A-B02C-4210-A1DF-0600E027D5D0@linux.dev>
-References: <65b7d88b-af4f-4869-9322-e38910abce6d@suse.cz>
-Cc: Muchun Song <songmuchun@bytedance.com>, akpm@linux-foundation.org,
- hannes@cmpxchg.org, nphamcs@gmail.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>
-In-Reply-To: <65b7d88b-af4f-4869-9322-e38910abce6d@suse.cz>
-To: Vlastimil Babka <vbabka@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Zpg41yZRHPv9w0Lg@five231003>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+On 03:04-20240718, Kousik Sanagavarapu wrote:
+> On Sun, Jul 07, 2024 at 10:44:15AM +0530, Kousik Sanagavarapu wrote:
+> > Do "struct device_node" auto cleanup in soc/ti/.  This patch series takes
+> > care of all the cases where this is possible.
+> > 
+> > Thanks Jonathan for the review on the previous round.
+> > 
+> > v2:
+> > 
+> > 	https://lore.kernel.org/linux-arm-kernel/20240703065710.13786-1-five231003@gmail.com/
+> > 
+> > Changes since v2:
+> > - Split v2 1/3 into v3 1/4 and v3 2/4.  The memory setup code is
+> >   seperated out of the pruss_probe() function and put into 1/4 and the
+> >   actual conversion to auto cleanup is done in 2/4.
+> > - Replace dev_err() with dev_err_probe() in the code paths touched.
+> > 
+> > v1:
+> > 
+> > 	https://lore.kernel.org/linux-arm-kernel/20240510071432.62913-1-five231003@gmail.com/
+> > 
+> > Changes since v1:
+> > - Refactor code so that it the scope of the pointers touched is reduced,
+> >   making the code look more clean.
+> > - The above also the side-effect of fixing the errors that clang emitted
+> >   (but my local version of gcc didn't) for PATCH 2/3 during v1.
+> > 
+> > Kousik Sanagavarapu (4):
+> >   soc: ti: pruss: factor out memories setup
+> >   soc: ti: pruss: do device_node auto cleanup
+> >   soc: ti: knav_qmss_queue: do device_node auto cleanup
+> >   soc: ti: pm33xx: do device_node auto cleanup
+> > 
+> >  drivers/soc/ti/knav_qmss_queue.c | 100 +++++++++---------
+> >  drivers/soc/ti/pm33xx.c          |  52 ++++-----
+> >  drivers/soc/ti/pruss.c           | 176 ++++++++++++++-----------------
+> >  3 files changed, 155 insertions(+), 173 deletions(-)
+> 
+> Ping
 
+Umm... ping for what? for whom and why? In addition to reviews, I will
+need someone to do tested-by as well - pruss/am33xx folks..? Further,
+fyi, 6.12 collection cycle starts with 6.11 rc1 and I close mine around
+rc4.
 
-> On Jul 18, 2024, at 18:30, Vlastimil Babka <vbabka@suse.cz> wrote:
->=20
-> =EF=BB=BFOn 7/18/24 10:36 AM, Muchun Song wrote:
->> The mem_cgroup_from_slab_obj() is supposed to be called under rcu
->> lock or cgroup_mutex or others which could prevent returned memcg
->> from being freed. Fix it by adding missing rcu read lock.
->=20
-> Was the UAF ever observed, or is this due to code review?
-
-Just code review.
-
-Thanks.
-
-> Should there be some lockdep_assert somwhere?
->=20
-
-It=E2=80=99s a good option to improve this. Maybe mem_cgroup_from_slab_obj()=
- is a good place.
-
->> Fixes: 0a97c01cd20bb ("list_lru: allow explicit memcg and NUMA node selec=
-tion)
->> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->> ---
->> mm/list_lru.c | 24 ++++++++++++++++++------
->> 1 file changed, 18 insertions(+), 6 deletions(-)
->>=20
->> diff --git a/mm/list_lru.c b/mm/list_lru.c
->> index 3fd64736bc458..225da0778a3be 100644
->> --- a/mm/list_lru.c
->> +++ b/mm/list_lru.c
->> @@ -85,6 +85,7 @@ list_lru_from_memcg_idx(struct list_lru *lru, int nid, i=
-nt idx)
->> }
->> #endif /* CONFIG_MEMCG_KMEM */
->>=20
->> +/* The caller must ensure the memcg lifetime. */
->> bool list_lru_add(struct list_lru *lru, struct list_head *item, int nid,
->>            struct mem_cgroup *memcg)
->> {
->> @@ -109,14 +110,20 @@ EXPORT_SYMBOL_GPL(list_lru_add);
->>=20
->> bool list_lru_add_obj(struct list_lru *lru, struct list_head *item)
->> {
->> +    bool ret;
->>    int nid =3D page_to_nid(virt_to_page(item));
->> -    struct mem_cgroup *memcg =3D list_lru_memcg_aware(lru) ?
->> -        mem_cgroup_from_slab_obj(item) : NULL;
->> +    struct mem_cgroup *memcg;
->>=20
->> -    return list_lru_add(lru, item, nid, memcg);
->> +    rcu_read_lock();
->> +    memcg =3D list_lru_memcg_aware(lru) ? mem_cgroup_from_slab_obj(item)=
- : NULL;
->> +    ret =3D list_lru_add(lru, item, nid, memcg);
->> +    rcu_read_unlock();
->> +
->> +    return ret;
->> }
->> EXPORT_SYMBOL_GPL(list_lru_add_obj);
->>=20
->> +/* The caller must ensure the memcg lifetime. */
->> bool list_lru_del(struct list_lru *lru, struct list_head *item, int nid,
->>            struct mem_cgroup *memcg)
->> {
->> @@ -139,11 +146,16 @@ EXPORT_SYMBOL_GPL(list_lru_del);
->>=20
->> bool list_lru_del_obj(struct list_lru *lru, struct list_head *item)
->> {
->> +    bool ret;
->>    int nid =3D page_to_nid(virt_to_page(item));
->> -    struct mem_cgroup *memcg =3D list_lru_memcg_aware(lru) ?
->> -        mem_cgroup_from_slab_obj(item) : NULL;
->> +    struct mem_cgroup *memcg;
->>=20
->> -    return list_lru_del(lru, item, nid, memcg);
->> +    rcu_read_lock();
->> +    memcg =3D list_lru_memcg_aware(lru) ? mem_cgroup_from_slab_obj(item)=
- : NULL;
->> +    ret =3D list_lru_del(lru, item, nid, memcg);
->> +    rcu_read_unlock();
->> +
->> +    return ret;
->> }
->> EXPORT_SYMBOL_GPL(list_lru_del_obj);
->>=20
->=20
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
