@@ -1,235 +1,106 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783933B784;
-	Thu, 18 Jul 2024 08:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704AE3B784;
+	Thu, 18 Jul 2024 08:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721292125; cv=none; b=UlKkxI+0JIzzllN8gwIErQto9Gr4FcN2NZZ58Y9DPOS89DvobUlQ8VH+GFXyud5HJ4rZ2SUYqX9u+wT5Wnje5YJX7NghyVpDjNHpNNu+zKWJzzPcKFP1R5JrHwPgHmi8V5AV85Mh7g07OuB7cIrr030fFMe6NyIjLvhEobx804w=
+	t=1721292236; cv=none; b=VAf0tF8xgtgIildSWlU7lOKLcD/MOPInIgLsYsmewxFKZ3foX129c8KrIAXR249ggC0Bn5FPxmyHyy0fLrodmCPGW0g44z0T8fTVvwaeBYmNFh7HoF0axmdDFmwyeimv05VzpjWtMaxbpvVyoo5ZapDVCL5QMC4aJ84Tx0geK6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721292125; c=relaxed/simple;
-	bh=bZxPqhxRGdkOe6ZLtw3jKcUWDWSwAmYsYQ61dXx/HOM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n8PIYb4gV/t2p7F6PPCiu5NEaXDnGbSnNnjw/TFc5E3SVGQL4f++IjkfMMO/JycI3aVxEZLzzxeIOHb5VdBIeqr6S/1lYVf6Yuwi6Js0Y6jkpw+K7em2ZBqUWCTbo6Eb031M+zwNHL9W1QyusGTZmLWu36tfPlLVhyKwkKI3OEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=f7uD2/F7; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1721292236; c=relaxed/simple;
+	bh=t59HvvioUnAYN4TRwpXWrIUMqAPeRW5LGIJ3kW8HqgQ=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=XV3leLR4U5qFHDXyqNxldJ9bSbbAppF9zpSqtvY5FJTDi1SCgJQAxRHRqiH8Dby9XFEyErDpoMtYGqJ8fW8ZytQBSUfn4frhGzPmL6WZfeEjkVJ2AeNM/HCIUO+FV/gf0f+3ZnxB+WfN3/EiZPnK3J+a4ZvclKhEE0TLqafrSh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=XTBAEQjI; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f7uD2/F7"
-X-UUID: 954dd25644e111ef87684b57767b52b1-20240718
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=7cJPIYBOZKxw9By0YCCiUkOLCsHVgJUmv6aYpcZa7dk=;
-	b=f7uD2/F7SkTFOfUYHRiR66c1Sk2Hi+FvaLxUyzevtOaezO80RN9BEmg9rJz0ekolP6FcjJKCmy60GT9YNMmNRLexmkAAKLL1IU6+2uEkN9hQuRq471+y4EiQKy4L4L7F6aKrVpqXMzhVQbP3pHW84cehEMVTCGJ5M5Da7rTWl4o=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:53f467ad-055b-4c6d-be37-d96deb48ce75,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:ba885a6,CLOUDID:6b877245-a117-4f46-a956-71ffeac67bfa,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 954dd25644e111ef87684b57767b52b1-20240718
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
-	(envelope-from <boy.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 717439943; Thu, 18 Jul 2024 16:41:53 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 18 Jul 2024 16:41:53 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 18 Jul 2024 16:41:53 +0800
-From: boy.wu <boy.wu@mediatek.com>
-To: Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>, Jens Axboe
-	<axboe@kernel.dk>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Boris Burkov <boris@bur.io>,
-	<cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <iverlin.wang@mediatek.com>, Boy Wu
-	<boy.wu@mediatek.com>
-Subject: [PATCH v4] blk-cgroup: Replace u64 sync with spinlock for iostat
-Date: Thu, 18 Jul 2024 16:41:12 +0800
-Message-ID: <20240718084112.12202-1-boy.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="XTBAEQjI"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--7.618200-8.000000
-X-TMASE-MatchedRID: YZKi2GGnn9+ZtBi01n3C9xafLXbshfogcx5k3wffojOHwGEm+CpYGTEG
-	FjeZwyRUzbrWhbT2b8cTMOv2lZG8w2zFfXEzaNt8wCZxkTHxccn64i5lgawyBFSOymiJfTYXZmL
-	HoWzm2fS1hH+43GdK0QG2ORx9EyapCCk23kSAVszovZduO2AF9zQAp53S718HVo+424uIBNJYTM
-	99NlfBm1EXNKIgpuQj+9p3HcFJM3mVhIWL9FEuN54CIKY/Hg3AGdQnQSTrKGPEQdG7H66TyH4gK
-	q42LRYkpO8ojRYm4lcl4rDZgwtgKw3kTcv9FMbtpUElRFcYt7l+3BndfXUhXQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--7.618200-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: F123CDD9A65F6182C8CF3180A6DA8AB398AC9F1B101EEA855735D2109E5C8CC32000:8
-X-MTK: N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1721292231;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kKk8adyi9jKYJ3vFAHnVWE13YqvAw47sg8mkzonVaMk=;
+	b=XTBAEQjIAr/Sm2A4jEnG0EecGJsQtbpQ71+5D9saa21Z31AlZzAuCCJB2UV93jw/+uf09E
+	lDPD9O//Y2wtfeIcL7hsxVWsTxU2ZzvfK7ZbSH8u80DZvCnk7+lGC6VUb5tolqXY08I/AZ
+	2Bqjlc0+wt6+pNVWN9rWx4LLHRjvd1gA/wbcoFfAwKoUxeKgkLU1d4Ti3Iyekvwslzkz1/
+	6D+44dufeuQDm6SbfFpestveehQS/w9ROgX63HRgrec1bbQLe4/+wo9UMhBaJRPYldAOHJ
+	o9t65FddTbvPbu9rItji07hs6ooM5kbuOrUBkPbCYURzvo+WWhU09JQk+Qc3Kg==
+Date: Thu, 18 Jul 2024 10:43:50 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Christopher Obbard <chris.obbard@collabora.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Kever Yang
+ <kever.yang@rock-chips.com>, Collabora Kernel Mailing List
+ <kernel@collabora.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: rockchip: Add Firefly
+ Core-PX30-JD4 with baseboard
+In-Reply-To: <20240718-lapped-suffocate-0216bad82c68@wendy>
+References: <20240717-rockchip-px30-firefly-v2-0-06541a5a5946@collabora.com>
+ <20240717-rockchip-px30-firefly-v2-1-06541a5a5946@collabora.com>
+ <0c804e9a0227904b16bfb779f2009af1@manjaro.org>
+ <e34f1a0a81de24437be7f582c719d3f128d44b51.camel@collabora.com>
+ <20240718-lapped-suffocate-0216bad82c68@wendy>
+Message-ID: <6ed3e6c6b74ddba1bca1a719dfdf3ac4@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-From: Boy Wu <boy.wu@mediatek.com>
+On 2024-07-18 10:34, Conor Dooley wrote:
+> On Thu, Jul 18, 2024 at 09:31:45AM +0100, Christopher Obbard wrote:
+>> Thanks for the review.
+>> 
+>> On Thu, 2024-07-18 at 06:36 +0200, Dragan Simic wrote:
+>> > Hello Christopher,
+>> >
+>> > On 2024-07-17 18:46, Christopher Obbard wrote:
+>> > > Add binding for the Firefly Core-PX30-JD4 SoM when used in conjunction
+>> > > with the MB-JD4-RK3328 & PX30 baseboard.
+>> > >
+>> > > Signed-off-by: Christopher Obbard <chris.obbard@collabora.com>
+>> > > ---
+>> > >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+>> > >  1 file changed, 6 insertions(+)
+>> > >
+>> > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> > > b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> > > index 1ef09fbfdfaf5..33ca8028bc151 100644
+>> > > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> > > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> > > @@ -148,6 +148,12 @@ properties:
+>> > >            - const: engicam,px30-core
+>> > >            - const: rockchip,px30
+>> > >
+>> > > +      - description: Firefly Core-PX30-JD4 with MB-JD4-PX30 baseboard
+>> > > +        items:
+>> > > +          - const: firefly,px30-mb-jd4
+>> > > +          - const: firefly,px30-core-jd4
+>> >
+>> > Similarly to how I suggested the new dts(i) files to be named, [1]
+>> > the model names should be named like this:
+>> >
+>> >            - const: firefly,px30-jd4-core
+>> >            - const: firefly,px30-jd4-core-mb
+>> 
+>> I suppose the order should be the other way around to match other 
+>> entries, e.g
+>> firefly,px30-jd4-core-mb first?
+> 
+> Yes. Mainboard first, then som, then soc.
 
-In 32bit SMP systems, if multiple CPUs call blkcg_print_stat,
-it may cause blkcg_fill_root_iostats to have a concurrent problem
-on the seqlock in u64_stats_update, which will cause a deadlock
-on u64_stats_fetch_begin in blkcg_print_one_stat.
-
-Thus, replace u64 sync with spinlock to protect iostat.
-
-Fixes: ef45fe470e1e ("blk-cgroup: show global disk stats in root cgroup io.stat")
-Signed-off-by: Boy Wu <boy.wu@mediatek.com>
----
-Change in v2:
- - update commit message
- - Remove u64_sync
- - Replace spin_lock_irq with guard statement
- - Replace blkg->q->queue_lock with blkg_stat_lock
-Change in v3:
- - update commit message
- - Add spinlock in blkg_iostat_set structure
- - Replace all u64_sync with spinlock for iostat
- - Replace blkg_stat_lock with iostat.spinlock
-Change in v4:
- - update commit message
- - Remove spinlock in blkg_iostat_set structure
- - Replace iostat.spinlock with blkg_stat_lock
- - Add 32-bit systems only define
----
- block/blk-cgroup.c | 34 +++++++++++++---------------------
- 1 file changed, 13 insertions(+), 21 deletions(-)
-
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 37e6cc91d576..faa604c6fab9 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -329,7 +329,6 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct gendisk *disk,
- 	INIT_WORK(&blkg->async_bio_work, blkg_async_bio_workfn);
- #endif
- 
--	u64_stats_init(&blkg->iostat.sync);
- 	for_each_possible_cpu(cpu) {
- 		u64_stats_init(&per_cpu_ptr(blkg->iostat_cpu, cpu)->sync);
- 		per_cpu_ptr(blkg->iostat_cpu, cpu)->blkg = blkg;
-@@ -632,18 +631,18 @@ static void blkg_iostat_set(struct blkg_iostat *dst, struct blkg_iostat *src)
- static void __blkg_clear_stat(struct blkg_iostat_set *bis)
- {
- 	struct blkg_iostat cur = {0};
--	unsigned long flags;
- 
--	flags = u64_stats_update_begin_irqsave(&bis->sync);
- 	blkg_iostat_set(&bis->cur, &cur);
- 	blkg_iostat_set(&bis->last, &cur);
--	u64_stats_update_end_irqrestore(&bis->sync, flags);
- }
- 
- static void blkg_clear_stat(struct blkcg_gq *blkg)
- {
- 	int cpu;
- 
-+#if BITS_PER_LONG == 32
-+	guard(raw_spinlock_irqsave)(&blkg_stat_lock);
-+#endif
- 	for_each_possible_cpu(cpu) {
- 		struct blkg_iostat_set *s = per_cpu_ptr(blkg->iostat_cpu, cpu);
- 
-@@ -995,15 +994,12 @@ static void blkcg_iostat_update(struct blkcg_gq *blkg, struct blkg_iostat *cur,
- 				struct blkg_iostat *last)
- {
- 	struct blkg_iostat delta;
--	unsigned long flags;
- 
- 	/* propagate percpu delta to global */
--	flags = u64_stats_update_begin_irqsave(&blkg->iostat.sync);
- 	blkg_iostat_set(&delta, cur);
- 	blkg_iostat_sub(&delta, last);
- 	blkg_iostat_add(&blkg->iostat.cur, &delta);
- 	blkg_iostat_add(last, &delta);
--	u64_stats_update_end_irqrestore(&blkg->iostat.sync, flags);
- }
- 
- static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
-@@ -1034,7 +1030,6 @@ static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
- 		struct blkcg_gq *blkg = bisc->blkg;
- 		struct blkcg_gq *parent = blkg->parent;
- 		struct blkg_iostat cur;
--		unsigned int seq;
- 
- 		/*
- 		 * Order assignment of `next_bisc` from `bisc->lnode.next` in
-@@ -1051,10 +1046,7 @@ static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
- 			goto propagate_up; /* propagate up to parent only */
- 
- 		/* fetch the current per-cpu values */
--		do {
--			seq = u64_stats_fetch_begin(&bisc->sync);
--			blkg_iostat_set(&cur, &bisc->cur);
--		} while (u64_stats_fetch_retry(&bisc->sync, seq));
-+		blkg_iostat_set(&cur, &bisc->cur);
- 
- 		blkcg_iostat_update(blkg, &cur, &bisc->last);
- 
-@@ -1112,7 +1104,6 @@ static void blkcg_fill_root_iostats(void)
- 		struct blkcg_gq *blkg = bdev->bd_disk->queue->root_blkg;
- 		struct blkg_iostat tmp;
- 		int cpu;
--		unsigned long flags;
- 
- 		memset(&tmp, 0, sizeof(tmp));
- 		for_each_possible_cpu(cpu) {
-@@ -1133,10 +1124,10 @@ static void blkcg_fill_root_iostats(void)
- 			tmp.bytes[BLKG_IOSTAT_DISCARD] +=
- 				cpu_dkstats->sectors[STAT_DISCARD] << 9;
- 		}
--
--		flags = u64_stats_update_begin_irqsave(&blkg->iostat.sync);
-+#if BITS_PER_LONG == 32
-+		guard(raw_spinlock_irqsave)(&blkg_stat_lock);
-+#endif
- 		blkg_iostat_set(&blkg->iostat.cur, &tmp);
--		u64_stats_update_end_irqrestore(&blkg->iostat.sync, flags);
- 	}
- }
- 
-@@ -1145,7 +1136,6 @@ static void blkcg_print_one_stat(struct blkcg_gq *blkg, struct seq_file *s)
- 	struct blkg_iostat_set *bis = &blkg->iostat;
- 	u64 rbytes, wbytes, rios, wios, dbytes, dios;
- 	const char *dname;
--	unsigned seq;
- 	int i;
- 
- 	if (!blkg->online)
-@@ -1157,16 +1147,18 @@ static void blkcg_print_one_stat(struct blkcg_gq *blkg, struct seq_file *s)
- 
- 	seq_printf(s, "%s ", dname);
- 
--	do {
--		seq = u64_stats_fetch_begin(&bis->sync);
--
-+#if BITS_PER_LONG == 32
-+	scoped_guard(raw_spinlock_irqsave, &blkg_stat_lock) {
-+#endif
- 		rbytes = bis->cur.bytes[BLKG_IOSTAT_READ];
- 		wbytes = bis->cur.bytes[BLKG_IOSTAT_WRITE];
- 		dbytes = bis->cur.bytes[BLKG_IOSTAT_DISCARD];
- 		rios = bis->cur.ios[BLKG_IOSTAT_READ];
- 		wios = bis->cur.ios[BLKG_IOSTAT_WRITE];
- 		dios = bis->cur.ios[BLKG_IOSTAT_DISCARD];
--	} while (u64_stats_fetch_retry(&bis->sync, seq));
-+#if BITS_PER_LONG == 32
-+	}
-+#endif
- 
- 	if (rbytes || wbytes || rios || wios) {
- 		seq_printf(s, "rbytes=%llu wbytes=%llu rios=%llu wios=%llu dbytes=%llu dios=%llu",
--- 
-2.18.0
-
+Ah yes, sorry, I somehow managed to get the order wrong.  Basically,
+it goes from more specific to less specific.
