@@ -1,34 +1,41 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AC318EBF
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 03:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E0518EBF;
+	Thu, 18 Jul 2024 03:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721272150; cv=none; b=tTJ04GqL7dgzmeNd/1CCFDdTvC7ehv07SfxoZS65x5+sUOkpKkhibQvpOmDnU8AQuD7M3i08esv03s3xkeF0+Znp46otXK6KZMfnBpdbXURoUPjsnga7+Gjpr5J2nGzxi0bqI3ayAix1T8d3CLklzNEdlWHU+99j6NGWUdDzh8A=
+	t=1721272265; cv=none; b=ASOwA3DKpaBPAU+YvdwFMwAXdmtvs02i+MiI4zrMPd/6A/fd+tamWX53U88L8dzSUGG52Sd5mccuaCcHgv0lA7abPneFZt3K/kmiN0etkjuPK08NS9O1otcylRv/hxCbmZsNr6b29wIZn2PLw9/4flQgbU5rz/kYAdhAZ1G/cmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721272150; c=relaxed/simple;
-	bh=Wn/ugSasIZn1Rz+OIXPHCRFZ7J1x+uFKA3RglbYqnt0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UQZ0XVPLPH1KfUvyRRm9C6qAUpPKqQn0u91+G+vUo/uHqgcPQQeucFb1SwfhMrcaZ0oc8r5PZ0mIwaRZhgZWeERLc4IAd+ED9LWJSGSoV9JciGPIaw9Ostf9IJmYiSlfshwINxehgFjDVif6pJsgTsoqlYqDClrV82Syxm19S6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Thu, 18 Jul
- 2024 11:03:52 +0800
-Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Thu, 18 Jul 2024 11:03:52 +0800
-From: Jammy Huang <jammy_huang@aspeedtech.com>
-To: <tzimmermann@suse.de>, <jfalempe@redhat.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<airlied@redhat.com>, <airlied@gmail.com>, <daniel@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/ast: Fix black screen after resume
-Date: Thu, 18 Jul 2024 11:03:52 +0800
-Message-ID: <20240718030352.654155-1-jammy_huang@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1721272265; c=relaxed/simple;
+	bh=pD2xubbTa4c6T4WNzg1CAB+MEyajjEmWSQtRqNVNtnE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WgaoRdFAbacWjT3oUrUh1GzCNp8KBn/GJUYiamN+PuGHlchP+W7PWAWzYgAxcz+D5qPu7fxRMp3G+Jw7/Ufb6AyY9MTpv08EkGBD+XAH4f4WGzGCrgsry6YZvV7cZ3mwSmdyaal0Ohq5BU7JnFILhtsMxirN/4iaHyz2Dhi3K58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nE/UNPqc; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nE/UNPqc"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1721272252; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=tgQJsXXJZtuIafpHz+x3BoFD/+zTuz5fz+02sw/hJ+s=;
+	b=nE/UNPqcycmdXT0rTg5+4+pY9uCjw7ilYuhx3shAHDYBWjbnDBr3Z9bW9UdG43r6yATJ/bBzhcPITyPT9HlFQ+5IHuGHPOaHs2AAiFtYJgQ/PCIoRcc4CdmHcQSE59LKYBHF8X0sJwqUi4N7npmuE0m18tghrb5LaerzZesvfRo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0WAmhdTk_1721272240;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WAmhdTk_1721272240)
+          by smtp.aliyun-inc.com;
+          Thu, 18 Jul 2024 11:10:52 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: akpm@linux-foundation.org
+Cc: shuah@kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] selftests/mm: mseal, self_elf: Fix warning comparing pointer to 0
+Date: Thu, 18 Jul 2024 11:10:39 +0800
+Message-Id: <20240718031039.69861-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,38 +43,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Suspend will disable pcie device. Thus, resume should do full hw
-initialization again.
-Add some APIs to ast_drm_thaw() before ast_post_gpu() to fix the issue.
+Avoid pointer type value compared with 0 to make code clear.
 
-Fixes: 5b71707dd13 ("drm/ast: Enable and unlock device access early during init")
-Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+./tools/testing/selftests/mm/mseal_test.c:486:27-28: WARNING comparing pointer to 0.
+./tools/testing/selftests/mm/mseal_test.c:1399:29-30: WARNING comparing pointer to 0.
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9552
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- drivers/gpu/drm/ast/ast_drv.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/testing/selftests/mm/mseal_test.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
-index f8c49ba68e78..45a9c7bf49c8 100644
---- a/drivers/gpu/drm/ast/ast_drv.c
-+++ b/drivers/gpu/drm/ast/ast_drv.c
-@@ -391,6 +391,11 @@ static int ast_drm_freeze(struct drm_device *dev)
+diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+index a818f010de47..50a5b9b9399e 100644
+--- a/tools/testing/selftests/mm/mseal_test.c
++++ b/tools/testing/selftests/mm/mseal_test.c
+@@ -481,9 +481,8 @@ static void test_seal_zero_address(void)
+ 	int prot;
  
- static int ast_drm_thaw(struct drm_device *dev)
- {
-+	struct ast_device *ast = to_ast_device(dev);
-+
-+	ast_enable_vga(ioregs);
-+	ast_open_key(ioregs);
-+	ast_enable_mmio(dev, ioregs);
- 	ast_post_gpu(dev);
+ 	/* use mmap to change protection. */
+-	ptr = sys_mmap(0, size, PROT_NONE,
+-			MAP_ANONYMOUS | MAP_PRIVATE | MAP_FIXED, -1, 0);
+-	FAIL_TEST_IF_FALSE(ptr == 0);
++	ptr = sys_mmap(0, size, PROT_NONE, MAP_ANONYMOUS | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	FAIL_TEST_IF_FALSE(!ptr);
  
- 	return drm_mode_config_helper_resume(dev);
-
-base-commit: e9d22f7a6655941fc8b2b942ed354ec780936b3e
-prerequisite-patch-id: a03a33902f33bcc38091e2cdce9d79f630464c30
-prerequisite-patch-id: 505779a1e2094f2ee2f2a55ad44aac5cd1d5342f
+ 	size = get_vma_size(ptr, &prot);
+ 	FAIL_TEST_IF_FALSE(size == 4 * page_size);
+@@ -1390,13 +1389,12 @@ static void test_seal_mremap_move_fixed_zero(bool seal)
+ 	/*
+ 	 * MREMAP_FIXED can move the mapping to zero address
+ 	 */
+-	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
+-			0);
++	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED, 0);
+ 	if (seal) {
+ 		FAIL_TEST_IF_FALSE(ret2 == MAP_FAILED);
+ 		FAIL_TEST_IF_FALSE(errno == EPERM);
+ 	} else {
+-		FAIL_TEST_IF_FALSE(ret2 == 0);
++		FAIL_TEST_IF_FALSE(!ret2);
+ 
+ 	}
+ 
 -- 
-2.25.1
+2.32.0.3.g01195cf9f
 
