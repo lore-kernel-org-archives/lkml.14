@@ -1,202 +1,106 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2DA4204B;
-	Thu, 18 Jul 2024 18:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25311145356
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 18:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721325716; cv=none; b=hkItOlHWM8+9Nup81ITy/XLNkz4WoXh742jvBbX5MIz9CHgVCXsg0caeGFZ72EuvixdEO0wrLdZg7R5Rnonpcy/MICWglLy/T9YcngzzHfp80ZWTTwCF3BPTYoOdNDjMmpDBkLqR9WHJ0KXXvVYCCt0AphvE9OfW3hByWn/7Lf4=
+	t=1721325782; cv=none; b=aDklZQI5dn0pT56znJ0FVauuWCUzPICbyAF1nY5u7FO4RgIok+9ZiGBHFkTwXQPugDcctB4JbNvxiuArbpXcmogVMQqDkoGwVqfdKETPwr/tLdAEyoKjV8trTbQPL1o65DP6F/DRrIOBPHH69bLhNYtnxoFEbMKY50VnzqbcPqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721325716; c=relaxed/simple;
-	bh=k2e9FTxMJcmFZ6iRpRLOB26XTkVkpXfMfb52s+UxKaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lzuMx2DB1E+wOZ2VMbzzd3AKfItLSY+yEYmX5z8yFqQ4e+EI6ftkjfvjo2BszkbLBDa7XcUfN/wbLyFb8jM7irmOID2CudzUX6GpQ4oXfC35ON4gugNWpIamFO2DjYnn76OOWgcmTFN2vq4fu09XiKKq6WR60gptD72NBgc0tg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwqhH9rQ; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwqhH9rQ"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5a22f09d976so178684a12.1;
-        Thu, 18 Jul 2024 11:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721325713; x=1721930513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XwjCmIgC9amJezzYNa7Vvk7vm/b0+JIIKpP0FzU5Lwk=;
-        b=NwqhH9rQbKVCXFazIyOjn7tzc1aeslhoIW/2OaIWNjkQjkzGl0vy+lCrfc+TcCere7
-         IV91+Cc1fcD1aSbkDXrjvBU4y8tEJXFHXqSdKnhJvisVdpeAPo3XCPuadQem34lZsWnG
-         jctFrcenPgOmnWVQVE8Cnvmj9RRouGWXrpeNCfbNmf6ZI2KqFJfKXRZVfmqWpV8wDfyl
-         ihdthVPqtT+mY08nINneTA7mmjeiS7RRzxyYX72J1bYlE33RuoYBRMR32iBRjNIg7W/Q
-         Da2wfz5CyUAxC1fVYG3Dh2MAj0Q4G61+RQHr+8tYkYKChulFn5tpDn+wcgu2UU6kj/Ab
-         ypGQ==
+	s=arc-20240116; t=1721325782; c=relaxed/simple;
+	bh=FHxbrmTw0dVAEXbFDVKzZm8aVaVDeImqbXiH++lXSSQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=WNRQRaE6u/fVxztsJGN6a2oPHGzXdEab15ClzZ3prWmdctdYR3XWTsORPFTn4uqLmoSas78Alypx42mZ6Ern3VRxe94+xjLP4G/MS62DCj5lnOdqQ0aFwhi+ZZe952ugzsnWR9+tVMV0qPgJbLho/BIoyWDER1lWoJ+W3rkg/Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3835c6e5763so14131195ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 11:03:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721325713; x=1721930513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XwjCmIgC9amJezzYNa7Vvk7vm/b0+JIIKpP0FzU5Lwk=;
-        b=XgSHjS5/2ZI8ZCtLvZMwf+YiB0AXzLMlwRVAW92I4elhl550C4hUs5N92068xZRtvL
-         PA9YYqpkw6o6fsPft9AV137Gl9KyBCeQaH8vS4unqjOGwn7MNhBWZtt9rMaylb/R2yKI
-         /1mkWShuwIxAdpYhlP3OO041OUVdXbmOCo/mocIurrh0cn/hpAYWNlagWzx/GefsPPEP
-         wHvdG1yXRhBqGSO+KwhrareQ0Ia4bzgSgDQnxqZhdBQQaznmC2lAsCmpdG3m4gGTJUj4
-         LP77zG5ySsRA4SOcZjCLJCeqcPahjS8uHFiGfk8JAFeO5gCjx2FRA0eidrbTTh+zrdNS
-         3koQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjeQD/SvFHJVHVkgo7jG3EoXP/gdLiRKvJGsl3l11e7J2Q3wJKOkv380hlrHza9lWGDlaQeZwzZ8GkDcQ0/YaHtEzf9iXyqPPUS6xyG/s7S72h15GeH7mgJMd4B4kA2wSgDRfvccd7+y0bVA==
-X-Gm-Message-State: AOJu0YyuQh6kQwudDLUoF1fyohi+FF4uXzDIEFshJBOTnmYqKbqtisub
-	Yrt82q4VUB6JNsVdujHiO4KpwTpwaQhccwiostN3wLRRUGZ8uT28lXX3Qd5iq8ym2GP+5V6iScQ
-	WwnTIIt792JPQjx50Nl2O/aCP360=
-X-Google-Smtp-Source: AGHT+IHnyhuY0wD7m5Nhg4/s+kP6IlMtQQiwPdS+LG//Il46Tc6q1VnUyZx7kaXZOUYWOB0F5U4b854qcA8dUvrJxkA=
-X-Received: by 2002:a50:c05b:0:b0:57d:455:d395 with SMTP id
- 4fb4d7f45d1cf-5a2caf4e97fmr70266a12.7.1721325712440; Thu, 18 Jul 2024
- 11:01:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721325780; x=1721930580;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+aHBRBgAFqp3cCvMwZ5U6Apip/zL0Qr94huepps+kHc=;
+        b=jDOKvSWhL5Y1/eXmiDGQZ9M0QLu5dzAmvmY8hxV/sztOjZAL1Dx3Ph5A3Wzb6853MH
+         JJU7S07iLQuhxinf0qt25ygJpci/qaWi8fo7MsQGXwDVaH5drDrktq7oN7d/AoRwTvGb
+         z9XNM2hGMdAusjDiHe023G+e0N7WnDlkfazRCnAyNAQg2o+yit4JMChf+yMZLYejLQMM
+         x7/bDfTdDKaU+8EJWLLdgsuZrsGITAzGswLgC8zlVfsT+S6RhYvW+VzIag8KsH+rfqSi
+         VrMdcjm8f1/j+64FnzraidxT5BssptP+qJDU1u9MUAHktDhEDz5hllk1uG3t2kXBe/FA
+         +oEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcoYs7Q3S8T/OhcJDDFboI9EcaqUD0oWZ4rs6JTGRoMr+WJSOaQokWD8jwgDepq1e4tu3SEnLFGOpwDMnEn0xphOZzeBqzTVgC0e7q
+X-Gm-Message-State: AOJu0Yx3DheHb3MZsETTPZL8LlEc+aYCdq0YlZKgutXlohVsqvGEcQ9m
+	odCk+PhevQ4wgZ4P0Bhi6aHa7OXMzgEQ2cQqf/ZBhpYjdtOCfH63hNxRO2pkIWERe55tdOr9zpJ
+	YfHU+wNsXbvcVPztd27L65UuTfhp911ST7K9m65t4hXJjJA0vOTKfatA=
+X-Google-Smtp-Source: AGHT+IExARHtw36AbOYPYSIsGgc5K0wOTD02RYbjVVAoQu8sLTtcwoYcCjxmXZrNkOohFZJqGBunDLc9teTF8O5IYgUpF3+yHLro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240717215847.5310-1-robdclark@gmail.com> <CAD=FV=XCOKJHJ-yzENpvm_MD34tMR5LRy2m2jYdcWzZXP4pfXQ@mail.gmail.com>
- <CAF6AEGuBZqV4zg1asUNbMLvq0-i-iyFwfi37uKS3kWNuRSOU+g@mail.gmail.com>
- <CAD=FV=UMiDTLBBEMk3fpg+TfE_K23fyL+JDZj77Fe9fCY8DyjA@mail.gmail.com>
- <CAF6AEGs22brXntJ-eDv_uTZGc2=rH2q2V4y6Vt8K4s+dsO=4-A@mail.gmail.com>
- <CAD=FV=WJQBTjt61ma-CoJQeGYKigEyXpA6j25JSyEfikrLeSNQ@mail.gmail.com> <CAF6AEGvxAVWDC45P3fbmVRO-yq5oV8wgPj0nqC7U0n6c9YuhbQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGvxAVWDC45P3fbmVRO-yq5oV8wgPj0nqC7U0n6c9YuhbQ@mail.gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 18 Jul 2024 11:01:40 -0700
-Message-ID: <CAF6AEGuKbzXxzUJS58pBomExNOOoPR7T64rBKuCrLYLW0e7MCA@mail.gmail.com>
-Subject: Re: [RFC] drm/panel/simple-edp: Add Samsung ATNA45DC02
-To: Doug Anderson <dianders@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	Rob Clark <robdclark@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6e02:b24:b0:381:c14:70cf with SMTP id
+ e9e14a558f8ab-3955523dd99mr5129945ab.1.1721325780368; Thu, 18 Jul 2024
+ 11:03:00 -0700 (PDT)
+Date: Thu, 18 Jul 2024 11:03:00 -0700
+In-Reply-To: <d848129a-ed5e-46f5-ac17-add37d7799fd@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ae9198061d896312@google.com>
+Subject: Re: [syzbot] [io-uring?] general protection fault in __io_remove_buffers
+From: syzbot <syzbot+2074b1a3d447915c6f1c@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com
+Cc: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 18, 2024 at 9:45=E2=80=AFAM Rob Clark <robdclark@gmail.com> wro=
-te:
+> On 7/18/24 02:20, syzbot wrote:
+>> Hello,
+>> 
+>> syzbot found the following issue on:
+>> 
+>> HEAD commit:    d67978318827 Merge tag 'x86_cpu_for_v6.11_rc1' of git://gi..
+>> git tree:       upstream
+>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1178e9e9980000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=e206d588252bd3ff
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=2074b1a3d447915c6f1c
+>> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e07d9e980000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16adf045980000
+>> 
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/f34b31760156/disk-d6797831.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/a92e51d8d32e/vmlinux-d6797831.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/000a6a162550/bzImage-d6797831.xz
+>> 
+>> The issue was bisected to:
+>> 
+>> commit 87585b05757dc70545efb434669708d276125559
+>> Author: Jens Axboe <axboe@kernel.dk>
+>> Date:   Wed Mar 13 02:24:21 2024 +0000
+>> 
+>>      io_uring/kbuf: use vm_insert_pages() for mmap'ed pbuf ring
+> Easily reproducible, the diff helps
 >
-> On Thu, Jul 18, 2024 at 9:31=E2=80=AFAM Doug Anderson <dianders@chromium.=
-org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Jul 18, 2024 at 9:25=E2=80=AFAM Rob Clark <robdclark@gmail.com>=
- wrote:
-> > >
-> > > On Thu, Jul 18, 2024 at 9:00=E2=80=AFAM Doug Anderson <dianders@chrom=
-ium.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Wed, Jul 17, 2024 at 6:09=E2=80=AFPM Rob Clark <robdclark@gmail.=
-com> wrote:
-> > > > >
-> > > > > On Wed, Jul 17, 2024 at 5:19=E2=80=AFPM Doug Anderson <dianders@c=
-hromium.org> wrote:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Wed, Jul 17, 2024 at 2:58=E2=80=AFPM Rob Clark <robdclark@gm=
-ail.com> wrote:
-> > > > > > >
-> > > > > > > From: Rob Clark <robdclark@chromium.org>
-> > > > > > >
-> > > > > > > Just a guess on the panel timings, but they appear to work.
-> > > > > > >
-> > > > > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > > > > ---
-> > > > > > > This adds the panel I have on my lenovo yoga slim 7x laptop. =
- I couldn't
-> > > > > > > find any datasheet so timings is just a guess.  But AFAICT ev=
-erything
-> > > > > > > works fine.
-> > > > > > >
-> > > > > > >  drivers/gpu/drm/panel/panel-edp.c | 2 ++
-> > > > > > >  1 file changed, 2 insertions(+)
-> > > > > >
-> > > > > > Given that this is a Samsung ATNA<mumble>, is there any chance =
-it's an
-> > > > > > OLED panel? Should it be supported with the Samsung OLED panel =
-driver
-> > > > > > like this:
-> > > > > >
-> > > > > > https://lore.kernel.org/r/20240715-x1e80100-crd-backlight-v2-0-=
-31b7f2f658a3@linaro.org
-> > > > >
-> > > > > it is an OLED panel, and I did see that patchset and thought that
-> > > > > samsung panel driver would work.  But changing the compat string =
-on
-> > > > > the yoga dts only gave me a black screen (and I didn't see any of=
- the
-> > > > > other mentioned problems with bl control or dpms with panel-edp).=
-  So
-> > > > > :shrug:?  It could be I overlooked something else, but it _seems_=
- like
-> > > > > panel-edp is fine for this panel. Plus, it would avoid awkwardnes=
-s if
-> > > > > it turned out there were other non-samsung 2nd sources, but so fa=
-r
-> > > > > with a sample size of two 100% of these laptops have the same pan=
-el
-> > > >
-> > > > Hmm, OK. One question for you: are you using the "enable" GPIO in
-> > > > panel-edp? IMO the code handling that GPIO in panel-edp is somewhat
-> > > > dodgy, but it predates my deeper involvement with panels. I've neve=
-r
-> > > > seen an eDP panel that could use panel-edp where it was actually
-> > > > required--every instance where someone thought it was required was
-> > > > better modeled by using that GPIO as the backlight enable. On the
-> > > > other hand, the "enable" GPIO in the Samsung OLED panel driver came
-> > > > straight from the panel datasheet and it makes sense for it to be i=
-n
-> > > > the panel driver since the backlight is handled straight by the
-> > > > panel...
-> > >
-> > > hmm, at least current dts doesn't have an enable gpio.  Which could b=
-e
-> > > why panel-samsung-atna33xc20 wasn't working.
-> > >
-> > > It is entirely possible we are relying on something left on by the bo=
-otloader.
-> >
-> > That would be my best guess. Is there any way for you to find out if
-> > there's an enable GPIO?
+> #syz test:
+
+want either no args or 2 args (repo, branch), got 4
+
 >
-> presumably it would be in the ACPI dump (which I've not much of a clue
-> what I'm looking for there)
 >
-
-Ok, turns out it is wired up the same way as on the crd.. if I copy
-those then panel-samsung-atna33xc20 is working
-
-BR,
--R
-
-> >
-> > > > In any case, I guess if things are working it doesn't really hurt t=
-o
-> > > > take it in panel-edp for now...
-> > > >
-> > >
-> > > I wonder if using compatible=3D"edp-panel" everywhere isn't a great i=
-dea
-> > > if we want to switch drivers later.  But I guess that is already wate=
-r
-> > > under the bridge (so to speak)
-> >
-> > For panels that aren't OLED it's all very standard and we're kinda
-> > forced to use something generic since manufacturers want lots of 2nd
-> > (and 3rd and 4th and ...) sourcing. As far as I've been able to tell
-> > you can't do 2nd sourcing between OLED panels and other panels since
-> > the wires hooked up to the panels are a little different for the OLED
-> > panels and the power sequencing is a bit different. It would also be
-> > pretty obvious to an end user if some of their devices had an OLED
-> > panel and some didn't. I'm not aware of OLED panels other than the
-> > Samsung ones, but I haven't done any real research here...
-> >
-> > -Doug
-> >
+> diff --git a/io_uring/kbuf.c b/io_uring/kbuf.c
+> index d2945c9c812b..c95dc1736dd9 100644
+> --- a/io_uring/kbuf.c
+> +++ b/io_uring/kbuf.c
+> @@ -657,8 +657,10 @@ static int io_alloc_pbuf_ring(struct io_ring_ctx *ctx,
+>   	ring_size = reg->ring_entries * sizeof(struct io_uring_buf_ring);
+>   
+>   	bl->buf_ring = io_pages_map(&bl->buf_pages, &bl->buf_nr_pages, ring_size);
+> -	if (!bl->buf_ring)
+> +	if (IS_ERR(bl->buf_ring)) {
+> +		bl->buf_ring = NULL;
+>   		return -ENOMEM;
+> +	}
+>   
+>   	bl->is_buf_ring = 1;
+>   	bl->is_mmap = 1;
+>
