@@ -1,59 +1,72 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CD815C3;
-	Thu, 18 Jul 2024 02:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5061F1DFFB
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 02:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721269142; cv=none; b=GATP/+cRFCMIf4AVnc7+E38/LumtFwnqSKqqpivYVj1qV6jaS8aJxRaUIJWmA+K5lAtE27R0ZTaz7iw4q7atpmYIs4xsivgdKRtdDl59hOHwX6jQ3f3JgiDxQYIlZRk7rk+tUJ2WhVIpJV+eLN54S/cM21wokpBeQaLtIkHINpo=
+	t=1721269203; cv=none; b=SAgCVxfHA0JLrgUZGn2SLqHSv2tfvcqE/WML3yo4VLxtUM/7GXF2RailBIs/Bm6MVxmSj+c+JmrIBRQNPaZ599+PgpTEH1UK6Ju9wYf3tNRDs3yDGCq7eOWYeqGLsQ1Z8rfPJ0kTGPNgzW2wOMf+VGgphgllnQLxUerPNI2whUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721269142; c=relaxed/simple;
-	bh=/KzmiqZ1DGwvGOZCrjg/tYdiQhsCdmhOg4/3Iz+Fiwg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N+KiOwGLlddXE/Fsnu9YefQp13Bl10cwielfppAvGeqEiNKkp54QXHCapVg6V/h5ec1V5uVSpYu4P3JhrST+Kjex3NVkfHFn8/7458ZVbWJVI8fote9pXXyFZMTZA2JLNgho/3vPYNb43QUrdRmlHaFRug/IL3cTyjr/ESHRLQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XL2pElcW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721269203; c=relaxed/simple;
+	bh=dZnxHmEM4CYiMLSggfRNQF9bA8Zj9YwdQLne1Mi4OjM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c35YDjM5vSgIfJ0uStlT3kkSimbNqW33XlzgK4t9UtEAhxduPuBF5h+MfWfRA2krH5ybdKjIO9Hk46XNwNAhuhrFmH0G9T9If+FUe3GoAD0IIlaJ1V6wYGVokqPLz0Cw7RmUvDNVaxqjYZkzMRzTawVOjJIUgf8FcGwTTz8vb5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=N5PcYFZS; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XL2pElcW"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HFt0Eh029141;
-	Thu, 18 Jul 2024 02:18:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UOOKMMmT5K9ZRMdtHreWgAH9PIVNDRgvbwbIqD3C7Zo=; b=XL2pElcWyOEYzN6r
-	y7EYbctCLmayXqGwQZekkYklW9Cax5wTrxLj731nRZtosvusOowEpMTq8hL/2ZE8
-	szI2TZBgeYcbOo279tzl5YRMiwTb1ibvKrUz5qBgMAxI5bDuI7XzRXDDsQVH2d6r
-	V2tdKyLiBLAvoInq/qywZjB6WHgF8l8FtQ0Sk43rfXp6CnM/k7nGeA5/9QevjvQo
-	5Jmany51NNgIwDtYE0G8rbjLs2N6vcRRIa6pdQ4SqVkzhHT6v3XdpqFD+oiZU4Pe
-	DGMj5uHdLYaHphWSng3DRelOFOSbnIRoESUceSHZapqzJNePHi7LkU0tDM69YxCz
-	OcrJDg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfpm5fr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 02:18:40 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46I2Id1I030971
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 02:18:39 GMT
-Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 17 Jul 2024 19:18:36 -0700
-From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-To: <dalias@libc.org>, <glaubitz@physik.fu-berlin.de>,
-        <ysato@users.sourceforge.jp>
-CC: <kernel@quicinc.com>, <linux-kernel@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <robh+dt@kernel.org>,
-        Oreoluwa Babatunde
-	<quic_obabatun@quicinc.com>
-Subject: [PATCH v5 1/2] sh: Restructure call site for early_reserve_mem()
-Date: Wed, 17 Jul 2024 19:18:21 -0700
-Message-ID: <20240718021822.1545976-2-quic_obabatun@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240718021822.1545976-1-quic_obabatun@quicinc.com>
-References: <20240718021822.1545976-1-quic_obabatun@quicinc.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="N5PcYFZS"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fbfb7cdb54so2760375ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 19:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1721269200; x=1721874000; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=T9SZYdZsUUoeIjJIREJT2CI+WWVTiYc+Wvm2FRooJHI=;
+        b=N5PcYFZSnDKWsBhU5rl1kO9/uwgfspvifeRtYU59/MuBOsv9+sge+A9pNkkx+2dEQe
+         fsuJDBx7aaYz4q5TfvWiRwWIYKuT3WzRoVVmSwGQ6EuoDeP2/T7yIzFkrKW1H+sh6x0I
+         l9jLV7C11RImacdmcbJgdFyTF3Dn85LIJnzR/vMeDzJRb/d5jmgXyEPLMKkfTpUFKEzu
+         UCfwM9y00NwDo3hRyhjnGgvOcXUFshvC7Zi2iJLi53Y/mnMRCLmE1JPwiTx/g7NVpnH8
+         GeLi4xEyDcoOBAKJHXO/9wr/JsNb2GNW+kdoplfs70wH069//CarTkqtquvxduXO4M/j
+         Aoag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721269200; x=1721874000;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T9SZYdZsUUoeIjJIREJT2CI+WWVTiYc+Wvm2FRooJHI=;
+        b=MKfRD2KaLO21uwuMmlesX98AmFvfErklv351t2GV1Ir1nBbYrjoWFMYuO44LVY/sdW
+         e7C0T1O3LrNtsLd60PM5bpTHFK75XobxErqacDwMuVBxRZo06AZEktnXFowwG5fNcxhO
+         H0q5iBEgsUxn/RRd1ZzRPds95lPa74qDE/xQPFWL0Rgkbg6dUQ5zsex4xjJL7v8fw0Ic
+         SG84nj0tl1xsckjk4dMvsQ5GpveAlxn8heOGdkXVCnXTVtHUrzlCtgYQ9szO0HE3dHa5
+         KPbAhaAUeZwi+mdzJSkNJKWEw2SZVCeHiBUT884NjehncnV2RTYRB8kJRdQsZRdsQ9vt
+         r+1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWDblvdzEyX1khROqDWLjHk6bXqzVGQRcmDA4s0H9ww8tAxVztb/6P/JBMGlXiKVxetp5786fBlRWOw41zIHF0ZD4HxFU2jWNqtMtB3
+X-Gm-Message-State: AOJu0Yw5EuGmF34HstFP6XiZsuOIeCZJrtEZMOsRBK9KLQoSiSqYip6d
+	VlVllAy1g5hjUrNUM1GxWWUMdWBOtCIi6ZJO9X/1VzLbDK1thl0zTWjQV36kA+o=
+X-Google-Smtp-Source: AGHT+IGHbBfQu2e2YWhJChF1C+hZkw/qVjCPVvObxOb7FpH7Ohyx7cX+w8+p0XCiuteXdW56LLgYZw==
+X-Received: by 2002:a17:902:db0d:b0:1fb:1b16:eb80 with SMTP id d9443c01a7336-1fc4e15c311mr28657665ad.26.1721269200464;
+        Wed, 17 Jul 2024 19:20:00 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([139.177.225.235])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bb70060sm83732525ad.58.2024.07.17.19.19.56
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 17 Jul 2024 19:20:00 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: punit.agrawal@bytedance.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	akpm@linux-foundation.org,
+	surenb@google.com,
+	peterx@redhat.com,
+	alexghiti@rivosinc.com,
+	willy@infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>
+Subject: [PATCH] riscv/mm/fault: add show_pte() before die()
+Date: Thu, 18 Jul 2024 10:09:35 +0800
+Message-Id: <20240718020935.12803-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,101 +74,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2PkGXoz85e_Eex27rSNozL6vu--Aad8z
-X-Proofpoint-GUID: 2PkGXoz85e_Eex27rSNozL6vu--Aad8z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_19,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 clxscore=1015 bulkscore=0 mlxscore=0
- adultscore=0 phishscore=0 spamscore=0 malwarescore=0 mlxlogscore=680
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407180014
 
-early_reserve_mem() reserves memory for important regions in the kernel
-such as kernel text region and bootmem bitmap.
-Reserving these memory regions should take precedence over any other
-reserved memory allocations so that the system does not unknowingly
-reserve them for some other use case.
+When the kernel displays "Unable to handle kernel paging request at
+virtual address", we would like to confirm the status of the virtual
+address in the page table. So add show_pte() before die().
 
-Hence, move the call site of early_reserve_mem() out of the
-paging_init() function and into an earlier point in setup_arch()
-
-Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
- arch/sh/include/asm/mmu.h | 1 +
- arch/sh/kernel/setup.c    | 3 +++
- arch/sh/mm/init.c         | 5 ++---
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ arch/riscv/mm/fault.c | 47 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/arch/sh/include/asm/mmu.h b/arch/sh/include/asm/mmu.h
-index 172e329fd92d..696e303a2f19 100644
---- a/arch/sh/include/asm/mmu.h
-+++ b/arch/sh/include/asm/mmu.h
-@@ -96,6 +96,7 @@ static inline int pmb_unmap(void __iomem *addr)
+diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+index 90d4ba36d1d0..dfe3ce38e16b 100644
+--- a/arch/riscv/mm/fault.c
++++ b/arch/riscv/mm/fault.c
+@@ -22,6 +22,52 @@
  
- #endif /* CONFIG_PMB */
+ #include "../kernel/head.h"
  
-+void __init early_reserve_mem(void);
- static inline void __iomem *
- pmb_remap(phys_addr_t phys, unsigned long size, pgprot_t prot)
- {
-diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
-index 620e5cf8ae1e..3b0bc191a2a2 100644
---- a/arch/sh/kernel/setup.c
-+++ b/arch/sh/kernel/setup.c
-@@ -40,6 +40,7 @@
- #include <asm/setup.h>
- #include <asm/clock.h>
- #include <asm/smp.h>
-+#include <asm/mmu.h>
- #include <asm/mmu_context.h>
- #include <asm/mmzone.h>
- #include <asm/processor.h>
-@@ -319,6 +320,8 @@ void __init setup_arch(char **cmdline_p)
- 
- 	sh_mv_setup();
- 
-+	early_reserve_mem();
++static void show_pte(unsigned long addr)
++{
++	pgd_t *pgdp, pgd;
++	p4d_t *p4dp, p4d;
++	pud_t *pudp, pud;
++	pmd_t *pmdp, pmd;
++	pte_t *ptep, pte;
++	struct mm_struct *mm = current->mm;
 +
- 	/* Let earlyprintk output early console messages */
- 	sh_early_platform_driver_probe("earlyprintk", 1, 1);
- 
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index bf1b54055316..643e3617c6a6 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -19,6 +19,7 @@
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
- #include <linux/export.h>
-+#include <asm/mmu.h>
- #include <asm/mmu_context.h>
- #include <asm/mmzone.h>
- #include <asm/kexec.h>
-@@ -242,7 +243,7 @@ static void __init do_init_bootmem(void)
- 	sparse_init();
- }
- 
--static void __init early_reserve_mem(void)
-+void __init early_reserve_mem(void)
++	if (!mm)
++		mm = &init_mm;
++	pgdp = pgd_offset(mm, addr);
++	pgd = READ_ONCE(*pgdp);
++	pr_alert("[%016lx] pgd=%016lx", addr, pgd_val(pgd));
++	if (pgd_none(pgd) || pgd_bad(pgd))
++		goto out;
++
++	p4dp = p4d_offset(pgdp, addr);
++	p4d = READ_ONCE(*p4dp);
++	pr_cont(", p4d=%016lx", p4d_val(p4d));
++	if (p4d_none(p4d) || p4d_bad(p4d))
++		goto out;
++
++	pudp = pud_offset(p4dp, addr);
++	pud = READ_ONCE(*pudp);
++	pr_cont(", pud=%016lx", pud_val(pud));
++	if (pud_none(pud) || pud_bad(pud))
++		goto out;
++
++	pmdp = pmd_offset(pudp, addr);
++	pmd = READ_ONCE(*pmdp);
++	pr_cont(", pmd=%016lx", pmd_val(pmd));
++	if (pmd_none(pmd) || pmd_bad(pmd))
++		goto out;
++
++	ptep = pte_offset_map(pmdp, addr);
++	if (!ptep)
++		goto out;
++
++	pte = READ_ONCE(*ptep);
++	pr_cont(", pte=%016lx", pte_val(pte));
++	pte_unmap(ptep);
++out:
++	pr_cont("\n");
++}
++
+ static void die_kernel_fault(const char *msg, unsigned long addr,
+ 		struct pt_regs *regs)
  {
- 	unsigned long start_pfn;
- 	u32 zero_base = (u32)__MEMORY_START + (u32)PHYSICAL_OFFSET;
-@@ -282,8 +283,6 @@ void __init paging_init(void)
+@@ -31,6 +77,7 @@ static void die_kernel_fault(const char *msg, unsigned long addr,
+ 		addr);
  
- 	sh_mv.mv_mem_init();
- 
--	early_reserve_mem();
--
- 	/*
- 	 * Once the early reservations are out of the way, give the
- 	 * platforms a chance to kick out some memory.
+ 	bust_spinlocks(0);
++	show_pte(addr);
+ 	die(regs, "Oops");
+ 	make_task_dead(SIGKILL);
+ }
 -- 
-2.34.1
+2.39.2
 
