@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E74C145FEB;
-	Thu, 18 Jul 2024 21:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257B146A9B;
+	Thu, 18 Jul 2024 21:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721337165; cv=none; b=laIzAnzp/tJ+gXe9MwXird8hWxScFkM2Q52V/JSyHNpd4MQAM2p1LxFsmsVY0z0Ss8Gyky8F7564Zu/s9tEW9O/8J7mn/nCvNDXwlozGCLya8BPMfZd+nIguN4hkMmnJE7LFW5s+XskRsUFiutynJil5Mo+TFiMmP9d6cgz9c4c=
+	t=1721337169; cv=none; b=nBcEATm2ogoaHGKQ4CpwlIqu0NxomfJOgYMjcFJ1NXWGKzX6ue0sAJqZuwGaI/FFPhss0352m/3BmjEZh/Z5A1usa1el7aSGj3bGNLUtghTaGxeK0aPKFN796e8UH+HDigC9tVVGNA26X6KPpTr/gwtdwXwjOm8uAg31j8MmRLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721337165; c=relaxed/simple;
-	bh=BBy7GPOg0d+2ljCCqnuvdMtNSo89q9d+zR/eMMOn/U4=;
+	s=arc-20240116; t=1721337169; c=relaxed/simple;
+	bh=SBvf9S0EhqB8FK0uuYH+CPawVD501/FTiaC8zBC9RBo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=payp4V+wCYCa3yBjABNB9XkN+WsGMhQBtM+ubvVuY39fa1hdv+bBMtXhDGDxhhf4K0N14Mxso1pKBraLQDoGqU+O+0Bta3i0vLgC3iRooNndYsP8DMS3eO2zAclHfp4zqhxILJ56U/lkqfQu2WxiRkdHK+345tg5gB1M2mbFXw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6d3VlMU; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=EFmSGd0afWPCUQedPQK2YhUqwt14Y8Tf8jlzLEmjmtgnAIx/go4FP1iqHpMErW6GSGtE5XpGXBU83nAqeTyURV/Bk6Dv0qKQlFU2sWdixBeFu4yWQOvfyk/ww8u4nLWipBx2AHsetVQ70I1I8SAB3Iko1J5rghuzjLCIVtmY/V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jnmQPZT6; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6d3VlMU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jnmQPZT6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721337164; x=1752873164;
+  t=1721337168; x=1752873168;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BBy7GPOg0d+2ljCCqnuvdMtNSo89q9d+zR/eMMOn/U4=;
-  b=a6d3VlMU6ADxe/jbqBEv38JX+fwMo3bIwDpeWrfQRdnkmvA0oXkhkeTs
-   a7Fokfaks+OBIqNV2YkhzuwBnv7NAI9Og1qXxfGkGr1XGmLfuViXQGK+/
-   Cdfo8acOCdCV8u2/qgpdfKeNnhpXsjSOE957ACR2ZjtCtEt7+MT8Jf4up
-   wbeaj583rDyBXzIhc1UIfVz4Ccn/VfYXl8pvDXsU2BeRLPj6tphWTTfFH
-   UjaZ7lLFJ8wPpydFmeNXIO7uokoztboEEp9ilFzGiizBvxi2P24CwmFqO
-   aQWtJLCMhW6MrLrjXjVNKqWy1J9ooDdhvtdN9o9KqpR/ccd1biNAMNeCO
-   g==;
-X-CSE-ConnectionGUID: 93m0vft7RwC3g/FoFw8VEA==
-X-CSE-MsgGUID: j1s8CAlPSS2Gt83mqeuZig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="22697398"
+  bh=SBvf9S0EhqB8FK0uuYH+CPawVD501/FTiaC8zBC9RBo=;
+  b=jnmQPZT6H3McSWfNQ7gVPRLL7r0xpqiOY2y7wS9LDhDvgQs9URopLRt0
+   sc/zFz8IRlx3VFwgDvnCQB3ghcwycMzPyTHBiQaUfPlC+UBCJwAwESv9f
+   m4moy3nx7bBk39FySe3vpVVvU0uiWt/wEZxrVIo85nPn0Dzk1ZFveUiZu
+   erY6kZ7eUOlU9RFziJBJjQaQ9EGW8zzPh1mawICvAGmF8P77o7IzPAgff
+   Bs+LMxBKTNL1JrHQO/jQF5kOl83xgYpP6d59DQvyWpHwWNTzGSJN9fJwB
+   dtxmfm7fXxVF4IPFk7ewrGh+BEic/IhU3NtnZy56I6p2K4wqObXUkk6d1
+   A==;
+X-CSE-ConnectionGUID: YwFJpdYvTnedTxpnY3tl0A==
+X-CSE-MsgGUID: nWdstOe/T569NekDMJoXjQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="22697409"
 X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
-   d="scan'208";a="22697398"
+   d="scan'208";a="22697409"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:42 -0700
-X-CSE-ConnectionGUID: 6q3phqdzRE68GH7pnAttGA==
-X-CSE-MsgGUID: pTGUhlVrSsW2i7RFVf9oRQ==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:44 -0700
+X-CSE-ConnectionGUID: ZaD1Z0ovTgaKEpR7r3Azow==
+X-CSE-MsgGUID: e8Y7W5V3S0aa86I68HiMDA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
-   d="scan'208";a="55760370"
+   d="scan'208";a="55760381"
 Received: from ccbilbre-mobl3.amr.corp.intel.com (HELO rpedgeco-desk4..) ([10.124.223.76])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:41 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 14:12:43 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -56,9 +56,9 @@ Cc: kai.huang@intel.com,
 	yan.y.zhao@intel.com,
 	rick.p.edgecombe@intel.com,
 	Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: [PATCH v4 02/18] KVM: Add member to struct kvm_gfn_range for target alias
-Date: Thu, 18 Jul 2024 14:12:14 -0700
-Message-Id: <20240718211230.1492011-3-rick.p.edgecombe@intel.com>
+Subject: [PATCH v4 05/18] KVM: x86/mmu: Add an is_mirror member for union kvm_mmu_page_role
+Date: Thu, 18 Jul 2024 14:12:17 -0700
+Message-Id: <20240718211230.1492011-6-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240718211230.1492011-1-rick.p.edgecombe@intel.com>
 References: <20240718211230.1492011-1-rick.p.edgecombe@intel.com>
@@ -72,158 +72,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Add new members to strut kvm_gfn_range to indicate which mapping
-(private-vs-shared) to operate on: enum kvm_gfn_range_filter
-attr_filter. Update the core zapping operations to set them appropriately.
+Introduce a "is_mirror" member to the kvm_mmu_page_role union to identify
+SPTEs associated with the mirrored EPT.
 
-TDX utilizes two GPA aliases for the same memslots, one for memory that is
-for private memory and one that is for shared. For private memory, KVM
-cannot always perform the same operations it does on memory for default
-VMs, such as zapping pages and having them be faulted back in, as this
-requires guest coordination. However, some operations such as guest driven
-conversion of memory between private and shared should zap private memory.
+The TDX module maintains the private half of the EPT mapped in the TD in
+its protected memory. KVM keeps a copy of the private GPAs in a mirrored
+EPT tree within host memory. This "is_mirror" attribute enables vCPUs to
+find and get the root page of mirrored EPT from the MMU root list for a
+guest TD. This also allows KVM MMU code to detect changes in mirrored EPT
+according to the "is_mirror" mmu page role and propagate the changes to
+the private EPT managed by TDX module.
 
-Internally to the MMU, private and shared mappings are tracked on separate
-roots. Mapping and zapping operations will operate on the respective GFN
-alias for each root (private or shared). So zapping operations will by
-default zap both aliases. Add fields in struct kvm_gfn_range to allow
-callers to specify which aliases so they can only target the aliases
-appropriate for their specific operation.
-
-There was feedback that target aliases should be specified such that the
-default value (0) is to operate on both aliases. Several options were
-considered. Several variations of having separate bools defined such
-that the default behavior was to process both aliases. They either allowed
-nonsensical configurations, or were confusing for the caller. A simple
-enum was also explored and was close, but was hard to process in the
-caller. Instead, use an enum with the default value (0) reserved as a
-disallowed value. Catch ranges that didn't have the target aliases
-specified by looking for that specific value.
-
-Set target alias with enum appropriately for these MMU operations:
- - For KVM's mmu notifier callbacks, zap shared pages only because private
-   pages won't have a userspace mapping
- - For setting memory attributes, kvm_arch_pre_set_memory_attributes()
-   chooses the aliases based on the attribute.
- - For guest_memfd invalidations, zap private only.
-
-Link: https://lore.kernel.org/kvm/ZivIF9vjKcuGie3s@google.com/
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Co-developed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
 v3:
- - Fix typo in comment (Paolo)
- - Remove KVM_PROCESS_PRIVATE_AND_SHARED (Paolo)
- - Remove outdated reference to exclude_{private,shared} (Paolo)
- - Set process member in new kvm_mmu_zap_memslot_leafs() function
- - Rename process -> filter (Paolo)
+ - Rename role mirror_pt -> is_mirror (Paolo)
+ - Remove unnessary helpers that just access a member (Paolo)
+
+v2:
+ - Rename private -> mirrored
 
 v1:
- - Replaced KVM_PROCESS_BASED_ON_ARG with BUGGY_KVM_INVALIDATION to follow
-   the original suggestion and not populte kvm_handle_gfn_range(). And add
-   WARN_ON_ONCE().
- - Move attribute specific logic into kvm_vm_set_mem_attributes()
- - Drop Sean's suggested-by tag as the solution has changed
- - Re-write commit log
+- Remove warning and NULL check in is_private_sptep() (Rick)
+- Update commit log (Yan)
 ---
- arch/x86/kvm/mmu/mmu.c   |  6 ++++++
- include/linux/kvm_host.h |  6 ++++++
- virt/kvm/guest_memfd.c   |  2 ++
- virt/kvm/kvm_main.c      | 14 ++++++++++++++
- 4 files changed, 28 insertions(+)
+ arch/x86/include/asm/kvm_host.h | 3 ++-
+ arch/x86/kvm/mmu/mmu_internal.h | 5 +++++
+ arch/x86/kvm/mmu/spte.h         | 5 +++++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 6f721ab0cd33..1e184e524e97 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7496,6 +7496,12 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
- 		return false;
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 09aa2c56bab6..f764a07a32f9 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -351,7 +351,8 @@ union kvm_mmu_page_role {
+ 		unsigned ad_disabled:1;
+ 		unsigned guest_mode:1;
+ 		unsigned passthrough:1;
+-		unsigned :5;
++		unsigned is_mirror:1;
++		unsigned :4;
  
-+	/* Unmap the old attribute page. */
-+	if (range->arg.attributes & KVM_MEMORY_ATTRIBUTE_PRIVATE)
-+		range->attr_filter = KVM_FILTER_SHARED;
-+	else
-+		range->attr_filter = KVM_FILTER_PRIVATE;
-+
- 	return kvm_unmap_gfn_range(kvm, range);
+ 		/*
+ 		 * This is left at the top of the word so that
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index 68f99d9d6e7c..3319d0a42f36 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -157,6 +157,11 @@ static inline int kvm_mmu_page_as_id(struct kvm_mmu_page *sp)
+ 	return kvm_mmu_role_as_id(sp->role);
  }
  
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index f7ba665652f3..4643680654d5 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -260,11 +260,17 @@ union kvm_mmu_notifier_arg {
- 	unsigned long attributes;
- };
- 
-+enum kvm_gfn_range_filter {
-+	KVM_FILTER_SHARED		= BIT(0),
-+	KVM_FILTER_PRIVATE		= BIT(1),
-+};
++static inline bool is_mirror_sp(const struct kvm_mmu_page *sp)
++{
++	return sp->role.is_mirror;
++}
 +
- struct kvm_gfn_range {
- 	struct kvm_memory_slot *slot;
- 	gfn_t start;
- 	gfn_t end;
- 	union kvm_mmu_notifier_arg arg;
-+	enum kvm_gfn_range_filter attr_filter;
- 	bool may_block;
- };
- bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 8f4159dd7824..ce5c96f32c3f 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -113,6 +113,8 @@ static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
- 			.end = slot->base_gfn + min(pgoff + slot->npages, end) - pgoff,
- 			.slot = slot,
- 			.may_block = true,
-+			/* guest memfd is relevant to only private mappings. */
-+			.attr_filter = KVM_FILTER_PRIVATE,
- 		};
+ static inline void kvm_mmu_alloc_external_spt(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
+ {
+ 	/*
+diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+index ef793c459b05..a72f0e3bde17 100644
+--- a/arch/x86/kvm/mmu/spte.h
++++ b/arch/x86/kvm/mmu/spte.h
+@@ -267,6 +267,11 @@ static inline struct kvm_mmu_page *root_to_sp(hpa_t root)
+ 	return spte_to_child_sp(root);
+ }
  
- 		if (!found_memslot) {
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 293ae714e825..71df4968004e 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -635,6 +635,11 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 			 */
- 			gfn_range.arg = range->arg;
- 			gfn_range.may_block = range->may_block;
-+			/*
-+			 * HVA-based notifications aren't relevant to private
-+			 * mappings as they don't have a userspace mapping.
-+			 */
-+			gfn_range.attr_filter = KVM_FILTER_SHARED;
- 
- 			/*
- 			 * {gfn(page) | page intersects with [hva_start, hva_end)} =
-@@ -2450,6 +2455,14 @@ static __always_inline void kvm_handle_gfn_range(struct kvm *kvm,
- 	gfn_range.arg = range->arg;
- 	gfn_range.may_block = range->may_block;
- 
-+	/*
-+	 * If/when KVM supports more attributes beyond private .vs shared, this
-+	 * _could_ set KVM_FILTER_{SHARED,PRIVATE} appropriately if the entire target
-+	 * range already has the desired private vs. shared state (it's unclear
-+	 * if that is a net win).  For now, KVM reaches this point if and only
-+	 * if the private flag is being toggled, i.e. all mappings are in play.
-+	 */
++static inline bool is_mirror_sptep(u64 *sptep)
++{
++	return is_mirror_sp(sptep_to_sp(sptep));
++}
 +
- 	for (i = 0; i < kvm_arch_nr_memslot_as_ids(kvm); i++) {
- 		slots = __kvm_memslots(kvm, i);
- 
-@@ -2506,6 +2519,7 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 	struct kvm_mmu_notifier_range pre_set_range = {
- 		.start = start,
- 		.end = end,
-+		.arg.attributes = attributes,
- 		.handler = kvm_pre_set_memory_attributes,
- 		.on_lock = kvm_mmu_invalidate_begin,
- 		.flush_on_ret = true,
+ static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
+ {
+ 	return (spte & shadow_mmio_mask) == kvm->arch.shadow_mmio_value &&
 -- 
 2.34.1
 
