@@ -1,165 +1,332 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8773286A8
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2B54653A
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721263717; cv=none; b=OmUVsSF1lK9dPqn0XCqRG4Flbggi+SikBR4Zn9oRY6uNep24x741dDYmaApBjhOcyiM6P9eq6Gz0ivelv+nh3cK22Yek6Q8PEwd0ThvV5SxHWllmlJuZbQOpoWKBZHCgiGpxMoC83OpapKUR9WUgd5AwW6doZgkyhqdlxDNudYw=
+	t=1721263745; cv=none; b=ZMweRF8cMBfNKJkk3Qt6JhztIubOQZHObouACSDZL5BRRfYz7xxGecxhw7nwlvr53wUEID7BK8SU1180lrNQWZv2u10rAT3kwUPY0omrBsgwmzGoVD6jmHNvTws6oOsz9PqsrYGYiJkIx8aFEh29hNzCt287o+QcISkqHizh1rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721263717; c=relaxed/simple;
-	bh=hmKpDCFEog/ciMbNur3/GrkuPzJrWO1HrIYd74nYWyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Smedwem3XSIWJFGXuyyAiuKoXy6AhOJKJHc3gtX0UQmXbs4hIweUENJNUy4JVeet4d2Aj0TFFm8qBoSWU7Ux6Fd8jc8svhG2+LOnRc7WzwlS2sHLfHz7oNRw13Ku6S6X/j01PnaQB8w29O/Q51LWmVylV3r2srFpnxhcN9URJTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Ha1bOfRo; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1721263745; c=relaxed/simple;
+	bh=zPIg+4eb6WoHfiAiG3KlsYSlCN+gdWNJn8xNEEP0J1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nfpAiBHKmDGBKdv9nM+atEZgkgvW8acZZr/i40a88DTD/dcXGPV6iP6umtRFAzgbxwU9XesvDLTQx2tvXgvHIthqQwVqyVzuW+H5ARW2b2SvEo7IxatLrdymCwC1G80E8ZxKdqKwIsGP59Dxw/sINlsij+Ip1MnRFNaY12Aau68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C3ySbfCw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ha1bOfRo"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5c694d5c5adso98375eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1721263695; x=1721868495; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0yshoBMmTilnB7Tn31CojFxfms9fcaLBu92AZXjz1tU=;
-        b=Ha1bOfRoqyd7mS0TFCt0UWa/o8wrCWtYMCFkpE/1YRCdq9PrZrnKyVlS7qgle8VNiw
-         8fAsS15ko29Txl+eAYbKXw8R/rkHkhOhE91eqHW9/NQQw/3tKK88BK35MXo6iyqHS9bC
-         lGYOM5u+saXOL+hssT4/8zLYKBC2OkuJBIMf2ZhnIDQraXgYm3Puxcgf9VLcuk0HMoRO
-         gPd+yS4XiWmEYQy2guFhbLmLe7JnlQxbvcwjdOFaP3ORia3GIuorWKZrsDseOlMQIHlH
-         Mb6ryOQEkC6+a8oQKadYZN4srkgqZb9TKQ5r/YedFjwDpF/YW0H2VvNvhyulYezjK2Ri
-         E5Lg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C3ySbfCw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1721263741;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cuGBSeFQsnlLdV7vrAMqLKj9qYzNTsXMEl3YsWB1yD0=;
+	b=C3ySbfCwh0cUEklQ81OVBYJ3hBrEXz0GT8Tn/bA59w7IQD9qw2m7WHKJ/Ic+sGrl6YEUqJ
+	wKnv1sWyhpf/1KCzOb+ccDYtLOBpBJMzGZE06g+HYX9Xm9Uif0Z6Iy7XbK7h4BD32YKAbS
+	Mog0WS6Chs9xtYw9PIUM3ZeguXh1VaQ=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-687-2OIaVHcbMxOo_CLrNgGpag-1; Wed, 17 Jul 2024 20:45:46 -0400
+X-MC-Unique: 2OIaVHcbMxOo_CLrNgGpag-1
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-70af58f79d1so268592b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 17:45:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721263695; x=1721868495;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1721263543; x=1721868343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0yshoBMmTilnB7Tn31CojFxfms9fcaLBu92AZXjz1tU=;
-        b=CRuNcobRrsyM/l/gvfGJR3vNGFjakiO9KFH5tOih1mw+3Ps3P/sFU8O95RlsXET78W
-         OjnAUdno7L6n8ghdgApnheExJs5nvvMHw4R8Dcrf6Fc1uMk7LGOZ7iWd2ZaFprvJLU+L
-         pJLKGUCIJpokynOlkPgSX4ed980cYr1oEx6xtMrShtVKIWsMuHZhJ9NWIB4lSimGUM77
-         4GVnJ1JKCpxbDYZWyRHW0vNHVe0wt5eCMzEn4KI2d625S9J/gdFeXgHRGCmmg9UY0fkw
-         eyeQM43vMW198L39QqS0yJiPTnRQZFb0V+WZ4M7FqqAGVlhcAuJ3K6IRX1UlDSYxDyTC
-         rrWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNyweinKl3SIGK0IW4AJhESSgW1YhN54yQNjpBfqZv+O/p7vhznPrb2x7nx0q0a6S2tI8OSly/RSxK1dKJV7cE7vFhuRupXV8/xlfw
-X-Gm-Message-State: AOJu0YzEQwcjZdfO6Hc2YXShP2J9F8GMvMhAla83ooQkUy9d+M06cjW4
-	xKezmJLNmci2rw2mMOQ0FrEo6l+7ApYhBEbGoBEYT+PwezhSBbly84ufCVOSsU4=
-X-Google-Smtp-Source: AGHT+IFRqJmu713tBVUOkgi8JXhj0gBme+e9qJOsn5K+mQGju57nj8Rza2na6vwCvpeIB6ToTiVXyQ==
-X-Received: by 2002:a05:6820:3095:b0:5c6:9320:4f1e with SMTP id 006d021491bc7-5d41d0c0709mr4511184eaf.6.1721263695492;
-        Wed, 17 Jul 2024 17:48:15 -0700 (PDT)
-Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-78e386d53e4sm5694300a12.70.2024.07.17.17.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 17:48:14 -0700 (PDT)
-From: Samuel Holland <samuel.holland@sifive.com>
-To: linux-riscv@lists.infradead.org,
-	Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Andrew Jones <ajones@ventanamicro.com>,
-	Conor Dooley <conor@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Deepak Gupta <debug@rivosinc.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Evan Green <evan@rivosinc.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	Guo Ren <guoren@kernel.org>,
-	Leonardo Bras <leobras@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Xiao Wang <xiao.w.wang@intel.com>
-Subject: [PATCH v3 2/3] riscv: Add support for per-thread envcfg CSR values
-Date: Wed, 17 Jul 2024 17:47:55 -0700
-Message-ID: <20240718004808.2246354-3-samuel.holland@sifive.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240718004808.2246354-1-samuel.holland@sifive.com>
-References: <20240718004808.2246354-1-samuel.holland@sifive.com>
+        bh=cuGBSeFQsnlLdV7vrAMqLKj9qYzNTsXMEl3YsWB1yD0=;
+        b=DZh3QUJai1zrLJpcU8HW7MCNarONobZS0krwWtWcMfTvkXmjhC9Haqo9kpzebAE7Gk
+         owW66MYyF18RCoLynqObmIwBxwC+336AiejW5BbT+ghML4hpLonzoqg8MughLDgRIXjQ
+         S6hha/WHYN8I7nBbJsOEde34IDyLbw5SnmuvrO0C4B/ox2qBDxRj+sV85+JMoXQSucF3
+         YTm0Jw/Z3BerMntUHw7+SZsw8OkrmtX9WvbNvfW1cP4dHTVuFCiYWaXbaNUaP1crYJtP
+         TelyljmSjJ11Yh39QjA8L+YQwmKBnzlR97mcTMnUr7kbtbiVDG2fkyRjC0Dn1fNnW496
+         WBQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBghtWccgokXE0PWsyS6v33c9jvrHg3pP8ThY5FGpMftOOodgPp3ad4RWwJUfkdN7t1QI0OUjo4pNFCAGuqUKAxtHa5kgUtt890vMY
+X-Gm-Message-State: AOJu0YwAnIq/5XFON7yEKiJGo7eI2sHvV/4LFwu1KRRGyz8jiC/SCAtP
+	IMZNmLOjoXICfkKwcVwcTCTOaacW6EP+CCNePbNuVIqbO8ISfPn4yVscBy+6ogBBGH/AwB5YNAq
+	Pb6EJ6h+DIrlC2ODglbB0yC+UObkmF4ucfnfyXffDqgPN2kE0dX5FxsvZAbAWKiqGvTf+FLc0sp
+	O4voVjMZKZK9kk18Jo/ycrWETpp+k1QIBUGmfL
+X-Received: by 2002:a05:6a00:cd3:b0:70b:a46:7dbe with SMTP id d2e1a72fcca58-70ce4f74761mr3934053b3a.6.1721263543058;
+        Wed, 17 Jul 2024 17:45:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHEHUp2yLgFHjwlsv0tj9A0qEaGT1mHaLLnevxyAG688KmcyWJmEu2amcwCK/Wgj10hCEgcDt9cDijnUeA045E=
+X-Received: by 2002:a05:6a00:cd3:b0:70b:a46:7dbe with SMTP id
+ d2e1a72fcca58-70ce4f74761mr3934038b3a.6.1721263542518; Wed, 17 Jul 2024
+ 17:45:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1720790333-456232-1-git-send-email-steven.sistare@oracle.com>
+ <1720790333-456232-6-git-send-email-steven.sistare@oracle.com>
+ <CACGkMEurG88fXiThyainxbuzpgBUzzGkmvyQB5vuXsU7_6XBBw@mail.gmail.com>
+ <d738a0e2-5a17-4323-9c86-b5a806066292@oracle.com> <CACGkMEuj-6EcEPo9xKkmuPSaQPQnH6zG+j2cqLRiScWUB4oqXw@mail.gmail.com>
+ <5a1cfaaf-64aa-426a-b1b4-da84a66b362a@oracle.com>
+In-Reply-To: <5a1cfaaf-64aa-426a-b1b4-da84a66b362a@oracle.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Thu, 18 Jul 2024 08:45:31 +0800
+Message-ID: <CACGkMEtuErg+nd96k6FkL9dfSxOv2o38L1HSsK9jU-xmmkv8oQ@mail.gmail.com>
+Subject: Re: [PATCH V2 5/7] vhost-vdpa: VHOST_IOTLB_REMAP
+To: Steven Sistare <steven.sistare@oracle.com>
+Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Si-Wei Liu <si-wei.liu@oracle.com>, 
+	Eugenio Perez Martin <eperezma@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Dragos Tatulea <dtatulea@nvidia.com>, Alex Williamson <alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some bits in the [ms]envcfg CSR, such as the CFI state and pointer
-masking mode, need to be controlled on a per-thread basis. Support this
-by keeping a copy of the CSR value in struct thread_struct and writing
-it during context switches. It is safe to discard the old CSR value
-during the context switch because the CSR is modified only by software,
-so the CSR will remain in sync with the copy in thread_struct.
+On Thu, Jul 18, 2024 at 2:29=E2=80=AFAM Steven Sistare
+<steven.sistare@oracle.com> wrote:
+>
+> On 7/16/2024 1:28 AM, Jason Wang wrote:
+> > On Mon, Jul 15, 2024 at 10:28=E2=80=AFPM Steven Sistare
+> > <steven.sistare@oracle.com> wrote:
+> >>
+> >> On 7/14/2024 10:34 PM, Jason Wang wrote:
+> >>> On Fri, Jul 12, 2024 at 9:19=E2=80=AFPM Steve Sistare <steven.sistare=
+@oracle.com> wrote:
+> >>>>
+> >>>> When device ownership is passed to a new process via VHOST_NEW_OWNER=
+,
+> >>>> some devices need to know the new userland addresses of the dma mapp=
+ings.
+> >>>> Define the new iotlb message type VHOST_IOTLB_REMAP to update the ua=
+ddr
+> >>>> of a mapping.  The new uaddr must address the same memory object as
+> >>>> originally mapped.
+> >>>>
+> >>>> The user must suspend the device before the old address is invalidat=
+ed,
+> >>>> and cannot resume it until after VHOST_IOTLB_REMAP is called, but th=
+is
+> >>>> requirement is not enforced by the API.
+> >>>>
+> >>>> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
+> >>>> ---
+> >>>>    drivers/vhost/vdpa.c             | 58 +++++++++++++++++++++++++++=
++++++
+> >>>>    include/uapi/linux/vhost_types.h | 11 +++++-
+> >>>>    2 files changed, 68 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+> >>>> index 4396fe1a90c4..51f71c45c4a9 100644
+> >>>> --- a/drivers/vhost/vdpa.c
+> >>>> +++ b/drivers/vhost/vdpa.c
+> >>>> @@ -1257,6 +1257,61 @@ static int vhost_vdpa_pa_map(struct vhost_vdp=
+a *v,
+> >>>>
+> >>>>    }
+> >>>>
+> >>>> +static int vhost_vdpa_process_iotlb_remap(struct vhost_vdpa *v,
+> >>>> +                                         struct vhost_iotlb *iotlb,
+> >>>> +                                         struct vhost_iotlb_msg *ms=
+g)
+> >>>> +{
+> >>>> +       struct vdpa_device *vdpa =3D v->vdpa;
+> >>>> +       const struct vdpa_config_ops *ops =3D vdpa->config;
+> >>>> +       u32 asid =3D iotlb_to_asid(iotlb);
+> >>>> +       u64 start =3D msg->iova;
+> >>>> +       u64 last =3D start + msg->size - 1;
+> >>>> +       struct vhost_iotlb_map *map;
+> >>>> +       int r =3D 0;
+> >>>> +
+> >>>> +       if (msg->perm || !msg->size)
+> >>>> +               return -EINVAL;
+> >>>> +
+> >>>> +       map =3D vhost_iotlb_itree_first(iotlb, start, last);
+> >>>> +       if (!map)
+> >>>> +               return -ENOENT;
+> >>>> +
+> >>>> +       if (map->start !=3D start || map->last !=3D last)
+> >>>> +               return -EINVAL;
+> >>>
+> >>> I had a question here, if a buggy user space that:
+> >>>
+> >>> 1) forget to update some of the mappings
+> >>> 2) address is wrong
+> >>> 3) other cases.
+> >>>
+> >>> Does this mean the device can DMA to the previous owner?
+> >>
+> >> Yes, but only to the mappings which were already pinned for DMA for th=
+is
+> >> device, and the old owner is giving the new owner permission to DMA to=
+ that
+> >> memory even without bugs.
+> >>
+> >>> If yes, does
+> >>> this have security implications?
+> >>
+> >> No.  The previous owner has given the new owner permission to take ove=
+r.  They
+> >> trust each other completely. In the live update case, they are the sam=
+e; the new
+> >> owner is the old owner reincarnated.
+> >
+> > I understand the processes may trust each other but I meant the kernel
+> > may not trust those processes.
+>
+> If a process holds the key (the fd) then the kernel can trust that is has
+> permission to use it.  Keys are only passed around voluntarily, unless th=
+ere
+> is a bug.
 
-Use ALTERNATIVE directly instead of riscv_has_extension_unlikely() to
-minimize branchiness in the context switching code.
+Looks not, for example, kernel can choose to limit various operations
+on a fd, even if the process holds the key
 
-Since thread_struct is copied during fork(), setting the value for the
-init task sets the default value for all other threads.
+1) privileged process do setup on fd, passing that fd to unprivileged fd
+2) unprivileged process can only use a subset of the functions of a fd
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-Reviewed-by: Deepak Gupta <debug@rivosinc.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
----
+In the case of Qemu, it prevents the kernel from the case where for
+example malicious guests can escape to Qemu.
 
-(no changes since v1)
+In the case of vhost-net, the privilege is the owner. For example, the
+following seems to be valid in the case of vhost-net:
 
- arch/riscv/include/asm/processor.h | 1 +
- arch/riscv/include/asm/switch_to.h | 8 ++++++++
- arch/riscv/kernel/cpufeature.c     | 2 +-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+1) Two processes (A and B) share a part of the memory
+2) A is the owner of the vhost-net who is in charge of building memory
+mappings via IOTLB
+3) A passess vhost-net fd to process B
 
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index 8702b8721a27..586e4ab701c4 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -124,6 +124,7 @@ struct thread_struct {
- 	unsigned long s[12];	/* s[0]: frame pointer */
- 	struct __riscv_d_ext_state fstate;
- 	unsigned long bad_cause;
-+	unsigned long envcfg;
- 	u32 riscv_v_flags;
- 	u32 vstate_ctrl;
- 	struct __riscv_v_ext_state vstate;
-diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
-index 7594df37cc9f..9685cd85e57c 100644
---- a/arch/riscv/include/asm/switch_to.h
-+++ b/arch/riscv/include/asm/switch_to.h
-@@ -70,6 +70,13 @@ static __always_inline bool has_fpu(void) { return false; }
- #define __switch_to_fpu(__prev, __next) do { } while (0)
- #endif
- 
-+static inline void __switch_to_envcfg(struct task_struct *next)
-+{
-+	asm volatile (ALTERNATIVE("nop", "csrw " __stringify(CSR_ENVCFG) ", %0",
-+				  0, RISCV_ISA_EXT_XLINUXENVCFG, 1)
-+			:: "r" (next->thread.envcfg) : "memory");
-+}
-+
- extern struct task_struct *__switch_to(struct task_struct *,
- 				       struct task_struct *);
- 
-@@ -103,6 +110,7 @@ do {							\
- 		__switch_to_vector(__prev, __next);	\
- 	if (switch_to_should_flush_icache(__next))	\
- 		local_flush_icache_all();		\
-+	__switch_to_envcfg(__next);			\
- 	((last) = __switch_to(__prev, __next));		\
- } while (0)
- 
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index 4efaf12b470e..43fdae953379 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -878,7 +878,7 @@ unsigned long riscv_get_elf_hwcap(void)
- void riscv_user_isa_enable(void)
- {
- 	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICBOZ))
--		csr_set(CSR_ENVCFG, ENVCFG_CBZE);
-+		current->thread.envcfg |= ENVCFG_CBZE;
- 	else if (any_cpu_has_zicboz)
- 		pr_warn_once("Zicboz disabled as it is unavailable on some harts\n");
- }
--- 
-2.45.1
+>
+> > For example:
+> >
+> > 1) old owner pass fd to new owner which is another process
+> > 2) the new owner do VHOST_NEW_OWNER
+> > 3) new owner doesn't do remap correctly
+> >
+> > There's no way for the old owner to remove/unpin the mappings as we
+> > have the owner check in IOTLB_UPDATE. Looks like a potential way for
+> > DOS.
+>
+> This is a bug in the second cooperating process, not a DOS.  The applicat=
+ion
+> must fix it.  Sometimes you cannot recover from an application bug at run=
+ time.
+>
+> BTW, at one time vfio enforced the concept of an owner, but Alex deleted =
+it.
+> It adds no value, because possession of the fd is the key.
+>    ffed0518d871 ("vfio: remove useless judgement")
+
+This seems to be a great relaxation of the ownership check. I would
+like to hear from Michael first.
+
+Thanks
+
+>
+> - Steve
+>
+> >>>> +
+> >>>> +       /*
+> >>>> +        * The current implementation does not support the platform =
+iommu
+> >>>> +        * with use_va.  And if !use_va, remap is not necessary.
+> >>>> +        */
+> >>>> +       if (!ops->set_map && !ops->dma_map)
+> >>>> +               return -EINVAL;
+> >>>> +
+> >>>> +       /*
+> >>>> +        * The current implementation supports set_map but not dma_m=
+ap.
+> >>>> +        */
+> >>>> +       if (!ops->set_map)
+> >>>> +               return -EINVAL;
+> >>>> +
+> >>>> +       /*
+> >>>> +        * Do not verify that the new size@uaddr points to the same =
+physical
+> >>>> +        * pages as the old size@uaddr, because that would take time=
+ O(npages),
+> >>>> +        * and would increase guest down time during live update.  I=
+f the app
+> >>>> +        * is buggy and they differ, then the app may corrupt its ow=
+n memory,
+> >>>> +        * but no one else's.
+> >>>> +        */
+> >>>> +
+> >>>> +       /*
+> >>>> +        * Batch will finish later in BATCH_END by calling set_map f=
+or the new
+> >>>> +        * addresses collected here.  Non-batch must do it now.
+> >>>> +        */
+> >>>> +       if (!v->in_batch)
+> >>>> +               r =3D ops->set_map(vdpa, asid, iotlb);
+> >>>> +       if (!r)
+> >>>> +               map->addr =3D msg->uaddr;
+> >>>> +
+> >>>> +       return r;
+> >>>> +}
+> >>>> +
+> >>>>    static int vhost_vdpa_process_iotlb_update(struct vhost_vdpa *v,
+> >>>>                                              struct vhost_iotlb *iot=
+lb,
+> >>>>                                              struct vhost_iotlb_msg =
+*msg)
+> >>>> @@ -1336,6 +1391,9 @@ static int vhost_vdpa_process_iotlb_msg(struct=
+ vhost_dev *dev, u32 asid,
+> >>>>                           ops->set_map(vdpa, asid, iotlb);
+> >>>>                   v->in_batch =3D false;
+> >>>>                   break;
+> >>>> +       case VHOST_IOTLB_REMAP:
+> >>>> +               r =3D vhost_vdpa_process_iotlb_remap(v, iotlb, msg);
+> >>>> +               break;
+> >>>>           default:
+> >>>>                   r =3D -EINVAL;
+> >>>>                   break;
+> >>>> diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/v=
+host_types.h
+> >>>> index 9177843951e9..35908315ff55 100644
+> >>>> --- a/include/uapi/linux/vhost_types.h
+> >>>> +++ b/include/uapi/linux/vhost_types.h
+> >>>> @@ -79,7 +79,7 @@ struct vhost_iotlb_msg {
+> >>>>    /*
+> >>>>     * VHOST_IOTLB_BATCH_BEGIN and VHOST_IOTLB_BATCH_END allow modify=
+ing
+> >>>>     * multiple mappings in one go: beginning with
+> >>>> - * VHOST_IOTLB_BATCH_BEGIN, followed by any number of
+> >>>> + * VHOST_IOTLB_BATCH_BEGIN, followed by any number of VHOST_IOTLB_R=
+EMAP or
+> >>>>     * VHOST_IOTLB_UPDATE messages, and ending with VHOST_IOTLB_BATCH=
+_END.
+> >>>>     * When one of these two values is used as the message type, the =
+rest
+> >>>>     * of the fields in the message are ignored. There's no guarantee=
+ that
+> >>>> @@ -87,6 +87,15 @@ struct vhost_iotlb_msg {
+> >>>>     */
+> >>>>    #define VHOST_IOTLB_BATCH_BEGIN    5
+> >>>>    #define VHOST_IOTLB_BATCH_END      6
+> >>>> +
+> >>>> +/*
+> >>>> + * VHOST_IOTLB_REMAP registers a new uaddr for the existing mapping=
+ at iova.
+> >>>> + * The new uaddr must address the same memory object as originally =
+mapped.
+> >>>> + * Failure to do so will result in user memory corruption and/or de=
+vice
+> >>>> + * misbehavior.  iova and size must match the arguments used to cre=
+ate the
+> >>>> + * an existing mapping.  Protection is not changed, and perm must b=
+e 0.
+> >>>> + */
+> >>>> +#define VHOST_IOTLB_REMAP          7
+> >>>>           __u8 type;
+> >>>>    };
+> >>>
+> >>> Thanks
+> >>>
+> >>>>
+> >>>> --
+> >>>> 2.39.3
+> >>>>
+> >>>
+> >>
+> >
+>
 
