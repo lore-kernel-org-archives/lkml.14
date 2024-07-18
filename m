@@ -1,102 +1,228 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D99638DE5;
-	Thu, 18 Jul 2024 05:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721280916; cv=none; b=uZcC/Ou1DMOelNExL33lOndNo+fC/elQPPNjRgVjnrPaQT1PqD5H62ZBhpkX5qWTSoUQ9x9DoryfF2jfbXtM8MnThcaq2gk+xfBxWRACrfMRRk5x2i6bg9C2EV8XYE6MDu/lI8Qxa9oDp5Ix+FEcH/uI+KHEU7671U8w9Nkhwcs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721280916; c=relaxed/simple;
-	bh=554arJlAyY+yMIrtdQmrj1Ybfg3uQbn9nKNnJDo95vI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AEajM6Jqdd/dXSSPISn8p133tsZqP/Jo0DhowlTOyScRqT8ZurYNS9lL+yZZgorErMjt2MylwowZoGT+AiJthO4id1vHzcApOkKtWxJTwHi1Hs7AcYNh36RUZHnjMOAcLo2kN4Pkpr/Atmji/DJFq3tHbufgei7rjrl9pHvcook=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uFMS5Auj; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD95482FA
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 05:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721281282; cv=fail; b=ol8O8255VEfLFvW4mCpupmn5bDL1YwkB9FZA/F3QejuH0kSQFzoMTkuLAMiawJ6OntHP+bgX6s1S/L0/IEAbuhy7i4CdcubaoJLY5M/QoXXUnpewhz2gu9uLuqnmB8QIGIs++lAWExW4oCxZ0ZDNF37UbInboc+cQsD+KIpvgEM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721281282; c=relaxed/simple;
+	bh=y7rbAPiqM/t8eoyN9CWi87hZzfIRgMny7NzTq+6T4kA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=A8SwlygL+Cdwhny0DFnTL7xaukV8AMVm0oz+WOL5znXvdOjLiksYAAqgSKw0191Ynqx6HFd25BKDf5zoE/DxxQ/enIeLp48Y51TT/1MSUXb6mOYs3vasIWzs2TkisUXhZb2yzq8l1UajfqZEY8cbu7vcfT25fUoLt8qGXRncOCI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=e+uop/jS; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=uxav7/ZC; arc=fail smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uFMS5Auj"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46I5ZB9t107915;
-	Thu, 18 Jul 2024 00:35:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1721280911;
-	bh=fMUuTgKi6BATBFx4lgMh4QmXOqcHrSmeENQuJ8BZjws=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=uFMS5AujdFaRjkktNid3HCjhGCNiW69UGQL5Ivx3ODDB18XQfuDyjBLBxg4oqw0t5
-	 i8Al/hucrpoal09dBvZ+NAu33+hpRizdx3tTCaYMN0fVzNYLbUu/Ogf86ZTEVDXp2E
-	 5YFeb/K6rVKTsRVCirpDDNtNYBeAUv2PHFaZ7THg=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46I5ZB7Y001025
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 18 Jul 2024 00:35:11 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 18
- Jul 2024 00:35:11 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 18 Jul 2024 00:35:11 -0500
-Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46I5ZA24006332;
-	Thu, 18 Jul 2024 00:35:11 -0500
-Date: Thu, 18 Jul 2024 11:05:10 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Kevin Hilman <khilman@baylibre.com>
-CC: <linux-gpio@vger.kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        open list
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] gpio: davinci: handle wakeup-source property, detect
- wake IRQs
-Message-ID: <20240718053510.ywdv5c7fk3natknl@dhruva>
-References: <20240718000935.2573288-1-khilman@baylibre.com>
- <20240718000935.2573288-3-khilman@baylibre.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="e+uop/jS";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="uxav7/ZC"
+X-UUID: 573e0c6044c811efb5b96b43b535fdb4-20240718
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=y7rbAPiqM/t8eoyN9CWi87hZzfIRgMny7NzTq+6T4kA=;
+	b=e+uop/jSxgfeXwnqWvEvK2bhIbgIOWP6qYXXB6SBkrrjP965tu9vQPDWKxQ4Z6Nj3xaI3Rt/MvloUHnpx5FtiPdIcdrrAY5brrAMRrboHpz0NVx8cmAy7c1lnspgNv5MpmZeqoBKg6nr4ns0TqqyPdYmTMN99k1QsvUOCFga2Cg=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.40,REQID:8516a1ed-8b2a-460e-b5ac-59b49a9e7fcf,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:ba885a6,CLOUDID:97c9980d-46b0-425a-97d3-4623fe284021,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 573e0c6044c811efb5b96b43b535fdb4-20240718
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
+	(envelope-from <ck.hu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1702307243; Thu, 18 Jul 2024 13:41:11 +0800
+Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 18 Jul 2024 13:41:03 +0800
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 18 Jul 2024 13:41:03 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NyWSYX680rcYVuWpfS/7P/iPFGsd1+8hjt0P8kUwJZbroR9qJOru1vbZJWTes9+IK1zVPId1WtRc5PKXTLICheHybrgKs1aQfCOlln1cBP1sjHnGV7c0slum0hCIifi5IiF7AzEWFVwqfIsWclYjG9zUgsnvcPe3Sb5OHOTIsoFV9cZi3jI9zns/a3vio0MNb780b81BamyC9gWwlySAXa/g9t0CGQ1wmYtAchFPb6zFxtRp7fvuHfs4LfVRlL160xjZiLdk5FLB5BH/YhsLwB0LK0c3lIPC5EYNNDBv0YBmdoKtNJ0vLqbsOQIlcPILDhjuWKyz/K8pn/UM8OHbrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y7rbAPiqM/t8eoyN9CWi87hZzfIRgMny7NzTq+6T4kA=;
+ b=U7AUeubPSGFn0+9yQ5File+iN2J1sMkL9ENEZUxqIp3hS/6zWu6WMRB7hNUOOCnhhfv3/qlRmc6lh0SH0famzKj83A6jjy1jc8CyT4QqqBH9nIzEqViFoLoOjy+HrNkf4O6ttvcQ/RxjJJEtZ995vd5W1fbskZWaPQ/Tj7G5cb3zNsSozXsEDTwDv4Wc8M8CPjr45+A6b0pd1WAVSi0GxjGUCC4VsFxg650wSY/b+q/CFcUahlK3/e9K273XFpcCHqZiDceL/kTiqgOB05kkVb577EeFYxqvllSAiX56qGqSnaEq/l8GNIAy03Ctbj1us/9ElrkuZdfNfbm7oXNP+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7rbAPiqM/t8eoyN9CWi87hZzfIRgMny7NzTq+6T4kA=;
+ b=uxav7/ZC4GSO/q1AOcMgRh5dZUhf+Jv1jtrv1Ll07kCvuA2uh/+NDtnaZhuO3cAbDAwUHwtEKiWQzJf72vBIhIxpx80lSsjnOudCIPUeTJTeNqeBDhD8Tsd/lCcthexgN9aP1+Z19Hs1XfnTVO/iiqJcPbI75bynfxOeguJrYCc=
+Received: from TYZPR03MB6624.apcprd03.prod.outlook.com (2603:1096:400:1f4::13)
+ by TYSPR03MB8564.apcprd03.prod.outlook.com (2603:1096:405:61::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Thu, 18 Jul
+ 2024 05:41:01 +0000
+Received: from TYZPR03MB6624.apcprd03.prod.outlook.com
+ ([fe80::9ce6:1e85:c4a7:2a54]) by TYZPR03MB6624.apcprd03.prod.outlook.com
+ ([fe80::9ce6:1e85:c4a7:2a54%4]) with mapi id 15.20.7762.027; Thu, 18 Jul 2024
+ 05:41:01 +0000
+From: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
+To: =?utf-8?B?TWFjIFNoZW4gKOayiOS/iik=?= <Mac.Shen@mediatek.com>,
+	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+	=?utf-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?= <jitao.shi@mediatek.com>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, "p.zabel@pengutronix.de"
+	<p.zabel@pengutronix.de>, "airlied@gmail.com" <airlied@gmail.com>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+	=?utf-8?B?U2h1aWppbmcgTGkgKOadjuawtOmdmSk=?= <Shuijing.Li@mediatek.com>
+Subject: Re: [PATCH v3 2/3] Subject: [PATCH] drm/mediatek/dp: Add HDCP2.x
+ feature for DisplayPort
+Thread-Topic: [PATCH v3 2/3] Subject: [PATCH] drm/mediatek/dp: Add HDCP2.x
+ feature for DisplayPort
+Thread-Index: AQHauZvjSsoBOfJjC0GAI+NtmELueLH8NusA
+Date: Thu, 18 Jul 2024 05:41:01 +0000
+Message-ID: <22bc6e48edb0ed17080518531926ecc38194f1ad.camel@mediatek.com>
+References: <20240608120219.21817-1-mac.shen@mediatek.com>
+	 <20240608120219.21817-3-mac.shen@mediatek.com>
+In-Reply-To: <20240608120219.21817-3-mac.shen@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR03MB6624:EE_|TYSPR03MB8564:EE_
+x-ms-office365-filtering-correlation-id: 3811ff94-6124-4b4f-adab-08dca6ec3544
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?M2x1c1drSHNhVS9FMFVkK2xQdW9tb1ltdExYMEVmR0F5Z0NqdTBmUXdNNi9B?=
+ =?utf-8?B?N01yVVcwL1J4a0NEREh4b2R2ZVlyU3FuMm04RlFOWk56c0ZLMmE1VGdnYzFu?=
+ =?utf-8?B?R3pNb3UvZDE4UFFtMUgzWCtvTktDY1R3L3krMFhQSmlFN252blMxSGdLL0ZC?=
+ =?utf-8?B?bVo5QVJGY295L2ozYW5nVWhYNEw4emh5UnNwaVE0d3FPWTBNZXlia0Jma0FM?=
+ =?utf-8?B?RkhORU1jVTM5YzNPMG5kYzZ1KzUyK1F2djlhN2NXY3kxTERjNzJWOHU5RUs1?=
+ =?utf-8?B?KzFkc0doeHhLblI1elpnbkxrUjhhZXN5T0U0SWNpWkhjaUlQWmQ5cGlYNU5X?=
+ =?utf-8?B?MUVJL3dFbmExWDFjVDJHNEZZUTRFZExZQUtwU2ZUUERFeEx6U3RVTndzRVZN?=
+ =?utf-8?B?U2VoRVdueTNGL0lpTUowU3NFUVBuU2oyVVd3dUp2bUMxSk81QktvTXFkdFZr?=
+ =?utf-8?B?RTNLQ1ZHeHRMNW9NdXZxMG9UV3NpRHJYZHljWGRQdVNIV0ErSUxsYVExby94?=
+ =?utf-8?B?R2s2Z1hqb1pHYTRTM0F3NUlKc0VQcnh4NFdZQ01hVHlaS3RsQUtBSDAxVzNx?=
+ =?utf-8?B?TGRhREVydTFERTVDTG1QMmJ4ZEVERXl6bFY0SFNuaVZPekVxTWF5VExhdDZL?=
+ =?utf-8?B?MHZxbTluWEwvUUIxcnhEMnAvbDdOdGJHbTF4UExldWhBWTV1cW11UG85N2tR?=
+ =?utf-8?B?MTBPbUh2cFdDNXpjdGRCbi9DRjY3OHprbW5nRVBrVzFlNVhtVlYvaVNWMFZQ?=
+ =?utf-8?B?MFJTK29kRkd3cW9PWkxHWUt2TWxJOUoxQkVnMEVmSzJpRitTMzAwc2F0cUda?=
+ =?utf-8?B?dWhkZzVCa25BcGVXZnVOTHFtamx5NDhtL1pyWlhvRERyY2NXQk1aRUhwakNJ?=
+ =?utf-8?B?blExWEN0cktVT2xuQ2tGOElRRlk0T1FPL3poUGlMYnN2SVFraFdrMUIrK0tR?=
+ =?utf-8?B?Zm83MGNEcm5zYmczbG1KeW5oaU5XYm1MM1VNc2x1MjlIbmw1aGZ0dDlaVUF0?=
+ =?utf-8?B?V0RBRXJIcUJzeGNNNzc0djZtTGVKTE5wdlZkb3pkTSsyYUh3K2RLeW1vSkxP?=
+ =?utf-8?B?YVhzZnRFbFk0K3VCcDFhbldWMGlxMGErSUdGSURvUHlmeVFmT3BreWRneWdO?=
+ =?utf-8?B?NVhwWmFtNkNpWC91L0MrL2NFTUw5bjIxVHB6UEZiSVpsaFFGYkIyeEJwTU9V?=
+ =?utf-8?B?VE15VDRGS2VjTi9raXZXMXZGYkF2dUFuSm96djdRMHV1SGZEQmxla3J3ZVFN?=
+ =?utf-8?B?bDFucTRRdWtiYzB5Skh1QTVnV1RDT1RjTzU0S0ZVRUl5MXFFWE1UU2tYK2Zj?=
+ =?utf-8?B?eG1ieCtHVzV1VVRRcFFGTG9RcXk1M2RuNjdyZjQwQitQR09NdjhMR0FlWHc3?=
+ =?utf-8?B?S2N5SDJPTnJUa2pJSC9JZ0VQM3Mza1RUbXgwY1o1ckZHbnlQdFdycEoxMUxQ?=
+ =?utf-8?B?bDdtdnRTMjl4d1ZlQ2VOVWhWVUYxUjUyd2pla2VRVzRJTEs3YVFsM0x6c09M?=
+ =?utf-8?B?SWdPaWtVL1ZjcmpSdGVTUnQ0RFQ1R1ArS2JtVTFHY2llUytOU1ZMaHJ3QndN?=
+ =?utf-8?B?aFFBQjdSekU4M3Fnb2VPOXNNOFBHbTh6THYycVRUWHlHODNmQ1NweGFzR05U?=
+ =?utf-8?B?c1c3dC9tSHBBejd1L25yRnBob1RXZFJYT21uTEdNY2pub3lvaURmSWlQT0xI?=
+ =?utf-8?B?M0ROSDRKeStseVJZYkkxdGRSQ1FvVmNwZXBnVE9xVUZ2d0ViQlZpaFU2UEtS?=
+ =?utf-8?B?NmZIS0tvM0FZVDhwL09MbWlWcVJLSFY3dG9RbUE1ZnRDRCtJbjU4dDVrTmx4?=
+ =?utf-8?Q?L0c0GC8aFcDYYoa7pGwjgjBhCp7m4LkS6/aqE=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6624.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OXhKNzhUWXp2MFBETTNBWm1yMGFCdE1RdzJhWUJlVnBWdngwblpEK1krR0hv?=
+ =?utf-8?B?bkp0c0hKaEhzRW1yV0dXQmpTTWdNcUtUaXJOeEFUMjRiZCttTDhyS3RmRVZD?=
+ =?utf-8?B?ZnF2eUhZejF1V0E3Nnkzbm04RDBxYUJIYTA0RjJGTlBmb0NpRnRtOXE1QUU2?=
+ =?utf-8?B?enF4dGhNbDl0SDg2RTVWT3lkWmZ5cHNndHc5bk9KWGVjYzNhdlJQcHNTODhE?=
+ =?utf-8?B?QXRIVXFHT0kraVRqOXk5UjdFbzJsYndxZWdXYUhKSVhnTUZQK05Eb2RxQW04?=
+ =?utf-8?B?NFJ6SlQ1b3dwaDBhUUE3VTB5SXdrYlg0ZURudjNyUEY0Nm12U2FlcEw0ekIr?=
+ =?utf-8?B?T1lxY2tWV1RyUUUvdC83eXMyVlB4NUtYQzV4bWptRDhSRXRJZzVFY2Zvbjh3?=
+ =?utf-8?B?dmludW1ZbVV4bHRjVGtuV1M4MTFIU0dubEhsSGk4eFdBZW1yZFJ2RjNJd0dk?=
+ =?utf-8?B?ZHF4UnlKZnB3RzhYVEZVTXc5aWtHQkVpakFiN2tzZTYvK0xyRUdLKzRNbnhr?=
+ =?utf-8?B?QjlaRnFWTHZXbzVRaW5WN0d5ajhrcnF0RjF2U0hGdnpIc2RuZFZZdGhsejgw?=
+ =?utf-8?B?SmFXc3I1OW1pWUxGRHFrN0hzTVprWjkwTS9HTloxVmk4MEpvMTgrbU4zTWJX?=
+ =?utf-8?B?NmUwRG5SVEVUUkdrbWcrVEdnWnhmMjNqNmdDUWpEbmF0ZTgwNTBhVGJFM0hL?=
+ =?utf-8?B?YTduTkY5bFpFN3Nsb3o1QTk1N2kzdFl0OG5uVVFvRmdLSVpONlBuQVhEZE03?=
+ =?utf-8?B?NnJ2SDNDTTVvNm4yZ0VjZW9qcTRKUDBtU0dJeUFuWmtmSHpRRjJwZW1ueklD?=
+ =?utf-8?B?b3dublo0OXQ1b0hZaDZtd0N4T2FpOXhiY2lQQWttMVdOck5KYnEyRFZOeFNC?=
+ =?utf-8?B?QnR0cmExRGthQWo5TDBUQlkxeUtwQjJXc2MvREV3QU1sczRiUUxFV0J2UGRQ?=
+ =?utf-8?B?TDNEbk82ekZkK1htNG9XdHJPUk9wYUhrckJYTUdjNFRxM3RGcnZqdVJsWXRL?=
+ =?utf-8?B?SWR1RkM1NVQ4ZThzMEthM2tNNWp1MlVDV3NvaTB3R0F6NXdwODhiazRoQTJG?=
+ =?utf-8?B?S2t2YitDZVErSEtDcVRQYmpSOEkxVlhsUkNvWUtRcHpUU0N4S001OVBWalMv?=
+ =?utf-8?B?bXhSQnJBUU04UXdIWEJYT1dEVDFnd3YzN2JPM2xlQXVqbjY1dVFXU1FwNWN2?=
+ =?utf-8?B?ZW51Sk53UkM5b1o2MnRRRXRNV2d5T1J4TjRyWFBNZEtzZFhGdWpHZ3lpQmdP?=
+ =?utf-8?B?M3E2eDJIWTMwbFVTd2JMbXZQM0VDVlR4Szk3K3VscWE2L2x0Yld5OW9icGhT?=
+ =?utf-8?B?cDdnbktGb2tZWFloMU1DMEF2ODUycFh0RlE2NmlSaDdxcHpkajFocEUyRG5z?=
+ =?utf-8?B?RlYzQTFCcG9NU0tpNjFCQmhnSUVMQUFETUlvKzZBSkhJRmJPNUxQMEtjbmtW?=
+ =?utf-8?B?bnBsWWxSVHlXT3V1eTJwREo2eW12Wkh5UnE3SnRjUGxTQzJacVZUaFk2MXlC?=
+ =?utf-8?B?N2dBWG42SE5URUN5dWtjUWk2QzhMVHhlcnQ5MmtWRk4raUZsSUlrTi9hcFdq?=
+ =?utf-8?B?d2Zza0FEK0l4TGRlTkNhZGthaTJHOHNQanRJaldvMDJyUFJyQ2lQUjRwVDlj?=
+ =?utf-8?B?WlRSbTY4dUtMaE5uSVFPT21JeldhS3JoRVpmbks4cDNJT3RCT05tNWQvazll?=
+ =?utf-8?B?elJCcFk4Mm1CSE5QSkFlRjBZanIyU0RPVHVsdDgwWWZpdmpGaEhiTHJSVmZi?=
+ =?utf-8?B?YnVwaWVGL2VLejVySFlFRGpXUThnM0ZqTHUzNW14QUNiQ1YwaDVzQ1FjY2k4?=
+ =?utf-8?B?MGc0aTZoWkl1QnJ6dmVYVVBSaHZsdEowQjdXazZTTkRSWHhqczhPUDdIeUNh?=
+ =?utf-8?B?cVh4SG1WTm5pT0Z4VlhLcWFNZzg0MzZEUnZudFkwNWVUem9kRjZ1UklTZmtU?=
+ =?utf-8?B?dTNjQVFuaXM5RXkvalBVZmxxbUlRaE1aRGRyek5kZklhNHozRW50L2xMRXFt?=
+ =?utf-8?B?OW9qUldJSGVoNXJta2N6TVF0Q09YcHVNNFJYS21ZTHM3S2FQVWlGMEthVC9s?=
+ =?utf-8?B?dWhLMklBbm1LeHU3VXNndmVMdTBZdTdXWE5XaitFUWhSK1FIRHo3dlZDSFVj?=
+ =?utf-8?Q?O5Dc40xC3kK1vnrB8jeJmlLTn?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F22A04FB4F54BC47B854A2A610C3687C@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240718000935.2573288-3-khilman@baylibre.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6624.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3811ff94-6124-4b4f-adab-08dca6ec3544
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2024 05:41:01.5368
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M01TqOjfbGdi3fF1bxyU8fHoXLmBxGKq/LliYhHRpezGStb24qNLdHSLyWwg/Y6+nwGw1J/9zYTilJN5QC/2kA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR03MB8564
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--4.003800-8.000000
+X-TMASE-MatchedRID: 7ySqCuYCpfjPaPH51LTU5Ca1MaKuob8PC/ExpXrHizxXA7rTaHAw771A
+	/V6RVDjDMqtZwXDJcJxiPmy8WTo67rNUVnqixiMOGVyS87Wb4lzSv+oK79xjnUYvSDWdWaRh8ha
+	W4U9IrFqFWYX2TPbDEmR/iQlCuCUWlwV2iaAfSWfSBVVc2BozSnJnzNw42kCx2bNx1HEv7HAqtq
+	5d3cxkNaHPvJWKXC4F43fNEs/Hqwi7Mo8V9xqEPy05qRgqqIxPf+GEg1l85xcfvRvQEjvkJJnY8
+	UMFWrtvqmNic5lkPHKPYRvkXSVlnVUR4JJWH47oPVxlUTP3GoO7AlsRb/Q7WQoYlPnP/8T/FltY
+	lf3C/iNDDKa3G4nrLQ==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.003800-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	CB48ADE343C9B06E2B89A738CB8602E3B0F57AD9F606B233F3852465E5BE97492000:8
 
-On Jul 17, 2024 at 17:09:33 -0700, Kevin Hilman wrote:
-> If the wakeup-source property is used for the GPIO controller, then
-> mark the controller as wakeup capable.
-> 
-> Further, if there are any GPIO IRQs that are marked as wakeup-enabled,
-> then mark the GPIO controller as wakeup enabled also.  Since the GPIO
-> IRQs that are wake-enabled are dynamic, this is (re)calculated during
-> each suspend (and cleared on resume.)
-> 
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-> ---
->  drivers/gpio/gpio-davinci.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 1d0175d6350b..031aa7c30855 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -7,6 +7,7 @@
->   */
->  
->  #include <linux/gpio/driver.h>
-> +#include <linux/gpio/consumer.h>
-
-Please sort this...
-
-[...]
-
-With that taken care,
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-
--- 
-Best regards,
-Dhruva
+SGksIE1hYzoNCg0KT24gU2F0LCAyMDI0LTA2LTA4IGF0IDIwOjAxICswODAwLCBtYWMuc2hlbiB3
+cm90ZToNCj4gQ2hhbmdlcyBpbiB2MzoNCj4gLSByZWZpbmUgdGhlIGZ1bmN0aW9uIHRvIGdldCBz
+eXN0ZW0gdGltZQ0KPiAtIHJlZmluZSB0aGUgZmxvdyB0byBkbyBIRENQIHdpdGggY29udGVudCB0
+eXBlIGFuZA0KPiAgIHByb3RlY3Rpb24gdmFsdWUgd2hpY2ggc2V0IGJ5IHVzZXIgc3BhY2UNCj4g
+LSByZWZpbmUgdGhlIGZsb3cgdG8gdXBkYXRlIGNvbnRlbnQgcHJvdGVjdGlvbg0KPiAtIHJlZmlu
+ZSB0aGUgZmxvdyB0byBkbyBIRENQMi54IGF1dGhlbnRpY2F0aW9uDQo+IHBlciBzdWdnZXN0aW9u
+IGZyb20gdGhlIHByZXZpb3VzIHRocmVhZDoNCj4gaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92My9f
+X2h0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51eC1tZWRpYXRla19fOyEh
+Q1RSTktBOXdNZzBBUmJ3IW1kNnhVaVlOODhEMlltRVRzOEZRZ2FFeE0yekg4UzFTbUFFVTlHUmNo
+d3BOc1hPeURGdWwzemlWS2hScENKYWo4UmNuLWd2TS04MDFydW5qd0EkIA0KPiAvcGF0Y2gvMjAy
+NDAyMDUwNTUwNTUuMjUzNDAtMy1tYWMuc2hlbkBtZWRpYXRlay5jb20vDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBtYWMuc2hlbiA8bWFjLnNoZW5AbWVkaWF0ZWsuY29tPg0KPiAtLS0NCg0KW3NuaXBd
+DQoNCj4gKw0KPiArc3RhdGljIHZvaWQgbXRrX2RwX2hkY3BfZ2V0X2luZm8oc3RydWN0IG10a19k
+cCAqbXRrX2RwKQ0KPiArew0KPiArCWRwX3R4X2hkY3AyeF9nZXRfaW5mbygmbXRrX2RwLT5oZGNw
+X2luZm8pOw0KDQpkcF90eF9oZGNwMnhfZ2V0X2luZm8oKSBpcyBvbmx5IGNhbGxlZCBieSBtdGtf
+ZHBfaGRjcF9nZXRfaW5mbygpIGFuZCBtdGtfZHBfaGRjcF9nZXRfaW5mbygpIG9ubHkgY2FsbCBt
+dGtfZHBfaGRjcF9nZXRfaW5mbygpLA0Kc28gbWVyZ2UgdGhlc2UgdHdvIGZ1bmN0aW9uLg0KDQpS
+ZWdhcmRzLA0KQ0sNCg0KPiArfQ0KPiArDQo=
