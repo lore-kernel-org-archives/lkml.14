@@ -1,117 +1,101 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22D61B86F1;
-	Thu, 18 Jul 2024 07:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5603042078
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721289143; cv=none; b=DTtymNZNHHtUAiPiptIXBTO0N0QT/rtiXNd5PaW9q70ot+vnTZ9I7NmkEpA9Rgre9DZAzabXv3Zoh6ww3oGb7tn1Ep4IZK1RveMsWza5Usql70YoZQbIUbVCG4P3evNHwzJ4V8kwjk0Mth7yOxAx0uVHsHHSIccMQZU9XLTApG4=
+	t=1721289307; cv=none; b=mjxDNcu7q4E9nqTlcpHhfrDklKDTwTp0Tu7YB3JB6uu0+q5w/Ru8nXo2BZE7N+4cwen/IEkrolQ4q9j6M8Lsq4kDzxE3xWdQrjNbdndWvSM1utF9RvZBxaBO0sbytQX/jEnRec+IsqIXzP565l6f1lA3FCTeOrxACMAxPz0PvxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721289143; c=relaxed/simple;
-	bh=DiV0p5o4n1qcmrSq9TJa++YItZSe+uOXJNWLTngzDTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lfk12w64nn+iofFdBE/LJbFaE8FoN+Mas29vv4UWS1XH3m2BihkHUtRNFwLoJwV6bYy/f3jd7RD7gyfhNYzLN/XySWTQayyELskhlKynYtgQTy4UWHIAe4hugqPiGVNHFHVOsnWzNN/dCM4aQSNQvSp0ynqPDqaG4DTbFJ4PrKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LdlbP7h4; arc=none smtp.client-ip=209.85.161.49
+	s=arc-20240116; t=1721289307; c=relaxed/simple;
+	bh=d5Q4s4KdiwKVZCeMG8tsoDS/u17yAjv7xbwNDFlgqyQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nEYXfJkwrMgqZv5O799aKkZofXglPsPIaUnutbR9usKDkWK+jKfB/kCjigbDje/TUxFAMBru/QFKnPcFJC+O5YEEQDeAP54xxJA1l7mGfZCVR1PjOgyOyuXlKe24/gd9Gvlhk/X6iqysiIYZAnMu9QWCulQjU4ZxbC9tDbTBC0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KizPUkSn; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdlbP7h4"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5c669a0b5d1so244961eaf.3;
-        Thu, 18 Jul 2024 00:52:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KizPUkSn"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fc47abc040so4024205ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721289141; x=1721893941; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HeudbiUTX343qNiEURPI5YAOVpjxRDTmOUF5CU1l3Yg=;
-        b=LdlbP7h4ojVhNqvV54h1lhiB01lnQHVM8tLTtEExrNXI6oPZl/tbaLSa08jDrc74cH
-         wGi46MwUGmkvN6yx/wa8W0FPyhdng63d+M5W9XhFut89/CuZ2jyFAQ03wSQCPWyUT5tR
-         WejUK9NPHbUy0SgP4Ylg6zNJAeOpQulup8xPl4L3iI4TwNg1+w+LoRbrXYtD/ovUGXG+
-         x2zRv1knWke3eYv+iiiekOYEJxM9mwRmUdG5DedVd/sXC4/MmJcECM1/coZprVXlJvEA
-         nFhIEcRXnSgOJyWwWZ0h+MblyCPraMLDTVWy4G0kVw0e+bRyCNPp5YbL2bYijrAQ0/jB
-         6mrQ==
+        d=gmail.com; s=20230601; t=1721289305; x=1721894105; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZA5IPLmrPdo1khB/bNRcx/2WhOlf5P673XgW+aShrs=;
+        b=KizPUkSnG1ahN7ofzsqmaDIVY6enVhGBTsMuzkPTSTxW87BZNypiACLgl0wgtw4y6J
+         dijYmM3tGK8U7hwpNPEgY1wTm4BbLR7FPdNG61+c6+nA/9ZjaGpUg2y0IRiEpuR/JtNX
+         sRRDk3k2MNpb7MEFWlTtBL5JJu6Dq8GplCvNVLdWDsHZhJ3Wy7uQuaegSvOr3Vn9WibJ
+         OhcYzE0RwRlMRfCjwrOCsdNhEy6XPAabz+ZYoiVeD74EG2g7eLoTjm2QoNBr2sOKboMf
+         jJh5KrWfI3+5GEZdeOpQBZF09nPVmpBLDhjWPaj5zY/7Eoqe052yuhjYanWKbzTY/FBz
+         kHnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721289141; x=1721893941;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1721289305; x=1721894105;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HeudbiUTX343qNiEURPI5YAOVpjxRDTmOUF5CU1l3Yg=;
-        b=M8we5Mx63qwNLmWCjZE2oMb4jsWa6TroVZ3hMDqrKEsjgNnSJwLQPInRyi3BJxOHab
-         hhBMlCno95aQPXaGooKNV2YAIjOygAHOMYlE+dlDENBk4gWaGxJcz0XqqNSzrFFNhydJ
-         6trIvulDyksh+hu8HQmzTjm9Ar2VJWNDL9ec8dBoX2oxwEZFktQJ3SmAehyFGntZYb5L
-         ZDN3swI/GKDhtIbp062DCnxqoK3rt9k3+C5VUCHtrguq5HGRQNNa14Vcog1enYNk4Nuh
-         tgU2rGSE4Ta0LcmuvWCO5Nn61OE8GncHFnX+e71jY4dWV0C3BhiaPlwEpGLzMBQxmqPW
-         SxRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWt+0wwHHnaEapZocPQZ+4mYpgSMo0oZIbaEGBKErYcB0oXt76FS33CTgK5vGpXautD5TUi16gs/qDHueYMSywpQmLmO4tlRJyOmM8IZaWev2Y/wrRJYhC0HApJCT9O14XesgXv5XExrQX8OBLhOp+I2r/d8WRPZTgNXlhWHCtTNHtf+Q==
-X-Gm-Message-State: AOJu0Yzo7jqSZR3rmY9RU/4HfmGJA9s6Qwk3uxVFw8Ndb9mqUfAllVJ5
-	Yehrgb1pfrNgjxoqmzI9xXkXQ6ojMWIPhqKBBaLTAhSKYb1wA7Gv+OuOKqt5qf22365HB6TdwnP
-	zmLVqTwG4pgpi5tuEfatDMdtmBxU=
-X-Google-Smtp-Source: AGHT+IElzIEx7wtVYpF6wTHWDFLynANwFo8IX6K7B+fK3JlWZ76v8o9Oz+rqmBzF/VNzFntcaCU7zaa6RIubG5h0QfU=
-X-Received: by 2002:a05:6820:270f:b0:5cd:2e7:cc6 with SMTP id
- 006d021491bc7-5d41cade049mr4827457eaf.8.1721289140922; Thu, 18 Jul 2024
- 00:52:20 -0700 (PDT)
+        bh=ZZA5IPLmrPdo1khB/bNRcx/2WhOlf5P673XgW+aShrs=;
+        b=XWQBl73rHjOgfrE6xPDH32ODMSWiPWA63uookiP/Vj88VJMHcdXNDWpNsfAXNmdl1M
+         6wePCGPs2SpgYXDqpzpds2rNxEv7UEIE9xnutqZLfwM6IY4NOenXMPY7VrM4MYX7ujuO
+         xqB361K42Owvl0VKW411DHPB+gZAJ+xIh41PpKWAApYwUgtMY2ZCaXVPHjQSqAEmyRDH
+         pKGm0MWXA3L+6zXwY4KX96oTwHhO5cm0/2Cua8vSt07qVgidxh63ykQJ8P0fSroOD3no
+         qiYLwLWgqEhyllB6A9XpY71pFobdqn6/Tp5Qv4zs+W1mQBSQjc6cNvoaPF+KzNCRlwDo
+         mncw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz2KGqM1anm52QAtfdphzsQtbA5R/FYR6pnrxngDg3vboDaUVJcH32G77n4IeSVaXNVozY7Aub5lslgk32pw96kAOFqOH4iDiV++vA
+X-Gm-Message-State: AOJu0Yw54K9tydMPNeXas+6sYEeuGwKKjs0qoLIauBvnoXLGdjYELwBi
+	WlkNAysw2romx4qEdn++zJwJB6q21d0okT+Bo6eh1LCvAd95AQLI
+X-Google-Smtp-Source: AGHT+IEbsSUG6Tl4S9fs21p9y8/LyN8sXplN/4SY9rbtGmpj7qnhhT0h61oCSCHp1J3h7zx1E0OpUw==
+X-Received: by 2002:a17:902:ce8d:b0:1fc:4b4f:68aa with SMTP id d9443c01a7336-1fc4e1361f5mr37321515ad.1.1721289305522;
+        Thu, 18 Jul 2024 00:55:05 -0700 (PDT)
+Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc62e57bd9sm6187295ad.39.2024.07.18.00.55.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jul 2024 00:55:05 -0700 (PDT)
+Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
+	by twhmp6px (Postfix) with ESMTPS id B9F5580483;
+	Thu, 18 Jul 2024 16:04:15 +0800 (CST)
+From: Cheng Ming Lin <linchengming884@gmail.com>
+To: miquel.raynal@bootlin.com,
+	vigneshr@ti.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: richard@nod.at,
+	alvinzhou@mxic.com.tw,
+	leoyu@mxic.com.tw,
+	Cheng Ming Lin <chengminglin@mxic.com.tw>
+Subject: [PATCH v2 0/2] Add fixups for two-plane serial NAND flash 
+Date: Thu, 18 Jul 2024 15:53:54 +0800
+Message-Id: <20240718075356.488253-1-linchengming884@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715110251.261844-1-heiko@sntech.de> <20240715110251.261844-4-heiko@sntech.de>
- <CANAwSgS_ZaEkt5-kKud9OwdN4za+xvW5SoBr34EmOdU2OQJWnw@mail.gmail.com> <8a16eb6a29a39719ba4e4c43bae3b6ec@manjaro.org>
-In-Reply-To: <8a16eb6a29a39719ba4e4c43bae3b6ec@manjaro.org>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Thu, 18 Jul 2024 13:22:03 +0530
-Message-ID: <CANAwSgRZR8cM9qDD0Xn5ims4GX+PNMQ1+PEMBDQtZq2GxFd6Rw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: fix the pcie refclock
- oscillator on Rock 5 ITX
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, mturquette@baylibre.com, sboyd@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Dragan,
+From: Cheng Ming Lin <chengminglin@mxic.com.tw>
 
-On Thu, 18 Jul 2024 at 13:02, Dragan Simic <dsimic@manjaro.org> wrote:
->
-> Hello Anand,
->
-> On 2024-07-18 09:26, Anand Moon wrote:
-> > On Mon, 15 Jul 2024 at 16:35, Heiko Stuebner <heiko@sntech.de> wrote:
-> >>
-> >> The Rock 5 ITX uses two PCIe controllers to drive both a M.2 slot and
-> >> its
-> >> SATA controller with 2 lanes each. The supply for the refclk
-> >> oscillator is
-> >> the same that supplies the M.2 slot, but the SATA controller port is
-> >> supplied by a different rail.
-> >>
-> >> This leads to the effect that if the PCIe30x4 controller for the M.2
-> >> probes first, everything works normally. But if the PCIe30x2
-> >> controller
-> >> that is connected to the SATA controller probes first, it will hang on
-> >> the first DBI read as nothing will have enabled the refclock before.
-> >
-> > I just checked the rk3588-rock-5-itx.dts in the linux-next.
-> > You have not enabled sata0 and sata2, which might be the problem
-> > for the SATA controller not getting initialized.
->
-> Rock 5 ITX doesn't use RK5588's built-in SATA interfaces, so that's
-> fine.
-> Please have a look at the board schematic, it uses a separate PCI
-> Express
-> SATA controller for its four SATA ports.
->
-yes, But I am referring to sata node not enabled which enable the PHY_TYPE_SATA.
+Macronix serial NAND flash with a two-plane structure
+requires insertion of Plane Select bit into the column
+address during the write_to_cache operation.
 
-see rk3588-coolpi-cm5-evb.dts and rk3588-edgeble-neu6a-io.dtsi
-rk3588-quartzpro64.dts
-which have sata port on board.
+Additionally, for MX35{U,F}2G14AC, insertion of Plane
+Select bit into the column address is required during
+the read_from_cache operation.
 
-&sata0 {
-        status = "okay";
-};
+These flashes have been validated on Xilinx zynq-picozed
+board which included Macronix SPI Host.
 
-Thanks
--Anand
+Cheng Ming Lin (2):
+  mtd: spinand: Add fixups for spinand
+  mtd: spinand: macronix: Fixups for Plane Select bit
+
+ drivers/mtd/nand/spi/core.c     |  7 ++++
+ drivers/mtd/nand/spi/macronix.c | 66 ++++++++++++++++++++++++++++++---
+ include/linux/mtd/spinand.h     | 17 +++++++++
+ 3 files changed, 84 insertions(+), 6 deletions(-)
+
+-- 
+2.25.1
+
