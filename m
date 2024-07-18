@@ -1,134 +1,63 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD31912B94
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 21:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757DD29A1
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 21:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721337857; cv=none; b=JoiYmXb/FaWPt1SFEFhIkbP/3/lFvYIoLRjsvBWfWnGHaxJLRClGO4toAUDaPlA9kBKeZkpGNSMCQQG0K785zAXPyw209OOBkFSPyJozvPThQqO8PpAGEgstpO/68XtpLdK+NeU+Ii6uzth9tIVLJHy37gsWTNopDaSg7HLD2mw=
+	t=1721337984; cv=none; b=kDqwLCB2qVO/iWl07ZfX85f3cAfn3XBXU+6Tb9DcrPMKDbC+7NLQqI+ATokxWZNgu6CMSpR2fSHWwijFYwnMXEwhPtKP+Yk1FTtcFRu21ZN5yiZQKPGG9bFxiEYDdS3vzXdUHtsSHwZPBlgiSxQMXaTkMUmMeEkEgoC35PahzX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721337857; c=relaxed/simple;
-	bh=N9Fm15ZHn4sSi/OYXTG3vONh+AVr59xOARAhVbXD2Xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZSVmhylt+DBat0wfdEmHCu17hkdAChz3U+hnTzlvJ6XaS1wIHLz0BGCtB8UgsMC7ZS2qeLdH6MMPRjg0KZOl1A2U/R0vc2TjVV/1vSKVhAjbf7gMXWX47uLzOLp+aUOps2MANa+yNFDUPFisZSHBxwnLVp5X3NlQrBl2n+jllU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UoMjAzOH; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1721337984; c=relaxed/simple;
+	bh=NXxMTForTFpagKi/czQvaebJWkLD1gK5FgFy2FkS/N0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GkN2DNXFEE2MZYOREArp7vsCfqXnidpwo/YMolAlicTuuN49WT8DFKs0/2I5HTYp/861jIEoQ2IJjh2IoStmBiwKO5pslFVnI7xuVE4KxzczkAL+Ye7uEYnid5LYq5EUV3paMSnQhmyrRA4e7xMQUx/kLE4IITm96R2ixSl+v5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoDgqFUE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UoMjAzOH"
-X-Envelope-To: cam.alvarez.i@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721337853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ciX05pLlsnOl0uE9Hgq1AUuDtPjPn53t8UiIVR/hqQk=;
-	b=UoMjAzOHP58jaTQ77Xde0Cagxil7GN24MmHQ/8Os5HAnn5cGLZ6xScoPYuglc99wky+9n/
-	7rAw9UT71sZKjS3+WT1/6irENC3Q6DnZIn5/Lg3qxHpgtnLuarfkXynw2Jhv95IkBOOyEG
-	45mQ04Ou940POcjvP1NFGtLczSFpNj4=
-X-Envelope-To: syzbot+4093905737cf289b6b38@syzkaller.appspotmail.com
-X-Envelope-To: bfoster@redhat.com
-X-Envelope-To: linux-bcachefs@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: syzkaller-bugs@googlegroups.com
-Date: Thu, 18 Jul 2024 17:24:11 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Camila Alvarez <cam.alvarez.i@gmail.com>
-Cc: syzbot+4093905737cf289b6b38@syzkaller.appspotmail.com, 
-	Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] bcachefs: WARNING in bch2_fs_journal_stop
-Message-ID: <e2oi7a4jj4gjhzcp66rygr5d6wqlock6c5jvuwszxuej3hldmd@tnvbf45nbx2x>
-References: <20240717220237.1246673-1-cam.alvarez.i@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoDgqFUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E925C116B1;
+	Thu, 18 Jul 2024 21:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721337984;
+	bh=NXxMTForTFpagKi/czQvaebJWkLD1gK5FgFy2FkS/N0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=OoDgqFUENHIOEYRtMDYn0Kuy4Al2a7K+7VTMgFFF/oFfs9nJ6OHUgO5z+uCFy5ijM
+	 E0YO0Q1GRcPYzfYAfcp3/zZd7Rojn/Ual3s6rRSHotMLCwOVT5oZNfkTW1ahRa2sua
+	 WpG4c453+lUleT5A6Et7ArpZAeU2R26nsf9FbPkpCuEZojtajjNeQ5FPONZDpiX2F5
+	 YlIHO7MzwO+8u20Fbi+FCJ5PBJKQ3ypJGb023DoUENeEHwRLi0uR1+MbU6vp/6Lu2y
+	 3uQ7cWZrtVvQYxWCy9OXBJnFS8t4eQVzuQNQszQ7BiLl47RiDgsYDdAfSUbvl/w7oT
+	 y7gAfqZe8e/5w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4083AC43443;
+	Thu, 18 Jul 2024 21:26:24 +0000 (UTC)
+Subject: Re: [GIT PULL] probes: Updates for v6.11
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240716234445.a17a40e8d3d7b4ba5cef949e@kernel.org>
+References: <20240716234445.a17a40e8d3d7b4ba5cef949e@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240716234445.a17a40e8d3d7b4ba5cef949e@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git probes-v6.11
+X-PR-Tracked-Commit-Id: c26b1b89b8a9fd8665e79cd798bd970e233772b6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 91bd008d4e2b4962ecb9a10e40c2fb666b0aeb92
+Message-Id: <172133798424.21905.14577472450305387457.pr-tracker-bot@kernel.org>
+Date: Thu, 18 Jul 2024 21:26:24 +0000
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrii Nakryiko <andrii@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>, Jiri Olsa <jolsa@kernel.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240717220237.1246673-1-cam.alvarez.i@gmail.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jul 17, 2024 at 06:02:39PM GMT, Camila Alvarez wrote:
-> last_seq and last_empty_seq suffered from an off by one error when the
-> journal has no entries.
-> 
-> The indexes were fixed and an assertion is added to check that the
-> last_empty_seq is always kept under the next valid seq number.
+The pull request you sent on Tue, 16 Jul 2024 23:44:45 +0900:
 
-oh nice. I'm going to need to stare at this some more, I still feel like
-this code needs to be clearer and less fiddly.
+> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git probes-v6.11
 
-> 
-> Reported-by: syzbot+4093905737cf289b6b38@syzkaller.appspotmail.com
-> Signed-off-by: Camila Alvarez <cam.alvarez.i@gmail.com>
-> ---
->  fs/bcachefs/journal.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/bcachefs/journal.c b/fs/bcachefs/journal.c
-> index 10b19791ec98..7bbbf4b149e9 100644
-> --- a/fs/bcachefs/journal.c
-> +++ b/fs/bcachefs/journal.c
-> @@ -1201,7 +1201,7 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
->  	struct journal_replay *i, **_i;
->  	struct genradix_iter iter;
->  	bool had_entries = false;
-> -	u64 last_seq = cur_seq, nr, seq;
-> +        u64 last_written_seq = cur_seq - 1, last_seq = cur_seq - 1, nr, seq;
->  
->  	genradix_for_each_reverse(&c->journal_entries, iter, _i) {
->  		i = *_i;
-> @@ -1209,11 +1209,11 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
->  		if (journal_replay_ignore(i))
->  			continue;
->  
-> -		last_seq = le64_to_cpu(i->j.last_seq);
-> +		last_written_seq = le64_to_cpu(i->j.last_seq);
->  		break;
->  	}
->  
-> -	nr = cur_seq - last_seq;
-> +	nr = cur_seq - last_written_seq;
->  
->  	if (nr + 1 > j->pin.size) {
->  		free_fifo(&j->pin);
-> @@ -1224,14 +1224,14 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
->  		}
->  	}
->  
-> -	j->replay_journal_seq	= last_seq;
-> +	j->replay_journal_seq	= last_written_seq;
->  	j->replay_journal_seq_end = cur_seq;
-> -	j->last_seq_ondisk	= last_seq;
-> -	j->flushed_seq_ondisk	= cur_seq - 1;
-> -	j->seq_ondisk		= cur_seq - 1;
-> -	j->pin.front		= last_seq;
-> +	j->last_seq_ondisk	= last_written_seq;
-> +	j->flushed_seq_ondisk	= last_seq;
-> +	j->seq_ondisk		= last_seq;
-> +	j->pin.front		= last_written_seq;
->  	j->pin.back		= cur_seq;
-> -	atomic64_set(&j->seq, cur_seq - 1);
-> +	atomic64_set(&j->seq, last_seq);
->  
->  	fifo_for_each_entry_ptr(p, &j->pin, seq)
->  		journal_pin_list_init(p, 1);
-> @@ -1261,7 +1261,10 @@ int bch2_fs_journal_start(struct journal *j, u64 cur_seq)
->  	}
->  
->  	if (!had_entries)
-> -		j->last_empty_seq = cur_seq;
-> +		j->last_empty_seq = last_seq;
-> +
-> +	WARN(j->last_empty_seq >= cur_seq, "journal startup error: last empty seq %llu is higher or equal than the next seq number to be used (%llu)",
-> +	      j->last_empty_seq, cur_seq);
->  
->  	spin_lock(&j->lock);
->  
-> -- 
-> 2.34.1
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/91bd008d4e2b4962ecb9a10e40c2fb666b0aeb92
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
