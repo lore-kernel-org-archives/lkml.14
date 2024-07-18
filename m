@@ -1,101 +1,110 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2EA38DE1
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 06:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B1B273FD
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 06:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721284583; cv=none; b=rOipuOG0edI4aRCWbVRBPKZnHsy508PiAJ++ZPHb/tUsxsoj7sOyJw9rUdyVbVoiyqkxIMk86+g+M4nFnvEHUF/cBK3qRHUH5zoX02RFoyN2WhqjZWRM8On+cBX/5f90v2M8Js3NFNxIYpI4hAbLZhS+K7xzpPVFj+DdnSL2ed8=
+	t=1721284678; cv=none; b=goYSamrlo8ipmwUG+IuGr9KhcJYBf67UhWMo4SVPvpGp8MVoq9GyNLwJ4BAEd+nitGWQ+DbsSIMQG3nnMhgL/FSG/aV80WxCuj0ifbY9bd6JUCSZJlLn09e5IlqLmdEaH2u0rcmdWktxebZEMUD6qBUB1swPGrlah6LCoQGy/GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721284583; c=relaxed/simple;
-	bh=kKu8M4Ys25JGjAI9AWyCPhJrMrl3Ra0FEMmgZaSnnZQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=qKF57K+suufVudZroL3X9Lsig/V5hmKJJjcw00UVJYsfY0hKj+JAVgbQdGkrZ6MDLQ4K8jlUgnouHBrCzAVhwku0P+zJjKzVT4j2XO61N4v+OiJhF/F/+3/TAjI1Ywfb9PnmJ28mhDSPVhB4tUc2Sj1333+0vPJJ+2+b8VhZ3j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=lw7oDvgJ; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lw7oDvgJ"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 46I6a0vI3098584
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 17 Jul 2024 23:36:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 46I6a0vI3098584
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1721284561;
-	bh=olo1J9Ekj3oE7AMNzS+YKv+bJI1P8bkfXQDak1NfIMM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=lw7oDvgJHZzls5gqBdVbWtrmt1nTugB6QIOco/6UbR1XkbX8IcNdOi0GHHqVzUU+4
-	 KYvzD4h41Best6tZr40wbkhNr43tMB3xAGCNC5giu6Do3dd0jmiNCN/8vSyXRBzoul
-	 xjDQtTldbf9JYSbSycv1Kxry8PQpW/AoT1xT+UeBrARso9HOdRR2URmzUBTOq8Tfsg
-	 ndIqev1Ioyaa7owV/VBFM0b568hBVB7zcbsQ9GNnzQh91I4Jb1Cv5hQscHg/X/RiLA
-	 GPN5dbjH6R7EqzsFBFX6mBmTPWDz4i24pQfhcde8YszY6RhtCQPOss5vZolXaUEeYX
-	 JaI7jQQB6lG8Q==
-Date: Wed, 17 Jul 2024 23:35:57 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/boot=3A_Use_=5F=5FASM=5FSIZE?=
- =?US-ASCII?Q?=28=29_to_reduce_ifdeffery_in_cpuflags=2Ec?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240718063242.52275-1-ubizjak@gmail.com>
-References: <20240718063242.52275-1-ubizjak@gmail.com>
-Message-ID: <4049EB19-E869-4886-AD61-E716A75E4559@zytor.com>
+	s=arc-20240116; t=1721284678; c=relaxed/simple;
+	bh=ZGMAaa3hz4DkXQmXeLg0cxOwAuuJE5uqmlYG/Vh/z8Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V1LxgmbwT6oOUuhFUBDqermROhd7dJg7HykmvL8tKUiBjhKKPGkNAYZDUH+X1GbbS7fWFXEA5Le/pVuAXwmt96fIBIiow8fT+dMJYhRxWencqn5Kf8DRVy3BrsTtCNWsbzHtv8LXj0JiezBCpJGske1jRDEbWtH2UNCs6BlBXKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1721283848-1eb14e2e5f151040001-xx1T2L
+Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx2.zhaoxin.com with ESMTP id c4cjHLpIiBIaD9bC (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 18 Jul 2024 14:24:08 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX2.zhaoxin.com
+ (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
+ 2024 14:24:08 +0800
+Received: from xin.lan (10.32.64.1) by ZXBJMBX03.zhaoxin.com (10.29.252.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 18 Jul
+ 2024 14:24:06 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+From: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.7
+To: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
+	<robert.moore@intel.com>, <yazen.ghannam@amd.com>, <avadhut.naik@amd.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+CC: <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <TonyWWang-oc@zhaoxin.com>,
+	<leoliu-oc@zhaoxin.com>, LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+Subject: [PATCH v3 0/3] Parse the HEST PCIe AER and set to relevant registers
+Date: Thu, 18 Jul 2024 14:24:02 +0800
+X-ASG-Orig-Subj: [PATCH v3 0/3] Parse the HEST PCIe AER and set to relevant registers
+Message-ID: <20240718062405.30571-1-LeoLiu-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <b99685d9-9f3a-4c21-8d33-2eaa5de8be54@zhaoxin.com>
+References: <b99685d9-9f3a-4c21-8d33-2eaa5de8be54@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
+X-Barracuda-Start-Time: 1721283848
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1611
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.127785
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On July 17, 2024 11:32:18 PM PDT, Uros Bizjak <ubizjak@gmail=2Ecom> wrote:
->Use __ASM_SIZE() macro to add correct insn suffix to pushf/popf=2E
->
->Signed-off-by: Uros Bizjak <ubizjak@gmail=2Ecom>
->Cc: Thomas Gleixner <tglx@linutronix=2Ede>
->Cc: Ingo Molnar <mingo@kernel=2Eorg>
->Cc: Borislav Petkov <bp@alien8=2Ede>
->Cc: Dave Hansen <dave=2Ehansen@linux=2Eintel=2Ecom>
->Cc: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
->---
-> arch/x86/boot/cpuflags=2Ec | 10 +++-------
-> 1 file changed, 3 insertions(+), 7 deletions(-)
->
->diff --git a/arch/x86/boot/cpuflags=2Ec b/arch/x86/boot/cpuflags=2Ec
->index d75237ba7ce9=2E=2Eaacabe431fd5 100644
->--- a/arch/x86/boot/cpuflags=2Ec
->+++ b/arch/x86/boot/cpuflags=2Ec
->@@ -2,6 +2,7 @@
-> #include <linux/types=2Eh>
-> #include "bitops=2Eh"
->=20
->+#include <asm/asm=2Eh>
-> #include <asm/processor-flags=2Eh>
-> #include <asm/required-features=2Eh>
-> #include <asm/msr-index=2Eh>
->@@ -36,13 +37,8 @@ static int has_fpu(void)
->  * compressed/ directory where it may be 64-bit code, and thus needs
->  * to be 'pushfq' or 'popfq' in that case=2E
->  */
->-#ifdef __x86_64__
->-#define PUSHF "pushfq"
->-#define POPF "popfq"
->-#else
->-#define PUSHF "pushfl"
->-#define POPF "popfl"
->-#endif
->+#define PUSHF __ASM_SIZE(pushf)
->+#define POPF __ASM_SIZE(popf)
->=20
-> int has_eflag(unsigned long mask)
-> {
+From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
 
-Just use pushf/popf=2E gas hasn't needed that suffix for a long time as fa=
-r as I know=2E
+According to the Section 18.3.2.4, 18.3.2.5 and 18.3.2.6 in ACPI SPEC
+r6.5, the register value form HEST PCI Express AER Structure should be
+written to relevant PCIe Device's AER Capabilities. So the purpose of the
+patch set is to extract register value from HEST PCI Express AER
+structures and program them into PCIe Device's AER registers.
+Refer to the ACPI SPEC r6.5 for the more detailed description. This patch
+is an effective supplement to _HPP/_HPX method when the Firmware does not
+support the _HPP/_HPX method and can be specially configured for the AER
+register of the specific device.
+
+v1->v2:
+- Move the definition of structure "hest_parse_aer_info" to file apei.h.
+
+v2->v3:
+- The applicable hardware for this patch is added to the commit
+  information.
+- Change the function name "program_hest_aer_endpoint" to
+  "program_hest_aer_common".
+- Add the comment to function "program_hest_aer_common".
+- Remove the "PCI_EXP_TYPE_PCIE_BRIDGE" branch handling in function
+  "program_hest_aer_params".
+
+LeoLiuoc (3):
+  ACPI/APEI: Add hest_parse_pcie_aer()
+  PCI: Add AER bits #defines for PCIe to PCI/PCI-X Bridge
+  PCI/ACPI: Add pci_acpi_program_hest_aer_params()
+
+ drivers/acpi/apei/hest.c      |  66 +++++++++++++++++++++-
+ drivers/pci/pci-acpi.c        | 101 ++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h             |   9 +++
+ drivers/pci/probe.c           |   1 +
+ include/acpi/apei.h           |  17 ++++++
+ include/uapi/linux/pci_regs.h |   3 +
+ 6 files changed, 195 insertions(+), 2 deletions(-)
+
+-- 
+2.34.1
+
