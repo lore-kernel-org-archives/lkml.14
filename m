@@ -1,75 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765A038F91;
-	Thu, 18 Jul 2024 03:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFC12C1AC;
+	Thu, 18 Jul 2024 03:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721274377; cv=none; b=k8aJD6i5Okb78Xch7urmoQ08txSh0asJPXrgfhVDnctCb0AbuCIsSSD2PR3jiCRjlYXdNfszrm7pM3axGLLbgKbJUBRMFA2bGAxaarX5qaTI/1QClDA08Eo2t1+Az4FtIbZiklH0+IxQXqx0yddlDtsNwuUOyeIgf43Q12v5EUo=
+	t=1721274458; cv=none; b=Wc32ajfbZspuKF5olNZvRZsuZH7Y2Sct+lKqXR2mNqcQBnsSdREvwxki4wSWssmyFCTtQK1w4xrKxRXUUdn3hESXa1MCSoc7sqdBmD/u1Jv8iZPwCwtjhtxndL44yCo8wHu0cHYQ2jIaqQ9BP7UBSfu3X7YmXH1lP1C8v08tzj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721274377; c=relaxed/simple;
-	bh=TgyDblSb6DLChmBjwwEnBre4ru3uWNRP9SsYVOSJ+vM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fJpIRjXVMLZcMDb7eeXP72G2uyBfC0vZE1RDEl8S3ZYrr53EGWzY5qx5UtAf9oN4qAD1jExjRcABUyYIhqzFZkb/bhj4kQ9kjiHNA08UdAFXrWTL79lLaa/YJQqHtqfU5WDyY/ea4bUQrjI1Dmyvak0SZuYZquwu27aNrJX+uQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SUCMD5rC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721274458; c=relaxed/simple;
+	bh=toWkYc4Ctwc06/OlNCQ0sQyYdV9skpmiyoNCmJi8o3w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PTdgcYpNxMMgb4I4DaaAjb/67y4JwDAZCCmijVkkQ7Re54PmTpGIy04Y/BdrcALtYNZqVuf5OBOKBk9l8jURTWviOUxAy+woINsj6+QEr4xL1B5OTnK8Es7qrT2gd9SXbxjsSQX3CbBAYtu+BkrGATsiLtPcfE5S+loy2aRT6us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MPGLe0iK; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SUCMD5rC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A52C116B1;
-	Thu, 18 Jul 2024 03:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1721274377;
-	bh=TgyDblSb6DLChmBjwwEnBre4ru3uWNRP9SsYVOSJ+vM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SUCMD5rCWj/oJLM3Ldv8h7XQMawBx92SJwIAPYTByVK2UJEpkBnkk3NSlYWo7z2mK
-	 5EciqmWn1brjUmACgkQUojIOAvnG0c8isq24sN7BXmL+KxyrfEw4wsfd1ldjXPWM9y
-	 eQ0eRniOpEft0u7RUfWjGy1rEeaipAvzqeEW/0sE=
-Date: Wed, 17 Jul 2024 20:46:16 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: shuah@kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH -next] selftests/mm: mseal, self_elf: Fix warning
- comparing pointer to 0
-Message-Id: <20240717204616.7a3d2465272d4f8fd1736831@linux-foundation.org>
-In-Reply-To: <20240718031039.69861-1-jiapeng.chong@linux.alibaba.com>
-References: <20240718031039.69861-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPGLe0iK"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-396eb81a1cfso139205ab.2;
+        Wed, 17 Jul 2024 20:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721274456; x=1721879256; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VDh6Ql+TGdlrLagqD7b5t329MBkSs5xxrsa8OqakPWc=;
+        b=MPGLe0iKfDXuwpMjVL7sCDzJm8FHQmIAYGcHSBep+pD5FcBNsJ+Eep/3IxNoo0pde4
+         hhoNydKhG05axB034SMMAJiN1qC1Aao6UKnLua4zfzp1m4EyC/XRicmc7DS2z/59plGC
+         PjSaWiuJen63CRrhEovPWvQvB2IEozOoFAXtrOpgds0uUgoybrm1dEUSa5XmIsLuL/sM
+         fDIzEY2Ir/xA0eU1hwXfUlKf0qDp2KU28BnGN14sTSbdDjJxqVxmua2epE0Y9z2eiEgw
+         Kj7xjkCKO4z+jhf/GihSXwcHsENx4/iDr89CzmU/v6QS4pUsgGl/RZtw3amCaO4CzQUL
+         P1zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721274456; x=1721879256;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VDh6Ql+TGdlrLagqD7b5t329MBkSs5xxrsa8OqakPWc=;
+        b=pnBQ/ouDj05wihmvSz7pjNebnhYfALyr9o62wg1HjQ2RV5WS1W/nQGLluq4/12Yjcp
+         l3xoxfwtRP94Da/qqWWMI8ud+j/hc0jCniU7fI/sc18P59eFXcFbBwOUujluY3FWAnWk
+         R3qDy136KjCqQ/d/RamMCpM631ZndDmK9uhyK4zPBaYKxMtXJO5/lMDXOm35B9sw6+cL
+         67WgrC65OkPfLpe4rhBujljeJeuuyOWCoetarVMb2vZTlCzmvfeQ/PXNCYjWAuCdHnYR
+         KdUoWgGEC7Jf4Z6CZQcELfSLhnwI8kcIqNxGvkvGNeVwcl9cdgCJcLFPov3wUX6AloDE
+         IR3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVh8YyfKtBuKiyJYA7YQVZSY5WkVZeqShmCziTccYbDO4H58evBv3T6NwQXX3UNyeW5ZQgEMJ0LEye+bq0iieb9m20Iy624YrzWXquIBvjJ/+wDCtqt5k3Yfb8KC+qHC5wD82Sm5B+V
+X-Gm-Message-State: AOJu0Yz1WkKD53I7bvGQ3eanei2a4BKexyH7IdBdorkrFgdbrXkyWBys
+	32NBtPAddhJ9I6K4+V4rBmSeQYv7aCX487du3MgDEey4W8qj7DIM
+X-Google-Smtp-Source: AGHT+IEslbSVdfarj8VF3abfpeoMwQof3aoz3IYeXUjuJa1oSpr3Ne+IxLanbUpayuHh8H8+p2mXdw==
+X-Received: by 2002:a05:6e02:216d:b0:375:c9f0:5297 with SMTP id e9e14a558f8ab-39557425460mr45169865ab.26.1721274456490;
+        Wed, 17 Jul 2024 20:47:36 -0700 (PDT)
+Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ebc384bsm8946018b3a.70.2024.07.17.20.47.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 20:47:35 -0700 (PDT)
+Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
+	by twhmp6px (Postfix) with ESMTPS id 94805800D3;
+	Thu, 18 Jul 2024 11:56:47 +0800 (CST)
+From: AlvinZhou <alvinzhou.tw@gmail.com>
+To: linux-mtd@lists.infradead.org,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tudor.ambarus@linaro.org,
+	pratyush@kernel.org,
+	mwalle@kernel.org,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	broonie@kernel.org
+Cc: chengminglin@mxic.com.tw,
+	leoyu@mxic.com.tw,
+	AlvinZhou <alvinzhou@mxic.com.tw>
+Subject: [PATCH v9 0/6] Add octal DTR support for Macronix flash
+Date: Thu, 18 Jul 2024 11:46:08 +0800
+Message-Id: <20240718034614.484018-1-alvinzhou.tw@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 18 Jul 2024 11:10:39 +0800 Jiapeng Chong <jiapeng.chong@linux.alibaba.com> wrote:
+From: AlvinZhou <alvinzhou@mxic.com.tw>
 
-> Avoid pointer type value compared with 0 to make code clear.
-> 
-> ./tools/testing/selftests/mm/mseal_test.c:486:27-28: WARNING comparing pointer to 0.
-> ./tools/testing/selftests/mm/mseal_test.c:1399:29-30: WARNING comparing pointer to 0.
-> 
-> ...
->
-> --- a/tools/testing/selftests/mm/mseal_test.c
-> +++ b/tools/testing/selftests/mm/mseal_test.c
-> @@ -481,9 +481,8 @@ static void test_seal_zero_address(void)
->  	int prot;
->  
->  	/* use mmap to change protection. */
-> -	ptr = sys_mmap(0, size, PROT_NONE,
-> -			MAP_ANONYMOUS | MAP_PRIVATE | MAP_FIXED, -1, 0);
-> -	FAIL_TEST_IF_FALSE(ptr == 0);
-> +	ptr = sys_mmap(0, size, PROT_NONE, MAP_ANONYMOUS | MAP_PRIVATE | MAP_FIXED, -1, 0);
-> +	FAIL_TEST_IF_FALSE(!ptr);
-> @@ -1390,13 +1389,12 @@ static void test_seal_mremap_move_fixed_zero(bool seal)
->  	/*
->  	 * MREMAP_FIXED can move the mapping to zero address
->  	 */
-> -	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED,
-> -			0);
-> +	ret2 = mremap(ptr, size, 2 * page_size, MREMAP_MAYMOVE | MREMAP_FIXED, 0);
+Add method for Macronix Octal DTR Eable/Disable.
+Merge Tudor's patch "Allow specifying the byte order in DTR mode"
 
-The author of this code chose to make it tractable in an 80-column
-display.  It's best not to change that, without explanation.
+v9:
+  Change the name of the configuration register 2 for Macronix Octal flash.
+  Fix the bit value in __pad of struct spi_mem_op.
+  Use the local variable proto instead of nor->read_proto.
+
+v8:
+  Supplement missing S-o-b
+  Remove function spi_nor_is_octal_dtr_swab16
+  Split IDs by MX25 & MX66
+  Add dump of capability in debugfs
+  Add dump of params in debugfs
+  Add dump of reult for mtd-utils tests
+  Add SNOR_ID(0xC2) in last of Macronix ID table
+
+v7:
+  Add dtr_swab16 judgement to enable/disable Macronix xSPI host
+  controller swap byte feature.
+
+v6:
+  Add byte swap support for spi-mxic.c
+  Remove flash name in ID table.
+
+v5:
+  Remove manufacturer read id function.
+  For increased readability, separate Flash IDs based on whether
+  it supports RWW feature.
+
+v4:
+  Add patch for adding manufacturer read id function.
+  remove patch "hook manufacturer by checking first byte id" 
+
+v3:
+  Add patch for hook manufacturer by comparing ID 1st byte.
+  Add patches for specifying the byte order in DTR mode by merging
+  Tudor's patch.
+
+v2:
+  Following exsting rules to re-create Macronix specify Octal DTR method.
+  change signature to jaimeliao@mxic.com.tw
+  Clear sector size information in flash INFO.
+
+AlvinZhou (6):
+  mtd: spi-nor: add Octal DTR support for Macronix flash
+  spi: spi-mem: Allow specifying the byte order in Octal DTR mode
+  mtd: spi-nor: core: Allow specifying the byte order in Octal DTR mode
+  mtd: spi-nor: sfdp: Get the 8D-8D-8D byte order from BFPT
+  spi: mxic: Add support for swapping byte
+  mtd: spi-nor: add support for Macronix Octal flash
+
+ drivers/mtd/spi-nor/core.c     |  4 ++
+ drivers/mtd/spi-nor/core.h     |  1 +
+ drivers/mtd/spi-nor/macronix.c | 95 +++++++++++++++++++++++++++++++++-
+ drivers/mtd/spi-nor/sfdp.c     |  4 ++
+ drivers/mtd/spi-nor/sfdp.h     |  1 +
+ drivers/spi/spi-mem.c          |  3 ++
+ drivers/spi/spi-mxic.c         | 17 ++++--
+ include/linux/spi/spi-mem.h    |  8 ++-
+ 8 files changed, 127 insertions(+), 6 deletions(-)
+
+-- 
+2.25.1
+
