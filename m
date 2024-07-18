@@ -1,140 +1,183 @@
-Received: from flow4-smtp.messagingengine.com (flow4-smtp.messagingengine.com [103.168.172.139])
+Received: from mail.valinux.co.jp (mail.valinux.co.jp [210.128.90.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A7C25634;
-	Thu, 18 Jul 2024 09:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B185325634
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 09:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.128.90.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721295359; cv=none; b=H49Xl9N8IqOGvSxAycuczBGf8RtrTNYZhVPqEdyoV2Q1qo9Y27asfvTd8UOGllGNPKHwM+lk/0eo1fr82323CAOKRqFQVrifEtPvJA38NWaJimMynnns9v5bYHM4Ncn0KUgAkFhFyX/Uo2N7rpE43/17NwH8rQPE/hB1OnCZ4Qw=
+	t=1721295430; cv=none; b=jcbykHcvIHiDNYboKsLzUFciZjMZIOLzDE+dJz4orASohw8KhU2uFhxOF4wtyvON34Z7sqAqndHOGqQqmu3FefzmqhuIUDnc1O7tv8yx1DiCE67iFzpF0CCauFtoUvtqQBI/xuAp5c6+qdT7roJ6HVkUhtWWNPEOOS1CFaRImm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721295359; c=relaxed/simple;
-	bh=pSQ976eQYW5rH1Dwdz8iHxLbSbZIasTSAP2Pi//gvd8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ICI/lgMULOOkuISFGfzykAghHilBUGBeHc/xj+4dEIJGeTWclnyB6ySl9QDZFw3H3VWi8WobhfBCC4viykgasIbOsZLz/+pHrhByda1vB9BJ4XgPwP7Gp3DGGWEkGd6nWmBSi8gYp8rHZhsAerAsvAbyoGdbXqwiRyPUz80g5NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gU4B0fXC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YqCwNVUW; arc=none smtp.client-ip=103.168.172.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gU4B0fXC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YqCwNVUW"
-Received: from compute8.internal (compute8.nyi.internal [10.202.2.227])
-	by mailflow.nyi.internal (Postfix) with ESMTP id C6660200379;
-	Thu, 18 Jul 2024 05:35:55 -0400 (EDT)
-Received: from wimap26 ([10.202.2.86])
-  by compute8.internal (MEProxy); Thu, 18 Jul 2024 05:35:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1721295355;
-	 x=1721302555; bh=N6nNE9JphcqfhA9xYmwmZhMShW3TQ025Yd0UOM/gNrs=; b=
-	gU4B0fXCqkX23adCeJk85Axa5jUwIyl2PAu5Ak58NhKTY5MGrxcxHywaBGqjlaGB
-	EHsmg/15YoGQfdmZCYVXT+LjUEdSD0uzfnnd5L5TbEG5Dhu+w0ZOVwK2HlMoAlCI
-	j8KXiOBnjIj2EeW9VRecxF8+AeBiM1JW7reYXEc+/zkwWcl4uB1vB3uJkEEWVkiR
-	1IrFONzrwTmHIic+SnrFRljnryEgjhlferPDCLuxNkIOEVMoSZll3T4YpenCZN1W
-	NmHG9cdqmsX9jyksmjDXS4sLQXMnkHU7Pn8Cuyq2UK2R3G2omcVxTpdZ3vitrwuN
-	QuU2zVwT9e5Je1uubi5v8g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721295355; x=
-	1721302555; bh=N6nNE9JphcqfhA9xYmwmZhMShW3TQ025Yd0UOM/gNrs=; b=Y
-	qCwNVUWArrKsuH3XSXEL2at8TMuVuiHdG97DnqrCWM5CsyjiTDjYeWySKzCM9a5X
-	c6QinnvARAcLFd9hZoPUtGyw9+/LI3lIq6Qbe48MRe7dNQljWbQMes+JIfYvvo7m
-	oYJIBfsRNqGhzu911wZlNVVbLtMd4Kn4Xxah8gF4tKfjZ44KVMYbTaoxoldx8fc+
-	LsMudcXvuyR9pqoPxoBFQDrdyg9EAxzzLRufov5ld9hAaBICevK2Shfq1SSAnDdg
-	JvuABd0B9MNYzLb5SHPS6eF+Zs0dPYz57j0fivAhapFnnI7u7WZ7Ok1b20wnyvNy
-	stFA93tV2c6Szw8SMC7mQ==
-X-ME-Sender: <xms:-eGYZobX7watBK66SlOkFWX8j2mli9VQrXnkc79BfMDLam_kc43OJw>
-    <xme:-eGYZjZEP5tNQKPr4sPK1teVhX24U_OMpdGSDSKsn_bNGpC06EFRzx9cCzJK3ybiP
-    -_9sFU52xvoYZvTiX4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeelgddujecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:-uGYZi_nYJ6l6x5T5whB92TMlTXEZQkzD86YnoaUEbG3NR0qXVQM4w>
-    <xmx:-uGYZioVLqWSaVJ4ihMviX4Gt7w3sTkp7IigwP8e_XQ3MJVeSZ8KMQ>
-    <xmx:-uGYZjqDnuZAVNTLENuotI0unpAmAdj7Bc7vorLX-THOTr66pD32dQ>
-    <xmx:-uGYZgSYwmHS_csi4cZb8qGiLFRlYGRXTw11ai_V_m4MnFO748FyNQ>
-    <xmx:--GYZqe5KPCggtd0FZfIGawTHeZsKcprciCM8oF5gq8PvHD_NuuwKu_C>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id BADAB19C0062; Thu, 18 Jul 2024 05:35:53 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	s=arc-20240116; t=1721295430; c=relaxed/simple;
+	bh=sJbPNxK5gRhIDyjMLN+0i8DFfx8g3MhG6j4IptBLT8s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NC/34UV3RZazCFGUOJbJQtfVwVm7fhQ6eO34GPXiikXwIjJ/ZXogLJs0R6z1UQhMdCsEfiSG9ISGcjSY23GPG3WZgulF5XW2Q/kAByzcxckysnv/FW6d+xXtGISOuQl04hNtkWfZ//zuDHcmdhKbf6CVFI6lf6zZEqqHTwL+ai0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; arc=none smtp.client-ip=210.128.90.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+Received: from localhost (localhost [127.0.0.1])
+	by mail.valinux.co.jp (Postfix) with ESMTP id F07ACA9D5E;
+	Thu, 18 Jul 2024 18:37:06 +0900 (JST)
+X-Virus-Scanned: Debian amavisd-new at valinux.co.jp
+Received: from mail.valinux.co.jp ([127.0.0.1])
+	by localhost (mail.valinux.co.jp [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id UzITp37JSzLc; Thu, 18 Jul 2024 18:37:06 +0900 (JST)
+Received: from DESKTOP-NBGHJ1C.local.valinux.co.jp (vagw.valinux.co.jp [210.128.90.14])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.valinux.co.jp (Postfix) with ESMTPSA id C2B36A9606;
+	Thu, 18 Jul 2024 18:37:06 +0900 (JST)
+From: takakura@valinux.co.jp
+To: palmer@dabbelt.com,
+	bjorn@kernel.org,
+	paul.walmsley@sifive.com,
+	akpm@linux-foundation.org,
+	aou@eecs.berkeley.edu,
+	apatel@ventanamicro.com,
+	arnd@arndb.de,
+	atishp@rivosinc.com,
+	bmeng.cn@gmail.com,
+	conor.dooley@microchip.com,
+	daniel.thompson@linaro.org,
+	samuel.holland@sifive.com,
+	sfr@canb.auug.org.au
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	taka@valinux.co.jp,
+	Ryo Takakura <takakura@valinux.co.jp>
+Subject: [PATCH v2] RISC-V: Enable IPI CPU Backtrace
+Date: Thu, 18 Jul 2024 18:36:59 +0900
+Message-Id: <20240718093659.158912-1-takakura@valinux.co.jp>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <da057e38-a3e1-42d8-8b7d-4e2dfed6d7b7@app.fastmail.com>
-In-Reply-To: <20240718-stammer-envy-f77637a8d039@wendy>
-References: <20240717061957.140712-1-alexghiti@rivosinc.com>
- <20240717061957.140712-6-alexghiti@rivosinc.com>
- <20240717-94b49fbac3c6bf97a0f96281@orel>
- <CAHVXubi33T-5y9g1cqa+meM7q7b=0M54o+wrBeYmwfYpWAgAmQ@mail.gmail.com>
- <20240718-stammer-envy-f77637a8d039@wendy>
-Date: Thu, 18 Jul 2024 11:35:33 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Conor.Dooley" <conor.dooley@microchip.com>,
- "Alexandre Ghiti" <alexghiti@rivosinc.com>
-Cc: "Andrew Jones" <ajones@ventanamicro.com>,
- "Jonathan Corbet" <corbet@lwn.net>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Andrea Parri" <parri.andrea@gmail.com>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Will Deacon" <will@kernel.org>, "Waiman Long" <longman@redhat.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Leonardo Bras" <leobras@redhat.com>,
- guoren <guoren@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- Linux-Arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v3 05/11] riscv: Implement arch_cmpxchg128() using Zacas
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 18, 2024, at 10:33, Conor Dooley wrote:
-> On Thu, Jul 18, 2024 at 09:48:42AM +0200, Alexandre Ghiti wrote:
->> On Wed, Jul 17, 2024 at 10:34=E2=80=AFPM Andrew Jones <ajones@ventana=
-micro.com> wrote:
->> > On Wed, Jul 17, 2024 at 08:19:51AM GMT, Alexandre Ghiti wrote:
->> > > +
->> > > +union __u128_halves {
->> > > +     u128 full;
->> > > +     struct {
->> > > +             u64 low, high;
->> >
->> > Should we consider big endian too?
->>=20
->> Should we care about big endian? We don't deal with big endian
->> anywhere in our kernel right now.
->
-> There's one or two places I think that we do actually have some
-> conditional stuff for BE. The Zbb string routines I believe is one such
-> place, and maybe there are one or two others. In general I'm not of the
-> opinion that it is worth adding complexity for BE until there's
-> linux-capable hardware that supports it (so not QEMU or people's toy
-> implementations), unless it's something that userspace is able to see.
+From: Ryo Takakura <takakura@valinux.co.jp>
 
-I don't think you want to go there at all: maintaining an
-extra user space ABI (or two if you add 32-bit BE as well)
-has a huge long-term cost, and there is pretty much zero
-benefit for a BE ABI these days.
+Add arch_trigger_cpumask_backtrace() which is a generic infrastructure 
+for sampling other CPUs' backtrace using IPI.
 
-Adding it to arm64 turned out to be a mistake. We did have
-a handful of users in the first year, and it technically
-still works, but I don't think there are any users left
-after they managed to fix their nonportable legacy
-userspace from that was ported from big-endian mips or
-powerpc.
+The feature is used when lockups are detected or in case of oops/panic 
+if parameters are set accordingly.
 
-     Arnd
+Below is the case of oops with the oops_all_cpu_backtrace enabled.
+
+$ sysctl kernel.oops_all_cpu_backtrace=1
+
+triggering oops shows:
+[  212.214237] NMI backtrace for cpu 1
+[  212.214390] CPU: 1 PID: 610 Comm: in:imklog Tainted: G           OE      6.10.0-rc6 #1
+[  212.214570] Hardware name: riscv-virtio,qemu (DT)
+[  212.214690] epc : fallback_scalar_usercopy+0x8/0xdc
+[  212.214809]  ra : _copy_to_user+0x20/0x40
+[  212.214913] epc : ffffffff80c3a930 ra : ffffffff8059ba7e sp : ff20000000eabb50
+[  212.215061]  gp : ffffffff82066f90 tp : ff6000008e958000 t0 : 3463303866660000
+[  212.215210]  t1 : 000000000000005b t2 : 3463303866666666 s0 : ff20000000eabb60
+[  212.215358]  s1 : 0000000000000386 a0 : 00007ff6e81df926 a1 : ff600000824df800
+[  212.215505]  a2 : 000000000000003f a3 : 7fffffffffffffc0 a4 : 0000000000000000
+[  212.215651]  a5 : 000000000000003f a6 : 0000000000000000 a7 : 0000000000000000
+[  212.215857]  s2 : ff600000824df800 s3 : ffffffff82066cc0 s4 : 0000000000001c1a
+[  212.216074]  s5 : ffffffff8206a5a8 s6 : 00007ff6e81df926 s7 : ffffffff8206a5a0
+[  212.216278]  s8 : ff600000824df800 s9 : ffffffff81e25de0 s10: 000000000000003f
+[  212.216471]  s11: ffffffff8206a59d t3 : ff600000824df812 t4 : ff600000824df812
+[  212.216651]  t5 : ff600000824df818 t6 : 0000000000040000
+[  212.216796] status: 0000000000040120 badaddr: 0000000000000000 cause: 8000000000000001
+[  212.217035] [<ffffffff80c3a930>] fallback_scalar_usercopy+0x8/0xdc
+[  212.217207] [<ffffffff80095f56>] syslog_print+0x1f4/0x2b2
+[  212.217362] [<ffffffff80096e5c>] do_syslog.part.0+0x94/0x2d8
+[  212.217502] [<ffffffff800979e8>] do_syslog+0x66/0x88
+[  212.217636] [<ffffffff803a5dda>] kmsg_read+0x44/0x5c
+[  212.217764] [<ffffffff80392dbe>] proc_reg_read+0x7a/0xa8
+[  212.217952] [<ffffffff802ff726>] vfs_read+0xb0/0x24e
+[  212.218090] [<ffffffff803001ba>] ksys_read+0x64/0xe4
+[  212.218264] [<ffffffff8030025a>] __riscv_sys_read+0x20/0x2c
+[  212.218453] [<ffffffff80c4af9a>] do_trap_ecall_u+0x60/0x1d4
+[  212.218664] [<ffffffff80c56998>] ret_from_exception+0x0/0x64
+
+Signed-off-by: Ryo Takakura <takakura@valinux.co.jp>
+
+---
+
+Changes since V1:
+https://lore.kernel.org/lkml/20240417050711.41930-1-takakura@valinux.co.jp/
+- fix build failure when SMP=n as @Palmer pointed out
+
+---
+ arch/riscv/include/asm/irq.h |  5 +++++
+ arch/riscv/kernel/smp.c      | 16 ++++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+index 8e10a9443..8330d16b0 100644
+--- a/arch/riscv/include/asm/irq.h
++++ b/arch/riscv/include/asm/irq.h
+@@ -12,6 +12,11 @@
+ 
+ #include <asm-generic/irq.h>
+ 
++#ifdef CONFIG_SMP
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
++#define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
++#endif
++
+ void riscv_set_intc_hwnode_fn(struct fwnode_handle *(*fn)(void));
+ 
+ struct fwnode_handle *riscv_get_intc_hwnode(void);
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index 8e6eb6445..9b0478997 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -21,6 +21,7 @@
+ #include <linux/delay.h>
+ #include <linux/irq.h>
+ #include <linux/irq_work.h>
++#include <linux/nmi.h>
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/cacheflush.h>
+@@ -33,6 +34,7 @@ enum ipi_message_type {
+ 	IPI_CPU_CRASH_STOP,
+ 	IPI_IRQ_WORK,
+ 	IPI_TIMER,
++	IPI_CPU_BACKTRACE,
+ 	IPI_MAX
+ };
+ 
+@@ -136,6 +138,9 @@ static irqreturn_t handle_IPI(int irq, void *data)
+ 		tick_receive_broadcast();
+ 		break;
+ #endif
++	case IPI_CPU_BACKTRACE:
++		nmi_cpu_backtrace(get_irq_regs());
++		break;
+ 	default:
+ 		pr_warn("CPU%d: unhandled IPI%d\n", smp_processor_id(), ipi);
+ 		break;
+@@ -203,6 +208,7 @@ static const char * const ipi_names[] = {
+ 	[IPI_CPU_CRASH_STOP]	= "CPU stop (for crash dump) interrupts",
+ 	[IPI_IRQ_WORK]		= "IRQ work interrupts",
+ 	[IPI_TIMER]		= "Timer broadcast interrupts",
++	[IPI_CPU_BACKTRACE]     = "CPU backtrace interrupts",
+ };
+ 
+ void show_ipi_stats(struct seq_file *p, int prec)
+@@ -323,3 +329,13 @@ void arch_smp_send_reschedule(int cpu)
+ 	send_ipi_single(cpu, IPI_RESCHEDULE);
+ }
+ EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
++
++static void riscv_backtrace_ipi(cpumask_t *mask)
++{
++	send_ipi_mask(mask, IPI_CPU_BACKTRACE);
++}
++
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
++{
++	nmi_trigger_cpumask_backtrace(mask, exclude_cpu, riscv_backtrace_ipi);
++}
+-- 
+2.34.1
+
