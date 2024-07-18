@@ -1,155 +1,134 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8A1487A5
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B0B2CCA3
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721287335; cv=none; b=b/EytCOYTucdhtfC4zaHc4Fg5EQcHK5pSlLTweDiFpcgfqeLzx8hTEXRO/ExeaXf9n8pkpqVxCchkih40vQlRRusHfrf885wJDzN8nBvakWlVrYfoA3dESvOjIaxzvaHMuQ8fDF0DgySChIrDCk30lM3iyT2VarGBUWcdflHcmo=
+	t=1721287528; cv=none; b=ofr5xfG/qd/H39IGd6iw+zGkbJ2xU2NAL3efpfAsNModeCH5IrAE9pxsVFUPCAeUgnTQ0VNGEaJoWguKTzQ283cOxKyCUYR69Rp3NXnFuBC+07scqTMVb+t/Yox8nyOQshkpUVMeERFaG/HDmvnARR/JAk8b+MeIQHrdhH6En4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721287335; c=relaxed/simple;
-	bh=wPyOAmR53ULPE6Dq7KdjQV3wp/zEs9oj/w5PUnWP+bM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=Mb9lGAdx2pznNVNU64PfTrATdN3SkKzarDih+JpFArIoh3krBqUFJ7oek9srWT8ETJBNykp1zRZFa34H6rgHdE9U4NmHnFOIsls4EjEZ3hTLMXZqsJouludtVLxLDaErHv84PKEjwrl4URP1jU28YZoywdSezMVKhfhXA/NWYIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ibjI173y; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1721287528; c=relaxed/simple;
+	bh=dVlEsiq3WpoVPVRfCi0y480MQYxzoni0zWm4l4dNPXs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uVjoiJjHJX9/lXUNzCFORVl0gAe+cFxUqXWjcO1j2sjbTyewdIp9XmWEqJJIX/8gZ0MG90ld0QARBWMmknCUU1nBUFsUsXazgrQrvG5mXvioB1trgNxM3omaHm5cV0JVmV6NYSd+LX6XXXKga+6+CiYqYVuXwt3DTRbeqw6Fbc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1k2KjYbE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QRwn0Jpr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ibjI173y"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240718072204epoutp035241e950b8e8c3996f016967dfc2cc5f~jPbOq8Bs11545215452epoutp03D
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:22:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240718072204epoutp035241e950b8e8c3996f016967dfc2cc5f~jPbOq8Bs11545215452epoutp03D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1721287324;
-	bh=13FCV97nEtgiaVZ11kx9ddZIZe6T/jO3F12+cKIMIxE=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=ibjI173yXQH+Abe+Yft8W2qVNPNx6RHDZqdq0QaDXqonzo2tWzhqMf/EQnp21enMn
-	 NNp2p0TEfmOATBspPVaGhkf8cMyCDb3orxt+rqC1M579jlTPPPzg0E21CWytITEtfQ
-	 s2Sqqqm6WqM3A3hpfd+gCI+wFs3A3hN7Gr7oSltQ=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240718072204epcas5p2f3a0b245274dd89b955e1f6be285d6b8~jPbOR_v1g0558505585epcas5p2v;
-	Thu, 18 Jul 2024 07:22:04 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4WPklG2WF0z4x9Q7; Thu, 18 Jul
-	2024 07:22:02 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	57.75.06857.A92C8966; Thu, 18 Jul 2024 16:22:02 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240718070823epcas5p14445a1ab8f8bf8a496405a1424ea067f~jPPSSZ5Y52735427354epcas5p1C;
-	Thu, 18 Jul 2024 07:08:23 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240718070823epsmtrp148f9ae4bc5ac408493f174ea3e637c2a~jPPSRswvg0526105261epsmtrp1f;
-	Thu, 18 Jul 2024 07:08:23 +0000 (GMT)
-X-AuditID: b6c32a4b-88bff70000021ac9-fa-6698c29a4e02
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	AF.49.29940.76FB8966; Thu, 18 Jul 2024 16:08:23 +0900 (KST)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240718070822epsmtip2dde660fe4aa025631f465b5efe342a35~jPPRRKnAF2748427484epsmtip2i;
-	Thu, 18 Jul 2024 07:08:22 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hexue
-	<xue01.he@samsung.com>
-Subject: [PATCH v3] block: Avoid polling configuration errors
-Date: Thu, 18 Jul 2024 15:08:17 +0800
-Message-Id: <20240718070817.1031494-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1k2KjYbE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QRwn0Jpr"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1721287515;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IybnAjkns1vo3Yzo3bcVZRByBGhG1dccIwYMdpc8U4k=;
+	b=1k2KjYbEruhgnRkMGc+fTzVnCfrCYYWxDBPCoA2H32uwWPy6jQ+90Tl9f8IPFh8qI3be30
+	2Hlcb2wWlka1WPH/Vk+t0hifP4Qr3dvgy4ZKsw0iv48HtUqmH2zDOdupPsifg69OBDWzKz
+	v0xclbLFmczkREQCD4atrrOqGHhH/aJwChRUjzL20AhhXG+4i/DE8fUJq8sNA60J64YvdP
+	GLAvzTeDHid+YOR+4zB/MLG47zU5kmVlaTbAJxpzAPJDyTTXAKPbk0ZfnlKmQEzpdZnLa+
+	yO5Eg1gyAqUqDRMHWXImsY9rmKlkm+TKU0NCYnqLqTq6uEAppCE44I3ZfG/g0w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1721287515;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IybnAjkns1vo3Yzo3bcVZRByBGhG1dccIwYMdpc8U4k=;
+	b=QRwn0Jprs3oJwRX0qlQ2u32cf1z1/mfAfoIeUyD1znjZ/wfDzLIicGCS1lcyKCgiu37TJ6
+	QbVyS0G2rWX/tDCQ==
+To: Rik van Riel <riel@surriel.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Omar Sandoval <osandov@meta.com>, linux-kernel@vger.kernel.org, Petr
+ Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, kernel-team <kernel-team@meta.com>
+Subject: Re: [RFC PATCH] nmi,printk: fix ABBA deadlock between nmi_backtrace
+ and dump_stack_lvl
+In-Reply-To: <93155b2ccafa43ed4845ae450451c6b8e27509cc.camel@surriel.com>
+References: <20240715232052.73eb7fb1@imladris.surriel.com>
+ <87plrcqyii.fsf@jogness.linutronix.de>
+ <93155b2ccafa43ed4845ae450451c6b8e27509cc.camel@surriel.com>
+Date: Thu, 18 Jul 2024 09:31:14 +0206
+Message-ID: <87r0brkvqd.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAKsWRmVeSWpSXmKPExsWy7bCmpu6sQzPSDH6v4bNYfbefzeJX911G
-	i723tC0u75rDZnF2wgdWi64Lp9gc2Dwuny316NuyitHj8ya5AOaobJuM1MSU1CKF1Lzk/JTM
-	vHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoK1KCmWJOaVAoYDE4mIlfTubovzS
-	klSFjPziElul1IKUnAKTAr3ixNzi0rx0vbzUEitDAwMjU6DChOyMpc0CBd+5KlpON7M3MLZy
-	djFyckgImEjsevGKCcQWEtjNKNFxn7+LkQvI/sQoce1TLwuE841R4nHPFqAqDrCOn+1Q8b2M
-	ElOOLmSDcH4wSqxsnccIMopNQEli/5YPYLaIgLDE/o5WFhCbWSBW4uiyB2BxYQFbia2n74PF
-	WQRUJb4smcMOYvMKWEscmTKDGeI8eYmbXfuZIeKCEidnPoGaIy/RvHU2M8hiCYFN7BIzJ/VD
-	NbhIzF/4mhHCFpZ4dXwLO4QtJfGyvw3KzpeY/H09VE2NxLrN71ggbGuJf1f2sIB8ySygKbF+
-	lz5EWFZi6ql1TBB7+SR6fz9hgojzSuyYB2MrSSw5sgJqpITE7wmLWCFsD4mTOy8zQ4I3VqJv
-	5wmWCYzys5C8MwvJO7MQNi9gZF7FKJlaUJybnlpsWmCcl1oOj9bk/NxNjOCkp+W9g/HRgw96
-	hxiZOBgPMUpwMCuJ8E5gnJYmxJuSWFmVWpQfX1Sak1p8iNEUGMYTmaVEk/OBaTevJN7QxNLA
-	xMzMzMTS2MxQSZz3devcFCGB9MSS1OzU1ILUIpg+Jg5OqQamivk3zndXTJwS9tXA9ay8efj+
-	QjvTVfvLdl55n9p8aJ7QivXldaFeGbPv5tTXNIfdjXV4E9J96J+ruLlT/1mXI4Gsj/s21/Ou
-	1Z/6cO1jBbmw1s+M544ednDT8Z38kOfowat23/b1y0++KKCnKe97tKfYyknFMux2ezaHksRU
-	gZ9BVpfuKX7eU12dZTv/wntONsH59Q/uzGotZi1LfaZV7casnVVT8ZTn+OLFysteL1ISLPxw
-	tLn8nmZi0PwLgjbuQU9KrodVirM82qW+texs/6a3+kt9xXRfMx66fj3vZJRbT+ml6E9X/i7v
-	WJy+WLV2bfN04axD19l3aXiKJWhcExQ+bZX2PLyt4YfQ9ONKLMUZiYZazEXFiQBmufTpAwQA
-	AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNLMWRmVeSWpSXmKPExsWy7bCSvG76/hlpBvcvK1msvtvPZvGr+y6j
-	xd5b2haXd81hszg74QOrRdeFU2wObB6Xz5Z69G1ZxejxeZNcAHMUl01Kak5mWWqRvl0CV8bS
-	ZoGC71wVLaeb2RsYWzm7GDk4JARMJH62s3QxcnEICexmlPg9YydjFyMnUFxCYsejP6wQtrDE
-	yn/P2UFsIYFvjBLvH0SA2GwCShL7t3wAqxcBqtnf0coCYjMLxEtcmnqeGcQWFrCV2Hr6Plic
-	RUBV4suSOWBzeAWsJY5MmcEMMV9e4mbXfmaIuKDEyZlPoObISzRvnc08gZFvFpLULCSpBYxM
-	qxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxgsNPS3MH4/ZVH/QOMTJxMB5ilOBgVhLh
-	ncA4LU2INyWxsiq1KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QDU9Ap
-	O45bi26X2Zt1HDu5qOSSev781k/XPpVX3eC4VNFeW5r5nSNRvvvbl9CS74ssN4d0rcgRTT/z
-	e073J1uF3kf+NxVmSFyYo6Jne+aBfZeU38rlbdfNMpn23NBnzVF7HfLIZf2ZK3fzM88wsi/Y
-	79MrrJTF0L2Mw8t/kaTZEcGDt17Pt2K2usHGuOnryyelKladVqKmJkm+X8PipZLfV5oePJMj
-	ueV6y8LzOevecHGqdz1udZ/wYGFb3dmTChtkM0V3rHhwo/mccU7HtoXf61hKih5vf/L/YOwv
-	y8n+B079P+P9p8dA2+VR+dYOpkQ9r+SKufMYF+YxXZr1Iz8pYl9rmV/irrKFRv+72n5nKbEU
-	ZyQaajEXFScCAA37s7quAgAA
-X-CMS-MailID: 20240718070823epcas5p14445a1ab8f8bf8a496405a1424ea067f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240718070823epcas5p14445a1ab8f8bf8a496405a1424ea067f
-References: <CGME20240718070823epcas5p14445a1ab8f8bf8a496405a1424ea067f@epcas5p1.samsung.com>
+Content-Type: text/plain
 
-This patch add a poll queue check, aims to help users to use poll tolls
-accurately.
+On 2024-07-17, Rik van Riel <riel@surriel.com> wrote:
+> I think that would do the trick. The nmi_backtrace() printk is already
+> deferred, because of the check for in_nmi() in vprintk(), and this
+> change would put all the other users of printk_cpu_sync_get_irqsave()
+> on the exact same footing as nmi_backtrace().
+>
+> Combing through the code a little, it looks like that would remove
+> the potential for this deadlock to happen again.
 
-If users do polled IO but device doesn't have poll queues, they will get
-wrong perfromance data and waste CPU resources. So here adding a poll queue
-check, if users do this misconfiguration, it will return users that device
-does not support this operation, to help users adjust their configuration
-promptly.
---
-changes from v2:
-- move check into block layer
-- return -EOPNOTSUPP instead of print a warning in io_uring
-v2: https://lore.kernel.org/io-uring/20240711082430.609597-1-xue01.he@samsung.com/T/#u
+Let's see what Petr has to say. (He'll be back on Monday.) He might
+prefer a solution that does not result in deferring printing for all
+cases. i.e. allow the console_lock if it is available, but avoid the
+spinning if it is not. Below is a patch that would achieve this.
 
-changes from v1:
-- without disrupting the original I/O process.
-- move judgement from block to io_uring.
-v1: https://lore.kernel.org/linux-block/ZlrQCaR6xEaghWdQ@infradead.org/T/#t
+John
 
-Signed-off-by: hexue <xue01.he@samsung.com>
----
- block/blk-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 82c3ae22d76d..9788808bd488 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -791,8 +791,11 @@ void submit_bio_noacct(struct bio *bio)
- 		}
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index dddb15f48d59..36f40db0bf93 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1060,6 +1060,8 @@ static int __init log_buf_len_setup(char *str)
+ early_param("log_buf_len", log_buf_len_setup);
+ 
+ #ifdef CONFIG_SMP
++static bool vprintk_emit_may_spin(void);
++
+ #define __LOG_CPU_MAX_BUF_LEN (1 << CONFIG_LOG_CPU_MAX_BUF_SHIFT)
+ 
+ static void __init log_buf_add_cpu(void)
+@@ -1090,6 +1092,7 @@ static void __init log_buf_add_cpu(void)
+ }
+ #else /* !CONFIG_SMP */
+ static inline void log_buf_add_cpu(void) {}
++static inline bool vprintk_emit_may_spin(void) { return true };
+ #endif /* CONFIG_SMP */
+ 
+ static void __init set_percpu_data_ready(void)
+@@ -2330,6 +2333,8 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 
+ 	/* If called from the scheduler, we can not call up(). */
+ 	if (!in_sched) {
++		int ret;
++
+ 		/*
+ 		 * The caller may be holding system-critical or
+ 		 * timing-sensitive locks. Disable preemption during
+@@ -2344,7 +2349,11 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 		 * spinning variant, this context tries to take over the
+ 		 * printing from another printing context.
+ 		 */
+-		if (console_trylock_spinning())
++		if (vprintk_emit_may_spin())
++			ret = console_trylock_spinning();
++		else
++			ret = console_trylock();
++		if (ret)
+ 			console_unlock();
+ 		preempt_enable();
  	}
+@@ -4321,6 +4330,15 @@ void console_replay_all(void)
+ static atomic_t printk_cpu_sync_owner = ATOMIC_INIT(-1);
+ static atomic_t printk_cpu_sync_nested = ATOMIC_INIT(0);
  
--	if (!test_bit(QUEUE_FLAG_POLL, &q->queue_flags))
-+	if (!test_bit(QUEUE_FLAG_POLL, &q->queue_flags) &&
-+			(bio->bi_opf & REQ_POLLED)) {
- 		bio_clear_polled(bio);
-+		goto not_supported;
-+	}
- 
- 	switch (bio_op(bio)) {
- 	case REQ_OP_READ:
--- 
-2.40.1
-
++/*
++ * As documented in printk_cpu_sync_get_irqsave(), a context holding the
++ * printk_cpu_sync must not spin waiting for another CPU.
++ */
++static bool vprintk_emit_may_spin(void)
++{
++	return (atomic_read(&printk_cpu_sync_owner) != smp_processor_id());
++}
++
+ /**
+  * __printk_cpu_sync_wait() - Busy wait until the printk cpu-reentrant
+  *                            spinning lock is not owned by any CPU.
