@@ -1,102 +1,155 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE48714372D;
-	Thu, 18 Jul 2024 16:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C1C3B784;
+	Thu, 18 Jul 2024 16:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721321110; cv=none; b=sz2vBcYmPqGDVMNj+gUU7xEmE2iCEeXU0PfArjS76A5GooyBD1bzbTFmQc6qRXiu8r6TzKLz9dCC9qApiPzv4F1r6KqaYsc2ZukkP6uUUnQ3rvd3TjlSm+aeK2Ssgtngw+KYmIcTgWeg5JgafThkiO+gcJVaihimz7HCdy6HJh4=
+	t=1721321109; cv=none; b=OakChMDmIjnmgoquzFn+Fqhiq8GB711piG4G0QmTvY+oZNO3TczKr+ZvxbDG8j8fa0Xa1QhrlwdwJj//svyRN77m97aT5nAnn2qeMbilgMdsmZTTyuSnNeXWGFQ5Hc/S/UGhIsnmgAsQ3CsfrdUDJFPJSjeOTFUO76IZgDKM2RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721321110; c=relaxed/simple;
-	bh=ho4kXrb83dG7s2zTkRmierlLx/1L8Hdnc7xDarwrA6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rzM2HLH+sKV/X2esjVgIO/pk6uOqFfuXJL6gLLxW2fGBsrIP6+KTfAXP+0YB22KxrupqK4FloIP+JnzmJ6jc3SL/BFz2O2V/nOZ4Ly1wMIO8R6Tkgxr0oTdkOsPHtQnlKtsd9VeHj1Q2lm1LTm5Rh0EB2HGhIWUMtCvJmQcyZSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C9676FF808;
-	Thu, 18 Jul 2024 16:45:00 +0000 (UTC)
-Message-ID: <6908e437-bf1c-4fae-bb34-b5c30dae97ff@ghiti.fr>
-Date: Thu, 18 Jul 2024 18:45:00 +0200
+	s=arc-20240116; t=1721321109; c=relaxed/simple;
+	bh=MH4Q4XVP/39bjBRKGYVnf68mFPvP2t7C9VKeg2k4XlY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Q3FuNA4Uc3smtcQ+NolJhwhMgZJsUNYGoFTYxUXe7mFz5Cl4TaTUmt+dPr7BmRYCCt/vOLMh+yBHPOlEnzumeRRY+fvKeOgR+fi1CMuL9lvIoGdB5FIFxp69CAgk+apefOiFj8Wfd8jGmpies7aNLiq2M38vm/DIPIW+DTelML8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=C0r8YI/f; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="C0r8YI/f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1721320800; bh=069pD/YAJpfQ8jHaMRThKwpeiyzyE+NfLH9us2kGFnc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=C0r8YI/fbHI6J5vBnWJ+1ioNdVphtdLLL1M6E12q3hVVxMEfdGRWncSVjtW2yhLYN
+	 KTDnnRPHr2KSvk5QmF6+iisQyZOeUFrFs1u3aVrmKahMusIrTPH44SvLYlSnyPWTMg
+	 YnZA5sK86MiMsqYfvhppVVd0+I6BL9BnYGMcBOqA=
+Received: from ubuntu.. ([175.167.155.224])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 6A9A8008; Fri, 19 Jul 2024 00:26:41 +0800
+X-QQ-mid: xmsmtpt1721320001tea7nkyxk
+Message-ID: <tencent_2FCF6CC9E10DC8A27AE58A5A0FE4FCE96D0A@qq.com>
+X-QQ-XMAILINFO: OKkKo7I1HxIe5TtchEP1Gp8rYBvef4royzorLuTkiPosYdx5ym8rPEm1qbY9oj
+	 DsjTALFofYnriSpdeW8ItMrmpIpNBoDYUG0XGlGw6zH3jzt/FzxnB3GlFE+AzCJ3tkyiczSOkYPE
+	 jLwR8HJXzupNi/t0w2x8kIpUHY6+UBPe6piGEW7wf3J6nDmQUd7o2sIW8uTuoPpMNlhQvzXmI4G7
+	 8fgjlyzKO2MkF+oOfILbEA+8TGFDhslJXjWPTAyiLBhx8n3AjPrsYkceeVeF+i5J+7jIyIj0xJKA
+	 zd9SwJmwFHE5qoZf5GPgvN7KGc4IOjpNAsTWOhQNZwL5zZnfdO8qSGE+DqD8oGhHCvsPHsb9cQyM
+	 NMC7Q2TzrAQrUFp++Ny8Wg4smZ6I3UOKXF8c5SMyxJYd0ZSLd2gwwy6ysdFk40ol3U3c0cY5BUt6
+	 Ok4FPGLBYSto8fYJXVjY3sJ0pI/ZSbowxI363j41Bi1/QJwsZxX/86RdJsBbpX2kybR3QZ1JpjXH
+	 z/ItoRQzuROPHNkQb8gSTvvZPjuW5wxZ92zYYT0OU5S+3Issa+LnNBQ2T8yT0CQd77GbLz9oqbGK
+	 o8M+hiePa/LoVlRFVcWfsWkfPpv3R0EjUomiwKbNW9Yv3sZPoe5fc4cxlY4n0TRUrf12Oaa0B7C6
+	 xASl36oPoAtczpy2E4+JFvFub30A+N+b+/cU6fAKyDrGdToIt3rZDRQkYivdENZwrPogRT9gD+mh
+	 sVXs2LGrLvMoBSAc/yf9W7N0hGDqEuSxmtV8TskkQs95vjZUbGawHTtJfFhTv3MRPNoUutaxsJfy
+	 0QoDAJLqbpOZcsQnoZfgtb+VI8tQqnZfP1kYljO2YLq3JYuKy6swPZfo5zCg3b2/nZb1BsR6NOTE
+	 RYQQwmJjg9z4P2DM3d+uKmXdVxzAqxVUltvT3Lzkm7X2cwNGXxaBP8VICbCCI3zpriwxDMDuu9xZ
+	 VPZ70PpXyazaWEH/pL6vHeGEfaUn5F24NUDbe49eWlv+jRSPNE/Hw8UOhxxKvniYCmBfZasFY=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: Congjie Zhou <zcjie0802@qq.com>
+To: linux-kernel@vger.kernel.org
+Cc: zcjie0802@qq.com,
+	brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz
+Subject: [PATCH v4] vfs: correct the comments of vfs_*() helpers
+Date: Fri, 19 Jul 2024 00:25:45 +0800
+X-OQ-MSGID: <20240718162545.11435-1-zcjie0802@qq.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <tencent_3A7366F414667EE52C073850077331ADC709@qq.com>
+References: <tencent_3A7366F414667EE52C073850077331ADC709@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/4] dt-bindings: riscv: Add Svade and Svadu Entries
-Content-Language: en-US
-To: Yong-Xuan Wang <yongxuan.wang@sifive.com>, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, kvm-riscv@lists.infradead.org,
- kvm@vger.kernel.org
-Cc: greentime.hu@sifive.com, vincent.chen@sifive.com,
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- devicetree@vger.kernel.org
-References: <20240712083850.4242-1-yongxuan.wang@sifive.com>
- <20240712083850.4242-3-yongxuan.wang@sifive.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240712083850.4242-3-yongxuan.wang@sifive.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
 
-On 12/07/2024 10:38, Yong-Xuan Wang wrote:
-> Add entries for the Svade and Svadu extensions to the riscv,isa-extensions
-> property.
->
-> Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-> ---
->   .../devicetree/bindings/riscv/extensions.yaml | 28 +++++++++++++++++++
->   1 file changed, 28 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> index 468c646247aa..e91a6f4ede38 100644
-> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> @@ -153,6 +153,34 @@ properties:
->               ratified at commit 3f9ed34 ("Add ability to manually trigger
->               workflow. (#2)") of riscv-time-compare.
->   
-> +        - const: svade
-> +          description: |
-> +            The standard Svade supervisor-level extension for SW-managed PTE A/D
-> +            bit updates as ratified in the 20240213 version of the privileged
-> +            ISA specification.
-> +
-> +            Both Svade and Svadu extensions control the hardware behavior when
-> +            the PTE A/D bits need to be set. The default behavior for the four
-> +            possible combinations of these extensions in the device tree are:
-> +            1) Neither Svade nor Svadu present in DT => It is technically
-> +               unknown whether the platform uses Svade or Svadu. Supervisor
-> +               software should be prepared to handle either hardware updating
-> +               of the PTE A/D bits or page faults when they need updated.
-> +            2) Only Svade present in DT => Supervisor must assume Svade to be
-> +               always enabled.
-> +            3) Only Svadu present in DT => Supervisor must assume Svadu to be
-> +               always enabled.
-> +            4) Both Svade and Svadu present in DT => Supervisor must assume
-> +               Svadu turned-off at boot time. To use Svadu, supervisor must
-> +               explicitly enable it using the SBI FWFT extension.
-> +
-> +        - const: svadu
-> +          description: |
-> +            The standard Svadu supervisor-level extension for hardware updating
-> +            of PTE A/D bits as ratified at commit c1abccf ("Merge pull request
-> +            #25 from ved-rivos/ratified") of riscv-svadu. Please refer to Svade
-> +            dt-binding description for more details.
-> +
->           - const: svinval
->             description:
->               The standard Svinval supervisor-level extension for fine-grained
+correct the comments of vfs_*() helpers in fs/namei.c, including:
+1. vfs_create()
+2. vfs_mknod()
+3. vfs_mkdir()
+4. vfs_rmdir()
+5. vfs_symlink()
 
+All of them come from the same commit:
+6521f8917082 "namei: prepare for idmapped mounts"
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+The @dentry is actually the dentry of child directory rather than
+base directory(parent directory), and thus the @dir has to be
+modified due to the change of @dentry.
 
-Thanks,
+Signed-off-by: Congjie Zhou <zcjie0802@qq.com>
+---
+It has been more than one month since my last email but no response, 
+so I make some changes and resend it.
 
-Alex
+ fs/namei.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 3a4c40e12..5512cb10f 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3248,9 +3248,9 @@ static inline umode_t vfs_prepare_mode(struct mnt_idmap *idmap,
+ /**
+  * vfs_create - create new file
+  * @idmap:	idmap of the mount the inode was found from
+- * @dir:	inode of @dentry
+- * @dentry:	pointer to dentry of the base directory
+- * @mode:	mode of the new file
++ * @dir:	inode of the parent directory
++ * @dentry:	dentry of the child file
++ * @mode:	mode of the child file
+  * @want_excl:	whether the file must not yet exist
+  *
+  * Create a new file.
+@@ -4047,9 +4047,9 @@ EXPORT_SYMBOL(user_path_create);
+ /**
+  * vfs_mknod - create device node or file
+  * @idmap:	idmap of the mount the inode was found from
+- * @dir:	inode of @dentry
+- * @dentry:	pointer to dentry of the base directory
+- * @mode:	mode of the new device node or file
++ * @dir:	inode of the parent directory
++ * @dentry:	dentry of the child device node
++ * @mode:	mode of the child device node
+  * @dev:	device number of device to create
+  *
+  * Create a device node or file.
+@@ -4174,9 +4174,9 @@ SYSCALL_DEFINE3(mknod, const char __user *, filename, umode_t, mode, unsigned, d
+ /**
+  * vfs_mkdir - create directory
+  * @idmap:	idmap of the mount the inode was found from
+- * @dir:	inode of @dentry
+- * @dentry:	pointer to dentry of the base directory
+- * @mode:	mode of the new directory
++ * @dir:	inode of the parent directory
++ * @dentry:	dentry of the child directory
++ * @mode:	mode of the child directory
+  *
+  * Create a directory.
+  *
+@@ -4256,8 +4256,8 @@ SYSCALL_DEFINE2(mkdir, const char __user *, pathname, umode_t, mode)
+ /**
+  * vfs_rmdir - remove directory
+  * @idmap:	idmap of the mount the inode was found from
+- * @dir:	inode of @dentry
+- * @dentry:	pointer to dentry of the base directory
++ * @dir:	inode of the parent directory
++ * @dentry:	dentry of the child directory
+  *
+  * Remove a directory.
+  *
+@@ -4537,8 +4537,8 @@ SYSCALL_DEFINE1(unlink, const char __user *, pathname)
+ /**
+  * vfs_symlink - create symlink
+  * @idmap:	idmap of the mount the inode was found from
+- * @dir:	inode of @dentry
+- * @dentry:	pointer to dentry of the base directory
++ * @dir:	inode of the parent directory
++ * @dentry:	dentry of the child symlink file
+  * @oldname:	name of the file to link to
+  *
+  * Create a symlink.
+-- 
+2.34.1
 
