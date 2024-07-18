@@ -1,279 +1,164 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A5513E8B6;
-	Thu, 18 Jul 2024 08:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852203F8F7
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 08:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721292362; cv=none; b=FmUlnebkLe5UjOzhsVSfEnGf6NGsCWnynTBbZFzehwKdeg1yNpEHwxGH+9HS+pqJZ40m6Z+rb0UnCmYu+B5yz4z205CdFRZJLIMN7/X8Lv+HIDESPm4bfUXuFlSu5yJjeq1GzRrsRx4gpPBmcTILoSfUdD4/WafBYP18MYQ7V7A=
+	t=1721292388; cv=none; b=ZgsnbpF5cQdHN2eprffIIukvLL3rvyeoOr/q4vjTyCEGLVb2OKN5PiM1nFSTzCN3eN3kZ4vrRx9DB9PZas5233a/T/tCf5l8QMR5eWgaF2TBZCxeYUAAB/yeE3g1kJsJmnwRP0lhT7DdgTku1tBwydiresByL1XR936dB/LDvvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721292362; c=relaxed/simple;
-	bh=467jEQaTif/bfInIQnmWvLVNZqvDQyQmqwxGgx8EW9I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lMtpwyY/OfmeX5Pp1sqqagGO1Ak/HCck3bHI4skF/zQqhv74Fn8Un1JwfVXQsV8+KzAhAfFupbYvJpjZmAXBwSF5ykT2oynx8gd335QslfoLHINF8rRw+USCv2zIHt3izoldDVf6JTh0NuH3Q4R9TkipVR+kj0DyE6njjvdTVdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pW9SXWMK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pW9SXWMK"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I8QbVD001322;
-	Thu, 18 Jul 2024 08:45:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=vr7W5Xzm/s9Qa
-	GIYhCDx0WOA+B+aZE32cz0L1rM6Vwg=; b=pW9SXWMKSYs6hWtNCo6iTt+eJ3uii
-	pcd9YN1HUOaIYiDNGV7+OJ+Wji0vf3Cc6WrjWj35+FvggbQFFF408hgsTYZgkBAH
-	BRi47v72HOlmWY7DeEUAEkw6qfqjuBMK5hynl3XZfKIluDJwa861atsJADHV2AsE
-	nyM5eijqpYbc9O4/C8Z3xyA3OeMKgmdve/T/gnvKQ7ez1RPNVXYvEtmdOdYE4l2o
-	JXZk2uAr12TXZk+5pI0yhGzTWujiqlBtOpNXTCYe5VwA4bUpR6ZxK/9FYK+9oXa5
-	sNWiKTqp1jASGo7owLmqJ7Y+KW2q2FI60CbCRygltmpPiMt55bEckBSBQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ewtpg91k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 08:45:50 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I8hZ2i024954;
-	Thu, 18 Jul 2024 08:45:50 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ewtpg91f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 08:45:50 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I59J0Z006020;
-	Thu, 18 Jul 2024 08:45:49 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40dwkn8rks-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 08:45:49 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I8jhrR44106172
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jul 2024 08:45:46 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D013C2004E;
-	Thu, 18 Jul 2024 08:45:43 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 85A1320040;
-	Thu, 18 Jul 2024 08:45:40 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.69.1])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 18 Jul 2024 08:45:40 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
-        christophe.leroy@csgroup.eu
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH V8 15/15] tools/perf: Set instruction name to be used with insn-stat when using raw instruction
-Date: Thu, 18 Jul 2024 14:13:58 +0530
-Message-Id: <20240718084358.72242-16-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
-References: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
+	s=arc-20240116; t=1721292388; c=relaxed/simple;
+	bh=wV5ybvQPor2bnJGgnEn0Oh+kFS+xgnjnr0Hxc8kRgHA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=U5LPpFKPeGHkEWqyqClc6MC3mIR01ezl5ntnjWZdFqpJEMC70BpF/N2WLR/uly2D7luuWC9V73LZNOSlyg8iN/Csxl4cMhIws73lj+8gvnXqMY0B/XSMMub8WWtifFwHkvLevrZedQmDtWBxzNmx2jHX9FvpfOQSRFaKRJvY31Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-396a2362fb0so8181765ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 01:46:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721292383; x=1721897183;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4zPAYIuXO5OCe6dNXtaa4wLM0bA3nIGaPdAwSXVyIi4=;
+        b=GZP9zukNjrZx0hXlwHYsQ0XY90GugHxCN5/yilUYmdKAhptVIL702Oa8DOZsEkxc7L
+         OHvs24N1/H/NRMl2TTa8UiPH/12hY68ClkZwjJUJPHZhSA2dY3mHbL/ZqCQCpN65RWS4
+         AasH7PUDxTKZ6xxY/3a1eO944B13sVMhpiUvwZkCiCT+48znUEWi+fV83G8M+038Kz0g
+         MpAqXRFdHIs8IqmzrLZ0W8HB1v1PY1l87PoiO9lS2usmYHyNepPiRMIA0+B8PFgcNK5f
+         kztqyKISVDCT3HFurud3y1RBJ9ebJZ0fd8KWpmmr2S+GZMcYI884EvWlN2pmL6OgOqMO
+         edhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoVfOLqu9zco+h+iMN/DUy4xtlBTVD7eTizqHb5LsUggkrzdKlmVnBrNad89/l466E2eOe6a7su6jPRhglfZWrtYKkmKepz/nkHkBm
+X-Gm-Message-State: AOJu0YyyRoglFdY3RphFYSuAPL+aNdqyD6xjLgWW/OrvppUV+7t90IJl
+	hWITmXUASNqk63ts+4SUmZ1MHsWT38gnQQ1DaMo/uw7rKbB9VLdTCkvr+cxDLNfgne8zcyvskaO
+	AAk6DoYwuOFUna48iasphVLJdV4HIjVxeebeWS+jQ0KrGH1FzdCYh9ac=
+X-Google-Smtp-Source: AGHT+IHfTQRHpCcbQEQMMigbvGYeylVBPR6NAUlcDpcwGlttqEKqQ56bCIDRYDV+m5WxrLtGPQzHuSWwSK9BUAxYbpReV8TK97NX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hIEO2A8xu-DdcJHOjttqB19CRvjQewcP
-X-Proofpoint-ORIG-GUID: 55Ht9lDrkXJK5fCm_P8VLmxO3lzK_6hb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-18_04,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407180054
+X-Received: by 2002:a05:6e02:219c:b0:397:3a28:94e8 with SMTP id
+ e9e14a558f8ab-3973a28973fmr25725ab.3.1721292383653; Thu, 18 Jul 2024 01:46:23
+ -0700 (PDT)
+Date: Thu, 18 Jul 2024 01:46:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000152438061d819d0b@google.com>
+Subject: [syzbot] [wireless?] divide error in mac80211_hwsim_link_info_changed
+From: syzbot <syzbot+c6f3c081bf956c97e4de@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, kvalo@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Since the "ins.name" is not set while using raw instruction,
-perf annotate with insn-stat gives wrong data:
+Hello,
 
-Result from "./perf annotate --data-type --insn-stat":
+syzbot found the following issue on:
 
-Annotate Instruction stats
-total 615, ok 419 (68.1%), bad 196 (31.9%)
+HEAD commit:    51835949dda3 Merge tag 'net-next-6.11' of git://git.kernel..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f207a5980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d3bdd09ea2371c89
+dashboard link: https://syzkaller.appspot.com/bug?extid=c6f3c081bf956c97e4de
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-  Name      :  Good   Bad
-  -----------------------------------------------------------
-            :   419   196
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Patch sets "dl->ins.name" in arch specific function "check_ppc_insn"
-while initialising "struct disasm_line". Also update "ins_find" function
-to pass "struct disasm_line" as a parameter so as to set its name field
-in arch specific call.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9690deac1819/disk-51835949.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/54d261dbb3f0/vmlinux-51835949.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e61465cd524f/bzImage-51835949.xz
 
-With the patch changes:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c6f3c081bf956c97e4de@syzkaller.appspotmail.com
 
-  Annotate Instruction stats
-  total 609, ok 446 (73.2%), bad 163 (26.8%)
+Oops: divide error: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 0 PID: 11 Comm: kworker/u8:0 Not tainted 6.10.0-syzkaller-04472-g51835949dda3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Workqueue: events_unbound cfg80211_wiphy_work
 
-  Name/opcode         :  Good   Bad
-  -----------------------------------------------------------
-  58                  :   323    80
-  32                  :    49    43
-  34                  :    33    11
-  OP_31_XOP_LDX       :     8    20
-  40                  :    23     0
-  OP_31_XOP_LWARX     :     5     1
-  OP_31_XOP_LWZX      :     2     3
-  OP_31_XOP_LDARX     :     3     0
-  33                  :     0     2
-  OP_31_XOP_LBZX      :     0     1
-  OP_31_XOP_LWAX      :     0     1
-  OP_31_XOP_LHZX      :     0     1
+RIP: 0010:mac80211_hwsim_link_info_changed+0x409/0xf00 drivers/net/wireless/virtual/mac80211_hwsim.c:2547
+Code: 00 fc ff df 43 80 7c 3d 00 00 48 8b 44 24 20 74 0f 48 8b 7c 24 20 e8 a6 ff 0d fb 48 8b 44 24 20 48 8b 08 89 ce 48 89 d8 31 d2 <48> f7 f6 29 d1 48 69 f1 e8 03 00 00 4c 89 f7 31 d2 b9 05 00 00 00
+RSP: 0018:ffffc900001077a0 EFLAGS: 00010246
 
-Reviewed-and-tested-by: Kajol Jain<kjain@linux.ibm.com>
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+RAX: 00061d780b08a1f3 RBX: 00061d780b08a1f3 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000040
+RBP: ffffc90000107890 R08: ffffffff8183f431 R09: 1ffffffff25f9ec5
+R10: dffffc0000000000 R11: ffffffff813597f0 R12: 0000000000000200
+R13: 1ffff1100c778e08 R14: ffff888063bc7048 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c34d35b CR3: 000000006a936000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ drv_link_info_changed+0x53d/0x8b0
+ ieee80211_offchannel_return+0x3a4/0x530 net/mac80211/offchannel.c:160
+ __ieee80211_scan_completed+0x77f/0xb60 net/mac80211/scan.c:495
+ ieee80211_scan_work+0x1cc/0x1da0 net/mac80211/scan.c:1162
+ cfg80211_wiphy_work+0x2db/0x490 net/wireless/core.c:440
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd40 kernel/workqueue.c:3390
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:mac80211_hwsim_link_info_changed+0x409/0xf00 drivers/net/wireless/virtual/mac80211_hwsim.c:2547
+Code: 00 fc ff df 43 80 7c 3d 00 00 48 8b 44 24 20 74 0f 48 8b 7c 24 20 e8 a6 ff 0d fb 48 8b 44 24 20 48 8b 08 89 ce 48 89 d8 31 d2 <48> f7 f6 29 d1 48 69 f1 e8 03 00 00 4c 89 f7 31 d2 b9 05 00 00 00
+RSP: 0018:ffffc900001077a0 EFLAGS: 00010246
+RAX: 00061d780b08a1f3 RBX: 00061d780b08a1f3 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000040
+RBP: ffffc90000107890 R08: ffffffff8183f431 R09: 1ffffffff25f9ec5
+R10: dffffc0000000000 R11: ffffffff813597f0 R12: 0000000000000200
+R13: 1ffff1100c778e08 R14: ffff888063bc7048 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f37c5e6dfc8 CR3: 000000001f47a000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess), 3 bytes skipped:
+   0:	df 43 80             	filds  -0x80(%rbx)
+   3:	7c 3d                	jl     0x42
+   5:	00 00                	add    %al,(%rax)
+   7:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+   c:	74 0f                	je     0x1d
+   e:	48 8b 7c 24 20       	mov    0x20(%rsp),%rdi
+  13:	e8 a6 ff 0d fb       	call   0xfb0dffbe
+  18:	48 8b 44 24 20       	mov    0x20(%rsp),%rax
+  1d:	48 8b 08             	mov    (%rax),%rcx
+  20:	89 ce                	mov    %ecx,%esi
+  22:	48 89 d8             	mov    %rbx,%rax
+  25:	31 d2                	xor    %edx,%edx
+* 27:	48 f7 f6             	div    %rsi <-- trapping instruction
+  2a:	29 d1                	sub    %edx,%ecx
+  2c:	48 69 f1 e8 03 00 00 	imul   $0x3e8,%rcx,%rsi
+  33:	4c 89 f7             	mov    %r14,%rdi
+  36:	31 d2                	xor    %edx,%edx
+  38:	b9 05 00 00 00       	mov    $0x5,%ecx
+
+
 ---
- .../perf/arch/powerpc/annotate/instructions.c  | 18 +++++++++++++++---
- tools/perf/builtin-annotate.c                  |  4 ++--
- tools/perf/util/annotate.c                     |  2 +-
- tools/perf/util/disasm.c                       | 10 +++++-----
- tools/perf/util/disasm.h                       |  2 +-
- 5 files changed, 24 insertions(+), 12 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index af1032572bf3..ede9eeade0ab 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -189,8 +189,9 @@ static int cmp_offset(const void *a, const void *b)
- 	return (val1->value - val2->value);
- }
- 
--static struct ins_ops *check_ppc_insn(u32 raw_insn)
-+static struct ins_ops *check_ppc_insn(struct disasm_line *dl)
- {
-+	int raw_insn = dl->raw.raw_insn;
- 	int opcode = PPC_OP(raw_insn);
- 	int mem_insn_31 = PPC_21_30(raw_insn);
- 	struct insn_offset *ret;
-@@ -198,19 +199,30 @@ static struct ins_ops *check_ppc_insn(u32 raw_insn)
- 		"OP_31_INSN",
- 		mem_insn_31
- 	};
-+	char name_insn[32];
- 
- 	/*
- 	 * Instructions with opcode 32 to 63 are memory
- 	 * instructions in powerpc
- 	 */
- 	if ((opcode & 0x20)) {
-+		/*
-+		 * Set name in case of raw instruction to
-+		 * opcode to be used in insn-stat
-+		 */
-+		if (!strlen(dl->ins.name)) {
-+			sprintf(name_insn, "%d", opcode);
-+			dl->ins.name = strdup(name_insn);
-+		}
- 		return &load_store_ops;
- 	} else if (opcode == 31) {
- 		/* Check for memory instructions with opcode 31 */
- 		ret = bsearch(&mem_insns_31_opcode, ins_array, ARRAY_SIZE(ins_array), sizeof(ins_array[0]), cmp_offset);
--		if (ret != NULL)
-+		if (ret) {
-+			if (!strlen(dl->ins.name))
-+				dl->ins.name = strdup(ret->name);
- 			return &load_store_ops;
--		else {
-+		} else {
- 			mem_insns_31_opcode.value = PPC_22_30(raw_insn);
- 			ret = bsearch(&mem_insns_31_opcode, arithmetic_ins_op_31, ARRAY_SIZE(arithmetic_ins_op_31),
- 					sizeof(arithmetic_ins_op_31[0]), cmp_offset);
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index b10b7f005658..cf60392b1c19 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -396,10 +396,10 @@ static void print_annotate_item_stat(struct list_head *head, const char *title)
- 	printf("total %d, ok %d (%.1f%%), bad %d (%.1f%%)\n\n", total,
- 	       total_good, 100.0 * total_good / (total ?: 1),
- 	       total_bad, 100.0 * total_bad / (total ?: 1));
--	printf("  %-10s: %5s %5s\n", "Name", "Good", "Bad");
-+	printf("  %-20s: %5s %5s\n", "Name/opcode", "Good", "Bad");
- 	printf("-----------------------------------------------------------\n");
- 	list_for_each_entry(istat, head, list)
--		printf("  %-10s: %5d %5d\n", istat->name, istat->good, istat->bad);
-+		printf("  %-20s: %5d %5d\n", istat->name, istat->good, istat->bad);
- 	printf("\n");
- }
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ce99db291c5e..a2ee4074f768 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2229,7 +2229,7 @@ static struct annotated_item_stat *annotate_data_stat(struct list_head *head,
- 		return NULL;
- 
- 	istat->name = strdup(name);
--	if (istat->name == NULL) {
-+	if ((istat->name == NULL) || (!strlen(istat->name))) {
- 		free(istat);
- 		return NULL;
- 	}
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 63681df6482b..cd283c42195c 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -859,7 +859,7 @@ static void ins__sort(struct arch *arch)
- 	qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
- }
- 
--static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_insn)
-+static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
- {
- 	struct ins *ins;
- 	const int nmemb = arch->nr_instructions;
-@@ -871,7 +871,7 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
- 		 */
- 		struct ins_ops *ops;
- 
--		ops = check_ppc_insn(raw_insn);
-+		ops = check_ppc_insn(dl);
- 		if (ops)
- 			return ops;
- 	}
-@@ -905,9 +905,9 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
- 	return ins ? ins->ops : NULL;
- }
- 
--struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
-+struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
- {
--	struct ins_ops *ops = __ins__find(arch, name, raw_insn);
-+	struct ins_ops *ops = __ins__find(arch, name, dl);
- 
- 	if (!ops && arch->associate_instruction_ops)
- 		ops = arch->associate_instruction_ops(arch, name);
-@@ -917,7 +917,7 @@ struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
- 
- static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, struct map_symbol *ms)
- {
--	dl->ins.ops = ins__find(arch, dl->ins.name, dl->raw.raw_insn);
-+	dl->ins.ops = ins__find(arch, dl->ins.name, dl);
- 
- 	if (!dl->ins.ops)
- 		return;
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index c1bb1e484bfb..f56beedeb9da 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -105,7 +105,7 @@ struct annotate_args {
- struct arch *arch__find(const char *name);
- bool arch__is(struct arch *arch, const char *name);
- 
--struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn);
-+struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl);
- int ins__scnprintf(struct ins *ins, char *bf, size_t size,
- 		   struct ins_operands *ops, int max_ins_name);
- 
--- 
-2.43.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
