@@ -1,65 +1,38 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C944712FB13
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 12:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D2FC12C473
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 12:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721304285; cv=none; b=JqwSVov/2sz7Oc9Zir1C9iworrf0QYQuvqb4tQ/T5AixH5l7T9h/ocHkA9FWMkcOixuJGmyk1JKxGqs1Vre6dqWR+d6CKSbdwdAGKqFE9RVIX6j+IMofgjU6bOshncQwmZge2ZXhf4jCDgeuUsVHnKT6aItmmyDUqFu79vlSM1E=
+	t=1721304436; cv=none; b=AZfUyM8cGXNMh4mQ1aAtyyH81nTR2KLrqSE0IzufjyIQLPaD2TpBPpHhkIYk6p/Ci6pyjJxtCv5tqC7ZzFq3gJwTSiSj1ye7wP5trLevs0W0QXg+smMckQL6AVbjMd5mKbZvGxPBBZqGfTbf40iATTN74+TbTMsP7yEbgnpRyCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721304285; c=relaxed/simple;
-	bh=Lx+yy9Iw767d4BIHylrSib1+7BL5Oh0LwpkDO9BukPc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q4EQa6LczDgyeGngfAtZ7w6F4OjT0QMZgzcNKJWXyBbit2iBS9IA0o/T6okSsiloMarRxD7drupwt40c4/UmoxOkAn/AYiNUZEs23EmcY//3ZOC/Yk7tuAbM7xJur01JbrG8CXiYFfnWQlBjvR7Smljp5Q0/H04s3H7lBclQf4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2U7gy2f; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2U7gy2f"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fc424901dbso6675035ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 05:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721304283; x=1721909083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4xJnAZcJFi/7QBpbb2lPd2reHM3PE2XgOmpWH+Y0tPI=;
-        b=T2U7gy2fY65Ry7m62ioNWSuDBUdFFcNgMROY/Sqr+WmdQ54oPrY0QmOb8tK0Vzvw/Y
-         mnLHqVP85JDcrUfy8iX2vdwn2hNu7tzzyHezLk1USHvw3oT3+2dwUnp0+Bm+PQ/CSma8
-         3MkVfWIohKtLkKw2XJyXmMIVgnjRe7RmKtbb6XIVAbnpskMJoWyydQOV9zNsZVUeRG3n
-         vHkm4pdTTujX/lLnoUGBId8ARm0x3tTw+MhArs7ehf1VPlLhbkq54MG3hoIFLSGXzGb9
-         7hl5wHuoF79I33aVR8N9t12DwAwitSuA3xLid/pd56yy4w+pAmXMJqWTzL3untaPPP4i
-         CC0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721304283; x=1721909083;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4xJnAZcJFi/7QBpbb2lPd2reHM3PE2XgOmpWH+Y0tPI=;
-        b=oECBOgMx+c7GfKCrkBnBKqjqJkvA+FuFwzAUlv5KYNMEXh/NjYd3ojSDhLV5q7cAiK
-         eFBHR/UautUqLv5ToEAQxEkHa+c18xNEqkORJf5nFdDXeC5cv2BZe9l2dwfnoGXYd5p7
-         DBD34tgsSDnWzgQ8V+zZOsp4nAO+I1n+5O8G2ZfuNVyJMl6Y/CWhh1kRBgKj9viiUvyM
-         +p9B2JFFwebs2YGfwjExwDqa2q0iHPEn7Eng31pRUuoOMmC8Kxyo4wxM5USP3Nf0zYJ0
-         g+I4HQEjEyiPfATe670PJ99Zrs8ukMoFfwaMRWvMXtOFtXMqNX3IwVZdM/Sm+X0apyqq
-         qDXQ==
-X-Gm-Message-State: AOJu0YwMUhpYpk27wziY2Q03nZUsmiiTwTtSWorfGYJM3lszOx+KHWdx
-	T2tkLjBXyHSGK8cVTAd8DjxmG3yR7MkUGWhcx/wKxVhRpyQ8f57W
-X-Google-Smtp-Source: AGHT+IF3zjoG9QvOXyeZC59ZkKL+h+5406IcCivXZEuwOqSiqH2+9C/ZgpAbqqYOIwe5UVRjdpXa+A==
-X-Received: by 2002:a17:902:f64e:b0:1fc:71fb:10d6 with SMTP id d9443c01a7336-1fc71fb1160mr862865ad.6.1721304282938;
-        Thu, 18 Jul 2024 05:04:42 -0700 (PDT)
-Received: from kernelexploit-virtual-machine.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bc2b822sm91169705ad.160.2024.07.18.05.04.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 05:04:42 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: syzbot+a81f2759d022496b40ab@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [syzbot] [net?] KMSAN: uninit-value in hsr_get_node (3)
-Date: Thu, 18 Jul 2024 21:04:39 +0900
-Message-Id: <20240718120439.59661-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <0000000000004a86bf0616571fc7@google.com>
-References: <0000000000004a86bf0616571fc7@google.com>
+	s=arc-20240116; t=1721304436; c=relaxed/simple;
+	bh=DNBMocFKMlBc4naeA5BAkg+RIDCNP4lvbMF7Y2MTE/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nUj/w6++eKdjLpU8yotpxTFSjs6xsyw5lNFxjfP4PaDFS5ADrd04JKjEcDj5q8g3zfyu08NNKSXAR7hTduCe37XlHsiYhddYvoMNlPaEsyDLsx5T96Wzmo9+jzD/UWQM7rAY16oNEMieeSKW6QDtpdmHCheHFkUS0zmj5q+GA9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D23331063;
+	Thu, 18 Jul 2024 05:07:31 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C2A0D3F766;
+	Thu, 18 Jul 2024 05:07:04 -0700 (PDT)
+From: Mark Rutland <mark.rutland@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: alex.coplan@arm.com,
+	catalin.marinas@arm.com,
+	jakub@gcc.gnu.org,
+	linux-arm-kernel@lists.infradead.org,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	seanjc@google.com,
+	szabolcs.nagy@arm.com,
+	torvalds@linux-foundation.org,
+	will@kernel.org
+Subject: [PATCH] init/Kconfig: remove CONFIG_GCC_ASM_GOTO_OUTPUT_WORKAROUND
+Date: Thu, 18 Jul 2024 13:06:47 +0100
+Message-Id: <20240718120647.1115592-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,23 +41,236 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-#syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+Several versions of GCC mis-compile asm goto with outputs. We try to
+workaround this, but our workaround is demonstrably incomplete and
+liable to result in subtle bugs, especially on arm64 where get_user()
+has recently been moved over to using asm goto with outputs.
 
+From discussion(s) with Linus at:
+
+  https://lore.kernel.org/linux-arm-kernel/Zpfv2tnlQ-gOLGac@J2N7QTR9R3.cambridge.arm.com/
+  https://lore.kernel.org/linux-arm-kernel/ZpfxLrJAOF2YNqCk@J2N7QTR9R3.cambridge.arm.com/
+
+... it sounds like the best thing to do for now is to remove the workaround and
+make CC_HAS_ASM_GOTO_OUTPUT depend on working compiler versions.
+
+The issue was originally reported to GCC by Sean Christopherson:
+
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921
+
+... and Jakub Jelinek fixed this for GCC 14, with the fix backported to
+13.3.0, 12.4.0, and 11.5.0.
+
+In the kernel, we tried to workaround broken compilers in commits:
+
+  4356e9f841f7 ("work around gcc bugs with 'asm goto' with outputs")
+  68fb3ca0e408 ("update workarounds for gcc "asm goto" issue")
+
+... but the workaround of adding an empty asm("") after the asm volatile
+goto(...) demonstrably does not always avoid the problem, as can be seen
+in the following test case:
+
+| #define asm_goto_output(x...) \
+|         do { asm volatile goto(x); asm (""); } while (0)
+|
+| #define __good_or_bad(__val, __key)                                     \
+| do {                                                                    \
+|         __label__ __failed;                                             \
+|         unsigned long __tmp;                                            \
+|         asm_goto_output(                                                \
+|         "       cbnz    %[key], %l[__failed]\n"                         \
+|         "       mov     %[val], #0x900d\n"                              \
+|         : [val] "=r" (__tmp)                                            \
+|         : [key] "r" (__key)                                             \
+|         :                                                               \
+|         : __failed);                                                    \
+|         (__val) = __tmp;                                                \
+|         break;                                                          \
+| __failed:                                                               \
+|         (__val) = 0xbad;                                                \
+| } while (0)
+|
+| unsigned long get_val(unsigned long key);
+| unsigned long get_val(unsigned long key)
+| {
+|         unsigned long val = 0xbad;
+|
+|         __good_or_bad(val, key);
+|
+|         return val;
+| }
+
+GCC 13.2.0 (at -O2) compiles this to:
+
+| 	cbnz    x0, .Lfailed
+| 	mov     x0, #0x900d
+| .Lfailed:
+| 	ret
+
+GCC 14.1.0 (at -O2) compiles this to:
+
+| 	cbnz    x0, .Lfailed
+| 	mov     x0, #0x900d
+| 	ret
+| .Lfailed:
+| 	mov     x0, #0xbad
+| 	ret
+
+Note that GCC 13.2.0 erroneously omits the assignment to 'val' in the
+error path (even though this does not depend on an output of the asm
+goto). GCC 14.1.0 correctly retains the assignment.
+
+This problem can be seen within the kernel with the following test case:
+
+| #include <linux/uaccess.h>
+| #include <linux/types.h>
+|
+| noinline unsigned long test_unsafe_get_user(unsigned long __user *ptr);
+| noinline unsigned long test_unsafe_get_user(unsigned long __user *ptr)
+| {
+|         unsigned long val;
+|
+|         unsafe_get_user(val, ptr, Efault);
+|         return val;
+|
+| Efault:
+|         val = 0x900d;
+|         return val;
+| }
+
+GCC 13.2.0 (arm64 defconfig) compiles this to:
+
+|         and     x0, x0, #0xff7fffffffffffff
+|         ldtr    x0, [x0]
+| .Lextable_fixup:
+|         ret
+
+GCC 13.2.0 (x86_64 defconfig + MITIGATION_RETPOLINE=n) compiles this to:
+
+|         endbr64
+|         mov    (%rdi),%rax
+| .Lextable_fixup:
+|         ret
+
+... omitting the assignment to 'val' in the error path, and leaving
+garbage in the result register returned by the function (which happens
+to contain the faulting address in the generated code).
+
+GCC 14.1.0 (arm64 defconfig) compiles this to:
+
+|         and     x0, x0, #0xff7fffffffffffff
+|         ldtr    x0, [x0]
+|         ret
+| .Lextable_fixup:
+|         mov     x0, #0x900d                     // #36877
+|         ret
+
+GCC 14.1.0 (x86_64 defconfig + MITIGATION_RETPOLINE=n) compiles this to:
+
+|         endbr64
+|         mov    (%rdi),%rax
+|         ret
+| .Lextable_fixup:
+|         mov    $0x900d,%eax
+|         ret
+
+... retaining the expected assignment to 'val' in the error path.
+
+We don't have a complete and reasonable workaround. While placing empty
+asm("") blocks after each goto label *might* be sufficient, we don't
+know for certain, this is tedious and error-prone, and there doesn't
+seem to be a neat way to wrap this up (which is especially painful for
+cases with multiple goto labels).
+
+Avoid this issue by disabling CONFIG_CC_HAS_ASM_GOTO_OUTPUT for
+known-broken compiler versions and removing the workaround (along with
+the CONFIG_GCC_ASM_GOTO_OUTPUT_WORKAROUND config option).
+
+For the moment I've left the default implementation of asm_goto_output()
+unchanged. This should now be redundant since any compiler with the fix
+for the clobbering issue whould also have a fix for the (earlier)
+volatile issue, but it's far less churny to leave it around, which makes
+it easier to backport this patch if necessary.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alex Coplan <alex.coplan@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Jakub Jelinek <jakub@gcc.gnu.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Szabolcs Nagy <szabolcs.nagy@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/virtio_net.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/compiler-gcc.h | 20 --------------------
+ init/Kconfig                 | 14 +++++---------
+ 2 files changed, 5 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index af474cc191d0..2088b566d10b 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2895,7 +2895,7 @@ static int virtnet_open(struct net_device *dev)
- 	for (i = 0; i < vi->max_queue_pairs; i++) {
- 		if (i < vi->curr_queue_pairs)
- 			/* Make sure we have some buffers: if oom use wq. */
--			if (!try_fill_recv(vi, &vi->rq[i], GFP_KERNEL))
-+			if (!try_fill_recv(vi, &vi->rq[i], GFP_KERNEL | GFP_ZERO))
- 				schedule_delayed_work(&vi->refill, 0);
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index aff92b1d284fd..f805adaa316e9 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -64,26 +64,6 @@
+ 		__builtin_unreachable();	\
+ 	} while (0)
  
- 		err = virtnet_enable_queue_pair(vi, i);
---
+-/*
+- * GCC 'asm goto' with outputs miscompiles certain code sequences:
+- *
+- *   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921
+- *
+- * Work around it via the same compiler barrier quirk that we used
+- * to use for the old 'asm goto' workaround.
+- *
+- * Also, always mark such 'asm goto' statements as volatile: all
+- * asm goto statements are supposed to be volatile as per the
+- * documentation, but some versions of gcc didn't actually do
+- * that for asms with outputs:
+- *
+- *    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98619
+- */
+-#ifdef CONFIG_GCC_ASM_GOTO_OUTPUT_WORKAROUND
+-#define asm_goto_output(x...) \
+-	do { asm volatile goto(x); asm (""); } while (0)
+-#endif
+-
+ #if defined(CONFIG_ARCH_USE_BUILTIN_BSWAP)
+ #define __HAVE_BUILTIN_BSWAP32__
+ #define __HAVE_BUILTIN_BSWAP64__
+diff --git a/init/Kconfig b/init/Kconfig
+index febdea2afc3be..e236498911870 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -82,6 +82,11 @@ config CC_CAN_LINK_STATIC
+ 	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(m32-flag) -static)
+ 
+ config CC_HAS_ASM_GOTO_OUTPUT
++	# Fixed in GCC 14, 13.3, 12.4 and 11.5
++	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921
++	default n if CC_IS_GCC && GCC_VERSION < 110500
++	default n if CC_IS_GCC && GCC_VERSION >= 120000 && GCC_VERSION < 120400
++	default n if CC_IS_GCC && GCC_VERSION >= 130000 && GCC_VERSION < 130300
+ 	def_bool $(success,echo 'int foo(int x) { asm goto ("": "=r"(x) ::: bar); return x; bar: return 0; }' | $(CC) -x c - -c -o /dev/null)
+ 
+ config CC_HAS_ASM_GOTO_TIED_OUTPUT
+@@ -89,15 +94,6 @@ config CC_HAS_ASM_GOTO_TIED_OUTPUT
+ 	# Detect buggy gcc and clang, fixed in gcc-11 clang-14.
+ 	def_bool $(success,echo 'int foo(int *x) { asm goto (".long (%l[bar]) - .": "+m"(*x) ::: bar); return *x; bar: return 0; }' | $CC -x c - -c -o /dev/null)
+ 
+-config GCC_ASM_GOTO_OUTPUT_WORKAROUND
+-	bool
+-	depends on CC_IS_GCC && CC_HAS_ASM_GOTO_OUTPUT
+-	# Fixed in GCC 14, 13.3, 12.4 and 11.5
+-	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921
+-	default y if GCC_VERSION < 110500
+-	default y if GCC_VERSION >= 120000 && GCC_VERSION < 120400
+-	default y if GCC_VERSION >= 130000 && GCC_VERSION < 130300
+-
+ config TOOLS_SUPPORT_RELR
+ 	def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
+ 
+-- 
+2.30.2
+
