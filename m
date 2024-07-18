@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92847145FE1;
-	Thu, 18 Jul 2024 21:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D9C145B18;
+	Thu, 18 Jul 2024 21:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721336717; cv=none; b=jJTBFwvSmaHNKlSki0RByjTa/AQ30im/mdq1FZBS7CIQM4jcjRKf/lpYqKG/KTGx0txsPncCswge6cUVHibbZyMjvMW7FP6H/PUq0JJr7C+4D9wYnWSgN3hzTMa+V5zPgTFXsodYS1CpwXNsl8CE32vFFwoveQl2PLWlr9KU6pg=
+	t=1721336720; cv=none; b=HcFUl0zYhu826xh8BgotO3yJflr5KwAENzZ7IgKSPgzbWidkOtydy0zUSJ0jfynMeCOPGtuvT6yz4yRM2s39/H1f1hu9t1G/ZlWBS2zcNeSV3ZTO4U4hLSnt9kEG8lol5n8m38tRJ1GXbClinOXeK8BXQNg8xOGQi4quTtldAEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721336717; c=relaxed/simple;
-	bh=Mcghtonb1+4dGFbTm3s16+SUcDCk3hG3Gde9pj3naiI=;
+	s=arc-20240116; t=1721336720; c=relaxed/simple;
+	bh=HtW0kcEIqaYiTiNJE6NVHD7SlFgaVrjf8sVl3XFhWiE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LVmC2nmAtxSrru4UHceH+hQvv0wWC0I3seu4o7IG0WhSsgyWfTxbuhAvMB8lq8k2OIU6IGB11+mm5MtiFaW2Dc79ehfCfWKdTX/3jvGdwzG7Fxylx/BQjz7OKe8nWRifHFBTFIP+nMBNB5mLpHFRnJf1kgl+P1Br1lKs5c+lfGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GM7QXS8T; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qndfenCCgGq9JDSSa3cfk9axrII8g/yN0PUTS+KtFTf3ggeq0VKaj11RHaDrX89x3u74H+2EXeMEa2abOZBJIHMlE9L2GUrEvo7niPtvhWNIk/nkQPllSMy+I3qMy01t0GJjSGmcsX4jzeJQXr2iMo2qO1GJGV8lrEml+4cXz88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SaihEcQe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GM7QXS8T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BEACC4AF0E;
-	Thu, 18 Jul 2024 21:05:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SaihEcQe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AFEEC116B1;
+	Thu, 18 Jul 2024 21:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721336717;
-	bh=Mcghtonb1+4dGFbTm3s16+SUcDCk3hG3Gde9pj3naiI=;
+	s=k20201202; t=1721336719;
+	bh=HtW0kcEIqaYiTiNJE6NVHD7SlFgaVrjf8sVl3XFhWiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GM7QXS8Tq9BOEsUyVAi4EO3NcSg1Oqjcvzc0sPOeHZfC99NFr40AoVHSXT6pYzVfB
-	 lgWUiVdlxp/224BByQdIHg6rqjI+MTrAENDg/5IMhpqyAkfLcYWhqShZf4OygSxKtB
-	 w3AZC2vb75XcUozmPG6/94MvGCtBPWSVNi22o2Mnpfcr+hb+U3MPdCOeoFwjCy7LHU
-	 9YSEk6bZ2lk0VDHsUcJxLkGavOwOYrYmlyIuTYF0g98u/6hNcSueGxSAF8SUkrmmCb
-	 tlubW07Z3/t5or2Dea2JpuXSsAo7yORRAYxqNvETKkX38jbZL1lEuX5zIGT1Ag2G1f
-	 sbk/SBnjgNjOg==
+	b=SaihEcQeVrtLjxTIv+RfzHQOX9NxWBXhNXzEYxU0yrqXMhj3MYED2apcsNOF3aEh/
+	 VB6+B1cE9rz4w3P7fTHAxOODVxDM+5T1NuW5R2FIOtAx+sN5jXACubo3IPQmXz2J5h
+	 bAc/sorzc7gjqzYhjUtuqwrqqKcGm7CsxaUtchDvroaDR77q7UTgeJLY3WNibzv4oL
+	 bz4PHSFvW1VLdkhlMBJRVWg6m6vRNenRBTARYS9iUtwRKMUT7WkWYF3DWyklkyA0SM
+	 8fzVg5T+zVQQqFKfFQvv+blJU/l3b6QYfLFsdoRbBkTCumU1fCqaIJKGRKv62oSzKl
+	 DCm21hVzkYw/A==
 From: Stephen Boyd <sboyd@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>
@@ -48,9 +48,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Conor Dooley <conor+dt@kernel.org>,
 	Maxime Ripard <maxime@cerno.tech>,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v8 2/8] of: Add test managed wrappers for of_overlay_apply()/of_node_put()
-Date: Thu, 18 Jul 2024 14:05:01 -0700
-Message-ID: <20240718210513.3801024-3-sboyd@kernel.org>
+Subject: [PATCH v8 4/8] of: Add a KUnit test for overlays and test managed APIs
+Date: Thu, 18 Jul 2024 14:05:03 -0700
+Message-ID: <20240718210513.3801024-5-sboyd@kernel.org>
 X-Mailer: git-send-email 2.45.2.1089.g2a221341d9-goog
 In-Reply-To: <20240718210513.3801024-1-sboyd@kernel.org>
 References: <20240718210513.3801024-1-sboyd@kernel.org>
@@ -62,323 +62,208 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add test managed wrappers for of_overlay_apply() that automatically
-removes the overlay when the test is finished. This API is intended for
-use by KUnit tests that test code which relies on 'struct device_node's
-and of_*() APIs.
+Test the KUnit test managed overlay APIs. Confirm that platform devices
+are created and destroyed properly. This provides us confidence that the
+test managed APIs work correctly and can be relied upon to provide tests
+with fake platform devices and device nodes via overlays compiled into
+the kernel image.
 
-KUnit tests will call of_overlay_apply_kunit() to load an overlay that's
-been built into the kernel image. When the test is complete, the overlay
-will be removed.
-
-This has a few benefits:
-
- 1) It keeps the tests hermetic because the overlay is removed when the
-    test is complete. Tests won't even be aware that an overlay was
-    loaded in another test.
-
- 2) The overlay code can live right next to the unit test that loads it.
-    The overlay and the unit test can be compiled into one kernel module
-    if desired.
-
- 3) We can test different device tree configurations by loading
-    different overlays. The overlays can be written for a specific test,
-    and there can be many of them loaded per-test without needing to jam
-    all possible combinations into one DTB.
-
- 4) It also allows KUnit to test device tree dependent code on any
-    architecture, not just UML. This allows KUnit tests to test
-    architecture specific device tree code.
-
-There are some potential pitfalls though. Test authors need to be
-careful to not overwrite properties in the live tree. The easiest way to
-do this is to add and remove nodes with a 'kunit-' prefix, almost
-guaranteeing that the same node won't be present in the tree loaded at
-boot.
-
-Suggested-by: Rob Herring <robh@kernel.org>
 Cc: Rob Herring <robh@kernel.org>
 Cc: Saravana Kannan <saravanak@google.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Cc: Daniel Latypov <dlatypov@google.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
 Reviewed-by: David Gow <davidgow@google.com>
+Cc: Rae Moar <rmoar@google.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- Documentation/dev-tools/kunit/api/index.rst |  11 ++
- Documentation/dev-tools/kunit/api/of.rst    |  13 +++
- drivers/of/Makefile                         |   1 +
- drivers/of/of_kunit_helpers.c               |  77 +++++++++++++
- include/kunit/of.h                          | 115 ++++++++++++++++++++
- 5 files changed, 217 insertions(+)
- create mode 100644 Documentation/dev-tools/kunit/api/of.rst
- create mode 100644 drivers/of/of_kunit_helpers.c
- create mode 100644 include/kunit/of.h
+ drivers/of/.kunitconfig            |   1 +
+ drivers/of/Kconfig                 |  10 +++
+ drivers/of/Makefile                |   2 +
+ drivers/of/kunit_overlay_test.dtso |   9 +++
+ drivers/of/overlay_test.c          | 115 +++++++++++++++++++++++++++++
+ 5 files changed, 137 insertions(+)
+ create mode 100644 drivers/of/kunit_overlay_test.dtso
+ create mode 100644 drivers/of/overlay_test.c
 
-diff --git a/Documentation/dev-tools/kunit/api/index.rst b/Documentation/dev-tools/kunit/api/index.rst
-index 2d8f756aab56..282befa17edf 100644
---- a/Documentation/dev-tools/kunit/api/index.rst
-+++ b/Documentation/dev-tools/kunit/api/index.rst
-@@ -9,11 +9,15 @@ API Reference
- 	test
- 	resource
- 	functionredirection
-+	of
+diff --git a/drivers/of/.kunitconfig b/drivers/of/.kunitconfig
+index 5a8fee11978c..4c53d2c7a275 100644
+--- a/drivers/of/.kunitconfig
++++ b/drivers/of/.kunitconfig
+@@ -1,3 +1,4 @@
+ CONFIG_KUNIT=y
+ CONFIG_OF=y
+ CONFIG_OF_KUNIT_TEST=y
++CONFIG_OF_OVERLAY_KUNIT_TEST=y
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index dd726c7056bf..0e2d608c3e20 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -107,6 +107,16 @@ config OF_OVERLAY
+ 	  While this option is selected automatically when needed, you can
+ 	  enable it manually to improve device tree unit test coverage.
  
++config OF_OVERLAY_KUNIT_TEST
++	tristate "Device Tree overlay KUnit tests" if !KUNIT_ALL_TESTS
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
++	select OF_OVERLAY
++	help
++	  This option builds KUnit unit tests for the device tree overlay code.
++
++	  If unsure, say N here, but this option is safe to enable.
++
+ config OF_NUMA
+ 	bool
  
- This page documents the KUnit kernel testing API. It is divided into the
- following sections:
- 
-+Core KUnit API
-+==============
-+
- Documentation/dev-tools/kunit/api/test.rst
- 
-  - Documents all of the standard testing API
-@@ -25,3 +29,10 @@ Documentation/dev-tools/kunit/api/resource.rst
- Documentation/dev-tools/kunit/api/functionredirection.rst
- 
-  - Documents the KUnit Function Redirection API
-+
-+Driver KUnit API
-+================
-+
-+Documentation/dev-tools/kunit/api/of.rst
-+
-+ - Documents the KUnit device tree (OF) API
-diff --git a/Documentation/dev-tools/kunit/api/of.rst b/Documentation/dev-tools/kunit/api/of.rst
-new file mode 100644
-index 000000000000..cb4193dcddbb
---- /dev/null
-+++ b/Documentation/dev-tools/kunit/api/of.rst
-@@ -0,0 +1,13 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+====================
-+Device Tree (OF) API
-+====================
-+
-+The KUnit device tree API is used to test device tree (of_*) dependent code.
-+
-+.. kernel-doc:: include/kunit/of.h
-+   :internal:
-+
-+.. kernel-doc:: drivers/of/of_kunit_helpers.c
-+   :export:
 diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index 251d33532148..2ae909adde49 100644
+index 2ae909adde49..379a0afcbdc0 100644
 --- a/drivers/of/Makefile
 +++ b/drivers/of/Makefile
-@@ -19,6 +19,7 @@ obj-y	+= kexec.o
- endif
- endif
+@@ -21,5 +21,7 @@ endif
  
-+obj-$(CONFIG_KUNIT) += of_kunit_helpers.o
+ obj-$(CONFIG_KUNIT) += of_kunit_helpers.o
  obj-$(CONFIG_OF_KUNIT_TEST) += of_test.o
++obj-$(CONFIG_OF_OVERLAY_KUNIT_TEST) += overlay-test.o
++overlay-test-y := overlay_test.o kunit_overlay_test.dtbo.o
  
  obj-$(CONFIG_OF_UNITTEST) += unittest-data/
-diff --git a/drivers/of/of_kunit_helpers.c b/drivers/of/of_kunit_helpers.c
+diff --git a/drivers/of/kunit_overlay_test.dtso b/drivers/of/kunit_overlay_test.dtso
 new file mode 100644
-index 000000000000..287d6c91bb37
+index 000000000000..85f20b4b4c16
 --- /dev/null
-+++ b/drivers/of/of_kunit_helpers.c
-@@ -0,0 +1,77 @@
++++ b/drivers/of/kunit_overlay_test.dtso
+@@ -0,0 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++/plugin/;
++
++&{/} {
++	kunit-test {
++		compatible = "test,empty";
++	};
++};
+diff --git a/drivers/of/overlay_test.c b/drivers/of/overlay_test.c
+new file mode 100644
+index 000000000000..19a292cdeee3
+--- /dev/null
++++ b/drivers/of/overlay_test.c
+@@ -0,0 +1,115 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Test managed DeviceTree APIs
++ * KUnit tests for device tree overlays
 + */
-+
++#include <linux/device/bus.h>
++#include <linux/kconfig.h>
 +#include <linux/of.h>
-+#include <linux/of_fdt.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
 +
 +#include <kunit/of.h>
 +#include <kunit/test.h>
-+#include <kunit/resource.h>
 +
-+#if defined(CONFIG_OF_OVERLAY) && defined(CONFIG_OF_EARLY_FLATTREE)
++static const char * const kunit_node_name = "kunit-test";
++static const char * const kunit_compatible = "test,empty";
 +
-+static void of_overlay_fdt_apply_kunit_exit(void *ovcs_id)
++/* Test that of_overlay_apply_kunit() adds a node to the live tree */
++static void of_overlay_apply_kunit_apply(struct kunit *test)
 +{
-+	of_overlay_remove(ovcs_id);
++	struct device_node *np;
++
++	KUNIT_ASSERT_EQ(test, 0,
++			of_overlay_apply_kunit(test, kunit_overlay_test));
++
++	np = of_find_node_by_name(NULL, kunit_node_name);
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, np);
++	of_node_put(np);
 +}
 +
-+/**
-+ * of_overlay_fdt_apply_kunit() - Test managed of_overlay_fdt_apply()
-+ * @test: test context
-+ * @overlay_fdt: device tree overlay to apply
-+ * @overlay_fdt_size: size in bytes of @overlay_fdt
-+ * @ovcs_id: identifier of overlay, used to remove the overlay
-+ *
-+ * Just like of_overlay_fdt_apply(), except the overlay is managed by the test
-+ * case and is automatically removed with of_overlay_remove() after the test
-+ * case concludes.
-+ *
-+ * Return: 0 on success, negative errno on failure
++/*
++ * Test that of_overlay_apply_kunit() creates platform devices with the
++ * expected device_node
 + */
-+int of_overlay_fdt_apply_kunit(struct kunit *test, void *overlay_fdt,
-+			       u32 overlay_fdt_size, int *ovcs_id)
++static void of_overlay_apply_kunit_platform_device(struct kunit *test)
 +{
-+	int ret;
-+	int *copy_id;
++	struct platform_device *pdev;
++	struct device_node *np;
 +
-+	copy_id = kunit_kmalloc(test, sizeof(*copy_id), GFP_KERNEL);
-+	if (!copy_id)
-+		return -ENOMEM;
++	KUNIT_ASSERT_EQ(test, 0,
++			of_overlay_apply_kunit(test, kunit_overlay_test));
 +
-+	ret = of_overlay_fdt_apply(overlay_fdt, overlay_fdt_size,
-+				   ovcs_id, NULL);
-+	if (ret)
-+		return ret;
++	np = of_find_node_by_name(NULL, kunit_node_name);
++	of_node_put_kunit(test, np);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
 +
-+	*copy_id = *ovcs_id;
-+
-+	return kunit_add_action_or_reset(test, of_overlay_fdt_apply_kunit_exit,
-+					 copy_id);
++	pdev = of_find_device_by_node(np);
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, pdev);
++	if (pdev)
++		put_device(&pdev->dev);
 +}
-+EXPORT_SYMBOL_GPL(of_overlay_fdt_apply_kunit);
 +
-+#endif
++static int of_overlay_bus_match_compatible(struct device *dev, const void *data)
++{
++	return of_device_is_compatible(dev->of_node, data);
++}
 +
-+KUNIT_DEFINE_ACTION_WRAPPER(of_node_put_wrapper, of_node_put, struct device_node *);
++/* Test that of_overlay_apply_kunit() cleans up after the test is finished */
++static void of_overlay_apply_kunit_cleanup(struct kunit *test)
++{
++	struct kunit fake;
++	struct platform_device *pdev;
++	struct device *dev;
++	struct device_node *np;
 +
-+/**
-+ * of_node_put_kunit() - Test managed of_node_put()
-+ * @test: test context
-+ * @node: node to pass to `of_node_put()`
-+ *
-+ * Just like of_node_put(), except the node is managed by the test case and is
-+ * automatically put with of_node_put() after the test case concludes.
++	if (!IS_ENABLED(CONFIG_OF_EARLY_FLATTREE))
++		kunit_skip(test, "requires CONFIG_OF_EARLY_FLATTREE for root node");
++
++	kunit_init_test(&fake, "fake test", NULL);
++	KUNIT_ASSERT_EQ(test, fake.status, KUNIT_SUCCESS);
++
++	KUNIT_ASSERT_EQ(test, 0,
++			of_overlay_apply_kunit(&fake, kunit_overlay_test));
++
++	np = of_find_node_by_name(NULL, kunit_node_name);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
++	of_node_put_kunit(test, np);
++
++	pdev = of_find_device_by_node(np);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
++	put_device(&pdev->dev); /* Not derefing 'pdev' after this */
++
++	/* Remove overlay */
++	kunit_cleanup(&fake);
++
++	/* The node and device should be removed */
++	np = of_find_node_by_name(NULL, kunit_node_name);
++	KUNIT_EXPECT_PTR_EQ(test, NULL, np);
++	of_node_put(np);
++
++	dev = bus_find_device(&platform_bus_type, NULL, kunit_compatible,
++			      of_overlay_bus_match_compatible);
++	KUNIT_EXPECT_PTR_EQ(test, NULL, dev);
++	put_device(dev);
++}
++
++static struct kunit_case of_overlay_apply_kunit_test_cases[] = {
++	KUNIT_CASE(of_overlay_apply_kunit_apply),
++	KUNIT_CASE(of_overlay_apply_kunit_platform_device),
++	KUNIT_CASE(of_overlay_apply_kunit_cleanup),
++	{}
++};
++
++/*
++ * Test suite for test managed device tree overlays.
 + */
-+void of_node_put_kunit(struct kunit *test, struct device_node *node)
-+{
-+	if (kunit_add_action(test, of_node_put_wrapper, node)) {
-+		KUNIT_FAIL(test,
-+			   "Can't allocate a kunit resource to put of_node\n");
-+	}
-+}
-+EXPORT_SYMBOL_GPL(of_node_put_kunit);
++static struct kunit_suite of_overlay_apply_kunit_suite = {
++	.name = "of_overlay_apply_kunit",
++	.test_cases = of_overlay_apply_kunit_test_cases,
++};
 +
++kunit_test_suites(
++	&of_overlay_apply_kunit_suite,
++);
 +MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Test managed DeviceTree APIs");
-diff --git a/include/kunit/of.h b/include/kunit/of.h
-new file mode 100644
-index 000000000000..48d4e70c9666
---- /dev/null
-+++ b/include/kunit/of.h
-@@ -0,0 +1,115 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _KUNIT_OF_H
-+#define _KUNIT_OF_H
-+
-+#include <kunit/test.h>
-+
-+struct device_node;
-+
-+#ifdef CONFIG_OF
-+
-+void of_node_put_kunit(struct kunit *test, struct device_node *node);
-+
-+#else
-+
-+static inline
-+void of_node_put_kunit(struct kunit *test, struct device_node *node)
-+{
-+	kunit_skip(test, "requires CONFIG_OF");
-+}
-+
-+#endif /* !CONFIG_OF */
-+
-+#if defined(CONFIG_OF) && defined(CONFIG_OF_OVERLAY) && defined(CONFIG_OF_EARLY_FLATTREE)
-+
-+int of_overlay_fdt_apply_kunit(struct kunit *test, void *overlay_fdt,
-+			       u32 overlay_fdt_size, int *ovcs_id);
-+#else
-+
-+static inline int
-+of_overlay_fdt_apply_kunit(struct kunit *test, void *overlay_fdt,
-+			   u32 overlay_fdt_size, int *ovcs_id)
-+{
-+	kunit_skip(test, "requires CONFIG_OF and CONFIG_OF_OVERLAY and CONFIG_OF_EARLY_FLATTREE for root node");
-+	return -EINVAL;
-+}
-+
-+#endif
-+
-+/**
-+ * __of_overlay_apply_kunit() - Test managed of_overlay_fdt_apply() variant
-+ * @test: test context
-+ * @overlay_begin: start address of overlay to apply
-+ * @overlay_end: end address of overlay to apply
-+ *
-+ * This is mostly internal API. See of_overlay_apply_kunit() for the wrapper
-+ * that makes this easier to use.
-+ *
-+ * Similar to of_overlay_fdt_apply(), except the overlay is managed by the test
-+ * case and is automatically removed with of_overlay_remove() after the test
-+ * case concludes.
-+ *
-+ * Return: 0 on success, negative errno on failure
-+ */
-+static inline int __of_overlay_apply_kunit(struct kunit *test,
-+					   u8 *overlay_begin,
-+					   const u8 *overlay_end)
-+{
-+	int unused;
-+
-+	return of_overlay_fdt_apply_kunit(test, overlay_begin,
-+					  overlay_end - overlay_begin,
-+					  &unused);
-+}
-+
-+/**
-+ * of_overlay_apply_kunit() - Test managed of_overlay_fdt_apply() for built-in overlays
-+ * @test: test context
-+ * @overlay_name: name of overlay to apply
-+ *
-+ * This macro is used to apply a device tree overlay built with the
-+ * cmd_dt_S_dtbo rule in scripts/Makefile.lib that has been compiled into the
-+ * kernel image or KUnit test module. The overlay is automatically removed when
-+ * the test is finished.
-+ *
-+ * Unit tests that need device tree nodes should compile an overlay file with
-+ * @overlay_name\.dtbo.o in their Makefile along with their unit test and then
-+ * load the overlay during their test. The @overlay_name matches the filename
-+ * of the overlay without the dtbo filename extension. If CONFIG_OF_OVERLAY is
-+ * not enabled, the @test will be skipped.
-+ *
-+ * In the Makefile
-+ *
-+ * .. code-block:: none
-+ *
-+ *	obj-$(CONFIG_OF_OVERLAY_KUNIT_TEST) += overlay_test.o kunit_overlay_test.dtbo.o
-+ *
-+ * In the test
-+ *
-+ * .. code-block:: c
-+ *
-+ *	static void of_overlay_kunit_of_overlay_apply(struct kunit *test)
-+ *	{
-+ *		struct device_node *np;
-+ *
-+ *		KUNIT_ASSERT_EQ(test, 0,
-+ *				of_overlay_apply_kunit(test, kunit_overlay_test));
-+ *
-+ *		np = of_find_node_by_name(NULL, "test-kunit");
-+ *		KUNIT_EXPECT_NOT_ERR_OR_NULL(test, np);
-+ *		of_node_put(np);
-+ *	}
-+ *
-+ * Return: 0 on success, negative errno on failure.
-+ */
-+#define of_overlay_apply_kunit(test, overlay_name)		\
-+({								\
-+	extern uint8_t __dtbo_##overlay_name##_begin[];		\
-+	extern uint8_t __dtbo_##overlay_name##_end[];		\
-+								\
-+	__of_overlay_apply_kunit((test),			\
-+			__dtbo_##overlay_name##_begin,		\
-+			__dtbo_##overlay_name##_end);		\
-+})
-+
-+#endif
++MODULE_DESCRIPTION("KUnit tests for device tree overlays");
 -- 
 https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
 https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
