@@ -1,587 +1,258 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011038.outbound.protection.outlook.com [52.101.70.38])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBB37A15C;
-	Thu, 18 Jul 2024 07:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721288004; cv=fail; b=ngZ+U5ixjERY0H5L9FXZ9a78HmKXBMy4VwNbw6vgZgK3KFtsA+6JPg1MAXhI++dZkYKZyC18G93nNfTZm4N2tFZekdH9ebuTOjPCDbB3oULoSSPGG6eRh275kMrjJBDu2Gmx9CjmK3LUvTITYnXLID4Rqj3DkuCTw2seBpi3Q8E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721288004; c=relaxed/simple;
-	bh=3ZrXc7dyEXDQLmXy4+anzWutGGiAYR2nUe71CkcL+bs=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=bKa0ZQAvT0d/9h3klhfH+3cwKj/EIk8pYtUnF2gocZotbDzwT1EcYcOHqXbCKQxyV6z8QyI2GkQ5D6GSrnfAso2+qith0rjZB9MBx3RjhgRaJWq07uWz54nIuDoWkYnZcfUTnK30a8UTzxGDu3Ug2XnmQLEz1rcyk2Gjm7K+0H4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=YDZUtEfi; arc=fail smtp.client-ip=52.101.70.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147FE7D3F1;
+	Thu, 18 Jul 2024 07:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721288014; cv=none; b=mgavwKTRDKWObDDeiyTfQi7+k1qKqvQh4X+Dw0UqyLUoDoQcnrcVoo1QD2ptJ6wCKgNRRbMEc8b+EZdzcA47FVYcajiorxQy32QAKyzI+nZnwozu1LHTunWsXPsPaRo5dEqcgdI2SjHAMEnF64iClE1iPmCccCoe7ud94TCeDPE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721288014; c=relaxed/simple;
+	bh=zVJAdWQ/IwEk/Sy+Dh2nXxrFJn/m57IRKW+sOy81ZwQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NPt3d7TeBCNG+Qw7PoqbqvW0zkUz5nFpnz1ZbRwRXXkWTGT1TQjcRcqeTa5I6DGPpXdGBLlrrw/wzjX6Vh1apeUoc35F5697Pri55M/LkXBvppV76P0E9GWpvJjC3irCA44VQw+NLE1SJOHwhkxb0d3awrIhqPlQ9uJYH4aB9YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J8b8RAPY; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="YDZUtEfi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jXnrtVlHdVSgBKT3GOT3++aOQpp8PHMDcojzmKEL2zuIF0J7G7Q3CN+edQZfTYUtjRTQ0Qy1ZGs+qQklMVMK1nbp/2D5ZBSBIPA3JM8DXPPe1I9nbX2xW0A9pTRcGqJ9wQ+2tu+6Z8zahde82uMxySs3+1usFXi6FnT6uuZfK1fDwiwdSKH7ACZp+H1PHFrJ0C9+5yhRVYFvY1evA/1SsTlL5waxp6vfMJdYjdzGQA2zCw1Lj7QS8F37PrM0UsSxQm7GeIJbvsxKbKqAbtk7XY7U3cgv+SAGy/TFEKK8WFVv9RTPPe1H+oAnX2o14f7L6QV9dHEK052o72VHjkxoew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b3D20n0bAzqcjLjXnBhoWSF/wj8T59kOpyVPxkul4Tg=;
- b=B3xVe1e70fGkfDp8QIozyDqdbNV1lTUgt3ydhDn4UOylqDmT5KK2nKY4AqkG8w1Tck3n2kwnydYbCcse9KcvWaZMH980lJx6WFTFsm2T//7Nc/UlYGMcTiBps3H+2ReIjogw+quCGOLc34bNXPbgI7GAScWfp0NrrF32XEjgXJVLBck3xiVuGTTRQ/YiabQLIC5tgXQkQ2jYQj/UZkOxiCGIhWtPjESM2Xx6RYpn4B6/+AMjPfRmVDX3P3zMVVAWj8FIy7coFWM2LokI7KJX055umZjdOJNL10ljvnKrdV/8/yOZRDP33feLe9eA6eTsTez9KaWhjU6/83KfY7qHUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b3D20n0bAzqcjLjXnBhoWSF/wj8T59kOpyVPxkul4Tg=;
- b=YDZUtEfi4gaNHmsvQFUTOQuU/ZaUAMULfSmY2kEpv1ExzbwxnL6fH4dAPU0vKiTKqY5kZThv8tpJrY3Ve+/EbjREns14L+NL/9HYCubc46lNJCqzw9if73TSGS3laQDrY3vUgQLLUuhymtD9K8NWvhU7dxDuALi6w/iITWNLNJg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DU4PR04MB10457.eurprd04.prod.outlook.com (2603:10a6:10:561::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Thu, 18 Jul
- 2024 07:33:18 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.7762.020; Thu, 18 Jul 2024
- 07:33:18 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Thu, 18 Jul 2024 15:41:55 +0800
-Subject: [PATCH v6 3/7] firmware: arm_scmi: add initial support for i.MX
- MISC protocol
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240718-imx95-bbm-misc-v2-v6-3-18f008e16e9d@nxp.com>
-References: <20240718-imx95-bbm-misc-v2-v6-0-18f008e16e9d@nxp.com>
-In-Reply-To: <20240718-imx95-bbm-misc-v2-v6-0-18f008e16e9d@nxp.com>
-To: Sudeep Holla <sudeep.holla@arm.com>, 
- Cristian Marussi <cristian.marussi@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Peng Fan <peng.fan@nxp.com>, arm-scmi@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
- linux-rtc@vger.kernel.org, linux-input@vger.kernel.org
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1721288528; l=11462;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=Yc9fGdHVGpzX3AJqC0pvTwDCGUbMJnSIzJSsTgCSQww=;
- b=m1xYcLFP+8Mm7HkSP2yFFGNj0T0uzzH021HBgwUzq/yrQmMTYpzXrxjMH42dBfbv5eNitTKZx
- kYEJ6cNzF8lC3dP7DJMlycLOIFvVRgF/dNYkab/09lpSHqNtfD6aqJm
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: SI1PR02CA0046.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::14) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J8b8RAPY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721288013; x=1752824013;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zVJAdWQ/IwEk/Sy+Dh2nXxrFJn/m57IRKW+sOy81ZwQ=;
+  b=J8b8RAPYS2vlkytKo9jhcGTgJfZL/OTrxfELx/hlaXhycRuWwe7fgEtP
+   Aijj3bG/1Y9LyZ8nrSELNQ50PNSA9SF8qaEkJHNBnshHJWp6XOvulIVhe
+   lgGYMkHfHZY/eYhSDtv3rb0/pHio2tAMrRSGoTIoGHi1zgjgcMp/KXmHA
+   4tA1BpgMsXAg/KKIWuo5zwALx+ZMjL1hUg4P1eupwLHR38qdYS9s8aZMY
+   JO8HRPs46tWl2GDLgA6Q+kwLAepXZAbW44Sr9pMJ7WAMYULoorCgASYBu
+   gSl4WycVMJlBBVkELJGKBHm2xKK1HlylFKXOsTmRtgS5ykFvnrjVmnQRP
+   Q==;
+X-CSE-ConnectionGUID: MQyc43qCSbymRK5Yt2V21w==
+X-CSE-MsgGUID: oJqIJm/XQbmGYUbgMD/Ynw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="22693872"
+X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
+   d="scan'208";a="22693872"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 00:33:32 -0700
+X-CSE-ConnectionGUID: CCVrYolsQm6cirAvmE3Dxg==
+X-CSE-MsgGUID: LiZ4Yn0xTK2NwS2i0g7pMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
+   d="scan'208";a="50972881"
+Received: from ysheng4-mobl.ccr.corp.intel.com (HELO [10.238.2.30]) ([10.238.2.30])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 00:33:28 -0700
+Message-ID: <457184ed-dcda-4363-a0c9-95b43b80a6a4@linux.intel.com>
+Date: Thu, 18 Jul 2024 15:33:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DU4PR04MB10457:EE_
-X-MS-Office365-Filtering-Correlation-Id: c890e55e-5760-49fc-7968-08dca6fbe4c8
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V1Z3NkRKeVBCZEdieFFoTTNSNEJvY0N2OUNDUHBJeHZpcWpUZDdhbHl0dGtQ?=
- =?utf-8?B?b0UxckhlaC96b2JKSE4yVDBVeHk3dzhCSTBRYTBocnJDNThPK0Rad1JhUkFO?=
- =?utf-8?B?Yzd0dVUrWk9PdGVya1hhdmtVYkplNHdGWmx0eWtVN0JQeklFbHdJVmd0NEx1?=
- =?utf-8?B?d3hvUXhjSC9MN1ZNOTRtSTNkRVluNDRWdWp3Rzk2N2pYaTBveDVYMjE0NTBH?=
- =?utf-8?B?RXp0MzIzeENPNi9BMFMzQ0I3NXZrUVVqV2YydStnOEVnempiWjRJbFh1QUxY?=
- =?utf-8?B?ZHlNSFBGYUVKMDNaREtkZW80aE1KVlE4QmVnSkRKZkplZm9SbXczVzd6MUx4?=
- =?utf-8?B?WFUvblExc3BySUxoNTJnTjBZdWRJM09scytQQUx5c0VneVZaNE8yejVld0Nk?=
- =?utf-8?B?a0RMdGN6cmhDeE5JSE1DbzB0anM0U2tlTE1sdWZ5N3QyNG53SVdqcnZ4dCsz?=
- =?utf-8?B?Q0ZHMkdYcyt4MUxPeWdiR1pxV0FJbG5rUzh3Q1AvV1E3elNjK3J4aXdvQ1py?=
- =?utf-8?B?ZzhvZ1FVcUpVaGRIMHJqclNJSXZQc2liY2tKQzZGQ29mbmxMbW1rZ3J4NkFD?=
- =?utf-8?B?Ni95bHhQWGVHbmpXRkFBRUd1dzhtNWg5VTZsSCtydUJzYnhEdXBQRG8wTnBy?=
- =?utf-8?B?VGVXSmN1MEF5QWtka2gyQ1VsUmFSMnBMandnRVkrSW5JcjBHcmUvalNOaks5?=
- =?utf-8?B?TnBMU0pDdVVkOGFoWVpTNnlENGJRL3RMdzlidUduL0F6a1VZVmh4ZDU1SXZK?=
- =?utf-8?B?YXlhb3ZRcDNGbm9jR2ljS0JSRy9HTitSMTQydUlmVmxLVWtRYnFrQmwxNXNF?=
- =?utf-8?B?N1gzZmlBNVdQaDMySk15MkYyK25YYmx6c2NmUDVBUUszT24xVnY0R21ZeHlk?=
- =?utf-8?B?Q2JOejkzWDc1OUp4L1VKWTI2aGZIZWRKb1pLdURtSi9OUGRmTE5IZm53bXpF?=
- =?utf-8?B?VFc2QlVxUFBIcUl3dXZ6WFhTN1I5K3lWemJ0NEhFaWFvZStXbFk1Q1VXZFJk?=
- =?utf-8?B?SGNhc1JneHJGSDhmTWRkUmJ3M2o5NHdWdjNVUVp4S0FYcG5mRW4yaDFOaGNk?=
- =?utf-8?B?bGJuaU9PcmVTUTdQemVvMm90VkI4aGxNcE1Ha3UrdFFYRWZYeVAxbk05T05B?=
- =?utf-8?B?NklXMGhFR0ZMbjFZTll3bDV3cm02SFEwMVZsUG5iZnZNbU9hcGYyZjRzNU9w?=
- =?utf-8?B?cU50Ti9RMVFWYVg4S0ZlWUdUZ3FrelVLeGRJbDhWU2dvUTN5UVZWdzV4THU4?=
- =?utf-8?B?WHcvd3Fyd2JPRkxOSWpOa3RnSjV6V2g2Q3VxcVdRWkdYVGEwVGJEMFltaFYr?=
- =?utf-8?B?UWdYTU9iM2drN0h4UzBBd2FRcjVRV1dvd2kxbk1adHdqSERqTTF5dUFoVTBV?=
- =?utf-8?B?OVhXbm9JZk0xalorZnR6SVNqWFJxMlR5ZmlrV1k5VnMremh6Qk15N1ZuOHU3?=
- =?utf-8?B?cVA1UHhOaDVLcG5ZU1hLYzZmUWQ4amtGV01qWWZrUGRxMVF4OC9KMVFoTERy?=
- =?utf-8?B?TTMybk9uRzlvSEkra3ZlRUMvQWxudVB6Y1dJVFp5NU1oblY4NGxDTUJQc0or?=
- =?utf-8?B?RnVRWnpoUnhRZWI3VTQ1cm03RWxyUGhva0gwMXpocDNycmx5M1c5ejZqaU1Z?=
- =?utf-8?B?Tm5hSEE0bFg3MlNpbXhZTzVtVHZTTlZ0VFRXZGw3K0owNGgzZVRYV0JaUnc2?=
- =?utf-8?B?M0tqSG5td3k0Vlg3aDN3VzFJOVBOYi90YXI1L2FlZ2JuekllYUczTHRRMXZ4?=
- =?utf-8?B?U3g2OEFpVTB2MnlDWS9vbEdUVHcwOVI0SUhxS3p2Mlk0bUlIRExYeVpMdlVL?=
- =?utf-8?B?QkVpK090YytHT2htd1ZIZDY3U2xWd3R2cUJVZjd6aUxLVmVwMTBUSHlxaFJX?=
- =?utf-8?B?cFRRR2orQkJCNFN5ZC9OSHFDc2Y2aFdOMi9sc0Q2MEgzWVhIVGoxdllRWlhi?=
- =?utf-8?Q?+UPWsAQjqzg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q3puTmVGays2Tk5jSkhhZXFxeGpEdnN0bTZLMlNlMVpKcVdrMXAxbVlyVXRy?=
- =?utf-8?B?RGQ4SUhnUlE5QmtxWVB2REY2VnhaaVNyN2d3M1hzRXRTYTJtSGtkT2d0ZDVP?=
- =?utf-8?B?S3RQaU9oL3M3emE2REtWR3M2K0x5dUNlQ2tnTldTZVhzRGxEa0ZSNWJUQlNr?=
- =?utf-8?B?bDlkR1czb1lOcnQrS0dlNnhFU3BOSnNSa2dTUG1NZk5qOGNaZXRTTHhuZjNV?=
- =?utf-8?B?d2hCTXZZUjBPODNiellKczVJRjdiVEhMaWJjb3JEbHVPaGN2Yzl3VFJFQmlO?=
- =?utf-8?B?S0RVUCtBK3RlMUhDam8vNmlVdFFRUWRidmtaM0tKREM0UVdVeStnNTBtSG54?=
- =?utf-8?B?S2I3blAwTzhoWjFlZjNuV0lQYmhhSTduMVN4WGNNbk9WNGpJdzZMcCszY1BY?=
- =?utf-8?B?dnBCQlk3dGZmZmtRZklySEE0QjJ2SWtHOEwzZHJDMXZGRlVIQ01HeGFJTzFX?=
- =?utf-8?B?U0o3akVPVUpYVHV6WWFjaG5wRFRQdGxCY0JCelYxQ0dQWS9WQkxpbVB3b1F3?=
- =?utf-8?B?VDdmQUVsRGNVVnVqclpQY3RPYXdmbXhKZzFEM2FJY3lYNWpLK0dKK01XT3BW?=
- =?utf-8?B?dzZrNFZ4Mlg2OWY0NldFSGdiYzdQSmdxZFFqM0tZT3FzMGFKc1VkVDZSc20y?=
- =?utf-8?B?NzVic3hTcXBxWVkwMERtL3hYMko3akRCWDdoUEZWMFFidEtRYW1iUmt3b2dx?=
- =?utf-8?B?ci9MRy9DTENIY2lEOHVLb0lnNHB6dzlFa3RVcDNpYlI2UllwUWVTQ05ublhK?=
- =?utf-8?B?T25IYXRGbnd6TVVSa0poS2oxKzdqVjdYOTA5QUVKMTRQSG5Ubko2eldDa3Ru?=
- =?utf-8?B?ZDhsZGUzRVlxeGxHVnlGb3I1S1RKNjlGbnhuK0w1clZuZnQ0N1VoWThZTDg0?=
- =?utf-8?B?ckhaSmw1a0ROS0JHOEx6OE9xNnlkZnkyamtVSDR5cjJiUmhKb1I3NHMzdnRr?=
- =?utf-8?B?dXVKTjRsRWFkY0taeHo3Wk1pWldIVCtxZGVUMk9qb0ZzUzQ0VEQvT1U1ZUVt?=
- =?utf-8?B?OGorZUQzRlNkUjlnQ0c5MElvNU9QbVBUM0NDa0FnT0FUTDU3aXRTa1VNczZt?=
- =?utf-8?B?bjZscmVYdGhmWHBDTWM3VGZFWlZSa1AvZnV6OVl0V0Y3bkh1TDhEWG9CUnRJ?=
- =?utf-8?B?REVMY3J5dmx6SnU1eElhQW5OeDBSOFN5ZU9ISW4zS0FmRWFwc2VqcVVVMS9K?=
- =?utf-8?B?L1BCU05DMTFTSmVxTkNnWExYWnJsYXl6UmFudU9iUDlYMFRkS2tSQmhybHhH?=
- =?utf-8?B?UTVacXV3Y1dhN1VHRmEzdmhTWm15azNWekZJeXdqRzBVdWdvdWhCcVdqbWUw?=
- =?utf-8?B?YXQ2OWRSMXhoeXNqQzBGb2NNeGlPNXo1dTkyaXZDeUZ0ZW9MK0RpTFhyb0Jp?=
- =?utf-8?B?ZEVPeGh0elIrT0ptNmNXSGR2bEF2RnNrZEUrbFNCaDkwckZNRnowYzVJY0c4?=
- =?utf-8?B?VVBmTm5LbzNwcXNjeEVqVnhHMjYrVmZLTHdadkI5TXpjTEI0MG1FR0VCZ1kx?=
- =?utf-8?B?NTJ3bTh0YXREdE45TFR0NXhlRUVadUhDckFvRkpnUnozN2xHalpoWHZUMk1V?=
- =?utf-8?B?aVk5bU83Yzg4b3Y3TjkvTVRKL2ZUVkhWdnhiNy9nbS9uYkdMeTk3a2xWV1Vt?=
- =?utf-8?B?U3lEenpBZVVCT1psYW9aQUJ6eFhObmJYRlVObzVMWnpNUjVLNXExeDlzUHJC?=
- =?utf-8?B?bm11QTg3b2NRNTF2S0sxdjdOd0JQdmlCaS9nUUwxZ29Db2IzVFBJL3RXVGps?=
- =?utf-8?B?M0xsN3ZWZ3pFaHp6ZnJDUXZKVHRzaTdMTEJpeVlRVExVZlliNUNUeGx0NHFP?=
- =?utf-8?B?MjNnY1N2M0V5SVZNZWJ3OWdORm5LUkxMSEJnanhyREtGU3UwZTRTZFJxblNj?=
- =?utf-8?B?bUJxbzNXZUpxWVgzWVJaZzJkMEkxc2lvNnZJTWxRV05UNytqNUFkMWtEbjBl?=
- =?utf-8?B?bTEvV1FqalZ4TDBuNVl4K0RleU5TN3ZJN3o5aW45OVB5bWczVzJjaExaaHJ5?=
- =?utf-8?B?WTV0M0h0M2RuMTBrK0tYRVN3KzhkMFhQTU9IbDEzaUpLam80WkhFWlhjTjZN?=
- =?utf-8?B?c1dPS1RiOTRNYTlyM2ZUMFNvamkwYVZMTmNMWmREaE9BdmtyYVVtSXBnOG9Q?=
- =?utf-8?Q?3v1LG57e2NQ2PPBEGUe02eijK?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c890e55e-5760-49fc-7968-08dca6fbe4c8
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 07:33:18.6060
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gfUK18i/MRBDhPw7/ly87KEvlkZY7KvsazVytarZqlMW+D10d3Wo6T3IBPnpK7e+1/mRNngFLLaT+zqFHZQyXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10457
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 110/130] KVM: TDX: Handle TDX PV MMIO hypercall
+To: Isaku Yamahata <isaku.yamahata@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+ Sean Christopherson <sean.j.christopherson@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <a4421e0f2eafc17b4703c920936e32489d2382a3.1708933498.git.isaku.yamahata@intel.com>
+ <560f3796-5a41-49fb-be6e-558bbe582996@linux.intel.com>
+ <20240716222514.GD1900928@ls.amr.corp.intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20240716222514.GD1900928@ls.amr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Peng Fan <peng.fan@nxp.com>
 
-i.MX95 System Manager(SM) firmware includes a SCMI vendor protocol, SCMI
-MISC protocol which includes controls that are misc settings/actions that
-must be exposed from the SM to agents. They are device specific and are
-usually define to access bit fields in various mix block control modules,
-IOMUX_GPR, and other General Purpose registers, Control Status Registers
-owned by the SM.
 
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/firmware/arm_scmi/imx/Kconfig       |   9 +
- drivers/firmware/arm_scmi/imx/Makefile      |   1 +
- drivers/firmware/arm_scmi/imx/imx-sm-misc.c | 315 ++++++++++++++++++++++++++++
- include/linux/scmi_imx_protocol.h           |  17 ++
- 4 files changed, 342 insertions(+)
+On 7/17/2024 6:25 AM, Isaku Yamahata wrote:
+> On Tue, Jun 25, 2024 at 02:54:09PM +0800,
+> Binbin Wu <binbin.wu@linux.intel.com> wrote:
+>
+>>
+>> On 2/26/2024 4:26 PM, isaku.yamahata@intel.com wrote:
+>>> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>>>
+>>> Export kvm_io_bus_read and kvm_mmio tracepoint and wire up TDX PV MMIO
+>>> hypercall to the KVM backend functions.
+>>>
+>>> kvm_io_bus_read/write() searches KVM device emulated in kernel of the given
+>>> MMIO address and emulates the MMIO.  As TDX PV MMIO also needs it, export
+>>> kvm_io_bus_read().  kvm_io_bus_write() is already exported.  TDX PV MMIO
+>>> emulates some of MMIO itself.  To add trace point consistently with x86
+>>> kvm, export kvm_mmio tracepoint.
+>>>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+>>> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> ---
+>>>    arch/x86/kvm/vmx/tdx.c | 114 +++++++++++++++++++++++++++++++++++++++++
+>>>    arch/x86/kvm/x86.c     |   1 +
+>>>    virt/kvm/kvm_main.c    |   2 +
+>>>    3 files changed, 117 insertions(+)
+>>>
+>>> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+>>> index 55fc6cc6c816..389bb95d2af0 100644
+>>> --- a/arch/x86/kvm/vmx/tdx.c
+>>> +++ b/arch/x86/kvm/vmx/tdx.c
+>>> @@ -1217,6 +1217,118 @@ static int tdx_emulate_io(struct kvm_vcpu *vcpu)
+>>>    	return ret;
+>>>    }
+>>> +static int tdx_complete_mmio(struct kvm_vcpu *vcpu)
+>>> +{
+>>> +	unsigned long val = 0;
+>>> +	gpa_t gpa;
+>>> +	int size;
+>>> +
+>>> +	KVM_BUG_ON(vcpu->mmio_needed != 1, vcpu->kvm);
+>>> +	vcpu->mmio_needed = 0;
+>> mmio_needed is used by instruction emulator to setup the complete callback.
+>> Since TDX handle MMIO in a PV way, mmio_needed is not needed here.
+> Ok, we don't need to update mmio_needed.
+>
+>
+>>> +
+>>> +	if (!vcpu->mmio_is_write) {
+>> It's also needed by instruction emulator, we can use
+>> vcpu->run->mmio.is_write instead.
+> No because vcpu->run->mmio is shared with user space.  KVM need to stash
+> it independently.
+>
+>
+>>> +		gpa = vcpu->mmio_fragments[0].gpa;
+>>> +		size = vcpu->mmio_fragments[0].len;
+>> Since MMIO cross page boundary is not allowed according to the input checks
+>> from TDVMCALL, these mmio_fragments[] is not needed.
+>> Just use vcpu->run->mmio.phys_addr and vcpu->run->mmio.len?
+> ditto.
+>
+>
+>>> +
+>>> +		memcpy(&val, vcpu->run->mmio.data, size);
+>>> +		tdvmcall_set_return_val(vcpu, val);
+>>> +		trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
+>>> +	}
+>> Tracepoint for KVM_TRACE_MMIO_WRITE is missing when it is handled in
+>> userspace.
+> tdx_mmio_write() has it before existing to the user space.  It matches with
+> how write_mmio() behaves in x86.c.
+>
+> Hmm, to match with other code, we should remove
+> trace_kvm_mmio(KVM_TRACE_MMIO_READ) and keep KVM_TRACE_MMIO_READ_UNSATISFIED
+> in tdx_emulate_mmio().  That's how read_prepare() and read_exit_mmio() behaves.
+>
+> For MMIO read
+> - When kernel can handle the MMIO, KVM_TRACE_MMIO_READ with data.
+> - When exiting to the user space, KVM_TRACE_MMIO_READ_UNSATISFIED before
+>    the exit.  No trace after the user space handled the MMIO.
 
-diff --git a/drivers/firmware/arm_scmi/imx/Kconfig b/drivers/firmware/arm_scmi/imx/Kconfig
-index 4b6ac7febe8f..e9d015859eaa 100644
---- a/drivers/firmware/arm_scmi/imx/Kconfig
-+++ b/drivers/firmware/arm_scmi/imx/Kconfig
-@@ -11,4 +11,13 @@ config IMX_SCMI_BBM_EXT
- 
- 	  This driver can also be built as a module.
- 
-+config IMX_SCMI_MISC_EXT
-+	tristate "i.MX SCMI MISC EXTENSION"
-+	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-+	default y if ARCH_MXC
-+	help
-+	  This enables i.MX System MISC control logic such as gpio expander
-+	  wakeup
-+
-+	  This driver can also be built as a module.
- endmenu
-diff --git a/drivers/firmware/arm_scmi/imx/Makefile b/drivers/firmware/arm_scmi/imx/Makefile
-index a7dbdd20dbb9..d3ee6d544924 100644
---- a/drivers/firmware/arm_scmi/imx/Makefile
-+++ b/drivers/firmware/arm_scmi/imx/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_IMX_SCMI_BBM_EXT) += imx-sm-bbm.o
-+obj-$(CONFIG_IMX_SCMI_MISC_EXT) += imx-sm-misc.o
-diff --git a/drivers/firmware/arm_scmi/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/imx/imx-sm-misc.c
-new file mode 100644
-index 000000000000..ca79d86d542c
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/imx/imx-sm-misc.c
-@@ -0,0 +1,315 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * System control and Management Interface (SCMI) NXP MISC Protocol
-+ *
-+ * Copyright 2024 NXP
-+ */
-+
-+#define pr_fmt(fmt) "SCMI Notifications MISC - " fmt
-+
-+#include <linux/bits.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/scmi_protocol.h>
-+#include <linux/scmi_imx_protocol.h>
-+
-+#include "../protocols.h"
-+#include "../notify.h"
-+
-+#define SCMI_PROTOCOL_SUPPORTED_VERSION		0x10000
-+
-+#define MAX_MISC_CTRL_SOURCES			GENMASK(15, 0)
-+
-+enum scmi_imx_misc_protocol_cmd {
-+	SCMI_IMX_MISC_CTRL_SET	= 0x3,
-+	SCMI_IMX_MISC_CTRL_GET	= 0x4,
-+	SCMI_IMX_MISC_CTRL_NOTIFY = 0x8,
-+};
-+
-+struct scmi_imx_misc_info {
-+	u32 version;
-+	u32 nr_dev_ctrl;
-+	u32 nr_brd_ctrl;
-+	u32 nr_reason;
-+};
-+
-+struct scmi_msg_imx_misc_protocol_attributes {
-+	__le32 attributes;
-+};
-+
-+#define GET_BRD_CTRLS_NR(x)	le32_get_bits((x), GENMASK(31, 24))
-+#define GET_REASONS_NR(x)	le32_get_bits((x), GENMASK(23, 16))
-+#define GET_DEV_CTRLS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
-+#define BRD_CTRL_START_ID	BIT(15)
-+
-+struct scmi_imx_misc_ctrl_set_in {
-+	__le32 id;
-+	__le32 num;
-+	__le32 value[];
-+};
-+
-+struct scmi_imx_misc_ctrl_notify_in {
-+	__le32 ctrl_id;
-+	__le32 flags;
-+};
-+
-+struct scmi_imx_misc_ctrl_notify_payld {
-+	__le32 ctrl_id;
-+	__le32 flags;
-+};
-+
-+struct scmi_imx_misc_ctrl_get_out {
-+	__le32 num;
-+	__le32 val[];
-+};
-+
-+static int scmi_imx_misc_attributes_get(const struct scmi_protocol_handle *ph,
-+					struct scmi_imx_misc_info *mi)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_imx_misc_protocol_attributes *attr;
-+
-+	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES, 0,
-+				      sizeof(*attr), &t);
-+	if (ret)
-+		return ret;
-+
-+	attr = t->rx.buf;
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+	if (!ret) {
-+		mi->nr_dev_ctrl = GET_DEV_CTRLS_NR(attr->attributes);
-+		mi->nr_brd_ctrl = GET_BRD_CTRLS_NR(attr->attributes);
-+		mi->nr_reason = GET_REASONS_NR(attr->attributes);
-+		dev_info(ph->dev, "i.MX MISC NUM DEV CTRL: %d, NUM BRD CTRL: %d,NUM Reason: %d\n",
-+			 mi->nr_dev_ctrl, mi->nr_brd_ctrl, mi->nr_reason);
-+	}
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static int scmi_imx_misc_ctrl_validate_id(const struct scmi_protocol_handle *ph,
-+					  u32 ctrl_id)
-+{
-+	struct scmi_imx_misc_info *mi = ph->get_priv(ph);
-+
-+	/*
-+	 * [0,      BRD_CTRL_START_ID) is for Dev Ctrl which is SOC related
-+	 * [BRD_CTRL_START_ID, 0xffff) is for Board Ctrl which is board related
-+	 */
-+	if ((ctrl_id < BRD_CTRL_START_ID) && (ctrl_id > mi->nr_dev_ctrl))
-+		return -EINVAL;
-+	if (ctrl_id >= BRD_CTRL_START_ID + mi->nr_brd_ctrl)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int scmi_imx_misc_ctrl_notify(const struct scmi_protocol_handle *ph,
-+				     u32 ctrl_id, u32 evt_id, u32 flags)
-+{
-+	struct scmi_imx_misc_ctrl_notify_in *in;
-+	struct scmi_xfer *t;
-+	int ret;
-+
-+	ret = scmi_imx_misc_ctrl_validate_id(ph, ctrl_id);
-+	if (ret)
-+		return ret;
-+
-+	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_MISC_CTRL_NOTIFY,
-+				      sizeof(*in), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	in = t->tx.buf;
-+	in->ctrl_id = cpu_to_le32(ctrl_id);
-+	in->flags = cpu_to_le32(flags);
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static int
-+scmi_imx_misc_ctrl_set_notify_enabled(const struct scmi_protocol_handle *ph,
-+				      u8 evt_id, u32 src_id, bool enable)
-+{
-+	int ret;
-+
-+	/* misc_ctrl_req_notify is for enablement */
-+	if (enable)
-+		return 0;
-+
-+	ret = scmi_imx_misc_ctrl_notify(ph, src_id, evt_id, 0);
-+	if (ret)
-+		dev_err(ph->dev, "FAIL_ENABLED - evt[%X] src[%d] - ret:%d\n",
-+			evt_id, src_id, ret);
-+
-+	return ret;
-+}
-+
-+static void *
-+scmi_imx_misc_ctrl_fill_custom_report(const struct scmi_protocol_handle *ph,
-+				      u8 evt_id, ktime_t timestamp,
-+				      const void *payld, size_t payld_sz,
-+				      void *report, u32 *src_id)
-+{
-+	const struct scmi_imx_misc_ctrl_notify_payld *p = payld;
-+	struct scmi_imx_misc_ctrl_notify_report *r = report;
-+
-+	if (sizeof(*p) != payld_sz)
-+		return NULL;
-+
-+	r->timestamp = timestamp;
-+	r->ctrl_id = p->ctrl_id;
-+	r->flags = p->flags;
-+	if (src_id)
-+		*src_id = r->ctrl_id;
-+	dev_dbg(ph->dev, "%s: ctrl_id: %d flags: %d\n", __func__,
-+		r->ctrl_id, r->flags);
-+
-+	return r;
-+}
-+
-+static const struct scmi_event_ops scmi_imx_misc_event_ops = {
-+	.set_notify_enabled = scmi_imx_misc_ctrl_set_notify_enabled,
-+	.fill_custom_report = scmi_imx_misc_ctrl_fill_custom_report,
-+};
-+
-+static const struct scmi_event scmi_imx_misc_events[] = {
-+	{
-+		.id = SCMI_EVENT_IMX_MISC_CONTROL,
-+		.max_payld_sz = sizeof(struct scmi_imx_misc_ctrl_notify_payld),
-+		.max_report_sz = sizeof(struct scmi_imx_misc_ctrl_notify_report),
-+	},
-+};
-+
-+static struct scmi_protocol_events scmi_imx_misc_protocol_events = {
-+	.queue_sz = SCMI_PROTO_QUEUE_SZ,
-+	.ops = &scmi_imx_misc_event_ops,
-+	.evts = scmi_imx_misc_events,
-+	.num_events = ARRAY_SIZE(scmi_imx_misc_events),
-+	.num_sources = MAX_MISC_CTRL_SOURCES,
-+};
-+
-+static int scmi_imx_misc_ctrl_get(const struct scmi_protocol_handle *ph,
-+				  u32 ctrl_id, u32 *num, u32 *val)
-+{
-+	struct scmi_imx_misc_ctrl_get_out *out;
-+	struct scmi_xfer *t;
-+	int ret, i;
-+	int max_msg_size = ph->hops->get_max_msg_size(ph);
-+	int max_num = (max_msg_size - sizeof(*out)) / sizeof(__le32);
-+
-+	ret = scmi_imx_misc_ctrl_validate_id(ph, ctrl_id);
-+	if (ret)
-+		return ret;
-+
-+	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_MISC_CTRL_GET, sizeof(u32),
-+				      0, &t);
-+	if (ret)
-+		return ret;
-+
-+	put_unaligned_le32(ctrl_id, t->tx.buf);
-+	ret = ph->xops->do_xfer(ph, t);
-+	if (!ret) {
-+		out = t->rx.buf;
-+		*num = le32_to_cpu(out->num);
-+
-+		if (*num >= max_num ||
-+		    *num * sizeof(__le32) > t->rx.len - sizeof(__le32)) {
-+			ph->xops->xfer_put(ph, t);
-+			return -EINVAL;
-+		}
-+
-+		for (i = 0; i < *num; i++)
-+			val[i] = le32_to_cpu(out->val[i]);
-+	}
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static int scmi_imx_misc_ctrl_set(const struct scmi_protocol_handle *ph,
-+				  u32 ctrl_id, u32 num, u32 *val)
-+{
-+	struct scmi_imx_misc_ctrl_set_in *in;
-+	struct scmi_xfer *t;
-+	int ret, i;
-+	int max_msg_size = ph->hops->get_max_msg_size(ph);
-+	int max_num = (max_msg_size - sizeof(*in)) / sizeof(__le32);
-+
-+	ret = scmi_imx_misc_ctrl_validate_id(ph, ctrl_id);
-+	if (ret)
-+		return ret;
-+
-+	if (num > max_num)
-+		return -EINVAL;
-+
-+	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_MISC_CTRL_SET, sizeof(*in),
-+				      0, &t);
-+	if (ret)
-+		return ret;
-+
-+	in = t->tx.buf;
-+	in->id = cpu_to_le32(ctrl_id);
-+	in->num = cpu_to_le32(num);
-+	for (i = 0; i < num; i++)
-+		in->value[i] = cpu_to_le32(val[i]);
-+
-+	ret = ph->xops->do_xfer(ph, t);
-+
-+	ph->xops->xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
-+static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
-+	.misc_ctrl_set = scmi_imx_misc_ctrl_set,
-+	.misc_ctrl_get = scmi_imx_misc_ctrl_get,
-+	.misc_ctrl_req_notify = scmi_imx_misc_ctrl_notify,
-+};
-+
-+static int scmi_imx_misc_protocol_init(const struct scmi_protocol_handle *ph)
-+{
-+	struct scmi_imx_misc_info *minfo;
-+	u32 version;
-+	int ret;
-+
-+	ret = ph->xops->version_get(ph, &version);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(ph->dev, "NXP SM MISC Version %d.%d\n",
-+		 PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
-+
-+	minfo = devm_kzalloc(ph->dev, sizeof(*minfo), GFP_KERNEL);
-+	if (!minfo)
-+		return -ENOMEM;
-+
-+	ret = scmi_imx_misc_attributes_get(ph, minfo);
-+	if (ret)
-+		return ret;
-+
-+	return ph->set_priv(ph, minfo, version);
-+}
-+
-+static const struct scmi_protocol scmi_imx_misc = {
-+	.id = SCMI_PROTOCOL_IMX_MISC,
-+	.owner = THIS_MODULE,
-+	.instance_init = &scmi_imx_misc_protocol_init,
-+	.ops = &scmi_imx_misc_proto_ops,
-+	.events = &scmi_imx_misc_protocol_events,
-+	.supported_version = SCMI_PROTOCOL_SUPPORTED_VERSION,
-+	.vendor_id = "NXP",
-+	.sub_vendor_id = "IMX",
-+};
-+module_scmi_protocol(scmi_imx_misc);
-diff --git a/include/linux/scmi_imx_protocol.h b/include/linux/scmi_imx_protocol.h
-index 2df2ea0f1809..066216f1357a 100644
---- a/include/linux/scmi_imx_protocol.h
-+++ b/include/linux/scmi_imx_protocol.h
-@@ -15,6 +15,7 @@
- 
- enum scmi_nxp_protocol {
- 	SCMI_PROTOCOL_IMX_BBM = 0x81,
-+	SCMI_PROTOCOL_IMX_MISC = 0x84,
- };
- 
- struct scmi_imx_bbm_proto_ops {
-@@ -30,6 +31,7 @@ struct scmi_imx_bbm_proto_ops {
- enum scmi_nxp_notification_events {
- 	SCMI_EVENT_IMX_BBM_RTC = 0x0,
- 	SCMI_EVENT_IMX_BBM_BUTTON = 0x1,
-+	SCMI_EVENT_IMX_MISC_CONTROL = 0x0,
- };
- 
- struct scmi_imx_bbm_notif_report {
-@@ -39,4 +41,19 @@ struct scmi_imx_bbm_notif_report {
- 	unsigned int		rtc_id;
- 	unsigned int		rtc_evt;
- };
-+
-+struct scmi_imx_misc_ctrl_notify_report {
-+	ktime_t			timestamp;
-+	unsigned int		ctrl_id;
-+	unsigned int		flags;
-+};
-+
-+struct scmi_imx_misc_proto_ops {
-+	int (*misc_ctrl_set)(const struct scmi_protocol_handle *ph, u32 id,
-+			     u32 num, u32 *val);
-+	int (*misc_ctrl_get)(const struct scmi_protocol_handle *ph, u32 id,
-+			     u32 *num, u32 *val);
-+	int (*misc_ctrl_req_notify)(const struct scmi_protocol_handle *ph,
-+				    u32 ctrl_id, u32 evt_id, u32 flags);
-+};
- #endif
+For MMIO read, in the emulator, there is still a trace after the 
+userspace handled the MMIO.
+In complete_emulated_mmio(), if all fragments have been handled, it will
+set vcpu->mmio_read_completed to 1 and call complete_emulated_io().
+complete_emulated_io
+     kvm_emulate_instruction(vcpu, EMULTYPE_NO_DECODE)
+         x86_emulate_instruction
+             x86_emulate_insn
+                 emulator_read_write
+                     read_prepare
+                         At this point, vcpu->mmio_read_completed is 1,
+                         it traces KVM_TRACE_MMIO_READ with data
+                         and then clear vcpu->mmio_read_completed
 
--- 
-2.37.1
+So to align with emulator, we should keep the trace for KVM_TRACE_MMIO_READ.
+
+
+>
+> For MMIO write
+> - KVM_TRACE_MMIO_WRITE before handling it.
+>
+>
+>> Also, the return code is only set when the emulation is done in kernel, but
+>> not set when it's handled in userspace.
+>>
+>>> +	return 1;
+>>> +}
+>> How about the fixup as following:
+>>
+>> @@ -1173,19 +1173,18 @@ static int tdx_emulate_io(struct kvm_vcpu *vcpu)
+>> static int tdx_complete_mmio(struct kvm_vcpu *vcpu) { unsigned long val = 0;
+>> - gpa_t gpa; - int size; - - vcpu->mmio_needed = 0; - - if
+>> (!vcpu->mmio_is_write) { - gpa = vcpu->mmio_fragments[0].gpa; - size =
+>> vcpu->mmio_fragments[0].len; + gpa_t gpa = vcpu->run->mmio.phys_addr; + int
+>> size = vcpu->run->mmio.len; + if (vcpu->run->mmio.is_write) { +
+>> trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, size, gpa, &val); + } else {
+>> memcpy(&val, vcpu->run->mmio.data, size); tdvmcall_set_return_val(vcpu,
+>> val); trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val); } + +
+>> tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS); return 1; }
+>>
+>>
+>>
+>>> +
+>>> +static inline int tdx_mmio_write(struct kvm_vcpu *vcpu, gpa_t gpa, int size,
+>>> +				 unsigned long val)
+>>> +{
+>>> +	if (kvm_iodevice_write(vcpu, &vcpu->arch.apic->dev, gpa, size, &val) &&
+>>> +	    kvm_io_bus_write(vcpu, KVM_MMIO_BUS, gpa, size, &val))
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, size, gpa, &val);
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static inline int tdx_mmio_read(struct kvm_vcpu *vcpu, gpa_t gpa, int size)
+>>> +{
+>>> +	unsigned long val;
+>>> +
+>>> +	if (kvm_iodevice_read(vcpu, &vcpu->arch.apic->dev, gpa, size, &val) &&
+>>> +	    kvm_io_bus_read(vcpu, KVM_MMIO_BUS, gpa, size, &val))
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	tdvmcall_set_return_val(vcpu, val);
+>>> +	trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int tdx_emulate_mmio(struct kvm_vcpu *vcpu)
+>>> +{
+>>> +	struct kvm_memory_slot *slot;
+>>> +	int size, write, r;
+>>> +	unsigned long val;
+>>> +	gpa_t gpa;
+>>> +
+>>> +	KVM_BUG_ON(vcpu->mmio_needed, vcpu->kvm);
+>>> +
+>> [...]
+>>> +
+>>> +	/* Request the device emulation to userspace device model. */
+>>> +	vcpu->mmio_needed = 1;
+>>> +	vcpu->mmio_is_write = write;
+>> Then they can be dropped.
+> We may drop mmio_needed. mmio_is_write is needed as above.
+>
+>
+>
+>>> +	vcpu->arch.complete_userspace_io = tdx_complete_mmio;
+>>> +
+>>> +	vcpu->run->mmio.phys_addr = gpa;
+>>> +	vcpu->run->mmio.len = size;
+>>> +	vcpu->run->mmio.is_write = write;
+>>> +	vcpu->run->exit_reason = KVM_EXIT_MMIO;
+>>> +
+>>> +	if (write) {
+>>> +		memcpy(vcpu->run->mmio.data, &val, size);
+>>> +	} else {
+>>> +		vcpu->mmio_fragments[0].gpa = gpa;
+>>> +		vcpu->mmio_fragments[0].len = size;
+>> These two lines can be dropped as well.
+> ditto.
 
