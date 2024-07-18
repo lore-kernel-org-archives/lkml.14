@@ -1,90 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70ACA13D8A3;
-	Thu, 18 Jul 2024 14:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F0613D62E;
+	Thu, 18 Jul 2024 14:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721314360; cv=none; b=aarbEfT7Y6t3A0jmr/rkC1ToWkl8SE/tX5cFpjjXWKd53IBtDO+tKAmXaboFH7dNZ6vGQzHibk86AxwpX4GnrqyF0KpciIfAAR19ZtyrOpRIXNR/H1wbcM52QCI7ogJ17vWAAqGQmBWJjFcFwkulPVllaXpH3gcWO+2yklPxCPM=
+	t=1721314392; cv=none; b=qhcVTQ07U5h2csYl5U1OOqZpSUxjUzLel7h5yfXjgsqnKjVH5UIyHAgHyP/2H/PDJ8/oNNybT15wqZRZFIxK41RJpy75/J+AoZQqLSbO6sqoSGfngXnvzsYS/mS0Q9qua/RwNG5DTk88vfLEnpQRSzsSNdio5yZ71Kd60sDShAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721314360; c=relaxed/simple;
-	bh=eRMIhpXx67jc5E7w+2lKxu/NNGDoKKCI036UvAuKGrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Juk+ymWY7Z4KVcFzzlSz//UOUa3KcX1syKh02S4dOnDf5619W62quP+BcT/2l+4cSqZGWqR/NMBsVSwaq0RpJbvw+umv+P698YN6bPuY+stgcKgR+A9LOX2PzzqAA8K2EVHnBfe5k2JgUG/Gd1dV5/dB3ekovv5R7B0pVmTuOIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 970C71063;
-	Thu, 18 Jul 2024 07:53:02 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 873663F762;
-	Thu, 18 Jul 2024 07:52:35 -0700 (PDT)
-Date: Thu, 18 Jul 2024 15:52:32 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"cristian.marussi@arm.com" <cristian.marussi@arm.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>
-Subject: Re: [PATCH RESEND] dt-bindings: firmware: arm,scmi: support system
- power protocol
-Message-ID: <ZpksMAYaAkemr9dd@bogus>
-References: <20240628030309.1162012-1-peng.fan@oss.nxp.com>
- <ZoZ8Mxjv9cIzivtk@bogus>
- <AM6PR04MB59419639315434DBFF2F13B688DE2@AM6PR04MB5941.eurprd04.prod.outlook.com>
- <PAXPR04MB8459EB8FC25AFF6D7C912F2A88AC2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1721314392; c=relaxed/simple;
+	bh=82AS+Zf4CVHf1Vp9cEoNBDoDZNddG/48AXZ/c/Xq+eo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fCCfxMRDgRKSCGTZjdu2EF6M4sbuIN369fkgsCbY2XvMDbc8dHDRokmsn0ppJYmFif7ElKDtepw7JKhqUi53kaAD6JS4+yJWR6mHBvFPAUdItLOiGwK8rVe49hFc3ImJRr73QOs8agNzT4OUaZ/IHeuVlTktPOfV/sppeVPFiVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RZ1mL2MO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OaZegsP4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VJs4TWiB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gdGUfCbr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RZ1mL2MO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OaZegsP4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VJs4TWiB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gdGUfCbr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5776D21B09;
+	Thu, 18 Jul 2024 14:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721314388; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tt1Kt4kEZPopJGh7fa66YbcOuxMjJWMWWaVrPr/IRrY=;
+	b=RZ1mL2MO2LPuUXJYfLiCRtuq1w70IHUyIK+SwhuxCjFI4vvcdTs41vJKkVNTj09HeizsHv
+	dJm3OAO8CSRlABUjuhjcHfIvzGq1CmsO57sr2Jf7kmpAq4nRkJEOPHQJoNnm9Gphy3iGbm
+	4aFI0BqEJrmhhep0DlRpIatIr763xVo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721314388;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tt1Kt4kEZPopJGh7fa66YbcOuxMjJWMWWaVrPr/IRrY=;
+	b=OaZegsP462jZR3izfIF7VMnq6blF3gdSo/E/3B616AC0YGCdjTWI0GiTOKAbouhMeQ23WO
+	BnkiW2Oy3nBcEDDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=VJs4TWiB;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=gdGUfCbr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721314387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tt1Kt4kEZPopJGh7fa66YbcOuxMjJWMWWaVrPr/IRrY=;
+	b=VJs4TWiBKOShELnsPgO98gCqKihDNWBuGzs6GFWAlO+VDmV+78i/0DPSHJhm409RAq7q5+
+	CKZGzNrnW2JJ1wHndyGWjeJcVQtavsvoWuhwqeCmKpz0lEmYT3rX90FPnuI9vtDvUG5csz
+	VA7qaOuR0KlhWHDk43ZWl6/O1KmoL5w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721314387;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tt1Kt4kEZPopJGh7fa66YbcOuxMjJWMWWaVrPr/IRrY=;
+	b=gdGUfCbrc3O4wPzc7JMbLLWp8Qo4RkEzyLP81E0TYsfBWxKhYVjqJOncvuHHt/16OGGZ2u
+	QawsmEIn4Tc+90AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0B9F9136F7;
+	Thu, 18 Jul 2024 14:53:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BVuGAVMsmWaHIQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 18 Jul 2024 14:53:07 +0000
+Date: Thu, 18 Jul 2024 16:53:40 +0200
+Message-ID: <87h6cmvjij.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-sound@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] kselftest/alsa: Diagnostic improvements
+In-Reply-To: <20240716-alsa-kselftest-board-name-v2-0-60f1acdde096@kernel.org>
+References: <20240716-alsa-kselftest-board-name-v2-0-60f1acdde096@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459EB8FC25AFF6D7C912F2A88AC2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 5776D21B09
 
-On Thu, Jul 18, 2024 at 12:15:20PM +0000, Peng Fan wrote:
-> Hi Sudeep,
+On Tue, 16 Jul 2024 16:47:58 +0200,
+Mark Brown wrote:
 > 
-> > Subject: RE: [PATCH RESEND] dt-bindings: firmware: arm,scmi: support
-> > system power protocol
-> > 
-> > > Subject: Re: [PATCH RESEND] dt-bindings: firmware: arm,scmi:
-> > support
-> > > system power protocol
-> > >
-> > > On Fri, Jun 28, 2024 at 11:03:09AM +0800, Peng Fan (OSS) wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > Add SCMI System Power Protocol bindings, and the protocol id is
-> > > 0x12.
-> > > >
-> > >
-> > > I think we must have this node only if it has dedicated channel or any
-> > > other required property.
-> > 
-> > I posted a patchset to support nodes not in device tree. And Cristian
-> > gave some comments:
-> > https://lore.kernel.org/all/Znv1p3FDiPSUNmBM@pluto/
-> >
+> The first patch fixes unstable naming of tests due to probe ordering not
+> being stable, the second just provides a bit more information.
 > 
-> Please suggest what should I do to avoid the dtbs_check issue.
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+> Changes in v2:
+> - Switch to using ID rather than longame.
+> - Log the PCM ID too.
+> - Link to v1: https://lore.kernel.org/r/20240711-alsa-kselftest-board-name-v1-1-ab5cf2dbbea6@kernel.org
 > 
-> Should I switch back to 
-> https://lore.kernel.org/all/Znv1p3FDiPSUNmBM@pluto/
-> or else?
->
+> ---
+> Mark Brown (2):
+>       kselftest/alsa: Use card name rather than number in test names
+>       kselftest/alsa: Log the PCM ID in pcm-test
 
-Sorry I need to discuss with Cristain and decide. I might have already
-discussed but I can't recall the details or decision(if any) made after
-that. He is away now, will get back once we discuss and see what is the
-best approach.
+Applied both patches now.  Thanks!
 
---
-Regards,
-Sudeep
+
+Takashi
