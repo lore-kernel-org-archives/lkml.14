@@ -1,116 +1,165 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70058481A7;
-	Thu, 18 Jul 2024 03:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBC939FFE
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 03:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721274471; cv=none; b=bUKnbUmSt7NiR7TpMrWP7XJanjO3QR54OYHM4cbx6jO95MFEAYxnut/7Hn/0zRMt5ZmU73S8gd4gXKr9L/aLz8MBLN5oPHUg2XX7FWE7zFzLm8xHX0DOZFyurGJ5USPb5QpHr1b0T55eTT4WRnNMDBSTiUA2KNSdcE8W1QT6nVo=
+	t=1721274545; cv=none; b=jp2kmCE2x0qB8CMQQ8b4Ii7+TvEGqU+lbJQt7wGdsE7/rksWaKi1XPdQCEN/TESlE6ft25iEFgW6Da4jpRHIc+cDSyQIMpSmljtLE7yUoT2xro9lUk07JhHJlPImyls8+BDpoIO38O2Hc8Po1Ch905bslTYtoo/r3BI0H9whCCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721274471; c=relaxed/simple;
-	bh=F14fWKV1q9X6qHHW9Bq+NyKhnV5NFHLtS1NGnf+0VHE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fWz23ZdItrrdr9FwDxgceu330gShUvNwJ6O+Is5KIWaX9FAruKEUG4qZuw7tAd8kDPm2573Y1Q7tNIYkleR2w2mvNKzR5EIVR+Vj0YjVcE0ylDWQOWo4ffLIjPTIOR+FyGQYDUMwQGixs79FoSF7YmlwdHrY7RuLpMl5fbmcPoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TDwyAmke; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDwyAmke"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3d93df6b54dso176120b6e.2;
-        Wed, 17 Jul 2024 20:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721274469; x=1721879269; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y5/8Zslr1MP/58mqMHISewZsB2/gBp8DHMSTzEl4QGQ=;
-        b=TDwyAmke0nfGO8uti90r5FHKwnhtyH3vG3pKGgqYBF2OWwEOE8yzCmi8KYFE7F46qs
-         4RLv0u9qsfGvvKqbdi0FkWuVo0ZGjTazLXE1N4FG8ObqO2qmSS6ZMulxn4DVkdqTudtt
-         5wyb7JbdGi1zqzseOdA1OPYvgDVZluxN50i7CwJU5OXJyVuT0oZhQ2yrZGr0Mov1fS1Q
-         5v3FqnFVSVY7cfjEdbcvpStDYTiR+1McJyZGkJWV7f5MC3h/Wf5DFbq9FxSi1H6pirGQ
-         5fvreu4iZqBa7PfAQaDF/J301jGRwCEJUGDf5ErkxF3x5+RXOfZsZeeEA5GkCK/RY5O8
-         Br3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721274469; x=1721879269;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y5/8Zslr1MP/58mqMHISewZsB2/gBp8DHMSTzEl4QGQ=;
-        b=uAspFxzB8rxNlEej9UMhkg4GsBlm/JoykcfrY1pip6Et/1iCPGM3iyoQ3oY6aJSqFf
-         Yzp4Qx57EoffFES44qsS89XkM3hS1PMX6nsFQSJTMFLrtwGp1LrzmkjItI/ewBt0h5SB
-         Hb2Dq28tZML6gMHivm3GM1SD7YpRkIkd2WHUt7Pa7O0qhE8Zq5D5ayQDrrSQBxh/DtGC
-         2VLb/DVOT2zRp7SEg4GDgeVSzDB5f3HXd0fq9VLc1Oga4ldGfgQm7qAS/UpjKLK1gIoV
-         ery8XfgNLz49DWA65cLC+HCqXYS1CkUC9g8Sv1BUpodsZr+nmklmCokJDIhXfJeJQo6I
-         a58g==
-X-Forwarded-Encrypted: i=1; AJvYcCVkWlqzxPUvVhUPxmc/4eG43Te0QO39286/DyGVyu9cMSxeEgFoVn7knOyOYhU8vc3k/7uEW4i7ivoFcheNVUckTncZWah9/kA6lm/OdnHJnTqRw4JgUnL8hP/MQ4WjjcQPdpVhMKpz
-X-Gm-Message-State: AOJu0Yy+MaVCJGO0rB6IlG+kpDw5Jww8Cw3ngGEQRRvDJwBEoa8Ap0u8
-	imXMcOR+Br4y2565JFhxfpHrx6ce4ktnoLNoqzNX/Qz9ZRLGCS+3hnrTgg==
-X-Google-Smtp-Source: AGHT+IFDF7qxwjD4lvstL6IWj4cD8QTRaRA0qpVS05uPxYjJp1QrxnbuNQ84hOkxLbR9ckqWdNl1uw==
-X-Received: by 2002:a05:6808:14d2:b0:3d9:385d:8754 with SMTP id 5614622812f47-3dad77941a9mr2005728b6e.47.1721274469600;
-        Wed, 17 Jul 2024 20:47:49 -0700 (PDT)
-Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ecc9965sm8940189b3a.199.2024.07.17.20.47.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 20:47:49 -0700 (PDT)
-Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id D2E46805EF;
-	Thu, 18 Jul 2024 11:56:59 +0800 (CST)
-From: AlvinZhou <alvinzhou.tw@gmail.com>
-To: linux-mtd@lists.infradead.org,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tudor.ambarus@linaro.org,
-	pratyush@kernel.org,
-	mwalle@kernel.org,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	broonie@kernel.org
-Cc: chengminglin@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	AlvinZhou <alvinzhou@mxic.com.tw>,
-	JaimeLiao <jaimeliao@mxic.com.tw>
-Subject: [PATCH v9 6/6] mtd: spi-nor: add support for Macronix Octal flash
-Date: Thu, 18 Jul 2024 11:46:14 +0800
-Message-Id: <20240718034614.484018-7-alvinzhou.tw@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240718034614.484018-1-alvinzhou.tw@gmail.com>
-References: <20240718034614.484018-1-alvinzhou.tw@gmail.com>
+	s=arc-20240116; t=1721274545; c=relaxed/simple;
+	bh=Tdxezc5XNOgn9ppSYX8AOYi8JFeWzTYe0VUchbryAek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XoD4tstXvroIic5cwA5sCYqwjYKos1nHzXgxGGKxfaRCKfhzHuCb0eLb6tN1bLOF4eAzgDmuqO8ihrCxnXaAmyxCGD1zPCf89vri8+8XUFVK5qPctZvTzQ4GWHxqhcsKEQZJswPnwasB5UrEnNDo17gQz+kt2o0edtcXllLhaPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id A76FA68D07; Thu, 18 Jul 2024 05:48:55 +0200 (CEST)
+Date: Thu, 18 Jul 2024 05:48:54 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2 2/2] dma: add IOMMU static calls with clear default
+ ops
+Message-ID: <20240718034854.GA31912@lst.de>
+References: <cover.1721219730.git.leon@kernel.org> <dd34bf3ecef252b4910d70aa21ff5273b5e8b19b.1721219730.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd34bf3ecef252b4910d70aa21ff5273b5e8b19b.1721219730.git.leon@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-From: AlvinZhou <alvinzhou@mxic.com.tw>
+On Wed, Jul 17, 2024 at 03:37:11PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Most of the arch DMA ops (which often, but not  always, involve
+> some sort of IOMMU) are using the same DMA operations. These DMA
+> operations are default ones implemented in drivers/iomem/dma-iommu.c.
 
-Adding Manufacture ID 0xC2 in last of ID table because of
-Octal Flash need manufacturer fixup for enabling/disabling
-Octal DTR mode.
+I'm not sure I agree with the exact wording.  There's tons of arch DMA
+ops not in any way tied to dma-iommu (or the iommu subsystem, but not
+dma-iommu like the arm32 ones), but for all modern platforms dma-iommu
+is what actually matters.
 
-Signed-off-by: JaimeLiao <jaimeliao@mxic.com.tw>
-Signed-off-by: AlvinZhou <alvinzhou@mxic.com.tw>
----
- drivers/mtd/spi-nor/macronix.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> Signed-off-by: Leon Romanovsky <leon@kernel.org>
 
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-index f039819a5252..1a8ccebdfe0e 100644
---- a/drivers/mtd/spi-nor/macronix.c
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -200,7 +200,9 @@ static const struct flash_info macronix_nor_parts[] = {
- 		.name = "mx25l3255e",
- 		.size = SZ_4M,
- 		.no_sfdp_flags = SECT_4K,
--	}
-+	},
-+	/* Need the manufacturer fixups, Keep this last */
-+	{ .id = SNOR_ID(0xc2) }
- };
- 
- static int macronix_nor_octal_dtr_en(struct spi_nor *nor)
--- 
-2.25.1
+A double-signoff for the same person is a bit weird, isn't it?
+
+>  	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+> @@ -1756,10 +1733,10 @@ void iommu_setup_dma_ops(struct device *dev)
+>  	if (iommu_is_dma_domain(domain)) {
+>  		if (iommu_dma_init_domain(domain, dev))
+>  			goto out_err;
+> +		dev->dma_iommu = true;
+> +	} else if (dev->dma_iommu) {
+>  		/* Clean up if we've switched *from* a DMA domain */
+> +		dev->dma_iommu = false;
+>  	}
+
+Strictly speaking we can no remove the if part of the else if above.
+Or reword this a bit to:
+
+	dev->dma_iommu = iommu_is_dma_domain(domain);
+	if (dev->dma_iommu && iommu_dma_init_domain(domain, dev))
+		goto out_err;
+
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index ace039151cb8..7fa1e40b617a 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -822,6 +822,9 @@ struct device {
+>  #ifdef CONFIG_DMA_NEED_SYNC
+>  	bool			dma_skip_sync:1;
+>  #endif
+> +#ifdef CONFIG_IOMMU_DMA
+> +	bool			dma_iommu : 1;
+> +#endif
+
+The kerneldoc above should be updated to describe this field.
+Please also add the maintainers of this file to the next round.
+
+> +static inline bool dma_is_default_iommu(struct device *dev)
+> +{
+> +#ifdef CONFIG_IOMMU_DMA
+> +	return dev->dma_iommu;
+> +#else
+> +	return false;
+> +#endif
+> +}
+
+The normal style would be to move the ifdefs outside the helper
+function.  Also maybe name this use_dma_iommu?
+
+>  static bool dma_go_direct(struct device *dev, dma_addr_t mask,
+>  		const struct dma_map_ops *ops)
+>  {
+> +	WARN_ON_ONCE(ops && dma_is_default_iommu(dev));
+
+I'd prefer to keep this out of the fast path and only do it in
+say dma_set_mask.  And fail the call while we're at it.
+
+> +	if (likely(!ops) && !dma_is_default_iommu(dev))
+
+The likely should cover both conditions.
+
+>  		return true;
+> +
+>  #ifdef CONFIG_DMA_OPS_BYPASS
+> +	WARN_ON_ONCE(dev->dma_ops_bypass && dma_is_default_iommu(dev));
+>  	if (dev->dma_ops_bypass)
+
+Let's skip this and think about it if we ever use the bypass for
+something that is not powerpc with it's own dma ops.
+
+> @@ -323,8 +346,12 @@ void dma_unmap_resource(struct device *dev, dma_addr_t addr, size_t size,
+>  	const struct dma_map_ops *ops = get_dma_ops(dev);
+>  
+>  	BUG_ON(!valid_dma_direction(dir));
+> -	if (!dma_map_direct(dev, ops) && ops->unmap_resource)
+> -		ops->unmap_resource(dev, addr, size, dir, attrs);
+> +	if (!dma_map_direct(dev, ops)) {
+> +		if (dma_is_default_iommu(dev))
+> +			iommu_dma_unmap_resource(dev, addr, size, dir, attrs);
+> +		else if (ops->unmap_resource)
+> +			ops->unmap_resource(dev, addr, size, dir, attrs);
+> +	}
+
+I'd prefer to order this as:
+
+	if (dma_map_direct(dev, ops))
+		; /* nothing to do: uncached and no swiotlb */
+	else if (use_dma_iommu(dev))
+		iommu_dma_unmap_resource(dev, addr, size, dir, attrs);
+	else if (ops->unmap_resource)
+		ops->unmap_resource(dev, addr, size, dir, attrs);
+
+> +	return (!ops || dma_is_default_iommu(dev));
+
+dma_is_default_iommu implies !ops, so the second condition is
+redundant.
+
+>  EXPORT_SYMBOL_GPL(dma_opt_mapping_size);
+> @@ -888,7 +943,12 @@ unsigned long dma_get_merge_boundary(struct device *dev)
+>  {
+>  	const struct dma_map_ops *ops = get_dma_ops(dev);
+>  
+> +	if (!ops)
+> +		return 0;	/* can't merge */
+> +	if (dma_is_default_iommu(dev))
+> +		return iommu_dma_get_merge_boundary(dev);
+
+The second check needs to move up here.
 
