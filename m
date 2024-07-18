@@ -1,162 +1,140 @@
-Received: from sonic311-13.consmr.mail.bf2.yahoo.com (sonic311-13.consmr.mail.bf2.yahoo.com [74.6.131.123])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670BD12C473
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 12:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.131.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87FC13B7AF
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 12:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721304763; cv=none; b=hjpoNudJY3OvBoz+vme13MwsP9Lm8ECa3JpZySb+WheNHiUg5bM8mq4HyLIn6cAAmWixaugH3+OF/fIIJZOz/u0q0IlVSs2CdKPvUE3RP7MSUQ7VhF1ZHxltMY/26v5xhdBNowmKXPxZtjwd60tkxWjEJjx6nquoToUZZaux2Z0=
+	t=1721304767; cv=none; b=ux7bTeNeExv6J6HMaN1BBCe+xm27wp9O2Sq6BKmY8nT5RlrMeWSHVqzba8+8WqMMXl2kS6c7AaLrq5rmyFVEeJm1ZX0TmjgAVYEtD3C3fjCnO63u2JcfhnU/XCPMg+/Sq/6x2hGWZTu/4zVnVD61x8+fSDQncXW7rdVPz3kp5aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721304763; c=relaxed/simple;
-	bh=UepMa331D+cyY94JmLhcAFRPs/Td7L3bh/kXcYJTGY8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fEz1SmrLhntLEZA4N3DoceTKIjC/AKlFWsj7Jd6xzFWxdqkhszj/M/MCs7IHUXZMk+gLCB7X3jA4RhRerP/U62AP3K0QonC/UH2cdN+WuulYIq2gt04ByXeK80YCAOn88OPTNGKregbCem6+jZJfu57AJUymtjzY4kr3+Vc1sVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=verizon.net; spf=pass smtp.mailfrom=verizon.net; dkim=pass (2048-bit key) header.d=verizon.net header.i=@verizon.net header.b=aZbVzB8P; arc=none smtp.client-ip=74.6.131.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=verizon.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=verizon.net
+	s=arc-20240116; t=1721304767; c=relaxed/simple;
+	bh=lDk/OFM9GdPyF5mO3TlS15U51RwuYwspDnGe9beFFBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FE+r34Qt2Np1hDh9HP2088fFydPWAp2pos/RA1KBZuYLQRPCFsUYFO9i3ivVDFGFd/I4Mg8gXX9yfaeVhUPXaia60LzMXB7jpHgMvFOzRgxAjapAm5fy/1Nyvj53rz2Vz32XJ83lWmZzHcEB5Mc/SvjgHwQOw+fgVFGN1RwnB38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tCH/BBnM; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=verizon.net header.i=@verizon.net header.b="aZbVzB8P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verizon.net; s=a2048; t=1721304754; bh=IEA/ym12MuqvUDny7bhJK84e5eeW75NUM/WX29B50T4=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=aZbVzB8PU4b1VYSH0TCiDEm5f9uphgYalHQrdeCpqFXVAFf367yKJMed4uKL52HgxAglWXrBWJGBQo58AI+P0Gdr2HPD9ODHgjyRureVFArHsEVcUduBI/onsaUbeBq7NYorZPkjdR3K75MLUSqofaMLlmiF0lSaZ+f5Co7WhetPlxnJi+0urXKwsxebqe8DLYniVl8mL9sACDMAAhxdmZvgFTFiv5RpthXfWWTNB94fiN4VKSbwCoOlq5W+4+E7SO+jmTKF0h43iCeuUPXAwcETFAKtsaUlfCvl+jX8WuijJDWlVMJ/iISeSeVE4p0zTCjXNY8AVzCUDWQpNB0Xtw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1721304754; bh=7gLwxSktrZbBOcacbXWLM+oCt5FkPbsTG6tNRq81e1p=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=LCrrkNI2W7ogTDRNEnn+BR3QQrKWVAtpMJ68yQlHiVyXbKgzNC6NxUslVp3WwfIxXVNJWqQ2q4KlOTChecKzcxuZunrMtYVxcO3X6PUghB6hTZfMlGHa9vFII3/JzzjthvcddAL8VauHJuWckVDq4+pR5Mre+uFtdtOCTLyR/TFK6S/JRv/ctmL+VECiHTP2vZyohBv3xkZPDLJtiM4ODj53dveY2YT90NDFxVWMlENzcFvCi+sTEGNYoOXNewfPc7lHQl6fuON+/pd9aNc4dGdD5v52cOggkNyKT0u6+PSVR1Gq2RzqkkHzmHnJxfxGF/ZouyRTMoU4/7fjtGFnKA==
-X-YMail-OSG: D5mKTscVM1l5dWYKdlCkscYU0D9qCYTW2jDnNFDx47sqLVq4baNM3zYEoxMRzds
- WpR0W.8jciySolrzqcxE1WNXnv8_zchLp4tKN3BNW53vp7_FqeJZ6qa_XDLodnlCIIbBhj9iUJwg
- fEislkpmYsEYQrdbNCY_UspSF4FXjTCI44ADZvqwpmkipf064EHpBW2nfGM_f060e3QAWIJgs4a8
- 11EDvyqe9bUhWS7DnfmzAYKw9c27AwSLI8gFuFoGVtjXZAVkCvL25q.7Y8v6bYuT.lLFzmYA.lL0
- 3OgK2Zmqi.5pwf3WEY4iFLIJJ5gfcZcAibnUHt1vsgh7D0tuBV4gKkAn9KONFlOJycxzIt7iIFAH
- xX4Ji29ISpt5NyqrTchX2yPj95CTuY7_LFmZzghgZeGhWmr7mVdRqubllC0gzq1VkvBSEgORGkSa
- RpE0QFHGn9pnyrJdZy.jU8vymaqlwenIUPESTfxCN_6JFFTlQV_S_Pn2l8QnuY2c1YTciFU5NHe9
- 6ovFu3GigpvpyueMDe5r5I7ZTEIfBKxPseAg7HGHcv5zwFCTfFaj1Dm1oEUFXhKD00GIZf_0zdLD
- pn_vFXwVFutb_ePAOFKD9a6Mv4A1w0406hb7VHbooH92asGTNGtyfhAy5H1InS_sZvD96ioz4qvp
- DmeRVZ7FviqfPJfzx0V.qIrKYQn5AZiVoDbFp9Ogp3jDGEDr4Ahqygo7aCNcaxxmyvIXtrqQ9uxC
- 5UvyEOyHS7Rt7WUXKqUY5bdncyWjm6bVtzKl3IoR0_GnScKhtQ38xBBs12VRh5_Av5AWkJzfcjKC
- 3OpMdRhu9ShBYsVjNIX9QtycwEQYHdNMMsfeaKBxvDIKBcD.mprgaTl6tqej5f_GOcEHkulzwSTw
- VN__6LKZBjQbi3ObBFUKmkbZx_0DweIDwt.fY5Rv24yIglzLbMxloVT61Bu.IKNjZ0uVQhwHdXC0
- SffN9dmDIF21KkgjERDUb6A7nGFZri1aUfLjGSTps6GucEV0UnwnHrMJJkdyYgDxZ8glPCn13kzC
- C8Qq2WzxVx2MEYg4YS2hgrjsv9kTIrKkqpJfmwnvJVdPBtwspcODa8sX66Bmz2wh33qeOK2.x2Y6
- HtQ_tj_anG3eB_btE4VWtQOubVhpJbSrszJoNWqjmAxVQnMxcmD1iiEDivRxevWK0K3F_VAvmBLW
- jnhC7PTfzB5KeOeUjww4ZUkPrCGdp578USyuaJ.3YNwjuTdaKbNO9EK_gE.mq.sD7cRCoza8vWC_
- g96Kmnk4z2bDEUljA1PpZtEMHFMRfbdmGfwxPtLMz4SE9WnNZjTOGXNQ8wi8uRAlRp1tVtgewbzQ
- 1dt.gI.IaY4BkgmCVmASf4bvd952_oS4mabquwu..ZGr5rsHRBWyUt_OiO3nO1dAFe.KBWoKicvJ
- IlBufNz6g2tD0wbbwzblExqP5UUwXI._86_IC0XUHPRf4ij7Cqqca96RAbBzJ1v1gAzjyl7bU1MA
- NCKdStvkH0uxaDEZ6e3CskZoRr56TXa9C5ADBMtY3gxKcZmZI5dVtJlrYmWiYTwOTe1cmpnMk9e7
- GV23_.eKSrqBZi.9N8OjycHxYO7k3889TwBADYT8bsQ5v_BmlqIHS9d_AOuaLyGk537EzYsqXX50
- dtjf8mtqCMk0hzQIi4yz30E.p1X1dzhJSbDLnn07B9a_r2kbeXyMI_sDx3yZW.jMjCCoomkWfY0a
- M.rwNqdryDWS4FJYF5MBkfIxpGlyY8tctvRVJy2yDXPNUXMam4FlVG9qTSn.4snUO40QKGJasgZ4
- FOUsJiRTs91oULO4R.I1y9wzq4xsPZwzjPug6zTAeNVE1k2K4tccFoGLUJ6blv4090hFFKr03FEc
- GV2X0zzXY4CzbTKCBkvmVuaCAQITh1R5dZrZvwK_wt5yKuw.dvAB3dMMlg7CUUacUfFx7MrQq8SN
- gHDLFr2cRc6Th_1_bJCkfmjdyDg1UvMKpK.NbQ1HrNEb1jX0197mjeeUBxhCIpLHCXrSEu1jrfAZ
- 8RqmrIyNFfOvqKohWJR0AM0FxHC9.cbZgosSpOiPY5I5QaS8__.TXPt9w1ve9mcC1RoCrfA6GzKy
- yQJ9FfZJK29HVWYeStq88WHsYy9nJVa2xwLNGV._voZFJB4JWGEOHV9TYysB2oShmHvA5yNfpGo9
- pj49.rGmI0_XPa_fLk14ID5JV5zP9BP1gpozWBhDTEhUiEg4OuT3nGHDT_B9jnKsa9gRkAzkRCd5
- U_isfzqfHgmg6gD3Y4rpssG9Rnb0WRhjZgszr9UFOtUCmXvkLxO4-
-X-Sonic-MF: <bluescreen_avenger@verizon.net>
-X-Sonic-ID: b64c7635-28d3-4c89-8ff1-ac7caa0f8c14
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.bf2.yahoo.com with HTTP; Thu, 18 Jul 2024 12:12:34 +0000
-Received: by hermes--production-bf1-7bd4f49c5c-qb2hx (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 78b91f3de68e800f759283adfbdfe161;
-          Thu, 18 Jul 2024 11:52:16 +0000 (UTC)
-From: nerdopolis <bluescreen_avenger@verizon.net>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: jirislaby@kernel.org, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org
-Subject: Re: When /dev/console is a disconnected /dev/ttyS0,
- TCGETS on /dev/console results in EIO (Even if TIOCCONS is called on a PTY)
-Date: Thu, 18 Jul 2024 07:52:15 -0400
-Message-ID: <114770592.nniJfEyVGO@nerdopolis2>
-In-Reply-To: <2024071238-underarm-impulsive-dc1b@gregkh>
-References: <8411114.T7Z3S40VBb.ref@nerdopolis2> <8411114.T7Z3S40VBb@nerdopolis2>
- <2024071238-underarm-impulsive-dc1b@gregkh>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCH/BBnM"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-58f9874aeb4so790587a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 05:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721304763; x=1721909563; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
+        b=tCH/BBnMTu8CG3Gxs5kcYA3zXyCbKxQYHAxqy1GvR4ONT8pi/L+aitwJqnF520xrak
+         HRtSiCC0nGNkSrqw9+yx8Zm6kA9qlEschgYKC/UZWNYcNKHaO8JifGJhKdvjNNfsx8e3
+         X52tcsczT4+V5KYr3UZcFBiSxiTxQJxHGUxolhBpE/3wZmnY5G6JSn7BH8AGOUSvlgns
+         c/16o7S/Tg0HjwlTPDDfsL74WSNBTr0fj5rQpuAaN5a47zr3qxLIkwWzN52rIQQhmWml
+         jK4pM1VymsWYrlh7pA/7No2kc2osE+Ag8IUB8pElBWcOj5k9dm8NTheFFDNlcqlpIaiv
+         BakA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721304763; x=1721909563;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zU1bn+cQnLCjdK9wTnZiKvOPZWaExGinaKV5vKvZYpY=;
+        b=ZEz6Db5yAEy0IDoSKdoaIznZks8huXGG7zmW4+yGlj1hoPyqgkWksOzWHsPE33mWJs
+         MSN+g+FIwxLvpy3DJMoK+A8XLF33tB2gFEogDwdSG3jsZjRanUCXh1nldCd2GR1X9QXs
+         toiGkiIKmYmXS944dOz/bWtODKaUQP3OxIRpWMbE90O41NjNDP+aOksomC6DSaA3YtlP
+         d7io6hEvjEbDuJW34ssNTo2dUq+x/GOvLPayTHvjhSnOJUMnTt6zSTFDAxcl9HpyhFpW
+         HqaY9vCTyQC/mrtclObrz0ulh4aonjxG9a0k3sr8qaVQ8AVzVkXRYqWEGHijWVgaCK+i
+         5Teg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIXhHl1i6An3W7tdMZZr5KVArgmgEJzI0aItS8UnngpPxbdPqKOYUltHkFJ2Fjbsa9SF+dXHnkjWng/99SzqrFmW09xdTo0fZrrxO3
+X-Gm-Message-State: AOJu0Yw7nLrSA1iKTc1T0jJBDu9g41lsUy0uK937GDdKyNdk9qfKx5V1
+	Cn4CBz6PFtk1n7v+jrHzlymQIt3ldzwAQddS8ZikME45w5TySkTcKBJPGbauwPk=
+X-Google-Smtp-Source: AGHT+IHpzAvuicnAr0t0F/QpWfgztRHIDCadRZ2CkWua+qXiqi9HeASkOwId5phE5trHQaIlvHyHqg==
+X-Received: by 2002:a05:6402:510f:b0:57c:c166:ba6 with SMTP id 4fb4d7f45d1cf-5a05bfab3c0mr3393413a12.19.1721304762690;
+        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a1d9a49e32sm654035a12.29.2024.07.18.05.12.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jul 2024 05:12:42 -0700 (PDT)
+Message-ID: <f171ded0-e9db-4bf0-8e1a-e00065becd4e@linaro.org>
+Date: Thu, 18 Jul 2024 14:12:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Mailer: WebService/1.1.22501 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/13] PCI: qcom-ep: Modify 'global_irq' and
+ 'perst_irq' IRQ device names
+To: manivannan.sadhasivam@linaro.org,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240717-pci-qcom-hotplug-v2-0-71d304b817f8@linaro.org>
+ <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240717-pci-qcom-hotplug-v2-6-71d304b817f8@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Friday, July 12, 2024 8:59:58 AM EDT Greg KH wrote:
-> On Fri, Jul 12, 2024 at 08:52:15AM -0400, nerdopolis wrote:
-> > Hi
-> > 
-> > Background:--------------------------------------------------------------------
-> > This issue becomes evident on VT-less kernels. As when there is no /dev/tty0
-> > device, the console defaults to being /dev/ttyS0 instead. Although this can
-> > also be replicated if booting a standard kernel with 'console=ttyS0' and ensure
-> > nothing is plugged into /dev/ttyS0.
-> > 
-> > This issue prevents systemd from logging to the console.
-> > systemd when logging to /dev/console, long story short it calls isatty() on
-> > /dev/console, and when /dev/console is actually /dev/ttyS0, and nothing is
-> > connected to /dev/ttyS0, isatty() fails on /dev/console due to an input/output
-> > error, causing systemd to not log the console output, because it rejects
-> > /dev/console as not being a terminal.
-> > 
-> > 
-> > This is noticed on a VT-less system with Plymouth. Plymouth calls the TIOCCONS
-> > ioctl on a pty device it requests, to redirect console output, and in newer
-> > versions, it displays the console logs on its own without the assistance of a
-> > VT.
-> > 
-> > This part of it works, Plymouth is able to 'see' what gets written to
-> > /dev/console, log output from processes that write to /dev/console directly
-> > (for example 'echo hi > /dev/console") do appear in plymouth's
-> > /var/log/boot.log, it is just that systemd is not writing to /dev/console
-> > because isatty() fails to report /dev/console as a tty device.
-> > 
-> > The alternate fix in for systemds https://github.com/systemd/systemd/pull/33690[1]
-> > is believed to be that when TIOCCONS is called on a PTY, or another terminal
-> > device, that trying to call TCGETS on /dev/console should no longer result
-> > in an error.
-> > 
-> > 
-> > Replicating the issue:---------------------------------------------------------
-> > 
-> > This program replicates it:
-> > -------------------------------------------------------------------------------
-> > #include <stdio.h>
-> > #include <fcntl.h>
-> > #include <unistd.h>
-> > #include <errno.h>
-> > #include <string.h>
-> > 
-> > int main(void)
-> > {
-> >         int fd;
-> > 
-> >         if (getuid() != 0) {
-> >                 printf("Must be root\n");
-> >                 return 1;
-> >         }
-> > 
-> >         fd = open ("/dev/console", O_RDONLY);
-> >         if (!isatty(fd)) {
-> >                 printf("err on /dev/console: %s\n", strerror(errno));
-> >         }
-> >         return 0;
-> > }
-> > -------------------------------------------------------------------------------
-> > 
-> > When the kernel console is /dev/ttyS0 and /dev/ttySO has no device connected,
-> > it prints "err on /dev/console: Input/output error"
-> > 
-> > When I strace it, the relevant line is:
-> > ioctl(3</dev/console<char 5:1>>, TCGETS, 0x7f...) = -1 EIO (Input/output error)
+On 17.07.2024 7:03 PM, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Do you have a proposed kernel change for this that solves this for your
-> tests here?
+> Currently, the IRQ device name for both of these IRQs doesn't have Qcom
+> specific prefix and PCIe domain number. This causes 2 issues:
 > 
-> thanks,
+> 1. Pollutes the global IRQ namespace since 'global' is a common name.
+> 2. When more than one EP controller instance is present in the SoC, naming
+> conflict will occur.
 > 
-> greg k-h
+> Hence, add 'qcom_pcie_ep_' prefix and PCIe domain number suffix to the IRQ
+> names to uniquely identify the IRQs and also to fix the above mentioned
+> issues.
 > 
-Hi
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 
-Sorry if this is a duplicate, I accidentally had rich text sending turned on,
-and did not realize until too late. Anyway, to answer the question, unfortunately
-I have been unable to come up with a fix on my own 
+lgtm
 
-Thanks
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-
-
+Konrad
