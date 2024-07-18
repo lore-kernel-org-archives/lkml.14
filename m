@@ -1,148 +1,119 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CC0110A
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 01:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904E7620;
+	Thu, 18 Jul 2024 01:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721264598; cv=none; b=ntNGDn0TOPiDPkZHYaLN9d/NXKQqSwGuUHNhTAekUUQIGjRJtsZ7tRop06JsIs9XslAfGxRbu+69Iw+gR6TR2HpvvqyXMAdmZCl/6aIZtdTR3vqj1FTk0HbLwWW5ZJCgBh+L1Ht/CCRlD8Wmth3oFL5bOPfxxUYyfypu9WCpNj8=
+	t=1721264988; cv=none; b=aPIn+F373rFRo1KUh/3sYabIHEkLw58bh/bT3kPMPQmIS1V9TC+fwWsgy7oSNd91mmdym9YR+EGuuvlAIJwaqTOr9vWdquzm5c8Qxh/0A/BjU2WYYUcIsKtMd9XdcLmVRoyRlFgy5f53G4KXWNed/GV6Uda2yTRBDIa1WeXqTfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721264598; c=relaxed/simple;
-	bh=wM0kktGn47Y6sE5nEErkw1T11AYqer5jFZMgYakKxfM=;
+	s=arc-20240116; t=1721264988; c=relaxed/simple;
+	bh=MSIYf7rIVMhbod8tcCJbQKU94YpPrpB4YDyZcQYA3RE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fY5MgCL5oIv1CmQQlVbKITD+bih2NFNVSvUzurZYUwdJ3sTlkO8LCQB1K2kmrHIkutURafea14n0ik9Nj7JiPv6JI64xSLlUMENSMAkp5NYkmnN2fwkp0Syl2cK2J1L8+g/rlcYvGbDEf6kzvvFZ21urOatV95LtND1721pQFzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net; spf=pass smtp.mailfrom=amacapital.net; dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b=C5ZNkohV; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amacapital.net
+	 To:Cc:Content-Type; b=t9sbotJGuU7Yy1Uo82WJiO4ssnuLn3z++50u8M16T7chYiZWDO4vKEppTWhP1vX+qsT5Z7edwBGaWVjWYEEdfT4ukwaAHGYpGrzGFyHUbIjR/j4pN5UX3LNiPkT5vSxI5jcMqIAz2ogKqqL3UXiqj+7pmW5idKXS+mVGlsPRHDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WHNtXVNM; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b="C5ZNkohV"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58d24201934so407550a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 18:03:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHNtXVNM"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5a1c496335aso64305a12.1;
+        Wed, 17 Jul 2024 18:09:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20230601.gappssmtp.com; s=20230601; t=1721264595; x=1721869395; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1721264982; x=1721869782; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4DvCNFOJURn8U74iwm+vc54yZXB4520PPHveux2N1NI=;
-        b=C5ZNkohV2PKf8jDxnQYfmIkPOvwttpoeXsPluk6MeKK8w9zYCcQgzNvNU4wzZZrHHB
-         k/ZcuIx5JqovyrIJNb05QA7Yf8dpzlYzSUHyN2tjONHMzySm0Q2pL+Nm1jKTRwrE/9TA
-         FscPxph9WOtczka0twPmHQGvjnqlbHtNx2+3FQm5dEwXi45ftX7XTuoFnvBXQxpPg0xG
-         2C4tCuFAXMYRGCA8S19v7x86aXCpQkvWLkfM8JWfAznQD/0Wk/hXf6arSg+JDXCnZqc2
-         lWGIejipYA41rvVwf6nMWJrO6iSFMtNjzNKeHQk8Fw/WmjqaG0QDVPii9an7HyaUu+ME
-         F8/Q==
+        bh=a24lA42kj1IKUpXd+h7uBNc53/x1IhEKAp0DRNXWxaA=;
+        b=WHNtXVNMQjtPc5u1ZIb2FKr6bMis2FoIN6A2Uhf0ENGCcL+vu7/WMTXSPi1rp32o/Q
+         q7NBG2aewVfMSmZXXATEcPdmN1Ix2V0ASx3f9G+ceySx90XS+0pLpAnGDyIzWuElSUie
+         BaFOeOn48tmIOdoWTFnHigllwgck0Z/R77mo2SFpcy/B4PO/esKD/KlB0bTTjE4k9Mkw
+         qA8jaj9Qh+i1W7u0J0UJ3Kcrf2r0yP3SLLoagEMeWM7GlyXkigAogBeoz+Zm54kudKLV
+         bKY312s3eqEug6eSu8qJKK5zNlIZL2Qn8lfABdEmOBzdvrWx65RpelAThH0ILcJU6khx
+         TPFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721264595; x=1721869395;
+        d=1e100.net; s=20230601; t=1721264982; x=1721869782;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4DvCNFOJURn8U74iwm+vc54yZXB4520PPHveux2N1NI=;
-        b=NHRZEGXL8/igA0TUlLamwGFptZmKHOHjDkfzsTLacEJDzNHAfJ4oaW7f08mGV6dhti
-         ohB/VpkdOJ1gUdx/u8NOyClZw/xGqD3pPE9F7xnB1SiBr/lGj62/V5N/vWfuZql80LOv
-         7moZ4DL9X+APidpXtR5wX3CwZ9+ZrWxY8542HujfqDDWZnwcuklrlbPHV40jGsAG6kOb
-         TNYNL2c3NEw9N3KzKfZ0TwGf4Y7RGPv9WnsNN5Fq7MX+S8IIY/ApYYKtHekzvKwa29a8
-         0YxcSul8AtJ3rpbcQEa6AlSFP8mJ43mOmqXx2Nqa42ssoEe5I/gLF3TwFaOeWYp/3opN
-         9j1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWwIWoRtuml5nx060+Ms96A5LkV9Ai14/KHxnkn1tST6DL76xsrR2jVQEXEp/zaWkmuJdiBXd+DXWaHLVhi4czDz1+wtNrKgEko5jM7
-X-Gm-Message-State: AOJu0YwXHV52yUJQxAH6NLY955eBRc8dafTX2RdzUtotNx5FB0HXqvDU
-	NOh3uCleVb3sQK4ZPDy5q6XyWcawIdLH8tib2eFn/CotyZ51rHqiT99OzsVLndeeJ2tYhtF9o/M
-	nix4b8JXExn7oQGvwWGXOVgPDtIp3rB/Oipjz
-X-Google-Smtp-Source: AGHT+IE7SBwV2lQaXPjuvVAVH1UzPNTxYBnnea3hS+FDItUKjfyoEirYJPBEWFBIzD4Kcr81i9vTbZRgtB1tPcSWRYA=
-X-Received: by 2002:a50:f617:0:b0:57c:9eef:e54 with SMTP id
- 4fb4d7f45d1cf-5a155e8f87cmr1229866a12.5.1721264588545; Wed, 17 Jul 2024
- 18:03:08 -0700 (PDT)
+        bh=a24lA42kj1IKUpXd+h7uBNc53/x1IhEKAp0DRNXWxaA=;
+        b=mSn24CHw24t9mHt61PapjbjQwHmBzOGSIFzoCPMqNDm92zN2bTuYyrHunxvPT+WEiI
+         cgZyUh3kpmu1I/ZnDPU6t4ZAkMFFVy8BWxeixPGBWSrhg7U4u2kkjJi1IOzvXEcDiBNP
+         CInvN4fY1rlX2gG1bsipiNaccnA//2Qo6+HB8lphja4OMkVB+uSjvj9Cy7N8vzZBjbrj
+         5NRgmzDRYTA8zPr3W/cY3Dd+obPWFz336nT5jnDxbPdf7CesMMBWwNtEzjTODsh3pb44
+         ndpaQjwSa857t8cZbTElnqTNbVZPaLytsNWEE1jR4B24wsM9snzE+zZD47vhlGxlsXgV
+         Tp0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXsKpYPCm/OwOvSutgLHGeUj6JzQdLNHed9c096JxMLrJUB+QL85QV8HBurXJMaR0Mc7SVRW2lGYqDFARIlomO3WCO/JzeyQitLhelqUxSenzuSOzyd4toVZjKfwlCPE7740OWekw4A1goaFw==
+X-Gm-Message-State: AOJu0YzlR+bYEXLOw6A2LnwL4kH6Z6WnTeOeFitNNT/2x8omTQUF6unS
+	Smp+RXTXnLnBUyV01WV7cml1a+7BBZrLK25qeCgRcEWsnk6hk/I1BvLNJusmzvuXB5BgC9x93ft
+	ylmb4cnRrUC/hPFfRS+PbB1+Pw+U=
+X-Google-Smtp-Source: AGHT+IEkQ1X1zBYds0LOtzFbshmU1UkroOPkGrUOvyXXeF3zQwEuX9vynegPp0P6goCLWVTcWk2q9FcIS4AwlVNjHmY=
+X-Received: by 2002:a05:6402:40c9:b0:57c:5f77:1136 with SMTP id
+ 4fb4d7f45d1cf-5a05bcc9a88mr3575667a12.24.1721264981722; Wed, 17 Jul 2024
+ 18:09:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240704190137.696169-1-mic@digikod.net> <20240704190137.696169-2-mic@digikod.net>
- <CALmYWFss7qcpR9D_r3pbP_Orxs55t3y3yXJsac1Wz=Hk9Di0Nw@mail.gmail.com>
- <a0da7702-dabe-49e4-87f4-5d6111f023a8@python.org> <20240717.AGh2shahc9ee@digikod.net>
-In-Reply-To: <20240717.AGh2shahc9ee@digikod.net>
-From: Andy Lutomirski <luto@amacapital.net>
-Date: Thu, 18 Jul 2024 09:02:56 +0800
-Message-ID: <CALCETrUcr3p_APNazMro7Y9FX1zLAiQESvKZ5BDgd8X3PoCdFw@mail.gmail.com>
-Subject: Re: [RFC PATCH v19 1/5] exec: Add a new AT_CHECK flag to execveat(2)
-To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: Steve Dower <steve.dower@python.org>, Jeff Xu <jeffxu@google.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Paul Moore <paul@paul-moore.com>, "Theodore Ts'o" <tytso@mit.edu>, Alejandro Colomar <alx@kernel.org>, 
-	Aleksa Sarai <cyphar@cyphar.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Christian Heimes <christian@python.org>, 
-	Dmitry Vyukov <dvyukov@google.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Eric Chiang <ericchiang@google.com>, Fan Wu <wufan@linux.microsoft.com>, 
-	Florian Weimer <fweimer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	James Morris <jamorris@linux.microsoft.com>, Jan Kara <jack@suse.cz>, 
-	Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jordan R Abrahams <ajordanr@google.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
-	Luca Boccassi <bluca@debian.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Matthew Garrett <mjg59@srcf.ucam.org>, Matthew Wilcox <willy@infradead.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Scott Shell <scottsh@microsoft.com>, 
-	Shuah Khan <shuah@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Steve Grubb <sgrubb@redhat.com>, 
-	Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>, 
-	Vincent Strubel <vincent.strubel@ssi.gouv.fr>, Xiaoming Ni <nixiaoming@huawei.com>, 
-	Yin Fengwei <fengwei.yin@intel.com>, kernel-hardening@lists.openwall.com, 
-	linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
+References: <20240717215847.5310-1-robdclark@gmail.com> <CAD=FV=XCOKJHJ-yzENpvm_MD34tMR5LRy2m2jYdcWzZXP4pfXQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=XCOKJHJ-yzENpvm_MD34tMR5LRy2m2jYdcWzZXP4pfXQ@mail.gmail.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Wed, 17 Jul 2024 18:09:29 -0700
+Message-ID: <CAF6AEGuBZqV4zg1asUNbMLvq0-i-iyFwfi37uKS3kWNuRSOU+g@mail.gmail.com>
+Subject: Re: [RFC] drm/panel/simple-edp: Add Samsung ATNA45DC02
+To: Doug Anderson <dianders@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	Rob Clark <robdclark@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> On Jul 17, 2024, at 6:01=E2=80=AFPM, Micka=C3=ABl Sala=C3=BCn <mic@digiko=
-d.net> wrote:
+On Wed, Jul 17, 2024 at 5:19=E2=80=AFPM Doug Anderson <dianders@chromium.or=
+g> wrote:
 >
-> =EF=BB=BFOn Wed, Jul 17, 2024 at 09:26:22AM +0100, Steve Dower wrote:
->>> On 17/07/2024 07:33, Jeff Xu wrote:
->>> Consider those cases: I think:
->>> a> relying purely on userspace for enforcement does't seem to be
->>> effective,  e.g. it is trivial  to call open(), then mmap() it into
->>> executable memory.
->>
->> If there's a way to do this without running executable code that had to =
-pass
->> a previous execveat() check, then yeah, it's not effective (e.g. a Pytho=
-n
->> interpreter that *doesn't* enforce execveat() is a trivial way to do it)=
-.
->>
->> Once arbitrary code is running, all bets are off. So long as all arbitra=
-ry
->> code is being checked itself, it's allowed to do things that would bypas=
-s
->> later checks (and it's up to whoever audited it in the first place to
->> prevent this by not giving it the special mark that allows it to pass th=
-e
->> check).
+> Hi,
 >
-> Exactly.  As explained in the patches, one crucial prerequisite is that
-> the executable code is trusted, and the system must provide integrity
-> guarantees.  We cannot do anything without that.  This patches series is
-> a building block to fix a blind spot on Linux systems to be able to
-> fully control executability.
+> On Wed, Jul 17, 2024 at 2:58=E2=80=AFPM Rob Clark <robdclark@gmail.com> w=
+rote:
+> >
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Just a guess on the panel timings, but they appear to work.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> > This adds the panel I have on my lenovo yoga slim 7x laptop.  I couldn'=
+t
+> > find any datasheet so timings is just a guess.  But AFAICT everything
+> > works fine.
+> >
+> >  drivers/gpu/drm/panel/panel-edp.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+>
+> Given that this is a Samsung ATNA<mumble>, is there any chance it's an
+> OLED panel? Should it be supported with the Samsung OLED panel driver
+> like this:
+>
+> https://lore.kernel.org/r/20240715-x1e80100-crd-backlight-v2-0-31b7f2f658=
+a3@linaro.org
 
-Circling back to my previous comment (did that ever get noticed?), I
-don=E2=80=99t think this is quite right:
+it is an OLED panel, and I did see that patchset and thought that
+samsung panel driver would work.  But changing the compat string on
+the yoga dts only gave me a black screen (and I didn't see any of the
+other mentioned problems with bl control or dpms with panel-edp).  So
+:shrug:?  It could be I overlooked something else, but it _seems_ like
+panel-edp is fine for this panel. Plus, it would avoid awkwardness if
+it turned out there were other non-samsung 2nd sources, but so far
+with a sample size of two 100% of these laptops have the same panel
+;-)
 
-https://lore.kernel.org/all/CALCETrWYu=3DPYJSgyJ-vaa+3BGAry8Jo8xErZLiGR3U5h=
-6+U0tA@mail.gmail.com/
+But that was the reason for posting this as an RFC.  I was hoping
+someone had some hint about where to find datasheets (my google'ing
+was not successful), etc.
 
-On a basic system configuration, a given path either may or may not be
-executed. And maybe that path has some integrity check (dm-verity,
-etc).  So the kernel should tell the interpreter/loader whether the
-target may be executed. All fine.
-
- But I think the more complex cases are more interesting, and the
-=E2=80=9Cexecute a program=E2=80=9D process IS NOT BINARY.  An attempt to e=
-xecute can
-be rejected outright, or it can be allowed *with a change to creds or
-security context*.  It would be entirely reasonable to have a policy
-that allows execution of non-integrity-checked files but in a very
-locked down context only.
-
-So=E2=80=A6 shouldn=E2=80=99t a patch series to this effect actually suppor=
-t this?
+BR,
+-R
