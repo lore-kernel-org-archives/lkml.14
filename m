@@ -1,156 +1,97 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3795020B33;
-	Thu, 18 Jul 2024 02:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD8E1FB5
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 02:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721269470; cv=none; b=cYrNJr7+uDOsnayLeaoQU4bX0CgMnC5dIx4MXrQvB0U8ViTKefazpCPKumjrYI+FMCF6+xuib+VUqDevWhpezk3+My/DGouJWWp0liMKIQbkCG9SKKVj2Y/b/KoubuC/KJfr66Fygh1XsPo4jdFJeD4wHAbSsoIACnAi4gJ1CBk=
+	t=1721269559; cv=none; b=heZNbufzOIy8hj1xN0pvEEK++CWaXNY9isJ8PZLS5eqwzxiIuHesH6zd94CVJJPSoH/I3qn8CaWSdaNVp4oMqxyW2HOkUcN5wDVC/6Abtt0QogmyKBruuk4jfOKOtHCOOKEazMnoSAkzYMoqu0ayNxLeOt9bAeFHjjvEAAgiQz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721269470; c=relaxed/simple;
-	bh=lHS4zU9RNzvGGwaAQfyMzzzCTd2SiLmWhRRuHYwpAZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kDCPPt7uUTHY3k1t7JmNW/6k2Yn0XP3MMj+/iPtKH6jmH9PIz2rVzdsOi5JNbvjIT74iShEXuxIzuf0yz7WO/iOPfG/XAvOi14GXEJrstoAK6hmyCY9gYLmUOUis7a702F2n4Kx+C0vhB1OhxKzj2gplo8jlLG8hWMeCavC+TII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c2p4iut+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721269559; c=relaxed/simple;
+	bh=M6VIKClxCKUTHKil/lftXivMZWewfbeoa7Xddd9eHf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Z6upFjQBs1xCwwH8vUq4trI6Dl+82iaoNIoPjFxl6XRNNnve/YzL0VzEg0pd5wwaXB50kYr658mfjJDqdgYnvjAyNvVoc2CwLfVBn6LtN4ruXfx4Y+SGZShp2KT6xrS+JvZFKYCFNmswhkY+jNerAYxVUGACHW9GfOZ52n1Q8jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xPKBNa0j; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c2p4iut+"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HGQGva006695;
-	Thu, 18 Jul 2024 02:24:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xzJgd9zfvvdrG2bbFqEDHpkkm0MYQWtDeLx1mGAsuOw=; b=c2p4iut+4ahyvtnA
-	SfIXaMVIoiDjwQAMqcnXCczZd3yrCe2qNLINVPH/DD9ccJHDEWRJ/64fwzcrRtjx
-	Serx+7zYGoFhpSoNCwNPDOyRM93ncvwon0a2BDGc+L/LrhNMQIvTj7F1CLe8dQL0
-	OaSwPpnXwyVVQ0Snb8ffropDrAgyo8Y9tc7IJ1ztI1uBRkp3lp4AAQqWfipiZaTo
-	9wr49sZ/sEa7hKm9W9GpOtXGv8GacNZ8KhYgdD6W2Z7c/vILMa3Qjwn7Ntc+Rt7m
-	QDknbTr12wYJfFvUGX6gBnYBlVxFtqBKMvs9lsC6rOKBB2CZrmcK1dCsSIY0/R+q
-	C9hAqw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfxc42a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 02:24:17 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46I2OGwT028956
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 02:24:16 GMT
-Received: from [10.239.133.211] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Jul
- 2024 19:24:12 -0700
-Message-ID: <b32ffd89-fbb1-4796-9780-d3c334d69485@quicinc.com>
-Date: Thu, 18 Jul 2024 10:24:09 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xPKBNa0j"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-260e6dfc701so186969fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2024 19:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721269556; x=1721874356; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gklRP1Mg2lPJDFn6YnROe/wcKMjIXNM5Cvhi4UGcBq0=;
+        b=xPKBNa0jmD+kLpOtPIT1JsGpQgplR6ypUfDz/AjTVQUUGLhubdKwFnLmGiVP4MM0FA
+         KtiCK6+qNneo90+fSnQ5BFgm0F/OTPKiEMvim3EoT49k6bCMs4lQWelOSF22isfCBOhW
+         CesqKLr0Q8ThvHmXeB8q77wGxJn77gA53ddXfucNxKDBXqGMq+MXSYoQAlCw1q0/WVBH
+         bBuFtb38CbAcLniP0ICCmzFSZxmaZP2oEsL6b2h2ZHIbVK7wFQCQfMSroEThfVeoweaP
+         JWUD3IO+vAiurkQhI/6KhNuqrmQzsjhSFJPXpcXH9y115EFGXO/uThqQDSzRmRi1UEht
+         oFqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721269556; x=1721874356;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gklRP1Mg2lPJDFn6YnROe/wcKMjIXNM5Cvhi4UGcBq0=;
+        b=KEPz5YOEN5RlZpvRiEWipYjJ3e/jOlBbh4CHxp412E+VQJMsi4+TyTc85TGfxYi7Je
+         RBmJMJSm0Zs5S1uk9WJ1HozF5ndE3fu7RNqqBklxDzHUg6JzUwPVB5pPmGvuokcRwm3g
+         6goarIAFrhrX4oEGLFhpT+SYYkbHeoWMXDo8FSDlOcKZ1+tHgbOLkOevvksnvYuZsdjs
+         VVcZxYGejSmhNM3961MA0xH5by2Om+ZY3WjeCFF/VHN/ErNCGyT0B0mV1THQ9h0lPBGV
+         +52/qBNPErFkRF6Par9q5oYnha58tBCN/ShzB90L8vkKdhc3wpnDc7YyUWU2vTEAF4sd
+         3f3g==
+X-Forwarded-Encrypted: i=1; AJvYcCViARzF8AT8ZyAU7vrjqn7H7eIIR96ixtixP6g5cSY40jrcWpui5WBr81KFqX74Oj7QbP/lj/vLWoFdq0n2HXZf2m0mYP9emKlS4Y4D
+X-Gm-Message-State: AOJu0YwQJA85v/xRxD5AgT50k4i0OZC338z+XHlQs5ojdbZoEyzz9h/r
+	4VER4XZZ2VHVlDP+FKUdTRsOzv5va6ktEnhkpx5TdV+RmWXNd/KUfJ8x1GL1dkQ=
+X-Google-Smtp-Source: AGHT+IHupNh4IdHfYITPiJHzo+24fJypzIvoRScwFusZfpcnc4Pu3dq0o5eCy94zxrmTygwA8vdt/w==
+X-Received: by 2002:a05:6870:d206:b0:260:8f6d:f029 with SMTP id 586e51a60fabf-260d9504d8bmr3106193fac.42.1721269556637;
+        Wed, 17 Jul 2024 19:25:56 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:eef3:26c0:a400:406b])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-260ee947f82sm192994fac.50.2024.07.17.19.25.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 19:25:56 -0700 (PDT)
+Date: Wed, 17 Jul 2024 21:25:53 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Inochi Amaoto <inochiama@outlook.com>, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] clk: sophgo: clk-sg2042-pll: Fix uninitialized variable in
+ debug output
+Message-ID: <baf0a490-d5ba-4528-90ba-80399684692d@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] coresight-tpda: Optimize the function of reading
- element size
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan
-	<leo.yan@linux.dev>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20240711081750.21792-1-quic_taozha@quicinc.com>
- <20240711081750.21792-4-quic_taozha@quicinc.com>
- <5d285a7e-d762-4c8c-8128-bb3b543f6423@arm.com>
-Content-Language: en-US
-From: Tao Zhang <quic_taozha@quicinc.com>
-In-Reply-To: <5d285a7e-d762-4c8c-8128-bb3b543f6423@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: r31Ob2gzt3mX4HXbXl_8MwOd-qpGjwXd
-X-Proofpoint-GUID: r31Ob2gzt3mX4HXbXl_8MwOd-qpGjwXd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-17_19,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- spamscore=0 clxscore=1015 mlxscore=0 phishscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407180014
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
+If sg2042_get_pll_ctl_setting() fails then "value" isn't initialized and
+it is printed in the debug output.  Initialize it to zero.
 
-On 7/11/2024 9:25 PM, Suzuki K Poulose wrote:
-> On 11/07/2024 09:17, Tao Zhang wrote:
->> Since the new funnel device supports multi-port output scenarios,
->> there may be more than one TPDM connected to one TPDA. In this
->> way, when reading the element size of the TPDM, TPDA driver needs
->> to find the expected TPDM corresponding to the filter source.
->> When TPDA finds a TPDM or a filter source from a input connection,
->> it will read the Devicetree to get the expected TPDM's element
->> size.
->>
->> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
->> ---
->>   drivers/hwtracing/coresight/coresight-tpda.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-tpda.c 
->> b/drivers/hwtracing/coresight/coresight-tpda.c
->> index bfca103f9f84..4936ba4a7625 100644
->> --- a/drivers/hwtracing/coresight/coresight-tpda.c
->> +++ b/drivers/hwtracing/coresight/coresight-tpda.c
->> @@ -110,6 +110,8 @@ static int tpda_get_element_size(struct 
->> tpda_drvdata *drvdata,
->>               csdev->pdata->in_conns[i]->dest_port != inport)
->>               continue;
->>   +        if (csdev->pdata->in_conns[i]->filter_src_dev)
->> +            in = csdev->pdata->in_conns[i]->filter_src_dev;
->
-> Actually, this may not be complete, if the device was removed. Also add
-> a comment here.
->
->         /*
->          * If this port has a hardcoded filter, use the source
->          * device directly.
->          */
->         if (csdev->pdata->in_conns[i]->filter_src_fwnode) {
->             in = csdev->pdata->in_conns[i]->filter_src_dev;
->             if (!in)
->                 continue;
->         }
+Fixes: 48cf7e01386e ("clk: sophgo: Add SG2042 clock driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/clk/sophgo/clk-sg2042-pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I will update to the next version.
+diff --git a/drivers/clk/sophgo/clk-sg2042-pll.c b/drivers/clk/sophgo/clk-sg2042-pll.c
+index aa142897aa5e..24b0eab6154b 100644
+--- a/drivers/clk/sophgo/clk-sg2042-pll.c
++++ b/drivers/clk/sophgo/clk-sg2042-pll.c
+@@ -387,7 +387,7 @@ static int sg2042_clk_pll_set_rate(struct clk_hw *hw,
+ 	struct sg2042_pll_clock *pll = to_sg2042_pll_clk(hw);
+ 	struct sg2042_pll_ctrl pctrl_table;
+ 	unsigned long flags;
+-	u32 value;
++	u32 value = 0;
+ 	int ret;
+ 
+ 	spin_lock_irqsave(pll->lock, flags);
+-- 
+2.43.0
 
-
-Best,
-
-Tao
-
->
->
-> Suzuki
->
->>           if (coresight_device_is_tpdm(in)) {
->>               if (drvdata->dsb_esize || drvdata->cmb_esize)
->>                   return -EEXIST;
->> @@ -124,7 +126,6 @@ static int tpda_get_element_size(struct 
->> tpda_drvdata *drvdata,
->>           }
->>       }
->>   -
->
->>       return rc;
->>   }
->
