@@ -1,286 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042C01C36;
-	Thu, 18 Jul 2024 07:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F2855886
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 07:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721288854; cv=none; b=GW9aAZk0Czvr59obYy9ZPFBn4LdSYq6i6d5EyT3BhMLibx4GpEM+SXw5QRpAEvL/yQSTzN1vwwj/sMoyjeVC9cS3xSpB0lxD1aFszpR7EMJDY/j8zr27PjZtSdRu9m/JvwNK0QbhwVe6ENW1TcSYFj1SV26sk7u37QfI+8yi1QU=
+	t=1721288938; cv=none; b=IgCiWEcDol60EDDOIsHhhYJeTKuF23tfnHhkfctHn/RZXbumq5NXUri8n9Bc5VA+mFHxwc4M6HB1Bh2+vYQgRyJmQe0FeajCH6Di08vWPLE9eKgiygwAjzy6Hb4KLJiiAzOEei8Ha5iOltYg8QZUaocaiyWUpvLGRivaKjNLeSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721288854; c=relaxed/simple;
-	bh=Ifd3ZyZiWcGSeHHusth+UilGRRT83bnliaZFUc5lL5s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RCn2NE4QvOg6EnkjvMkSsoVz9TI9YbfccJbgnECeN54IiaX0DWDFn4wsjIQBajdoG1+8dlpJr3/uQjEIGICq1Vk2MYgYa64mtAB58wI0k2B95pLO29t9Hts5UTSgLe6qJcDupQEGePI3RGVj90yK10CAa/0EMgp5+dqXb/btDIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=frQSO0db; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721288938; c=relaxed/simple;
+	bh=5wc0bWipxv0v6692QEnjJWw+FVL+UXe+lBnbGCz4Hso=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=glkFzAoeelFrNhDD3dl00IrPuWo3deFpwj9jkgP0laT0ZzjxtR5GTnvvR+QaU0rRLfct3g10TOMjqrV0W2ZmeffAQMAHXv004ga31KhSyOJz6/Gou6+RT8JcMavd1Eu1SRSlwgxgEetIiCbfb0Xo4KR+btwLFbRnuEDHRYB1+UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=K6cy95hU; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="frQSO0db"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721288853; x=1752824853;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ifd3ZyZiWcGSeHHusth+UilGRRT83bnliaZFUc5lL5s=;
-  b=frQSO0dbi4PcnZH6czEi+rIienkT5No/kB0IHOFEa6jrTFJ79STANyRx
-   tWxPXxnAF2JreROuq4/HFZjzwrghAAXE5sKKYYK678SOKm3SJBPA27DLh
-   DIO20KPejOHlqVKenBR5ngZuoIcbGjDlHimpjnSk+0VZ8/sK/YzGeRDN3
-   1zI673zIXRYGmXzb+InoSPQ9e+FrMePhEVey8vzkkR7jR0XU5XEAI+l6M
-   V6uyxTnXz4oo3OilOymljaDdYCUjc7rkwRri6JwAjXsN3XAgoXshJJvFZ
-   4XP7YhPUBrueizSHP23vyy7aOWkLeQxhgCa69fjviTx3XMNCO1rBiSc1t
-   Q==;
-X-CSE-ConnectionGUID: B7b0SZ7qTb+QlLtl7SIzPg==
-X-CSE-MsgGUID: 7hdq7lglQUOXfNaOcaIqGg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="21739157"
-X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
-   d="scan'208";a="21739157"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 00:47:32 -0700
-X-CSE-ConnectionGUID: S6P2ceP9RimzKllZ/qPsXA==
-X-CSE-MsgGUID: REKv0HNkT9eWoi+65bXpjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
-   d="scan'208";a="51288364"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.139])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 00:47:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 18 Jul 2024 10:47:24 +0300 (EEST)
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>, 
-    Hagan Billy <billy.hagan@amd.com>, Simon Guinot <simon.guinot@seagate.com>, 
-    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
-    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v2] PCI: pciehp: Clear LBMS on hot-remove to prevent link
- speed reduction
-In-Reply-To: <ca2b8c13-a7d8-e157-fd1a-770ee8cb10c1@amd.com>
-Message-ID: <1a252080-2076-5840-5add-7b584188d025@linux.intel.com>
-References: <20240617231841.GA1232294@bhelgaas> <27be113e-3e33-b969-c1e3-c5e82d1b8b7f@amd.com> <cf5f3b03-4c70-7a35-056e-5d94fc26f697@amd.com> <ZnKNJxJwdtWRphgX@wunner.de> <73fd7b2d-9256-9eba-70be-d69ea336fd67@amd.com> <6014882f-0936-ec31-d641-112a70eb2749@linux.intel.com>
- <ca2b8c13-a7d8-e157-fd1a-770ee8cb10c1@amd.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="K6cy95hU"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52ea5dc3c66so7647e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 00:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721288934; x=1721893734; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qD+nX/SK0sYHyfzpnXWu07tByOYZBtjRYGWr13b6ybo=;
+        b=K6cy95hUU3syJq1XDMclAs5byh2xv9Y2BA3WvPkAtNitrKvj7fW3h9vZ/Ejw1r5V/J
+         4nNcEK3R8xwVtcBg4+eafIdbSuRPmV6brGdiMN2oEBjM0CRPDaCTGKadfo/ie3t8T2+J
+         jmH8RNrrsRSYuDF7q+TMA3E9TAEcLOjH2ABsX6t/TbualUYBtjWxvXWpkUbAKUXDbpta
+         rJnXhL9KPQ8+DlXE1KdpM2uoejZJuMI+kRK30rhUNqyrEXrSPaUNY1FY5Jj9JCXe+X1r
+         yNQW1zRrupPc9MaysCcUQraq8x033GCxyvIisTM7W0+UCZZnN0k2geVgV2MDgMnYV7Wc
+         GOKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721288934; x=1721893734;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qD+nX/SK0sYHyfzpnXWu07tByOYZBtjRYGWr13b6ybo=;
+        b=BCsshmozmJqfx1rwRp8kR9cCm/9DS3+jKwAjeAWaaQsADVsvLD8ykoziH7kIRejgfH
+         W83QViynFLq50UAgvDNA6SS5QNjjL/dpZW7uJeA6nQDVBDLhzQarSgkGoDq0Anb+a3Xs
+         0cgwC5cIpGIqKpPwB4j3z8dTUn0mvRfdrKlG/xxz3Vo8AUnfqW1yldQr+e7GZVnZDQqH
+         88R4Hg9n5TkkIjXRGiucWk5LBXwdqLEs78vryP3xqNTfl/uWpmdrLLBi14g504z0YG8R
+         od3pL3ut90+VWR82qRUjIG0TNkuCUlAXLJGA3whwBOvALF8+Z6x9FO90PGmrZtcpNtgf
+         lzAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU25Yo7ewjS4rzEXDfHFQzqg1A3Ww+/tCfI+lpageOU6NoTxe2hNR6XLbxQANNLQnTQbmQf9zkl/gSDcCLLKvavSS7qxwWESnFPZlGw
+X-Gm-Message-State: AOJu0YyqCJmTogBIs2jHoXNqzGOaV4jxBVR4ufjvaOTHnnCi/OX2s/Sf
+	ho+MtUvDmJskXFig6aKlwKhfCTEc3k4YyPMeoZnRuXqriKeubQCpwuqqmFj3jz9p7G/tvSsc/AJ
+	jWNAOTxQrcVGb2gNBCcCdnelQ8bIsvcHs8a5NFw==
+X-Google-Smtp-Source: AGHT+IGHBgLtHfAhy/c4ubrhUk0ff0vQyOPXy+FGOXQxd0riXqum8s1MSYaqMyOjVLvFxDxlkfCgtZdggwCRrMfqEhI=
+X-Received: by 2002:a05:6512:b22:b0:52e:9f7a:6e6 with SMTP id
+ 2adb3069b0e04-52ee5433efemr3817500e87.41.1721288933743; Thu, 18 Jul 2024
+ 00:48:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1535258471-1721288844=:1055"
+References: <20240717061957.140712-1-alexghiti@rivosinc.com>
+ <20240717061957.140712-6-alexghiti@rivosinc.com> <20240717-94b49fbac3c6bf97a0f96281@orel>
+In-Reply-To: <20240717-94b49fbac3c6bf97a0f96281@orel>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Thu, 18 Jul 2024 09:48:42 +0200
+Message-ID: <CAHVXubi33T-5y9g1cqa+meM7q7b=0M54o+wrBeYmwfYpWAgAmQ@mail.gmail.com>
+Subject: Re: [PATCH v3 05/11] riscv: Implement arch_cmpxchg128() using Zacas
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Andrea Parri <parri.andrea@gmail.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Leonardo Bras <leobras@redhat.com>, Guo Ren <guoren@kernel.org>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Drew,
 
---8323328-1535258471-1721288844=:1055
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 17 Jul 2024, Smita Koralahalli wrote:
-
-> On 7/9/2024 3:52 AM, Ilpo J=C3=A4rvinen wrote:
-> > On Tue, 25 Jun 2024, Smita Koralahalli wrote:
-> >=20
-> > > Sorry for the delay here. Took some time to find a system to run
-> > > experiments.
-> > > Comments inline.
-> > >=20
-> > > On 6/19/2024 12:47 AM, Lukas Wunner wrote:
-> > > > On Tue, Jun 18, 2024 at 02:23:21PM -0700, Smita Koralahalli wrote:
-> > > > > On 6/18/2024 11:51 AM, Smita Koralahalli wrote:
-> > > > > > > > > But IIUC LBMS is set by hardware but never cleared by
-> > > > > > > > > hardware, so
-> > > > > > > > > if
-> > > > > > > > > we remove a device and power off the slot, it doesn't see=
-m
-> > > > > > > > > like
-> > > > > > > > > LBMS
-> > > > > > > > > could be telling us anything useful (what could we do in
-> > > > > > > > > response
-> > > > > > > > > to
-> > > > > > > > > LBMS when the slot is empty?), so it makes sense to me to
-> > > > > > > > > clear
-> > > > > > > > > it.
-> > > > > > > > >=20
-> > > > > > > > > It seems like pciehp_unconfigure_device() does sort of PC=
-I
-> > > > > > > > > core
-> > > > > > > > > and
-> > > > > > > > > driver-related things and possibly could be something sha=
-red
-> > > > > > > > > by
-> > > > > > > > > all
-> > > > > > > > > hotplug drivers, while remove_board() does things more
-> > > > > > > > > specific to
-> > > > > > > > > the
-> > > > > > > > > hotplug model (pciehp, shpchp, etc).
-> > > > > > > > >=20
-> > > > > > > > >   From that perspective, clearing LBMS might fit better i=
-n
-> > > > > > > > > remove_board(). In that case, I wonder whether it should =
-be
-> > > > > > > > > done
-> > > > > > > > > after turning off slot power? This patch clears is *befor=
-e*
-> > > > > > > > > turning
-> > > > > > > > > off the power, so I wonder if hardware could possibly set=
- it
-> > > > > > > > > again
-> > > > > > > > > before the poweroff?
-> > > > >=20
-> > > > > While clearing LBMS in remove_board() here:
-> > > > >=20
-> > > > > if (POWER_CTRL(ctrl)) {
-> > > > > =09pciehp_power_off_slot(ctrl);
-> > > > > +=09pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
-> > > > > =09=09=09=09   PCI_EXP_LNKSTA_LBMS);
-> > > > >=20
-> > > > > =09/*
-> > > > > =09 * After turning power off, we must wait for at least 1 second
-> > > > > =09 * before taking any action that relies on power having been
-> > > > > =09 * removed from the slot/adapter.
-> > > > > =09 */
-> > > > > =09msleep(1000);
-> > > > >=20
-> > > > > =09/* Ignore link or presence changes caused by power off */
-> > > > > =09atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
-> > > > > =09=09   &ctrl->pending_events);
-> > > > > }
-> > > > >=20
-> > > > > This can happen too right? I.e Just after the slot poweroff and b=
-efore
-> > > > > LBMS
-> > > > > clearing the PDC/PDSC could be fired. Then
-> > > > > pciehp_handle_presence_or_link_change() would hit case "OFF_STATE=
-" and
-> > > > > proceed with pciehp_enable_slot() ....pcie_failed_link_retrain() =
-and
-> > > > > ultimately link speed drops..
-> > > > >=20
-> > > > > So, I added clearing just before turning off the slot.. Let me kn=
-ow if
-> > > > > I'm
-> > > > > thinking it right.
-> > >=20
-> > > I guess I should have experimented before putting this comment out.
-> > >=20
-> > > After talking to the HW/FW teams, I understood that, none of our CRBs
-> > > support
-> > > power controller for NVMe devices, which means the "Power Controller
-> > > Present"
-> > > in Slot_Cap is always false. That's what makes it a "surprise removal=
-=2E" If
-> > > the
-> > > OS was notified beforehand and there was a power controller attached,=
- the
-> > > OS
-> > > would turn off the power with SLOT_CNTL. That's an "orderly" removal.=
- So
-> > > essentially, the entire block from "if (POWER_CTRL(ctrl))" will never=
- be
-> > > executed for surprise removal for us.
-> > >=20
-> > > There could be board designs outside of us, with power controllers fo=
-r the
-> > > NVME devices, which I'm not aware of.
-> > > >=20
-> > > > This was added by 3943af9d01e9 ("PCI: pciehp: Ignore Link State Cha=
-nges
-> > > > after powering off a slot").  You can try reproducing it by writing=
- "0"
-> > > > to the slot's "power" file in sysfs, but your hardware needs to sup=
-port
-> > > > slot power.
-> > > >=20
-> > > > Basically the idea is that after waiting for 1 sec, chances are ver=
-y low
-> > > > that any DLLSC or PDSC events caused by removing slot power may sti=
-ll
-> > > > occur.
-> > >=20
-> > > PDSC events occurring in our case aren't by removing slot power. It
-> > > should/will always happen on a surprise removal along with DLLSC for =
-us.
-> > > But
-> > > this PDSC is been delayed and happens after DLLSC is invoked and
-> > > ctrl->state =3D
-> > > OFF_STATE in pciehp_disable_slot(). So the PDSC is mistook to enable =
-slot
-> > > in
-> > > pciehp_enable_slot() inside pciehp_handle_presence_or_link_change().
-> > > >=20
-> > > > Arguably the same applies to LBMS changes, so I'd recommend to like=
-wise
-> > > > clear stale LBMS after the msleep(1000).
-> > > >=20
-> > > > pciehp_ctrl.c only contains the state machine and higher-level logi=
-c of
-> > > > the hotplug controller and all the actual register accesses are in
-> > > > helpers
-> > > > in pciehp_hpc.c.  So if you want to do it picture-perfectly, add a
-> > > > helper
-> > > > in pciehp_hpc.c to clear LBMS and call that from remove_board().
-> > > >=20
-> > > > That all being said, I'm wondering how this plays together with Ilp=
-o's
-> > > > bandwidth control driver?
-> > > >=20
-> > > > https://lore.kernel.org/all/20240516093222.1684-1-ilpo.jarvinen@lin=
-ux.intel.com/
-> > >=20
-> > > I need to yet do a thorough reading of Ilpo's bandwidth control drive=
-r.
-> > > Ilpo
-> > > please correct me if I misspeak something as I don't have a thorough
-> > > understanding.
-> > >=20
-> > > Ilpo's bandwidth controller also checks for lbms count to be greater =
-than
-> > > zero
-> > > to bring down link speeds if CONFIG_PCIE_BWCTRL is true. If false, it
-> > > follows
-> > > the default path to check LBMS bit in link status register. So if,
-> > > CONFIG_PCIE_BWCTRL is disabled by default we continue to see link spe=
-ed
-> > > drops.
-> > > Even, if BWCTRL is enabled, LBMS count is incremented to 1 in
-> > > pcie_bwnotif_enable() so likely pcie_lbms_seen() might return true th=
-ereby
-> > > bringing down speeds here as well if DLLLA is clear?
-> >=20
-> > I did add code to clear the LBMS count in pciehp_unconfigure_device() i=
-n
-> > part thanks to this patch of yours. Do you think it wouldn't work?
->=20
-> It works with BWCTRL enabled. Just my concern would be to keep the cleari=
-ng in
-> pciehp_unconfigure_device() and not do it inside POWER_CTRL(ctrl), in
-> remove_board() as per the suggestions given above.
-
-I added that LBMS count reset based on one of the first versions of your=20
-patch which had the LBMS clearing in pciehp_unconfigure_device() before=20
-this discussion went further. The point anyway is that bwctrl change would=
-=20
-replace the line you put in to clear LBMS, wherever that will be placed=20
-in the end.
-
-> > But I agree there would still be problem if BWCTRL is not enabled. I
-> > already have to keep part of it enabled due to the Target Speed quirk
-> > and now this is another case where just having it always on would be
-> > beneficial.
->=20
-> Correct, it should always be on to not see the problem.
+On Wed, Jul 17, 2024 at 10:34=E2=80=AFPM Andrew Jones <ajones@ventanamicro.=
+com> wrote:
 >
-> Would like to have this "LBMS clearing fix" accepted in sooner since its
-> breaking things on our systems! :)
+> On Wed, Jul 17, 2024 at 08:19:51AM GMT, Alexandre Ghiti wrote:
+> > Now that Zacas is supported in the kernel, let's use the double word
+> > atomic version of amocas to improve the SLUB allocator.
+> >
+> > Note that we have to select fixed registers, otherwise gcc fails to pic=
+k
+> > even registers and then produces a reserved encoding which fails to
+> > assemble.
+>
+> Oh, that's quite unfortunate... I guess we should try to get some new
+> RISC-V inline assembly register constraints added to support register
+> pairs.
 
-Sure, I've no objection to that. In fact, it's what I prefer myself too=20
-because it makes things easier for stable folks. :-)
+I internally informed the compilers people, I'll check their progress.
 
-I'd also like to see those Target Speed quick fixes to go in before
-bwctl (to the extent I did base my series on top of them) but it seems=20
-Maciej might not be updating them so perhaps I'll have to take look at=20
-Bjorn's comments on that series and see what can be done to those patches.
+>
+> >
+> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > ---
+> >  arch/riscv/Kconfig               |  1 +
+> >  arch/riscv/include/asm/cmpxchg.h | 39 ++++++++++++++++++++++++++++++++
+> >  2 files changed, 40 insertions(+)
+> >
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index d3b0f92f92da..0bbaec0444d0 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -104,6 +104,7 @@ config RISCV
+> >       select GENERIC_VDSO_TIME_NS if HAVE_GENERIC_VDSO
+> >       select HARDIRQS_SW_RESEND
+> >       select HAS_IOPORT if MMU
+> > +     select HAVE_ALIGNED_STRUCT_PAGE
+> >       select HAVE_ARCH_AUDITSYSCALL
+> >       select HAVE_ARCH_HUGE_VMALLOC if HAVE_ARCH_HUGE_VMAP
+> >       select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT
+> > diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/=
+cmpxchg.h
+> > index 97b24da38897..608d98522557 100644
+> > --- a/arch/riscv/include/asm/cmpxchg.h
+> > +++ b/arch/riscv/include/asm/cmpxchg.h
+> > @@ -289,4 +289,43 @@ end:;                                             =
+                       \
+> >       arch_cmpxchg_release((ptr), (o), (n));                          \
+> >  })
+> >
+> > +#ifdef CONFIG_RISCV_ISA_ZACAS
+>
+> This is also 64-bit only, so needs a CONFIG_64BIT check too.
 
---=20
- i.
+Yep, thanks
 
---8323328-1535258471-1721288844=:1055--
+>
+> > +
+> > +#define system_has_cmpxchg128()                                       =
+       \
+> > +                     riscv_has_extension_unlikely(RISCV_ISA_EXT_ZACAS)
+>
+> nit: let's let this stick out since we have 100 chars
+
+Ok
+
+>
+> > +
+> > +union __u128_halves {
+> > +     u128 full;
+> > +     struct {
+> > +             u64 low, high;
+>
+> Should we consider big endian too?
+
+Should we care about big endian? We don't deal with big endian
+anywhere in our kernel right now.
+
+>
+> > +     };
+> > +};
+> > +
+> > +#define __arch_cmpxchg128(p, o, n, cas_sfx)                           =
+       \
+> > +({                                                                    =
+       \
+> > +     __typeof__(*(p)) __o =3D (o);                                    =
+         \
+> > +     union __u128_halves __hn =3D { .full =3D (n) };                  =
+           \
+> > +     union __u128_halves __ho =3D { .full =3D (__o) };                =
+           \
+> > +     register unsigned long x6 asm ("x6") =3D __hn.low;               =
+         \
+> > +     register unsigned long x7 asm ("x7") =3D __hn.high;              =
+         \
+> > +     register unsigned long x28 asm ("x28") =3D __ho.low;             =
+         \
+> > +     register unsigned long x29 asm ("x29") =3D __ho.high;            =
+         \
+>
+> Can we use t1,t2,t3,t4 rather than the x names?
+
+We can, I did not because it was a bit misleading in the sense that
+amocas expects an *even* register and using the tX registers, we'll
+pass an *odd* register (which actually is even but still).
+
+Anyway, I'll change that, I don't like the xX notation.
+
+Thanks for the review,
+
+Alex
+
+>
+> > +                                                                      =
+       \
+> > +     __asm__ __volatile__ (                                           =
+       \
+> > +             "       amocas.q" cas_sfx " %0, %z3, %2"                 =
+       \
+> > +             : "+&r" (x28), "+&r" (x29), "+A" (*(p))                  =
+       \
+> > +             : "rJ" (x6), "rJ" (x7)                                   =
+       \
+> > +             : "memory");                                             =
+       \
+> > +                                                                      =
+       \
+> > +     ((u128)x29 << 64) | x28;                                         =
+       \
+> > +})
+> > +
+> > +#define arch_cmpxchg128(ptr, o, n)                                    =
+       \
+> > +     __arch_cmpxchg128((ptr), (o), (n), ".aqrl")
+> > +
+> > +#define arch_cmpxchg128_local(ptr, o, n)                              =
+       \
+> > +     __arch_cmpxchg128((ptr), (o), (n), "")
+> > +
+> > +#endif /* CONFIG_RISCV_ISA_ZACAS */
+> > +
+> >  #endif /* _ASM_RISCV_CMPXCHG_H */
+> > --
+> > 2.39.2
+>
+> Thanks,
+> drew
