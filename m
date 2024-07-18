@@ -1,155 +1,116 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144B8144D10
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 17:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA813144300;
+	Thu, 18 Jul 2024 17:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721322603; cv=none; b=rbsGzLU+YzgTAttTrgI/zcI7nf77xM6owdznJBseexNyr3OFkUlsQqgymanpfemUKYzTRhxB8w2zMMZFyekZlnFS2g3HJC18g9q2m7qSXq+xQsCS0686RWsALAfsej8bxdjxGoY6AaRWsEkoq7E6YF/PbZAYu1K8HUgbO3PTD6U=
+	t=1721322638; cv=none; b=FOBmBVDqKl5QO1Wf3euiNbI06Mn5tCg/t2rzEetPzRlDVuPe1lf6J3uFDcSTSdHQ1aLJKJjLTXSDD2/81Dxbr99vK0wP/sO6UMKf8rUkeYAPIh6s2QnlaBIiIu3leO/DgpcmRS2vVzG/UIeEbPbKL7Um0NOaEmJpXc48z+azRgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721322603; c=relaxed/simple;
-	bh=6nbNmq9keipECaitOCTHHOJ/2SiCOYt7HdwJHw9bbL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WJ7XnsmSJ7oHQCl5BXN1CGk4NB99Ww5cAuKGQjruAqxiW8pUTpsiWq15723D7dnmVXrP6c4BkZZe4OKq2KLLVks8qcxFhcWgQzOVr+D8Zb6HyQaEt7TNBoBdbOdiT3gVJU9MsXkfTEOYZ72PpIyZdswTy1RWk6j+sFjWSHbN8xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2TxTmCZG; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721322638; c=relaxed/simple;
+	bh=QZdYH3ME+OcwsRif5oGewFKnxSlxjBLMi5OPf+7dbZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ptYz7Fy/QDoG0ikJbj473PzMLVbLdPVUNzn6fayg9FjHjpl+XUsycZFrvmV/v7ulIinmOQkeXiG6X2a3F6L49seZW2PPHpcLlAdIjLNdSd8FNVvO5qEwF9B9WHvQvHwFE/X8gUfTh7qxKj94ZmD99YqFwBDfaLdRgfWTX7o340I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DfuLPcYF; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2TxTmCZG"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42666b89057so2045e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 10:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721322600; x=1721927400; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VE1zlo0WYP5fFUwruBkAhVFeTQERu81k99aRGv+J5us=;
-        b=2TxTmCZGf48JiUhnNebuMdQmwRvECLCgP1uIGVrNDo9ptXShVA0DbJ7Suqt/cQE5Z/
-         /8BCp04kHCqK9nV98crOm72DyQIy8jLvMkvUouKmtbAvRFMc/yMM9sGaGaa26CxESKGm
-         yDkQKoVNOAeuQ7NTv/q5lLhFxoVzfirUUgXd1EBALAWIJL9uhsrwEx18pAzDcQTxeo2D
-         bCLV+5WASt/+g5xUA3pdofyQHT0UILkZms++fa3+ZuEfQhRJWiPhQm1px2C6IDwNTrO9
-         xd82jlmkvtxJpxHAiTo6kJx7N9VtR0TAE4sVfxAbPE6xfxNtOt79Hq991ZsY1qhgOJqA
-         a9ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721322600; x=1721927400;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VE1zlo0WYP5fFUwruBkAhVFeTQERu81k99aRGv+J5us=;
-        b=fD4eSfF1ct3Lpv1OL1HBZ9B9XZvCQprJUPnmd0NlmEFKh2l574nPGtZtcPk9YsbOUU
-         MS68U5gKaDM8JE5ENcmxoRkQzNzn9gCE6Q4QmhcQ7N9eVc2K5YrWEG85rWAW6DTpg2u7
-         6EUERAWJN7r6DkiWXCFk/bIGgor0H88KWxNYtKYjuYs2gMwEv85R2Vb5rU0zYa8JZ8Rk
-         BqL3XfmkoIIYLyKQhjUoxmoHx/O4QBHjUuNfPC/JYOlxRxhK+Z8SEG+xJbSUO8yMVZyr
-         u8qEpvh/lIDOzsO/6ntU0Yy9m6ea2PTk1qtMAe86Z6euBaWpz5SFbVtHJU8imJWJPOaQ
-         Jdog==
-X-Forwarded-Encrypted: i=1; AJvYcCXHheIUnnseuFx6t7Gf5Hvmnzx73oXL85RiRgSquPANsMKg66X+nJXyQlcJkBccmvYDxSxIspoir+TDxb66K7CHI6vBu8hSjodtgSOi
-X-Gm-Message-State: AOJu0Yy4B+2mmfg2ifWpk5DIOmFQ1EebZ/VbbK6QbdiMZgiUTQ0g6yEN
-	9yO4BLd0eks4Kub1B63OrrALSGEZZblYUCbnILZXhKC7pducmnesEhE17cPJZETWD8OAS1Lc9sr
-	tvBmL2rHWj5SXs+mkIuYlAw0+64y8kUnVBWs=
-X-Google-Smtp-Source: AGHT+IGqGloYtoDbE/cj4acqUh5GhvD1KBfFRWwub7Dz01wOaqAUA8znvrRis2rZfOvQNT79qUteAFFBjkjI5HQKUJg=
-X-Received: by 2002:a05:600c:3b23:b0:426:62a2:dfc with SMTP id
- 5b1f17b1804b1-427d2a9794emr934485e9.5.1721322600131; Thu, 18 Jul 2024
- 10:10:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DfuLPcYF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721322637; x=1752858637;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=QZdYH3ME+OcwsRif5oGewFKnxSlxjBLMi5OPf+7dbZ0=;
+  b=DfuLPcYFApPpJWGHVkJtAlg+1m6/7khZlI5WORWx0xMUpO2WftE82Bc/
+   BPoq3wOV/Sb54H5R/HpGfJvktnGUh5UV0VZVDVSTghF2ZimL8aR+NG6BO
+   qXt7jKWncIAgLQh/Apk2ZsYQo00kCkdZvjZfI6jJ1s2etp63G/TdFNRwy
+   1QhVoq9H2spHECViYXuNu+/BXuWKHsXvOQYML61ykpbGVGYduzf3RuKwU
+   M9CP9t8NMNr2b09BnconKDCM5C8kgJbNntilCekwvefOLYfxS4BjX1a+5
+   U0fqn9Xy8H/LRWbcM9osa7eFCNU5IqlSpOKa0YTcfvZ7qA6kehVZ8XhqX
+   A==;
+X-CSE-ConnectionGUID: J+jyjTSAQtKg0TplgeCpfQ==
+X-CSE-MsgGUID: iDpYZ/c8RbeOGSpirGa+Aw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="36343124"
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="36343124"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:10:36 -0700
+X-CSE-ConnectionGUID: z752KpM7QYOCFh4CH+MaZg==
+X-CSE-MsgGUID: V5Y9TFBUSuWf68gy+6wUsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="50871249"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.54])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:10:36 -0700
+Date: Thu, 18 Jul 2024 10:10:35 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: Isaku Yamahata <isaku.yamahata@intel.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+	Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+	Sean Christopherson <sean.j.christopherson@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>
+Subject: Re: [PATCH v19 110/130] KVM: TDX: Handle TDX PV MMIO hypercall
+Message-ID: <20240718171035.GH1900928@ls.amr.corp.intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <a4421e0f2eafc17b4703c920936e32489d2382a3.1708933498.git.isaku.yamahata@intel.com>
+ <560f3796-5a41-49fb-be6e-558bbe582996@linux.intel.com>
+ <20240716222514.GD1900928@ls.amr.corp.intel.com>
+ <457184ed-dcda-4363-a0c9-95b43b80a6a4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230926160903.62924-1-masahiroy@kernel.org>
-In-Reply-To: <20230926160903.62924-1-masahiroy@kernel.org>
-From: John Stultz <jstultz@google.com>
-Date: Thu, 18 Jul 2024 10:09:47 -0700
-Message-ID: <CANDhNCraQ6UCDNH3s4+YKCWfk4dGjxP_LkZ7WBUnJ_WiKM5u6Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: fix get_user() broken with veneer
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: patches@armlinux.org.uk, linux-kernel@vger.kernel.org, 
-	Russell King <linux@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org, 
-	Neill Kapron <nkapron@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <457184ed-dcda-4363-a0c9-95b43b80a6a4@linux.intel.com>
 
-On Tue, Sep 26, 2023 at 9:09=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> The 32-bit ARM kernel stops working if the kernel grows to the point
-> where veneers for __get_user_* are created.
->
-> AAPCS32 [1] states, "Register r12 (IP) may be used by a linker as a
-> scratch register between a routine and any subroutine it calls. It
-> can also be used within a routine to hold intermediate values between
-> subroutine calls."
->
-> However, bl instructions buried within the inline asm are unpredictable
-> for compilers; hence, "ip" must be added to the clobber list.
->
-> This becomes critical when veneers for __get_user_* are created because
-> veneers use the ip register since commit 02e541db0540 ("ARM: 8323/1:
-> force linker to use PIC veneers").
->
-> [1]: https://github.com/ARM-software/abi-aa/blob/2023Q1/aapcs32/aapcs32.r=
-st
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+On Thu, Jul 18, 2024 at 03:33:25PM +0800,
+Binbin Wu <binbin.wu@linux.intel.com> wrote:
 
-+ stable@vger.kernel.org
-It seems like this (commit 24d3ba0a7b44c1617c27f5045eecc4f34752ab03
-upstream) would be a good candidate for -stable?
-The issue it fixes can manifest in lots of very strange ways, so it
-would be good to avoid others getting tripped up by it on -stable
-branches.
+> > > > +
+> > > > +		memcpy(&val, vcpu->run->mmio.data, size);
+> > > > +		tdvmcall_set_return_val(vcpu, val);
+> > > > +		trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
+> > > > +	}
+> > > Tracepoint for KVM_TRACE_MMIO_WRITE is missing when it is handled in
+> > > userspace.
+> > tdx_mmio_write() has it before existing to the user space.  It matches with
+> > how write_mmio() behaves in x86.c.
+> > 
+> > Hmm, to match with other code, we should remove
+> > trace_kvm_mmio(KVM_TRACE_MMIO_READ) and keep KVM_TRACE_MMIO_READ_UNSATISFIED
+> > in tdx_emulate_mmio().  That's how read_prepare() and read_exit_mmio() behaves.
+> > 
+> > For MMIO read
+> > - When kernel can handle the MMIO, KVM_TRACE_MMIO_READ with data.
+> > - When exiting to the user space, KVM_TRACE_MMIO_READ_UNSATISFIED before
+> >    the exit.  No trace after the user space handled the MMIO.
+> 
+> For MMIO read, in the emulator, there is still a trace after the userspace
+> handled the MMIO.
+> In complete_emulated_mmio(), if all fragments have been handled, it will
+> set vcpu->mmio_read_completed to 1 and call complete_emulated_io().
+> complete_emulated_io
+>     kvm_emulate_instruction(vcpu, EMULTYPE_NO_DECODE)
+>         x86_emulate_instruction
+>             x86_emulate_insn
+>                 emulator_read_write
+>                     read_prepare
+>                         At this point, vcpu->mmio_read_completed is 1,
+>                         it traces KVM_TRACE_MMIO_READ with data
+>                         and then clear vcpu->mmio_read_completed
+> 
+> So to align with emulator, we should keep the trace for KVM_TRACE_MMIO_READ.
 
-(Apologies for being a bit verbose in the following, I've included a
-lot of details and breadcrumbs so others might find this if they run
-into the same issues.)
-
-I was recently looking into an arm32 issue, and found getting a custom
-built kernel consistently working in qemu-system-arm to bisect issues
-in the range of 5.15-6.6 was a bit difficult, as I would hit a couple
-different odd errors.
-
-For 5.15 I was seeing systemd fail to start in a fairly opaque way:
-  starting systemd-udevd.service - Rule-based Manager for Device
-Events and Files.
-  systemd-udevd.service: Main process exited, code=3Dexited, status=3D1/FAI=
-LURE
-  systemd-udevd.service: Failed with result 'exit-code'.
-  Failed to start systemd-udevd.service - Rule-based Manager for
-Device Events and Files.
-
-But further looking through the logs I found:
-  systemd[1]: Failed to open netlink: Operation not permitted
-
-Despite lots of digging to try to understand what was going wrong, the
-one thing that worked was switching to CONFIG_CC_OPTIMIZE_FOR_SIZE
-(which I only tried as I came across this old thread:
-https://lists.yoctoproject.org/g/linux-yocto/message/8035 ), this
-seemed very suspicious, but I didn't have a lot of time to dig
-further.
-
-That resolved things until ~6.1, where I started seeing crashes at init:
-[   16.982562] Run /init as init process
-[   16.989311] Failed to execute /init (error -22)
-[   16.990017] Run /sbin/init as init process
-[   16.994737] Starting init: /sbin/init exists but couldn't execute
-it (error -22)
-
-That I bisected that failure down to being supposedly caused by commit
-5750121ae738 ("kbuild: list sub-directories in ./Kbuild")
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D5750121ae7382ebac8d47ce6d68012d6cd1d7926
-
-And searching around that commit luckily led me to this change, which
-finally seems to resolve the different issues I saw for 6.6, 6.1 and
-5.15!
-
-Now, In my rush to get something booting with qemu, I started with the
-debian config but disabled modules, and didn't put much time into
-getting rid of config options or drivers I wouldn't need. So the
-kernel is pretty large. So maybe not super common, but I definitely
-wouldn't want others to have to go down this debugging rabbit hole.
-
-thanks
--john
+Oops, you're right. Agreed to keep it.
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
