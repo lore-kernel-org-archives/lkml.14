@@ -1,125 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821D13B78D
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 03:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6433542AA6;
+	Thu, 18 Jul 2024 03:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721274685; cv=none; b=hu73MhZwXRLeqwZg/qpTvEmic/rfLafLxSbQtS935LnQ2yJzuKho9N8U+mc3K2GqZF3JNAMmZDA/9j5KUOMHB5y2nl0u9qw7pfZ+RfWUXC0afSasX+x7ELq9wzfWmWeNRaYUk6sIVGTZucC4ycGLkug7VWAc84tghK2eGfo1lhg=
+	t=1721274700; cv=none; b=klWhZigVL9Pw66SlbYxGGI/uw7ON0/e+wA9Ex0x8W0kloi8YIgpufWUo4YddoqXxKL2CziGVzoMrGvTy69242R3P0EYf5cVk9FaaEMJER8t/v+3eqY8vBYfn/YH71uGXHPwadvAvthl0a2LGHSi2UyPTw793G/i+whhJ/8c7q/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721274685; c=relaxed/simple;
-	bh=hjUCG+q0HREzgYmR5r7WJo3qIZ6wc8Ex0QI8HfWNF5g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=scJqkn2R188LzSLqnFY27Ct4L2Wu7Y++d9nQAHw22vAxm4fQS/jjanqQO7wtB8OaVFv4vVCk9QWZvYICexhZE/JHgK6j8+m114RAuSVWymQ2+wkq6a1f0evnszvDJ/pO4bkXom/A1Ryn3HKXQeDFOivgshly1F6fhPB5sKuXB2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QSylrB1M; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721274700; c=relaxed/simple;
+	bh=X2VthKODx/NH7qSkxS3leRmp7ffXTvTIE336tbI0ExI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T62PsuPNdoR1lCv3iJ3IP6vLDjSw1Qti4gUobYI8JQu6lw64tBBXaNWX49CH2C7bahP8eSG1oxXYhFPF0m1zqeM9dxifXHJk3htyNGWZlgvOVCJ7DPAvO4XBjajKKFz/426bWCQT2MqqMgw0WIw2T6sIINXlo+3EcFB9CZ7AsLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IWwzCIAI; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QSylrB1M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721274683;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O89ColwbFbMOP9rVqtVS+t6scjVmCqG2F84LAXBK61M=;
-	b=QSylrB1MznS4EAZGLgKF6+0CDCw2MvZI662nq0j2djRnZeMmZsefk0opGoJI26LOIPs5et
-	oFxCYVFinHLv0T7ozA6s9w0+YawKMcIkJqb4E5Rid51FlJjHBmxZGjfkXIncxFMiUv33/A
-	lbvfdRnNn65CiwZF2wF2WYnHd7nkUO0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-601-WLlbco4bNGCj9RqX9v7jGA-1; Wed,
- 17 Jul 2024 23:50:40 -0400
-X-MC-Unique: WLlbco4bNGCj9RqX9v7jGA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 964C419560AB;
-	Thu, 18 Jul 2024 03:50:38 +0000 (UTC)
-Received: from virt-mtcollins-01.lab.eng.rdu2.redhat.com (virt-mtcollins-01.lab.eng.rdu2.redhat.com [10.8.1.196])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 699FB1955D42;
-	Thu, 18 Jul 2024 03:50:36 +0000 (UTC)
-From: Shaoqin Huang <shahuang@redhat.com>
-To: Oliver Upton <oliver.upton@linux.dev>,
-	Marc Zyngier <maz@kernel.org>,
-	kvmarm@lists.linux.dev,
-	Mark Brown <broonie@kernel.org>
-Cc: Eric Auger <eauger@redhat.com>,
-	Sebastian Ott <sebott@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Shaoqin Huang <shahuang@redhat.com>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/3] KVM: arm64: Allow userspace to change ID_AA64PFR1_EL1
-Date: Wed, 17 Jul 2024 23:50:15 -0400
-Message-Id: <20240718035017.434996-3-shahuang@redhat.com>
-In-Reply-To: <20240718035017.434996-1-shahuang@redhat.com>
-References: <20240718035017.434996-1-shahuang@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IWwzCIAI"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I3QB0Z025697;
+	Thu, 18 Jul 2024 03:51:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=8
+	NbKhRYi5LieM0LCaj65EY/Do3XbJKVEjkqjluqRAvk=; b=IWwzCIAIjIXdJmAT+
+	VoowT3XnbhO0XTTOVwEosK7VLf2W/KiNJ14T3qA8HsuMOFlmT2kH/UfXhfa1RhH9
+	iy/SaSug1SPYGrtKTE2tPKfxOCw6ZO46rgTJTEpvtN7BWtgl3PQg9+zFZAVCq0f1
+	LwhLQGWwzpDwMQx8Ttk3wQ/vse9l/H19RECkv4fYbgVUOJYhwCNYBhHLvUN2Isys
+	6LarrILIc90P2EIGdT+/tkEPndUq6lTitblbU7up/hAdlkRdVvQj5SB97nMArmFu
+	vLaAiBoKOyhx/OxTrFeYsRbL4mzXxULwIl4h8/ymNeyBxgxL4KBkhrpOmRSFjxrF
+	7MOWA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40esuw05td-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 03:51:22 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I3pM9f031376;
+	Thu, 18 Jul 2024 03:51:22 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40esuw05tb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 03:51:22 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I16IjA000509;
+	Thu, 18 Jul 2024 03:51:21 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40dwkk7muw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 03:51:21 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I3pIIP3211898
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jul 2024 03:51:20 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 118A258062;
+	Thu, 18 Jul 2024 03:51:18 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 141465803F;
+	Thu, 18 Jul 2024 03:51:15 +0000 (GMT)
+Received: from [9.204.206.229] (unknown [9.204.206.229])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 18 Jul 2024 03:51:14 +0000 (GMT)
+Message-ID: <d6edb26f-f19e-4296-8fea-07961ce24960@linux.ibm.com>
+Date: Thu, 18 Jul 2024 09:21:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] KVM: PPC: Book3S HV: Refactor HFSCR emulation for KVM
+ guests
+To: Gautam Menghani <gautam@linux.ibm.com>, mpe@ellerman.id.au,
+        npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        naveen.n.rao@linux.ibm.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20240716115206.70210-1-gautam@linux.ibm.com>
+Content-Language: en-US
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <20240716115206.70210-1-gautam@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: l9RXJRyHS54SPijNIe1NeuLBWqfK12ms
+X-Proofpoint-ORIG-GUID: wndIF21AupoinKr27uYuMGpXkcDVNJT3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-17_19,2024-07-17_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
+ spamscore=0 bulkscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407180020
 
-Allow userspace to change the guest-visible value of the register with
-different way of handling:
 
-  - Since the RAS and MPAM is not writable in the ID_AA64PFR0_EL1
-    register, RAS_frac and MPAM_frac are also not writable in the
-    ID_AA64PFR1_EL1 register.
+On 7/16/24 5:22 PM, Gautam Menghani wrote:
+> Refactor HFSCR emulation for KVM guests when they exit out with
+> H_FAC_UNAVAIL to use a switch case instead of checking all "cause"
+> values, since the "cause" values are mutually exclusive; and this is
+> better expressed with a switch case.
+>
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+> V1 -> V2:
+> 1. Reword changelog to point out mutual exclusivity of HFSCR bits.
+> 2. Reword commit message to match other commits in book3s_hv.c
 
-  - The MTE is controlled by an internal flag (KVM_ARCH_FLAG_MTE_ENABLED),
-    so it's not writable.
 
-  - For those fields which KVM doesn't know how to handle, they have
-    are not exposed to the guest (being disabled in the register read
-    accessor), those fields value will always be 0. Allow those fields
-    writable is fine, since the userspace can only write 0 into those
-    fields. Maybe in the future KVM know how to handle some of the
-    fields, then they can be written into other value.
-    So let them writable.
-    Those fields include SME, RNDR_trap, NMI, GCS, THE, DF2, PFAR,
-    MTE_frac, MTEX.
+Minor: I guess you mean "Reword the subject line"
 
-  - The BT, SSBS, CSV2_frac don't introduce any new registers which KVM
-    doesn't know how to handle, they can be written without ill effect.
-    So let them writable.
+Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
 
-Besides, we don't do the crosscheck in KVM about the CSV2_frac even if
-it depends on the value of CSV2, it should be made sure by the VMM
-instead of KVM.
 
-Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
----
- arch/arm64/kvm/sys_regs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 4508288b9d38..26b38165a8be 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -2314,7 +2314,10 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 		   ID_AA64PFR0_EL1_GIC |
- 		   ID_AA64PFR0_EL1_AdvSIMD |
- 		   ID_AA64PFR0_EL1_FP), },
--	ID_SANITISED(ID_AA64PFR1_EL1),
-+	ID_WRITABLE(ID_AA64PFR1_EL1, ~(ID_AA64PFR1_EL1_RES0 |
-+				       ID_AA64PFR1_EL1_MPAM_frac |
-+				       ID_AA64PFR1_EL1_RAS_frac |
-+				       ID_AA64PFR1_EL1_MTE)),
- 	ID_UNALLOCATED(4,2),
- 	ID_UNALLOCATED(4,3),
- 	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
--- 
-2.40.1
-
+>
+>   arch/powerpc/kvm/book3s_hv.c | 16 ++++++++++++----
+>   1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+> index daaf7faf21a5..50797b0611a2 100644
+> --- a/arch/powerpc/kvm/book3s_hv.c
+> +++ b/arch/powerpc/kvm/book3s_hv.c
+> @@ -1922,14 +1922,22 @@ static int kvmppc_handle_exit_hv(struct kvm_vcpu *vcpu,
+>   
+>   		r = EMULATE_FAIL;
+>   		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
+> -			if (cause == FSCR_MSGP_LG)
+> +			switch (cause) {
+> +			case FSCR_MSGP_LG:
+>   				r = kvmppc_emulate_doorbell_instr(vcpu);
+> -			if (cause == FSCR_PM_LG)
+> +				break;
+> +			case FSCR_PM_LG:
+>   				r = kvmppc_pmu_unavailable(vcpu);
+> -			if (cause == FSCR_EBB_LG)
+> +				break;
+> +			case FSCR_EBB_LG:
+>   				r = kvmppc_ebb_unavailable(vcpu);
+> -			if (cause == FSCR_TM_LG)
+> +				break;
+> +			case FSCR_TM_LG:
+>   				r = kvmppc_tm_unavailable(vcpu);
+> +				break;
+> +			default:
+> +				break;
+> +			}
+>   		}
+>   		if (r == EMULATE_FAIL) {
+>   			kvmppc_core_queue_program(vcpu, SRR1_PROGILL |
