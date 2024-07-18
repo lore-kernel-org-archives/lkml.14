@@ -1,124 +1,274 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03322745F4;
-	Thu, 18 Jul 2024 08:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ECB1FA3;
+	Thu, 18 Jul 2024 08:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721292314; cv=none; b=SjU8qSSbWZ3QqU0V0qmvB1zGDmJbvrGIa9jV/wJBky2rAfjoY7P0+wBzN7BJmiBZuRbtNw/NS86U/AWrLgPQszy99rGYVwPoEylTAoL7H6H14mWD/oRBFxeeoxfRGHRqdGT5uYW5RTBVcKINA0I/uOROjrP2BIlqYryfNVstzOY=
+	t=1721292316; cv=none; b=l+Od6j8VwFTekP6SQYnZSzCHdebVmXmGckXQygvBXRlY1ejihRWr6PlZUL1ESUCwMGqRuGJE6QcDKv5+ZD05Iyp/i/LXfwi16/DLdL/iaQkVk2Z+atQNtzi/5/6NbXNpYTJVev1NfudcR4aQ3cdqXIPYPl5jbHxsetCTzvblQ34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721292314; c=relaxed/simple;
-	bh=fkCywxD3okS1KYREw38tF1DYuPRi9L2ZeQTfpycQs3U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pBngoFZUxjaVtuBw+OJDgbJB86HOM9iM3NYxDhcbD3Znha8SWfv5GF23VI8+PQ/jsnbMQl0mXRx0CCvrPGmW5dmtE0KCP+BImrQ+7cc7XTbw9L6ALLs8YFU5M8knpf9WvIegX4QhkS2/BJtz6dY92v7PYGZZZAvkdl3CqrN+C1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rLiF7O9f; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1721292316; c=relaxed/simple;
+	bh=Z3FKlNWxLdTN6CXoh9BN3eKuaWYfMhP1dMJQiR+VsGY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PM9lm18foiTgs0WOFj37/V9JbhqGeG1jsV/KvT/Yi2nZUYZGj6RfrDDjaxRbb0o3UCI8N/duR1iHJhJMibwenawKxYtsADpN+woCG7/cYg13MHMS8mhcETs8FcxoqtcikELZT4WKE3HQBhpBFu2hBisuf40cdhXB8+Q4+/8UzGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IgF/Mv9M; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rLiF7O9f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1721292311;
-	bh=fkCywxD3okS1KYREw38tF1DYuPRi9L2ZeQTfpycQs3U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=rLiF7O9fmaFWzbFQdiQyoRcpH9TaxgcAct7wegDUE+I3wTVmk35/m15OAschwhYpH
-	 DbXTMAwcMyeI+w4TwsSNYRldxwxCgB3jz3wRrpX7d1ycz6Y1YO+Q3dpuF+mYBE7Rnq
-	 Qlaz49lNlj+KkgbKdWLX3cuUSU5SyctiqacNBIZFl16vgsvFlmwoZxm9En4db9pgi0
-	 p572Ix5/w8tpjTDTlXQS73XqXheAy11TWgOb7VG9BSvlpZzlDkvsSXzJEM551TNbGD
-	 JQBaBUSrAzDP2ePnicoVymKTS47aL5qFb/qf20ROAz+5Q2SqDGepAJifocY+EuLt7F
-	 qaKrn3bsj/jqA==
-Received: from [100.77.12.232] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: obbardc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7F4913782167;
-	Thu, 18 Jul 2024 08:45:10 +0000 (UTC)
-Message-ID: <7dd789fb26817a8f752b6b0e8224b2ddf7293156.camel@collabora.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: arm: rockchip: Add Firefly
- Core-PX30-JD4 with baseboard
-From: Christopher Obbard <chris.obbard@collabora.com>
-To: Dragan Simic <dsimic@manjaro.org>, Conor Dooley
- <conor.dooley@microchip.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org,  linux-kernel@vger.kernel.org, Kever
- Yang <kever.yang@rock-chips.com>,  Collabora Kernel Mailing List
- <kernel@collabora.com>
-Date: Thu, 18 Jul 2024 09:45:09 +0100
-In-Reply-To: <6ed3e6c6b74ddba1bca1a719dfdf3ac4@manjaro.org>
-References: <20240717-rockchip-px30-firefly-v2-0-06541a5a5946@collabora.com>
-	 <20240717-rockchip-px30-firefly-v2-1-06541a5a5946@collabora.com>
-	 <0c804e9a0227904b16bfb779f2009af1@manjaro.org>
-	 <e34f1a0a81de24437be7f582c719d3f128d44b51.camel@collabora.com>
-	 <20240718-lapped-suffocate-0216bad82c68@wendy>
-	 <6ed3e6c6b74ddba1bca1a719dfdf3ac4@manjaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-1 
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IgF/Mv9M"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I7uSGB008996;
+	Thu, 18 Jul 2024 08:45:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pp1; bh=/uQye86qwt2Lw
+	MZGGs6ywX+ZzFeJcBe79GPMcD8i2rg=; b=IgF/Mv9MkZa5lzfxIW407J+CNCJ+f
+	5bZ9XvCCxaZp4c5MzR8D6g7wEdrYIKmBH8FDcFIgj1dxN3OBo3cgdS2ehk1WwqTt
+	JJP/wN4FjHwW3pl5/c1c1xu/iEG1lTdfTlbQKGGOFIuT/1cfb6FsT/XFJBtggs6c
+	Ehy0yexm5e0mtUyskRlvWwsK/EqIN8rxroDBULQTphDItIHb71eoIeqAhWaM+nfV
+	eIJhjytSX2NchkuBjm2/qRs2AM2cBrK7Rmj07+w+RsxNb2Zdl5ViqviNfhSOOvJn
+	GfMsy02Pj7X2B1iG6jqNugRwcBY9bOwoRu44QBCQCT4oBNVfpVelgarrQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eev9agas-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 08:45:02 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I8j11w017801;
+	Thu, 18 Jul 2024 08:45:01 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eev9agan-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 08:45:01 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I5DoD2029260;
+	Thu, 18 Jul 2024 08:45:00 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40dwkj8r8g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 08:45:00 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I8isBS56558014
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jul 2024 08:44:56 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C02EA2004B;
+	Thu, 18 Jul 2024 08:44:54 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AFE0020040;
+	Thu, 18 Jul 2024 08:44:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.69.1])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 18 Jul 2024 08:44:51 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
+        christophe.leroy@csgroup.eu
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH V8 01/15] tools/perf: Move the data structures related to register type to header file
+Date: Thu, 18 Jul 2024 14:13:44 +0530
+Message-Id: <20240718084358.72242-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
+References: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: sBRmpdoBVbwL6QMIS_LrVAPBaA7L066X
+X-Proofpoint-GUID: -jdPMJmEoq0LvAIYB5LLygubA6cIuQPR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-18_04,2024-07-17_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2407180054
 
-Hi Dragan,
+Data type profiling uses instruction tracking by checking each
+instruction and updating the register type state in some data
+structures. This is useful to find the data type in cases when the
+register state gets transferred from one reg to another. Example, in
+x86, "mov" instruction and in powerpc, "mr" instruction. Currently these
+structures are defined in annotate-data.c and instruction tracking is
+implemented only for x86. Move these data structures to
+"annotate-data.h" header file so that other arch implementations can use
+it in arch specific files as well.
 
-On Thu, 2024-07-18 at 10:43 +0200, Dragan Simic wrote:
-> On 2024-07-18 10:34, Conor Dooley wrote:
-> > On Thu, Jul 18, 2024 at 09:31:45AM +0100, Christopher Obbard wrote:
-> > > Thanks for the review.
-> > >=20
-> > > On Thu, 2024-07-18 at 06:36 +0200, Dragan Simic wrote:
-> > > > Hello Christopher,
-> > > >=20
-> > > > On 2024-07-17 18:46, Christopher Obbard wrote:
-> > > > > Add binding for the Firefly Core-PX30-JD4 SoM when used in
-> > > > > conjunction
-> > > > > with the MB-JD4-RK3328 & PX30 baseboard.
-> > > > >=20
-> > > > > Signed-off-by: Christopher Obbard <chris.obbard@collabora.com>
-> > > > > ---
-> > > > > =C2=A0Documentation/devicetree/bindings/arm/rockchip.yaml | 6 +++=
-+++
-> > > > > =C2=A01 file changed, 6 insertions(+)
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > > > > b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > > > > index 1ef09fbfdfaf5..33ca8028bc151 100644
-> > > > > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > > > > @@ -148,6 +148,12 @@ properties:
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - co=
-nst: engicam,px30-core
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - co=
-nst: rockchip,px30
-> > > > >=20
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - description: Firefly Core-PX30-=
-JD4 with MB-JD4-PX30
-> > > > > baseboard
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 items:
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: =
-firefly,px30-mb-jd4
-> > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: =
-firefly,px30-core-jd4
-> > > >=20
-> > > > Similarly to how I suggested the new dts(i) files to be named, [1]
-> > > > the model names should be named like this:
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - cons=
-t: firefly,px30-jd4-core
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - cons=
-t: firefly,px30-jd4-core-mb
-> > >=20
-> > > I suppose the order should be the other way around to match other=20
-> > > entries, e.g
-> > > firefly,px30-jd4-core-mb first?
-> >=20
-> > Yes. Mainboard first, then som, then soc.
->=20
-> Ah yes, sorry, I somehow managed to get the order wrong.=C2=A0 Basically,
-> it goes from more specific to less specific.
+Reviewed-and-tested-by: Kajol Jain <kjain@linux.ibm.com>
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/util/annotate-data.c | 53 +------------------------------
+ tools/perf/util/annotate-data.h | 56 +++++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+), 52 deletions(-)
 
-Right, I thought so and was just double-checking ;-).
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 965da6c0b542..a4c7f98a75e3 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -31,15 +31,6 @@
+ 
+ static void delete_var_types(struct die_var_type *var_types);
+ 
+-enum type_state_kind {
+-	TSR_KIND_INVALID = 0,
+-	TSR_KIND_TYPE,
+-	TSR_KIND_PERCPU_BASE,
+-	TSR_KIND_CONST,
+-	TSR_KIND_POINTER,
+-	TSR_KIND_CANARY,
+-};
+-
+ #define pr_debug_dtp(fmt, ...)					\
+ do {								\
+ 	if (debug_type_profile)					\
+@@ -140,49 +131,7 @@ static void pr_debug_location(Dwarf_Die *die, u64 pc, int reg)
+ 	}
+ }
+ 
+-/*
+- * Type information in a register, valid when @ok is true.
+- * The @caller_saved registers are invalidated after a function call.
+- */
+-struct type_state_reg {
+-	Dwarf_Die type;
+-	u32 imm_value;
+-	bool ok;
+-	bool caller_saved;
+-	u8 kind;
+-};
+-
+-/* Type information in a stack location, dynamically allocated */
+-struct type_state_stack {
+-	struct list_head list;
+-	Dwarf_Die type;
+-	int offset;
+-	int size;
+-	bool compound;
+-	u8 kind;
+-};
+-
+-/* FIXME: This should be arch-dependent */
+-#define TYPE_STATE_MAX_REGS  16
+-
+-/*
+- * State table to maintain type info in each register and stack location.
+- * It'll be updated when new variable is allocated or type info is moved
+- * to a new location (register or stack).  As it'd be used with the
+- * shortest path of basic blocks, it only maintains a single table.
+- */
+-struct type_state {
+-	/* state of general purpose registers */
+-	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
+-	/* state of stack location */
+-	struct list_head stack_vars;
+-	/* return value register */
+-	int ret_reg;
+-	/* stack pointer register */
+-	int stack_reg;
+-};
+-
+-static bool has_reg_type(struct type_state *state, int reg)
++bool has_reg_type(struct type_state *state, int reg)
+ {
+ 	return (unsigned)reg < ARRAY_SIZE(state->regs);
+ }
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 0a57d9f5ee78..cdb5cd8960bb 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -6,6 +6,11 @@
+ #include <linux/compiler.h>
+ #include <linux/rbtree.h>
+ #include <linux/types.h>
++#include "annotate.h"
++
++#ifdef HAVE_DWARF_SUPPORT
++#include "debuginfo.h"
++#endif
+ 
+ struct annotated_op_loc;
+ struct debuginfo;
+@@ -15,6 +20,15 @@ struct hist_entry;
+ struct map_symbol;
+ struct thread;
+ 
++enum type_state_kind {
++	TSR_KIND_INVALID = 0,
++	TSR_KIND_TYPE,
++	TSR_KIND_PERCPU_BASE,
++	TSR_KIND_CONST,
++	TSR_KIND_POINTER,
++	TSR_KIND_CANARY,
++};
++
+ /**
+  * struct annotated_member - Type of member field
+  * @node: List entry in the parent list
+@@ -143,6 +157,47 @@ struct annotated_data_stat {
+ extern struct annotated_data_stat ann_data_stat;
+ 
+ #ifdef HAVE_DWARF_SUPPORT
++/*
++ * Type information in a register, valid when @ok is true.
++ * The @caller_saved registers are invalidated after a function call.
++ */
++struct type_state_reg {
++	Dwarf_Die type;
++	u32 imm_value;
++	bool ok;
++	bool caller_saved;
++	u8 kind;
++};
++
++/* Type information in a stack location, dynamically allocated */
++struct type_state_stack {
++	struct list_head list;
++	Dwarf_Die type;
++	int offset;
++	int size;
++	bool compound;
++	u8 kind;
++};
++
++/* FIXME: This should be arch-dependent */
++#define TYPE_STATE_MAX_REGS  16
++
++/*
++ * State table to maintain type info in each register and stack location.
++ * It'll be updated when new variable is allocated or type info is moved
++ * to a new location (register or stack).  As it'd be used with the
++ * shortest path of basic blocks, it only maintains a single table.
++ */
++struct type_state {
++	/* state of general purpose registers */
++	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
++	/* state of stack location */
++	struct list_head stack_vars;
++	/* return value register */
++	int ret_reg;
++	/* stack pointer register */
++	int stack_reg;
++};
+ 
+ /* Returns data type at the location (ip, reg, offset) */
+ struct annotated_data_type *find_data_type(struct data_loc_info *dloc);
+@@ -160,6 +215,7 @@ void global_var_type__tree_delete(struct rb_root *root);
+ 
+ int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
+ 
++bool has_reg_type(struct type_state *state, int reg);
+ #else /* HAVE_DWARF_SUPPORT */
+ 
+ static inline struct annotated_data_type *
+-- 
+2.43.0
+
