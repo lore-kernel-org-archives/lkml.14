@@ -1,94 +1,188 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20023A267
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 10:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C923478276
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 10:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721297282; cv=none; b=cAC/qamBUbaab1lCcvVfJEBM5tT4BTLwCqWMku9/1WX4uVVN5L7hel5UcdDfAku2FBrZlFn+V/JoYH57CCB9qF0VTBA3JnNNuGNL4GCQdcYQxV5g8T0kpmCTs9t7P//Tn4hd7PiaQNs6ffoneaOiNjNm5FToiyQazBuEllqEGe8=
+	t=1721297379; cv=none; b=gbX9XTqlb5hddcDv6ejamIVOsxYmaIr3mGka3/P7hmz3KeG8mSpn/UGX9X7LN7AFnSbfXKZuvN/R3yGi9U0Un/iVovcwENjwnu/mmpIhP/bgE6zZN9Pt6xwucxLaLPGYdNhDv0+jSc03asY30KCbyuzXj88spHZYDuORTv5d4Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721297282; c=relaxed/simple;
-	bh=tZP1fkWEB1ULarjCH9v62tNcZ5x7nHm75Ee94zSsPf4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PDB6PSW0aFZyMLU8bvuxUbjzTu2VLAaniwfwvnfkB0ODvvTxxdo0aAmk4fyjx5D27GBptBBo3Xz1iMtOiRnum0N0fbqhEJzBM57XrXokIo/UpdePN5bB2ev/kBDwhCNEwWUa8f9O5YZw4IiJGu4pOA037a95Ht35vu9MabC+Gns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=WlMNGhyW; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	s=arc-20240116; t=1721297379; c=relaxed/simple;
+	bh=7W9NB+4beenTAyhTygX8/3CLonvIgT2Ws7zp0jH0pWk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xb7ie4tgX6SB9e0ITG1invCnILIKJuQZY4QXUpBq9ApH8uzfHBNtPyxWr1FHJlPIrYEahm+q/c7Bh3nTdBN/5JyZjjM5fmsTe+EIyf7eGCcmITGh+Np/51Mx9fBBWDYUyqL3ovHAsJ2392W1jsGfdKoQjdPWDgMnVlDzQ7pJWog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oYggl5Yq; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="WlMNGhyW"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1721296368; x=1723888368;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tZP1fkWEB1ULarjCH9v62tNcZ5x7nHm75Ee94zSsPf4=;
-	b=WlMNGhyWNv2J+Dezx9UoiRaBPc4hSCBqHsIjyJ3jcmlf+w9m7m5uIU+huTa92Rhi
-	FNED6k+CX5n/jGDBua6zzzJttI+HnrnjeO4EDxxdKxi0m9BclMrgK9FdJ8x2oVU5
-	xzx3ptFFNZ1dQl7mr2X0a6jk0bRyxtUHFKnP42rQDVM=;
-X-AuditID: ac14000a-03251700000021bc-f8-6698e5f0fd96
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 87.32.08636.0F5E8966; Thu, 18 Jul 2024 11:52:48 +0200 (CEST)
-Received: from augenblix2.phytec.de (172.25.0.11) by Berlix.phytec.de
- (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Thu, 18 Jul
- 2024 11:52:48 +0200
-From: Wadim Egorov <w.egorov@phytec.de>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
-	<krzysztof.kozlowski@linaro.org>, <geert+renesas@glider.be>,
-	<dmitry.baryshkov@linaro.org>, <shawnguo@kernel.org>,
-	<neil.armstrong@linaro.org>, <arnd@arndb.de>, <m.szyprowski@samsung.com>,
-	<nfraprado@collabora.com>, <u-kumar1@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<upstream@lists.phytec.de>
-Subject: [PATCH] arm64: defconfig: Enable PCF857X GPIO expander
-Date: Thu, 18 Jul 2024 11:52:39 +0200
-Message-ID: <20240718095239.922641-1-w.egorov@phytec.de>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oYggl5Yq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1721297373;
+	bh=7W9NB+4beenTAyhTygX8/3CLonvIgT2Ws7zp0jH0pWk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oYggl5YqOJlMmwn2fZXbxfLjSz9+mDZzx2Yu564ULzbOMeLZuLsGTkR2oOlw01KyW
+	 fBWieElXAsPOf3lqOQmpFxWNMf5SR16lha+HGu5cZP0bAiM1OZpkrt1yWdgqIdQJ6o
+	 s7Ckc5/xpPpKXd5Xh3Jeo8W6mSPa2ME22AWqgENFSE3s/tdG0TB9Y/B3ltHyEUsttN
+	 JX/vHpHmI5peAgzgAicMmD4Gchp7uTphNywZh/iezEKGgX4CmXrcGb3js53NF/sl53
+	 VOOFuCgCATbK5IbcoRAMbDohrGLqA6zkfj0gbQxZhEXI8wnMTEbLSUCxWsU1N9ZQtv
+	 /IIQJ7nPXaMkw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B1F99378020A;
+	Thu, 18 Jul 2024 10:09:32 +0000 (UTC)
+Message-ID: <8fbe44af-8da3-4554-ac2b-5db58003449e@collabora.com>
+Date: Thu, 18 Jul 2024 12:09:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWyRpKBR/fD0xlpBpv3aFj8nXSM3eL9sh5G
-	i4nnf7JZzJ09idFi7+ut7BabHl9jtbi8aw6bxdojd4FKdt5itPi6+QWzRePjGYwWL7aIW0zb
-	O4PZovudukXLHVMHfo8189Ywevz+NYnRY8fdJYweE8/qemxa1cnmcefaHjaPzUvqPfq7W1g9
-	Ju6p8+jbsorR4/iN7UwenzfJBfBEcdmkpOZklqUW6dslcGVcn7WAveA/S8X6p3eYGhhXsHQx
-	cnJICJhIzJg4AcwWEljCJLFssXUXIxeQ/ZhRYv/1U2wgCTYBdYk7G76xgiREBA4wSUybeYEZ
-	JMEskCEx689rsG5hAXuJtivrmEBsFgFViXsTT4A18wpYSDQfvMcIsU1eYual7+wQcUGJkzOf
-	sEDMkZdo3jobaqaExMEXL5ghLpKXeHFpOQtM77Rzr5kh7FCJI5tWM01gFJiFZNQsJKNmIRm1
-	gJF5FaNQbmZydmpRZrZeQUZlSWqyXkrqJkZQrIkwcO1g7JvjcYiRiYPxEKMEB7OSCO8Exmlp
-	QrwpiZVVqUX58UWlOanFhxilOViUxHlXdwSnCgmkJ5akZqemFqQWwWSZODilGhhzIqVX7VRk
-	VHvkectrDc/Hfbeq1zYW2rzTfvIwnsVde7LA5IIvDI/2PVvz4nnKReecA5PnLbpcwB37xKT1
-	mfm9efU7d8eIpc/+Grnlw72VtxjWKkqEKIuys/9+F7zftKOnW1rh3KTHNsWL/0vY6h2dv+/c
-	vG9Hgj4zzdFi1Lr3Lkv1g3XBr811SizFGYmGWsxFxYkA0gOb+KMCAAA=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mailbox: mtk-cmdq: Move
+ devm_mbox_controller_register() after devm_pm_runtime_enable()
+To: jason-jh.lin@mediatek.com, Jassi Brar <jassisinghbrar@gmail.com>,
+ CK Hu <ck.hu@mediatek.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20240718-mtk-cmdq-fixup-v2-1-f6bb3c052a60@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240718-mtk-cmdq-fixup-v2-1-f6bb3c052a60@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Enable the PCF857X GPIO expander which is equipped on
-the PHYTEC phyBOARD-Lyra AM625.
+Il 18/07/24 10:38, Jason-JH.Lin via B4 Relay ha scritto:
+> From: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>
+> 
+> When mtk-cmdq unbinds, a WARN_ON message with condition
+> pm_runtime_get_sync() < 0 occurs.
+> 
+> According to the call tracei below:
+>    cmdq_mbox_shutdown
+>    mbox_free_channel
+>    mbox_controller_unregister
+>    __devm_mbox_controller_unregister
+>    ...
+> 
+> The root cause can be deduced to be calling pm_runtime_get_sync() after
+> calling pm_runtime_disable() as observed below:
+> 1. CMDQ driver uses devm_mbox_controller_register() in cmdq_probe()
+>     to bind the cmdq device to the mbox_controller, so
+>     devm_mbox_controller_unregister() will automatically unregister
+>     the device bound to the mailbox controller when the device-managed
+>     resource is removed. That means devm_mbox_controller_unregister()
+>     and cmdq_mbox_shoutdown() will be called after cmdq_remove().
+> 2. CMDQ driver also uses devm_pm_runtime_enable() in cmdq_probe() after
+>     devm_mbox_controller_register(), so that devm_pm_runtime_disable()
+>     will be called after cmdq_remove(), but before
+>     devm_mbox_controller_unregister().
+> 
+> To fix this problem, cmdq_probe() needs to move
+> devm_mbox_controller_register() after devm_pm_runtime_enable() to make
+> devm_pm_runtime_disable() be called after
+> devm_mbox_controller_unregister().
+> 
+> Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+> ---
+> When mtk-cmdq unbinds, a WARN_ON message with condition
+> pm_runtime_get_sync() < 0 occurs.
+> 
+> According to the call tracei below:
+>    cmdq_mbox_shutdown
+>    mbox_free_channel
+>    mbox_controller_unregister
+>    __devm_mbox_controller_unregister
+>    ...
+> 
+> The root cause can be deduced to be calling pm_runtime_get_sync() after
+> calling pm_runtime_disable() as observed below:
+> 1. CMDQ driver uses devm_mbox_controller_register() in cmdq_probe()
+>     to bind the cmdq device to the mbox_controller, so
+>     devm_mbox_controller_unregister() will automatically unregister
+>     the device bound to the mailbox controller when the device-managed
+>     resource is removed. That means devm_mbox_controller_unregister()
+>     and cmdq_mbox_shoutdown() will be called after cmdq_remove().
+> 2. CMDQ driver also uses devm_pm_runtime_enable() in cmdq_probe() after
+>     devm_mbox_controller_register(), so that devm_pm_runtime_disable()
+>     will be called after cmdq_remove(), but before
+>     devm_mbox_controller_unregister().
+> 
+> To fix this problem, cmdq_probe() needs to move
+> devm_mbox_controller_register() after devm_pm_runtime_enable() to make
+> devm_pm_runtime_disable() be called after
+> devm_mbox_controller_unregister().
+> 
+> Change-Id: I4f0e68eac5186fe8041ea2f16c8e852d52d71cb0
+> ---
+> Changes in v2:
+> - Change to move the calling sequence of devm_mbox_controller_register()
+>    and devm_pm_runtime_enable().
+> - Link to v1: https://lore.kernel.org/r/20240613150626.25280-1-jason-jh.lin@mediatek.com
+> ---
+>   drivers/mailbox/mtk-cmdq-mailbox.c | 14 ++++++++------
+>   1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index f1dfce9e27f5..002003c3970a 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -370,6 +370,8 @@ static void cmdq_remove(struct platform_device *pdev)
+>   {
+>   	struct cmdq *cmdq = platform_get_drvdata(pdev);
+>   
+> +	devm_mbox_controller_unregister(&pdev->dev, &cmdq->mbox);
 
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+...if you moved devm_mbox_controller_register() after devm_pm_runtime_enable(),
+this means that the teardown sequence will disable pm runtime after unregistering
+the mbox controller, so why do you need to call devm_mbox_controller_unregister()
+manually here?
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index ef2235838c44..0c7d3f7717ff 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -655,6 +655,7 @@ CONFIG_GPIO_XGENE_SB=y
- CONFIG_GPIO_MAX732X=y
- CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCA953X_IRQ=y
-+CONFIG_GPIO_PCF857X=m
- CONFIG_GPIO_BD9571MWV=m
- CONFIG_GPIO_MAX77620=y
- CONFIG_GPIO_SL28CPLD=m
--- 
-2.34.1
+Cheers,
+Angelo
+
+> +
+>   	if (cmdq->pdata->sw_ddr_en)
+>   		cmdq_sw_ddr_enable(cmdq, false);
+>   
+> @@ -689,12 +691,6 @@ static int cmdq_probe(struct platform_device *pdev)
+>   		cmdq->mbox.chans[i].con_priv = (void *)&cmdq->thread[i];
+>   	}
+>   
+> -	err = devm_mbox_controller_register(dev, &cmdq->mbox);
+> -	if (err < 0) {
+> -		dev_err(dev, "failed to register mailbox: %d\n", err);
+> -		return err;
+> -	}
+> -
+>   	platform_set_drvdata(pdev, cmdq);
+>   
+>   	WARN_ON(clk_bulk_prepare(cmdq->pdata->gce_num, cmdq->clocks));
+> @@ -722,6 +718,12 @@ static int cmdq_probe(struct platform_device *pdev)
+>   	pm_runtime_set_autosuspend_delay(dev, CMDQ_MBOX_AUTOSUSPEND_DELAY_MS);
+>   	pm_runtime_use_autosuspend(dev);
+>   
+> +	err = devm_mbox_controller_register(dev, &cmdq->mbox);
+> +	if (err < 0) {
+> +		dev_err(dev, "failed to register mailbox: %d\n", err);
+> +		return err;
+> +	}
+> +
+>   	return 0;
+>   }
+>   
+> 
+> ---
+> base-commit: 797012914d2d031430268fe512af0ccd7d8e46ef
+> change-id: 20240718-mtk-cmdq-fixup-40379650e96b
+> 
+> Best regards,
 
