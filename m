@@ -1,76 +1,73 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23E934CD8;
-	Thu, 18 Jul 2024 03:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AC318EBF
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 03:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721272111; cv=none; b=lMDJSfw49pOQqbLlwYy0TJuAqMN0E5nd3lxFI5dHGGCEWpJmyP9LnJl8Xfrw0GilWbZV9aa4OeKMIp/24+4On58JjErLlK58xra4GTbxKdyxNhb1k19RoxXSEt6BR0SsScDw9+Cg8BZUJt3jDdueqoPKdQymxOg75rMjWesiv0I=
+	t=1721272150; cv=none; b=tTJ04GqL7dgzmeNd/1CCFDdTvC7ehv07SfxoZS65x5+sUOkpKkhibQvpOmDnU8AQuD7M3i08esv03s3xkeF0+Znp46otXK6KZMfnBpdbXURoUPjsnga7+Gjpr5J2nGzxi0bqI3ayAix1T8d3CLklzNEdlWHU+99j6NGWUdDzh8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721272111; c=relaxed/simple;
-	bh=MiNlsXGgcHh+E5vT/xG2YFf4Mbm5LGxVLddc+UVv2zM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZK+TujkXM62IKSF2P1yRR4BKcuWfyiR1ORS27b3F1y640sCHh2nW+lPlJEFYTNn+QlrAORqaimyq+AYLuUk+3KhNwk4s6Yd+EHWv+uxo14E4Tyz7VDLfqnKah8ye8UEomyG/xeW/sH4knqhtPz6I5YxfShd4wDw4vaKiqVH0gHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IpuNKge5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IpuNKge5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dhbKOOXLOR2dvKgzNkDsF4yaQ6Osy862xbMrlR1zrlQ=; b=IpuNKge5/alV6Zh+IIdYK02o6o
-	mQ6vK/76s7+pxU7WODCEyWz/6yKYMACOjWbuNN4pfqaGfqwjrVJvk6szr8URtWhT3CD8Yu6EV2RJ+
-	LdboflFJOE/rpX8VL8rN7I795cKHfm5U9BD7/mom5/xJnC9F0ggILKciQJ60LMLmE/a0MYkBudjWs
-	909niZLucPZQkdPbI9FbVL0SFbseSieO4T6Xf2faKmBw/AVRNmqLdd3jX7OUD7F94MesgwTfOqdk6
-	6g66H6TUQnwT6o6pwSBBVSI/GEyDRUbkc38BZbKtUB5rZ884cpQMrPjBckplXxQTjxXMykRDG6Z9C
-	Z99aa10A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sUHVJ-0000000FavV-24cO;
-	Thu, 18 Jul 2024 03:08:25 +0000
-Date: Wed, 17 Jul 2024 20:08:25 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Huan Yang <link@vivo.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH 1/2] dma-buf: heaps: DMA_HEAP_IOCTL_ALLOC_READ_FILE
- framework
-Message-ID: <ZpiHKY2pGiBuEq4z@infradead.org>
-References: <20240711074221.459589-2-link@vivo.com>
- <5ccbe705-883c-4651-9e66-6b452c414c74@amd.com>
- <ZpTnzkdolpEwFbtu@phenom.ffwll.local>
- <99364176-a7f0-4a17-8889-75ff92d5694e@amd.com>
- <06713006-c5ce-4773-a1b3-ca3bea56ee45@vivo.com>
- <ZpY-CfcDdEhzWpxN@phenom.ffwll.local>
- <b18ad853-90e4-4ad7-b621-2ca8a8111708@vivo.com>
- <Zpff-8LmqK5AD-a8@phenom.ffwll.local>
- <Zpf5R7fRZZmEwVuR@infradead.org>
- <7140a145-7dd5-43b0-8b2a-0fd12bb9e62d@vivo.com>
+	s=arc-20240116; t=1721272150; c=relaxed/simple;
+	bh=Wn/ugSasIZn1Rz+OIXPHCRFZ7J1x+uFKA3RglbYqnt0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UQZ0XVPLPH1KfUvyRRm9C6qAUpPKqQn0u91+G+vUo/uHqgcPQQeucFb1SwfhMrcaZ0oc8r5PZ0mIwaRZhgZWeERLc4IAd+ED9LWJSGSoV9JciGPIaw9Ostf9IJmYiSlfshwINxehgFjDVif6pJsgTsoqlYqDClrV82Syxm19S6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Thu, 18 Jul
+ 2024 11:03:52 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Thu, 18 Jul 2024 11:03:52 +0800
+From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: <tzimmermann@suse.de>, <jfalempe@redhat.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<airlied@redhat.com>, <airlied@gmail.com>, <daniel@ffwll.ch>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/ast: Fix black screen after resume
+Date: Thu, 18 Jul 2024 11:03:52 +0800
+Message-ID: <20240718030352.654155-1-jammy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7140a145-7dd5-43b0-8b2a-0fd12bb9e62d@vivo.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, Jul 18, 2024 at 09:51:39AM +0800, Huan Yang wrote:
-> Yes, actually, if dma-buf want's to copy_file_range from a file, it need
-> change something in vfs_copy_file_range:
+Suspend will disable pcie device. Thus, resume should do full hw
+initialization again.
+Add some APIs to ast_drm_thaw() before ast_post_gpu() to fix the issue.
 
-No, it doesn't.  copy_file_range is specifically designed to copy inside
-a single file system as already mentioned.  The generic offload for
-copying between arbitrary FDs is splice and the sendfile convenience
-wrapper around it
+Fixes: 5b71707dd13 ("drm/ast: Enable and unlock device access early during init")
+Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+---
+ drivers/gpu/drm/ast/ast_drv.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
+index f8c49ba68e78..45a9c7bf49c8 100644
+--- a/drivers/gpu/drm/ast/ast_drv.c
++++ b/drivers/gpu/drm/ast/ast_drv.c
+@@ -391,6 +391,11 @@ static int ast_drm_freeze(struct drm_device *dev)
+ 
+ static int ast_drm_thaw(struct drm_device *dev)
+ {
++	struct ast_device *ast = to_ast_device(dev);
++
++	ast_enable_vga(ioregs);
++	ast_open_key(ioregs);
++	ast_enable_mmio(dev, ioregs);
+ 	ast_post_gpu(dev);
+ 
+ 	return drm_mode_config_helper_resume(dev);
+
+base-commit: e9d22f7a6655941fc8b2b942ed354ec780936b3e
+prerequisite-patch-id: a03a33902f33bcc38091e2cdce9d79f630464c30
+prerequisite-patch-id: 505779a1e2094f2ee2f2a55ad44aac5cd1d5342f
+-- 
+2.25.1
 
