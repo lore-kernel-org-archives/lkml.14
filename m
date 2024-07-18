@@ -1,182 +1,124 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2057.outbound.protection.outlook.com [40.107.100.57])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7BE132121;
-	Thu, 18 Jul 2024 09:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721296357; cv=fail; b=bvppKkxz54ji+GJdKvn5wFamo+gFvoe6wpnz2wqGTMtQbKuoRYHaFbNzqeR1W+hfr/zJ6Ohypt/m5JQq8MxOu7ZkvBpBAsdY9InWUuiXgvVHAPoWEMEAhi/tuq/4YfIeTBXdEqwwOikM6lk9BuZJEgXAuYJ4uWEqmU+4WP1Xvwk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721296357; c=relaxed/simple;
-	bh=udaNN+4MPswiv7eqWZRG2xU/5TeH/hB1nB3lz5OQ7NU=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=Bt8vKaBkEgEMZqZB7h3XkpxRxmiUaeddOj8tbNGREbepsXAgLKxf5wcBuJrFqBYbEvq4CKz50Fn210tPWia6WzVpD5Y45xcs3QAKxOCkAibCKDta6fefYsMEh1+6wIn+TE2MwUI/OZxaM3vRbFYzPIPTxEyPYGyeYR6jEulVu/w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YQRGUJ6U; arc=fail smtp.client-ip=40.107.100.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160577D3EF;
+	Thu, 18 Jul 2024 09:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721296485; cv=none; b=B1FYghFs5/yQINEbjh8hOhXArLgezDjgpk7y4xy4CSN7WD8e5pnwZpRIK5vtYfLBMDrsifBkQ+QImoXMWieHUg0vjr8Pv+Hq81MGMhg/tCW2VRJI6bcVYqG/BZSdlLemLsOjlX4DFkjyu47DEZn9/fE/MyBPqLYwZGAu4mVJQCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721296485; c=relaxed/simple;
+	bh=LNvfFe6lpclQyzVtfWGQIEmYsoX37dvAyhtKRFDDsFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5OnOxPEWzh+j1BEC7BDYa198tPa4UdWLn3iaCZEoqeh9LJM15NYRZVISo+MPQUzJveubQNKhmZSKcJozyVsFDrKEKAvpFMXsydxNRJFNkUC2h3GR3137V3LwtQfnBxLZfMNe/XlclaZFel4cxlR+N1z+mQCzfBqjZ3A7etCtqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djTNqt3x; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YQRGUJ6U"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y4B9u1Zgaqip1PDPOBikVxTjKRE5MWt2GHuFy+ywHNHWN22Mgz/odQxg8zdLYZBoXBHKWZrI34lXY25aMD1g+OwNHKDsC6abbkdzjFl0ZdBbPa++/92kDKKkX3OYQssD/UnYQrU4+vTOOHp9Sbhqom1gQIRb56Om/dj4u41lCsMyowF0jjDFpuFVlF9k2REmY8qLOKUgsSuLf8RGxoQt6Qo3jBpccJnC4Ug6NI4sLexIxOuFH9dmWKQ4FjUbVL1Dq8+QxE7sLLW4kYQwNbNpp2H1rYgOV85v99iTuHvVocHr8viEj6bxr6VLKpmz/CQhWwAN9YFd1HMTrjngacNe4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NjjZjWiW+imRVXZVBCUeZ7Em7LS5ZhFXVXr6Hw06DcE=;
- b=oXVATkgH3mbwcRzKTN2ihEvSRoUh89cPj0MrHI4nsFQw4OYQ2uvjvjVcrB0baTilnZPb7rdzk5wI8SR5jYWstKPHDcCVWzhk+EUmwBsb083Hb6mifFTIrONX46e/4tprp13BaX37hMWcYQW8FvXHVDvZib0+0ScaF/pmty1mQ6arJYHh+5YL7E9UPL6hGT9KD2neqwnBC26uKaQ+QV9nC2o1sN3DAU/dqr0N6xSx1KtqAO3ZF+Qs5CUOLvL3E9ce7mKxOB8aK/0KO7RnlcwYqWfNA0KDMpQRBuFnRzjJLYxRvGcmZVmDo4zPAnaFyhj962s+FAiJ/Ltpw4vlWyjvkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NjjZjWiW+imRVXZVBCUeZ7Em7LS5ZhFXVXr6Hw06DcE=;
- b=YQRGUJ6UiBgnXc4alM5/UCYOULmeJ0nroSW/gks8D+7S5hE+//eOdi+3av2xY5R/C3RCXyyQCw2U+r1n5IrRQh+Bld6xcb/vAh6dRyD5753blkbZUGflDLtNqts4JwP1aU7qo6EkR7q2MxUg/R8WGiBlFnh7irRZVSDZyA7ScJIDp6BcHxmjUaQWBfbXnlQrSKR4H8ZoJ7JNQ8NQ0AgeWMcUNlrO2KxfbTeEo3bVIHruqpeNhxfFmyqE4es/9fWk0Ax7ykzkNq/P9LUvwfFFCDI+SY4nJZP7dzEK+jC51RaZcFn7Jlg0aX06Tp4NYRP5lUEIg/pDRfJ8QtFi6Ex/YA==
-Received: from MN2PR12CA0030.namprd12.prod.outlook.com (2603:10b6:208:a8::43)
- by DS0PR12MB7927.namprd12.prod.outlook.com (2603:10b6:8:147::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Thu, 18 Jul
- 2024 09:52:32 +0000
-Received: from BN3PEPF0000B071.namprd04.prod.outlook.com
- (2603:10b6:208:a8:cafe::78) by MN2PR12CA0030.outlook.office365.com
- (2603:10b6:208:a8::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29 via Frontend
- Transport; Thu, 18 Jul 2024 09:52:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN3PEPF0000B071.mail.protection.outlook.com (10.167.243.116) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7784.11 via Frontend Transport; Thu, 18 Jul 2024 09:52:31 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Jul
- 2024 02:52:16 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Jul
- 2024 02:52:16 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
- Transport; Thu, 18 Jul 2024 02:52:15 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <allen.lkml@gmail.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.1 00/95] 6.1.100-rc2 review
-In-Reply-To: <20240717063758.086668888@linuxfoundation.org>
-References: <20240717063758.086668888@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djTNqt3x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721296484; x=1752832484;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LNvfFe6lpclQyzVtfWGQIEmYsoX37dvAyhtKRFDDsFM=;
+  b=djTNqt3x0NVN/TPsCHJHQUKmNhkIE2DW7FcWg333NVa9X9SX/OqGlMrz
+   uBFZK3HjNMdiulFJhnPKNClBeGUrSJ7Es3doFdFtFkef4ul5hYNmLvOLz
+   zUH8isZdJ2m3pnothz+TDORmgjT7NAzCAVCaUQ97qu0OZgGqPf0PqaDG+
+   Y+TeeibqrjJcmZXF+efKfediQGcK5XI/drXLGKgNJKHXgKCAsJ4G+auJF
+   OnFIIePgyQyF/Ffr8FuyxtNgrLJpGA8W6bjWbXdDBJyK+1k8+xWwfwaj7
+   LUCAqtQWFRfIW9YqYgmYFB2hEUpkwhb9vR7ae0pwakT8OaBJNvDk5Syu8
+   g==;
+X-CSE-ConnectionGUID: b1tkrImdQ8qPoITdBycwYA==
+X-CSE-MsgGUID: Ww5gAsH/Sk604LI8rp9e6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="18805822"
+X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
+   d="scan'208";a="18805822"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 02:54:43 -0700
+X-CSE-ConnectionGUID: 2zJkzbk3Qg25Fe946qM/UA==
+X-CSE-MsgGUID: 9WjGZjySSfipH90FxDXWBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
+   d="scan'208";a="73943022"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO intel.com) ([10.245.246.52])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 02:54:38 -0700
+Date: Thu, 18 Jul 2024 11:54:34 +0200
+From: Andi Shyti <andi.shyti@linux.intel.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Zhi Wang <zhi.wang.linux@gmail.com>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-gfx@lists.freedesktop.org>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-xe@lists.freedesktop.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL GVT-g DRIVERS (Intel GPU Virtualization)" <intel-gvt-dev@lists.freedesktop.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+	"open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+	Zhi Wang <zhiwang@kernel.org>
+Subject: Re: [PATCH v4 3/6] drm/i915: Make I2C terminology more inclusive
+Message-ID: <ZpjmWtmaiu294ca_@ashyti-mobl2.lan>
+References: <20240711052734.1273652-1-eahariha@linux.microsoft.com>
+ <20240711052734.1273652-4-eahariha@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3c3e800a-aa51-45be-ae0c-6f114a278706@rnnvmail201.nvidia.com>
-Date: Thu, 18 Jul 2024 02:52:15 -0700
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B071:EE_|DS0PR12MB7927:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29ceb63a-9f26-4405-f954-08dca70f57af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eWRwVHc5WmZPTS9zeHFKKzNUSUtYMmtlQzJkY1NYN0wwbUd0WVF5ZDdrdzdj?=
- =?utf-8?B?akFGejZyM3g3L1UxNzlncGtmbjByNXM0UlUwWExZZVZOV2pBck5kU21Tc3lJ?=
- =?utf-8?B?ZFhpWGFGaVp4S3JkWXJ5SmhKaXJWZjB6RmlPUHZKUVdQRXNhcWZodUJzcmox?=
- =?utf-8?B?cjZ1SGZ0M1JTTGNPdGplelZZaGNrbkFSbStLWEpEd1hUZFpYMDcybWhsSktp?=
- =?utf-8?B?T1FYL0lhMTBEVy8rM3czK01Mc01GNldSKzdOZVFrL1d2SmdDRHY4TlByOE92?=
- =?utf-8?B?UWhYWTRhOTdFcDNxbjlob3dPS2ttZ2FBQVA2UmVwRXRLdWd0SnNjRlYweDRv?=
- =?utf-8?B?TXJLalZqOExVeDdBQjhEbE1kdlJZNUF4U1RBV213MlVuQklXaTQza0J6MXJK?=
- =?utf-8?B?Tndka1kxejVWeVZZekdvNExvQURHZ0VHSU1ZZUM4QlNFTjdiZnZlSGNSTnNk?=
- =?utf-8?B?UEdOUTdQVllSVnNRQU1GQnhKWFQ5SVVCTFl3bWxkRERqa2tHSmtEM3N2NkIr?=
- =?utf-8?B?Z041QWFKWmR6Z0NIM0ZnMkt5R29sVHRPclF4SS9hMWV1c2tOemhPMER2aHJD?=
- =?utf-8?B?cTdodVpuL0ZlY2JZdEhkakVwbkhnaDJML1JDNnlUZm5pdEg5YkdrakNtb1hn?=
- =?utf-8?B?UERiZGFHdUdkR3NqeVNhZHJjY1ZDS2JjRTJxWEJ6SXY3aTRFMjIyK09sU0tU?=
- =?utf-8?B?cERxL0FNS1ZrVU43WnBFeEpOSklGWjY5WlZ5VVEzdGZBQk9SQ1ZMQjMzY3gz?=
- =?utf-8?B?OWJXMVRCMHByZytSa1ZBbzhDNGZua3UyOW42OWhjOVFESlNNRFVSbVhRTEJB?=
- =?utf-8?B?VUZhNmlaalZTem5SN0haTXpNWUlFV0pOenI5RDIzaWRDWWJSeUR0UEtxVkZ0?=
- =?utf-8?B?NHlyOVVacW5TM2x0TDBlaUZ5eFNyNjh1YVVHM2lqZjhsOG5PV1RaQ3RmZ3ZX?=
- =?utf-8?B?bkR0Z3lIVkVhdnRENTlSYWtHMDZZeXBGWDV3eFBuaU1hTTVqSStKcEFQWkpK?=
- =?utf-8?B?aXNCTVRhUFh2SUhBQ3pVeHhpN2tGRnBCWjBsc1VwZ0dvZ0NFcGlMZDJaVkNr?=
- =?utf-8?B?dEVOZXlrMmM5MExKVFhpeXBvMnAyVVdtZkNENzF0SVhlcVZheGFVcGNQNndE?=
- =?utf-8?B?TExycFk5UVE4YTMxeTQyTGUwY2NRVzlwUyttUXczSVhEajZWZUVxMW4wNlJO?=
- =?utf-8?B?dU1sbXVEaWFYQVZYM3VWV21MaElKVUsxdEJWSXpOMFJ4RGVSZGZzK0dpQm03?=
- =?utf-8?B?RW5oQUVPSGpMb3d3M3M3ZGthNG9mdEtqUmhVUVc1Y3JjeGs3TnE1aWZPcTJr?=
- =?utf-8?B?eStmQ3M4VjIxVENxcTZNa3M3WmNhNzVWRDRxVEVqVi9Da3h3RXJ6dWcrejlQ?=
- =?utf-8?B?d1R5TnpKZFl6M0t3T1pwNDJFZ0Fnd0xROWJWUm40MmNyY0RMbEpmQm5xTWky?=
- =?utf-8?B?QnlWeUZrRlJJa2VCdVA1K2lFV2ZzdmJlSDBTTURRbmh1RHlyOXREUVdEeHBH?=
- =?utf-8?B?d0g2aklMb0pZRVpZTnpaeFRrRFQ0ZXFEQ3BwRHV0UUg4OUtvZGtJNkU5c1hk?=
- =?utf-8?B?azl0dW1YakRuOStnY3Y3MFJOVjlFcmZSbnAvOGpKVURCMkpBc0QvR1hZK2FF?=
- =?utf-8?B?QnllZk42Q2huc2E2Y3FVSi9DcjJHU2k0a1hlWnpseStWTG5wdHZ2UUp5NmNL?=
- =?utf-8?B?QjZCdWZqVG1UOStLOU9VYjhuQlZaSHYyd0c2Vzh1Y0NuVXdSWW5VSTBZdjNq?=
- =?utf-8?B?ODVTN0JYTk1ob1lsYjhDY0FGQi9vMkphYSs2NHV0eE5vQjZjSnJoaWYrQ3hj?=
- =?utf-8?B?V0gycTgrZmZqNlVjNFNDZnVpR3RvQ3RLbExiTmRhUTVFazhiQnJNakg2VDZr?=
- =?utf-8?B?U2IwM1JTTlZVS2JFTXRzYWZ1Q3NpSm9tZEI3QzRLeHk4OTN1dVFmUFhlZXhm?=
- =?utf-8?Q?O7x34i9GpVJjVd4jBo6LhPVRYcYerzhx?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 09:52:31.5235
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29ceb63a-9f26-4405-f954-08dca70f57af
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B071.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7927
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711052734.1273652-4-eahariha@linux.microsoft.com>
 
-On Wed, 17 Jul 2024 08:39:41 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.100 release.
-> There are 95 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Easwar,
+
+On Thu, Jul 11, 2024 at 05:27:31AM +0000, Easwar Hariharan wrote:
+> I2C v7, SMBus 3.2, and I3C 1.1.1 specifications have replaced "master/slave"
+> with more appropriate terms. Inspired by Wolfram's series to fix drivers/i2c/,
+> fix the terminology for users of I2C_ALGOBIT bitbanging interface, now that
+> the approved verbiage exists in the specification.
 > 
-> Responses should be made by Fri, 19 Jul 2024 06:37:32 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.100-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Acked-by: Zhi Wang <zhiwang@kernel.org>
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> ---
+>  drivers/gpu/drm/i915/display/dvo_ch7017.c     | 14 ++++-----
+>  drivers/gpu/drm/i915/display/dvo_ch7xxx.c     | 18 +++++------
+>  drivers/gpu/drm/i915/display/dvo_ivch.c       | 16 +++++-----
+>  drivers/gpu/drm/i915/display/dvo_ns2501.c     | 18 +++++------
+>  drivers/gpu/drm/i915/display/dvo_sil164.c     | 18 +++++------
+>  drivers/gpu/drm/i915/display/dvo_tfp410.c     | 18 +++++------
+>  drivers/gpu/drm/i915/display/intel_bios.c     | 22 +++++++-------
+>  .../gpu/drm/i915/display/intel_display_core.h |  2 +-
+>  drivers/gpu/drm/i915/display/intel_dsi.h      |  2 +-
+>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c  | 20 ++++++-------
+>  drivers/gpu/drm/i915/display/intel_dvo.c      | 14 ++++-----
+>  drivers/gpu/drm/i915/display/intel_dvo_dev.h  |  2 +-
+>  drivers/gpu/drm/i915/display/intel_gmbus.c    |  4 +--
+>  drivers/gpu/drm/i915/display/intel_sdvo.c     | 30 +++++++++----------
+>  drivers/gpu/drm/i915/display/intel_vbt_defs.h |  4 +--
+>  drivers/gpu/drm/i915/gvt/edid.c               | 28 ++++++++---------
+>  drivers/gpu/drm/i915/gvt/edid.h               |  4 +--
+>  drivers/gpu/drm/i915/gvt/opregion.c           |  2 +-
+>  18 files changed, 118 insertions(+), 118 deletions(-)
 
-All tests passing for Tegra ...
+it's a complex/long patch and I want to make sure there are no
+subtle errors. I will submit another round of tests and if it
+convinces me, I will take it in.
 
-Test results for stable-v6.1:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    116 tests:	116 pass, 0 fail
+The failures you see[*] are definitely not related to this patch,
+but better safe safe safe than sorry sorry sorry :-)
 
-Linux version:	6.1.100-rc2-gc434647e253a
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
+Thanks,
+Andi
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
+[*] https://patchwork.freedesktop.org/series/131867/
