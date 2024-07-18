@@ -1,120 +1,142 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717A78002E
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 09:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DB71BF37;
+	Thu, 18 Jul 2024 09:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721295434; cv=none; b=n5P5pSsuYAjTBqGq3OajKe6YufXudyCh+ZXIUOmb94rFYngAinL5qtqqPLyIYWZ3RH4pcIZd2WzEO3REfsGzfh8csED+05Ng3awoxXUOCoxXanlrJ2gSk7vHO1P7b+hGtSuHC92jrJg+TYnEr3o+7GqPdnG81SMqAiKh+qn9fsg=
+	t=1721295547; cv=none; b=icwadAQ0eDMq1VMROsmxouMzCFo1yol5ydLq/qMr0N4GG6RCW3qW2hz/Acu4NdqkyVMYV5O9c/MDIxW0oYtnVWxfP8puE2LxHYVxS5VO73Z8DMzPPh41pGV+K/sqpTy0DqjunJfo4xsUUBFV3nHLsu/OIVxYA3TvJVepOMuWc1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721295434; c=relaxed/simple;
-	bh=Z6kGOR/fyoETge1rmn754ir7mL2NxQyqjnTZBBwBe0A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jNdG8bDn7rq0QiVB0QNAH+woldmfbxrIC4xCLfvl4HcEJ/xwsik8/O2dZvaX7oXamkXUk1b7J+rfdUnR461fsE69IOldO/GYz5CYlgrQALZwTjuC4QkgTgETeBPdhbpli8Vw55Oy+gSxNg0Qe0IXpiSYe7RL+QpGNCZ4qZxH59c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 46I9aRQF021665;
-	Thu, 18 Jul 2024 17:36:27 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4WPnc51fvGz2KVL6p;
-	Thu, 18 Jul 2024 17:31:01 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 18 Jul 2024 17:36:24 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <Hao_hao.Wang@unisoc.com>
-Subject: [PATCH] f2fs: fix to use per-inode maxbytes and cleanup
-Date: Thu, 18 Jul 2024 17:36:06 +0800
-Message-ID: <1721295366-21008-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1721295547; c=relaxed/simple;
+	bh=or/dYLZwuKob/2SmTnu50xKA9faM6wgcIEKdV0rCwG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VzmpwB87hqPlvoUf+XRbP1CyQ4oQxVevl0LvHKXhjQmG+2L+BOA8PzmUSXQAiIVLmxptojreap/RV9B++8CsNo6G62khFjS3wDYiSxi1nCZb76Mnlef0DgTayEV7Co+z8Oa7IDtWvQ+MObiZONDpFjuVg8coNwxxi1eaVutobjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rwQpcfFx; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rwQpcfFx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wT78pFN34/V9uidmy7XYu2UoYrn2A2taxXO8JOLiM9Q=; b=rwQpcfFxtKPKmXhYBtiHgeClbk
+	wN7G9+koaKNpwtI0xqxNOT5rPipdVFi/RxbrX25DgXSgqggw+9Zj/C1YaLWCsrU18VffViblVNZTc
+	cVx5cbtLmMxW88++yGXH4yyvuPEDAqypkfmCqMNQxK2yCaEKEijdHBsEtg/sjKIWiMfCf0fFVgPuk
+	MgVzlv6sbp6lSQpnz0X8rGialcGDebGKdvpspnATBqPwzFYzhkLJRxbEsRlHP7sJPxcuZp5J/qq63
+	rn4zu9MLhMmSlnUAMhT4L2iNhzAcCUMXZFdJYl/mgUMBdDoOmAllKpJl2BBZRl80M44uyUURzwgYU
+	pwkGbZ8g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sUNb5-00000001pRp-2CG5;
+	Thu, 18 Jul 2024 09:38:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7F3583006B7; Thu, 18 Jul 2024 11:38:46 +0200 (CEST)
+Date: Thu, 18 Jul 2024 11:38:46 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V9 02/13] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+Message-ID: <20240718093846.GJ26750@noisy.programming.kicks-ass.net>
+References: <20240715160712.127117-1-adrian.hunter@intel.com>
+ <20240715160712.127117-3-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 46I9aRQF021665
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240715160712.127117-3-adrian.hunter@intel.com>
 
-This is a supplement to commit 6d1451bf7f84 ("f2fs: fix to use per-inode maxbytes")
-for some missed cases, also cleanup redundant code in f2fs_llseek.
+On Mon, Jul 15, 2024 at 07:07:01PM +0300, Adrian Hunter wrote:
+> Hardware traces, such as instruction traces, can produce a vast amount of
+> trace data, so being able to reduce tracing to more specific circumstances
+> can be useful.
+> 
+> The ability to pause or resume tracing when another event happens, can do
+> that.
+> 
+> Add ability for an event to "pause" or "resume" AUX area tracing.
+> 
+> Add aux_pause bit to perf_event_attr to indicate that, if the event
+> happens, the associated AUX area tracing should be paused. Ditto
+> aux_resume. Do not allow aux_pause and aux_resume to be set together.
+> 
+> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
+> event that it should start in a "paused" state.
+> 
+> Add aux_paused to struct hw_perf_event for AUX area events to keep track of
+> the "paused" state. aux_paused is initialized to aux_start_paused.
+> 
+> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
+> callbacks. Call as needed, during __perf_event_output(). Add
 
-Cc: Chengguang Xu <cgxu519@mykernel.net>
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
----
- fs/f2fs/data.c   | 2 +-
- fs/f2fs/file.c   | 7 ++-----
- fs/f2fs/verity.c | 5 +++--
- 3 files changed, 6 insertions(+), 8 deletions(-)
+Why in __perf_event_output() rather than in __perf_event_overflow().
+Specifically, before bpf_overflow_handler().
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 6457e5b..1d41d99 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2064,7 +2064,7 @@ int f2fs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- static inline loff_t f2fs_readpage_limit(struct inode *inode)
- {
- 	if (IS_ENABLED(CONFIG_FS_VERITY) && IS_VERITY(inode))
--		return inode->i_sb->s_maxbytes;
-+		return max_file_blocks(inode) << F2FS_BLKSIZE_BITS;
- 
- 	return i_size_read(inode);
- }
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index effbaa6..e6411d5 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -431,7 +431,7 @@ static bool __found_offset(struct address_space *mapping,
- static loff_t f2fs_seek_block(struct file *file, loff_t offset, int whence)
- {
- 	struct inode *inode = file->f_mapping->host;
--	loff_t maxbytes = inode->i_sb->s_maxbytes;
-+	loff_t maxbytes = max_file_blocks(inode) << F2FS_BLKSIZE_BITS;
- 	struct dnode_of_data dn;
- 	pgoff_t pgofs, end_offset;
- 	loff_t data_ofs = offset;
-@@ -513,10 +513,7 @@ static loff_t f2fs_seek_block(struct file *file, loff_t offset, int whence)
- static loff_t f2fs_llseek(struct file *file, loff_t offset, int whence)
- {
- 	struct inode *inode = file->f_mapping->host;
--	loff_t maxbytes = inode->i_sb->s_maxbytes;
--
--	if (f2fs_compressed_file(inode))
--		maxbytes = max_file_blocks(inode) << F2FS_BLKSIZE_BITS;
-+	loff_t maxbytes = max_file_blocks(inode) << F2FS_BLKSIZE_BITS;
- 
- 	switch (whence) {
- 	case SEEK_SET:
-diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
-index f7bb0c5..7fc787c 100644
---- a/fs/f2fs/verity.c
-+++ b/fs/f2fs/verity.c
-@@ -74,7 +74,7 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
- 	struct address_space *mapping = inode->i_mapping;
- 	const struct address_space_operations *aops = mapping->a_ops;
- 
--	if (pos + count > inode->i_sb->s_maxbytes)
-+	if (pos + count > (max_file_blocks(inode) << F2FS_BLKSIZE_BITS))
- 		return -EFBIG;
- 
- 	while (count) {
-@@ -237,7 +237,8 @@ static int f2fs_get_verity_descriptor(struct inode *inode, void *buf,
- 	pos = le64_to_cpu(dloc.pos);
- 
- 	/* Get the descriptor */
--	if (pos + size < pos || pos + size > inode->i_sb->s_maxbytes ||
-+	if (pos + size < pos ||
-+	    pos + size > (max_file_blocks(inode) << F2FS_BLKSIZE_BITS) ||
- 	    pos < f2fs_verity_metadata_pos(inode) || size > INT_MAX) {
- 		f2fs_warn(F2FS_I_SB(inode), "invalid verity xattr");
- 		f2fs_handle_error(F2FS_I_SB(inode),
--- 
-1.9.1
+That is, what do we want BPF to be able to do here? To me it seems
+strange that BPF would be able to affect this functionality. You want
+this pause/resume to happen irrespective of how the rest of the event is
+processed, no?
 
+> aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
+> handler. Pause/resume in NMI context will miss out if it coincides with
+> another pause/resume.
+
+I'm struggling here. That variable is only ever used inside that one
+function. So it must be self-recursion. Are you thinking something like:
+
+  swevent_overflow()
+    ...
+      event_aux_pause()
+        <NMI>
+	  event_overflow()
+	    ...
+	      event_aux_pause()
+
+?
+
+Where two events in the group, one software and one hardware, are both
+trying to control the AUX thing? Because I don't think the PT-PMI ever
+gets here.
+
+> To use aux_pause or aux_resume, an event must be in a group with the AUX
+> area event as the group leader.
+
+
+> @@ -402,6 +411,15 @@ struct pmu {
+>  	 *
+>  	 * ->start() with PERF_EF_RELOAD will reprogram the counter
+>  	 *  value, must be preceded by a ->stop() with PERF_EF_UPDATE.
+> +	 *
+> +	 * ->stop() with PERF_EF_PAUSE will stop as simply as possible. Will not
+> +	 * overlap another ->stop() with PERF_EF_PAUSE nor ->start() with
+> +	 * PERF_EF_RESUME.
+> +	 *
+> +	 * ->start() with PERF_EF_RESUME will start as simply as possible but
+> +	 * only if the counter is not otherwise stopped. Will not overlap
+> +	 * another ->start() with PERF_EF_RESUME nor ->stop() with
+> +	 * PERF_EF_PAUSE.
+>  	 */
+>  	void (*start)			(struct perf_event *event, int flags);
+>  	void (*stop)			(struct perf_event *event, int flags);
+
+Notably, they *can* race with ->stop/start without EF_PAUSE/RESUME.
