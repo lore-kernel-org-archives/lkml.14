@@ -1,119 +1,83 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24073144306
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 17:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28EB47A73;
+	Thu, 18 Jul 2024 17:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721322432; cv=none; b=lwjRayDEwNnqKS5brbPQN9JSPQyDrqQ/dfBa7vXhueYRexlTCw4FM10NLax/pkwow698PuINDATyN1S29e6x9oEGoslM6/p4btUs99QfBvr5JQLEJADY2G6RB133+7wTHuYYRVt09yYxFqWcRHpxFds5RbqdbQJsdp67P14/Szo=
+	t=1721322527; cv=none; b=n9adUzEjUCTTI82bVsVfmE4rCtHuU094arj0Nn/jvPoEQpKo/7TACJWlMlYMGjNUfj7s3XfSxAV0GneZn7apYpln5pOLjKI6Sx/SXzvbtGZjSWcFmKDWBHqrUAY4QUMxvHIGhHQdWR8uTTymkETeRTC6/XUK8QHGu1v7m/xwsyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721322432; c=relaxed/simple;
-	bh=cjeX1aFyWdBgsxfxbKfPnG9h/qsmn1yS9giF+UQOvt4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KPXJvVyNU7DLezixJnHloKMzH+aBdtTr0m1mvxJwkemRMRRzwl7OySSqUPpVU8PCuDxGDrFe56yO3RZhgafS3iKEEpiDSlzU3WE9Xp74R0pjLw6gf4I68IzQCT4DSzTmu4cR6WH0fl2SuZEO9SLUL92kdUnRwubDVLzRGFh1zw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m7k+sYjb; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721322527; c=relaxed/simple;
+	bh=HB8dfb3UJPZxA//Ds4TzHgj9flc2H8ljylk/vKM5fsk=;
+	h=Message-ID:Date:MIME-Version:In-Reply-To:To:Cc:From:Subject:
+	 Content-Type; b=goC0nAsvyEYM+BD8nkBflSKILfKzTLBYLxogV2irLN8+XBnS3UdSEdhJ3Fsk6jXAwJ134Bb5wlJ8Uw8l+uydeqsjmEjNiaWBWszh0PtTZ7vgSw+Wt5NuQ9qmTWUYNZU3HOMCMBTkRawswRGR2phOAQJ/sJDHGJpptV0VRMzlxxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=D1rpZxd2; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m7k+sYjb"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2cb57e25387so426049a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 10:07:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721322430; x=1721927230; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wbWG4pqQqIat0xDS0ZVANXGmuhcJIaLuF1t7QxTUgZc=;
-        b=m7k+sYjb1rMVAGo464+87Ykc1YRWqFoXtSxbQC1kX59ymqXr0mfiCrAJbMmEVs9jgn
-         20SxRBL7mn/iv5AtXEIidk6upCLzOAwt4RJx3aEFT0rFVwtzsgqCz/47fkkQr0M0jFSv
-         dnwKaS0XiyXEl9hTK8uDhIdnXtTFfpzhH162HCGykZl0fqoyX5qPlWKFuxXwqnDha0TR
-         ECBMwWuzWVoFsq0F9shtBzuyD8F5UBdt96b6BsEmuNpMJDgNSiN+X3TA0Zey2+oeJUn6
-         93b521i75fn1S7sHT9eU2C6MQ00Xd29h8vi/7YFz64ffY6lLdGmz094iYZP0SfOLl2Tq
-         sSkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721322430; x=1721927230;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wbWG4pqQqIat0xDS0ZVANXGmuhcJIaLuF1t7QxTUgZc=;
-        b=qmU/z+6ECnM1wBaWTVWf5t1/7C7KNHBspgXWBOhO4C52ZdG42PEzBnUY7wWRrFlM02
-         LPRuKE/l6sz7PKJFvC/uxUWVo69FvJSG2V64FLNhGoYW7+oxZF0j/t+tcoBuJc0wQOUv
-         tMDWBjOs74QsQnsMeStyIaSNKHOHDLzxxmRqKr8uPAYHLfYOyaO/FrO/RhgVypmJ/MeO
-         8wOivZLd5kIhI0+KWd7Bi1krL/5c6dNeoXb54ed3ZKihkFpl9NFoyj2o5lV2C6J3xYNp
-         72ilRtn6EwtceHhVXk6x3a7Uim6HTaQtn67CBJXoO34evxlEtnGiokc0jmuZoqSPaT8M
-         8IbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNYIAAPK2W2wTanKZZQsqA31dx9Ix5cZkAGEvM1C1w6WR9oTBMw3v37zgXSHIawFVtoN9zQ4Q6htNoCcZnyDwuFKklLyEf47G1hxMA
-X-Gm-Message-State: AOJu0YwqTvyiOJKnKcNR2XaF3W5i7vJUqGPQ0BdYgg7C1nqdMafmibja
-	0pLl6hU9QXN7lvBChsKdiCq7CYl9wfim/jhdZ7lK0W9fISy4wSF/pFa+xchYRw==
-X-Google-Smtp-Source: AGHT+IHzfGYavO6Fs7TNZbgx1Lr2vRkcXC3MMHfexuW7iiUp4F5HrO19UwuxKuf2xwzNcnSQfjNJvg==
-X-Received: by 2002:a17:90a:b885:b0:2c9:93a3:1db6 with SMTP id 98e67ed59e1d1-2cb5269443amr4146865a91.11.1721322430332;
-        Thu, 18 Jul 2024 10:07:10 -0700 (PDT)
-Received: from localhost.localdomain ([120.56.207.21])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb77342dcdsm969962a91.25.2024.07.18.10.07.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 10:07:09 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: alim.akhtar@samsung.com,
-	avri.altman@wdc.com,
-	bvanassche@acm.org,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Anjana Hari <quic_ahari@quicinc.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] scsi: ufs: core: Do not set link to OFF state while waking up from hibernation
-Date: Thu, 18 Jul 2024 22:36:59 +0530
-Message-Id: <20240718170659.201647-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="D1rpZxd2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1721322521; x=1721927321; i=wahrenst@gmx.net;
+	bh=HB8dfb3UJPZxA//Ds4TzHgj9flc2H8ljylk/vKM5fsk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:In-Reply-To:To:Cc:
+	 From:Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=D1rpZxd2lj1IhXA5nv2Y8qRkcvfGW+c/Ctpyu1DSVPTFVxzajjwGVwLiThOSgbnE
+	 eT5eeS1V3u5xGYdPDblSPi3fa3MvV5LNApht3L6VGtOl7aS+sgJa4iCA3eOp6r41n
+	 2LIu0lxWY8/+O2FsjDGRMTqva594RIUnKrhhwBjLeD2xhGwkCgmjF583kbr10KlFD
+	 kPqh07aQPTcQE6Qb/cn0Oj2bM6yNOU8UMgWHb752+W+x2RP3iU9r7on7jqT36U9gd
+	 0kCavSksPideJSGCSZRCAWtYwonhnLe75QMUwmwFOqGLbZQPp+wUfJO1Y8Mow+pIB
+	 qAS2df+yzSwbCEnkpg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MAfYm-1sb7Oj170K-003CUA; Thu, 18
+ Jul 2024 19:08:41 +0200
+Message-ID: <09eb7049-269e-4616-a33d-5b304c7aabf0@gmx.net>
+Date: Thu, 18 Jul 2024 19:08:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+In-Reply-To: <CACRpkdaRxoEZT1_KyJ3QMDgBcciw1XUXKr=cEiPxbcwSnpmyiA@mail.gmail.com>
+To: haibo.chen@nxp.com
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH] gpio: vf610: always set GPIO to input mode when used as
+ interrupt source
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Prz1EgVU96L/IE7BzQCBQAF+oWvB8fuBCdgc10l3MUMI6+ioS5P
+ tAGEpLadmcNT9SLrZcvUConwpJZkRdOKZh6uNZkaciYiaJb9dHPiaVw/yucEB/DeqVoziFl
+ U6NrWSaaalFOhoNkNq4PlzVOFGBMHTRAX1l6o+VjJViC1LPHibrFPuFkTnv5FvP86gaCU6p
+ Gp07dBNxWyLABs3btk8Lg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8n6Yt+MBNW0=;4dBoCuPdnkYnY0CjmEgeFg5zmIi
+ 4OKZxyE235YGutky2N6L0fyFrysH2e9ExzwmCDEwfDcSquQ9M+upxV32Wg8U1vYF+8z8Id2fL
+ Dfjq20JIFW6OXRYZJlcoXdHoEfnH4oyAV4DbVQof/Ts3lVqL7zsUSFQlrjh+1NSjWg4eTxD9/
+ u+BxEx8MvAJdveBteTHjSFdH31gQd5/cxApY2LQ5OxOdSrgiJfXGUm2oJx+GtDcpi3c6jN6/R
+ 4y6QdC02BrcHOoDdwhsCvMoE/34gsUIq3+IIucLlQQ1etkkwy6DkcA0BLJz5ABJzE/0/NOPMR
+ ElX6VBfcDQHrZrr7llnp7BZvsIj5M8YJZwqCLXSy4iRIlpmGUNHAeP+F4MWUTM+3tPecw4e8m
+ VtD86UWAnoyf8WMdpobFj3Wneo5K5B5APC9iP7bPc7BZNJA68V/gga/hobqchtTQ2fGAKVE34
+ pIbWTKiG379jG5N/pwWWH4w9fTNVXVX6SIHpxgt+IJkwMyXWcqFTPbD+0a3ugXBgrz1G6lGyQ
+ ORUfZeEZLATnLqq9Au/cUpQ67se8XPPWOxag95ydtSz5sdbxGxNftOZPyY0+F1xX6t6kgOxeM
+ DY0uYZq434b3EZyhHxNCVXAW0RNHG4FFmpv6lF8l8n2uum6cyuOy1lbDjkZY94ZgxeNUuK3tu
+ 69QYJVF6XSkOQ/aSyQ1nrsTTcvpziPgWxQSmm+yQ8UFgN+9EQAYA05B1SfFNyCkZ4eE76tcrf
+ GDKVndklJEQ8A0LQazbuBQXd91/qfVEVBjzs/L321hMpSS4cQ/OidQ+p0fUMouFX82tHX5F0W
+ lvTrYVMr3UpD+WEuJ2yxj84w==
 
-UFS link is just put into hibern8 state during the 'freeze' process of the
-hibernation. Afterwards, the system may get powered down. But that doesn't
-matter during wakeup. Because during wakeup from hibernation, UFS link is
-again put into hibern8 state by the restore kernel and then the control is
-handed over to the to image kernel.
+Hi,
 
-So in both the places, UFS link is never turned OFF. But
-ufshcd_system_restore() just assumes that the link will be in OFF state and
-sets the link state accordingly. And this breaks hibernation wakeup:
+I found this thread about the vf610 driver, because I noticed today that
+the i.MX93 is missing the GPIO get_direction callback.
 
-[ 2445.371335] phy phy-1d87000.phy.3: phy_power_on was called before phy_init
-[ 2445.427883] ufshcd-qcom 1d84000.ufshc: Controller enable failed
-[ 2445.427890] ufshcd-qcom 1d84000.ufshc: ufshcd_host_reset_and_restore: Host init failed -5
-[ 2445.427906] ufs_device_wlun 0:0:0:49488: ufshcd_wl_resume failed: -5
-[ 2445.427918] ufs_device_wlun 0:0:0:49488: PM: dpm_run_callback(): scsi_bus_restore returns -5
-[ 2445.427973] ufs_device_wlun 0:0:0:49488: PM: failed to restore async: error -5
+Are there any plans to implement this?
 
-So fix the issue by removing the code that sets the link to OFF state.
-
-Cc: Anjana Hari <quic_ahari@quicinc.com>
-Cc: stable@vger.kernel.org # 6.3
-Fixes: 88441a8d355d ("scsi: ufs: core: Add hibernation callbacks")
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/ufs/core/ufshcd.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 9f037a40316a..a9dfa82adac9 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -10261,9 +10261,6 @@ int ufshcd_system_restore(struct device *dev)
- 	 */
- 	ufshcd_readl(hba, REG_UTP_TASK_REQ_LIST_BASE_H);
- 
--	/* Resuming from hibernate, assume that link was OFF */
--	ufshcd_set_link_off(hba);
--
- 	return 0;
- 
- }
--- 
-2.25.1
-
+Best regards
