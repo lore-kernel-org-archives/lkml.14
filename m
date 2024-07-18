@@ -1,82 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C570138490;
-	Thu, 18 Jul 2024 11:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5248565E
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 11:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721301577; cv=none; b=oMn52+U5tQFztzb5YPqIPVJVWCJJsouwp/tc9SccGrRXzu/9iRitx9v1ek8nOXwu768M/Cr9Up7laum4W5r8LAMXQP/bW11GixcV0cMocGBZ45ZqY8R0EhJQhnhvmNRUD2Y7eDiR9zqY1Wr56DbcCM5QIzSOrN5m1CfAbeoyTKw=
+	t=1721301644; cv=none; b=pQHIll/Lhgx8Ma0KacSSwNVk2QT2uLSBVKWRhPEui+F7L9Kme/yk7sQhs5Hm/j7XlZmcEEaVyUAAt1iGA0UxX5StVp/SKfWxKF+LXBltiXw6Vm6jpvDPkjAjq2kmi8WrwkohBN5xsGF20sx4Gkr8irAMJ1gsFaV45GN24MGp8cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721301577; c=relaxed/simple;
-	bh=5ZS2bRAKZLxoBsfHc6SxW8krc/3kNApEhtyZJg8XVNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=acweDE/1Gn75s+Z2b4KyMNwi6+kEF9tGN/WDYeOdOjoTGORtXi9cSJPsDdoLZ6bhT/AHGT+jtL2zRXCzBAEhDUapiAdY2WlRXjDcvB2Sqdr7sH9OnLjdWJrkxm0cqcZ0l6QCTAG1d/DF2yAtbMfRCyVwADfOpw2Ztz2RxZ+SQBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvpoIjzw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721301644; c=relaxed/simple;
+	bh=iv20VAb6LpGASS19cXeiUPfpWaZEMqnqCnGgiQW6vis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a7DkCelF9u21OjJQxpm/uTCNy7HNa/psawbHQycRYveP8CKeBDJ2WAf/MUkLM2p0VuR9LBYW8+4npOC/tYS1BLnuGlL1BwKn7DDaGkGYciwtqnEWmZE0IZrhiSPmyudC91adRH2FP/ECenYY91RshM6q35Atpne/VY5RCKw5DNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=URbxCITs; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvpoIjzw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 815A2C4AF11;
-	Thu, 18 Jul 2024 11:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721301577;
-	bh=5ZS2bRAKZLxoBsfHc6SxW8krc/3kNApEhtyZJg8XVNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hvpoIjzw30Dl+QTifO/P8Vo5uF1HOGt0sQI+vryqWAhBIKM0V0GEmtQFfiaFJ+HUh
-	 IR68P0EWFFCISJjqRSXM+ySHixpQda5hzw5LbjZqGpQJOvN++mWZp8BRQ44nZKwTK1
-	 iQwjsFpfF7TSpzR7cFhQP0AvF/SWAdKELUOomDsWGK5RDmB5il0COUNRZDWNDoEbrk
-	 8dfsVITRHQ2jxDVHRmJ8AxwdSefqXM2j2BEQZGRQoNrOzk46QPNd3V48P1jICTCfNH
-	 l5T+DBVUQxbpNiKcMWLmaSkDUEYXhHUz98Ly/n9ihFZrEs4wz1AMs0UFLAP8KhvZJ8
-	 tRglhFMBjN/FQ==
-Date: Thu, 18 Jul 2024 12:19:30 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com
-Subject: Re: [PATCH 5.10 000/109] 5.10.222-rc2 review
-Message-ID: <5bd9ca42-5f56-4e88-bc35-a5a835bbfc70@sirena.org.uk>
-References: <20240717063758.061781150@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="URbxCITs"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38028so688135a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 04:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721301641; x=1721906441; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QdPwyZBp9vMOZVz7lUUwmgecgkSCLrQ0rjAotCotg+0=;
+        b=URbxCITsmn4bBsiPBcaL2vGYW4aLQvVBlzg6TbQniJFHUoUEcKH3F2mf9zoOyytjBi
+         jzABDgIPIdjBBN0ZnU1nbIBnXb8m6WN8KNNzkx3/Ak7GE2/ZhocyRplVk5kE5m8VNp2R
+         /rhxinEFe38pedzpjBGKvhcvlLKi0KZu+vDEzOIs1ntKffLzXUslKu4gJZDAp0qy1RLm
+         I9rcHtUyUOG4+UWxg2/Yc1JP3eumjy/Gpy4In893GukRTxWX0qqmPdN54fM2F8MWPPER
+         GapLT6ZpopB8lYFRRqO5Bg9oV/cvZZdvbsjmEjmRHMgSzOPv46vrEP/ZucnfW9ShGlcu
+         vvzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721301641; x=1721906441;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QdPwyZBp9vMOZVz7lUUwmgecgkSCLrQ0rjAotCotg+0=;
+        b=OHEuIFAZIWvlEJzsavCD7ewiYcg57n0olx9IKwHhxiIm4Ul6BZjwyPGAjltSR+7CZR
+         UsnrOhd41Gomj1fVIyiShqR/0Pa7VlnD15OE+YiTrv9cV4yoP02zz7/xGesHpb9rohvJ
+         XUhhL2WETKE3JI8qePYIeHcvmMADaUAuqq2JyptGi0/WKHPkLm/dmTeaxTBBNToYxRyB
+         hdQz4Q296iC1YENLAgkFbkbvylnqdTDsaAODC7TArFvZIEoDndirF8j8SzzoAFSmEbTq
+         WKnFGYNkmjLdAEx84x7R2hpRRmn4xe+gv5VZiXiIQ2FLlRxhXy1GWMtwRRPl2g1tplmH
+         Z4HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjVf84+bh8tYSvXydRh+A6vHx3H/ntf/0L49J3w+xwnLFa6ITEt2BDxWGjwtvW96LAm0sf2W+rU3VGto+6pWKiCuvZrIMmxA+yR7sY
+X-Gm-Message-State: AOJu0YzWwOy0NVz0LC6kAbR726UAiLrGzKlHUC34L+HoOiVGx5y6pt6+
+	UH5Sh88d6L/xrhtZmUj1iO8NLK+dNo5w72gMyUuzxg4t3gXW+5UsRpFmYo1dWA8=
+X-Google-Smtp-Source: AGHT+IF9iu6NNq9VCQIGnpytgnvrD3+aeNGAuSKJw8t9yX/qIIYfxpIVf1/g3LyDNbi2qcTT3rtY4A==
+X-Received: by 2002:a17:906:a387:b0:a77:f2c5:84b7 with SMTP id a640c23a62f3a-a7a01131319mr342413466b.5.1721301640476;
+        Thu, 18 Jul 2024 04:20:40 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc7f1e20sm545466566b.116.2024.07.18.04.20.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jul 2024 04:20:40 -0700 (PDT)
+Message-ID: <39df7ff4-7f22-4715-a0f7-eb2475bd7b55@linaro.org>
+Date: Thu, 18 Jul 2024 13:20:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/UjkfDHKOqeJeWLR"
-Content-Disposition: inline
-In-Reply-To: <20240717063758.061781150@linuxfoundation.org>
-X-Cookie: For off-road use only.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm8450: Add Broadcast_AND region in
+ LLCC block
+To: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rajendra Nayak
+ <quic_rjendra@quicinc.com>, Sibi Sankar <quic_sibis@quicinc.com>
+Cc: Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240718-x1e80100-dts-llcc-add-broadcastand_region-v1-1-20b6edf4557e@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240718-x1e80100-dts-llcc-add-broadcastand_region-v1-1-20b6edf4557e@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 18.07.2024 12:20 PM, Abel Vesa wrote:
+> Add missing Broadcast_AND region to the LLCC block for x1e80100,
+> as the LLCC version on this platform is 4.1 and it provides the region.
+> 
+> This also fixes the following error caused by the missing region:
+> 
+> [    3.797768] qcom-llcc 25000000.system-cache-controller: error -EINVAL: invalid resource (null)
+> 
+> Fixes: af16b00578a7 ("arm64: dts: qcom: Add base X1E80100 dtsi and the QCP dts")
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
 
---/UjkfDHKOqeJeWLR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please fix the commit title
 
-On Wed, Jul 17, 2024 at 08:39:31AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.222 release.
-> There are 109 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-Tested-by: Mark Brown <broonie@kernel.org>
-
---/UjkfDHKOqeJeWLR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaY+kIACgkQJNaLcl1U
-h9CQQQf/dlf5gSaLrYkI52H91RrOJvYSdx3CnDZLKJbkA5VMWK0WQ/hRoo3wvtXg
-ezMQmp8RKlXlVHkizcwz06ObZ5NY6Mo/XYXjbbCpDhsgEsLiDtoxvDlp0/FLE7kl
-icwei/HY1N17EaxbUW6JPDiXN3UFt37aSxew3vrHVe+vjxLqEqah4hDOTVbFfAqC
-4dBSwX9bUlJO4L5VrS98c1RU0r/GDuIs3qIMrmNhFvxM5+91SDyCKMGS6lUbKCXJ
-ADTVMWbMoYY3maWIYtqDmJTzA9nYrq0BluFTKkFhAwLuLuEvHsnN5uPcT86MaS1K
-m/ePH6+2lvbyXsRv19TSEcokpl+AtA==
-=LD2U
------END PGP SIGNATURE-----
-
---/UjkfDHKOqeJeWLR--
+Konrad
