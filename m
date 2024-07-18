@@ -1,93 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7967212F5A1
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 14:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41EA12C7FB
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 14:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721313794; cv=none; b=NgKGEGakoE1/3AayiDgMfx1K2bKfrLttajHrUqJ0S85U7guFh2ya+C+nSXdaOwOHjL4tKPsH3ioBtSpJCzNdc6ORFPzTAU5sPZPXpoQbiM3tLLk80te0qXwAMasxeX0O1Jaeec4Jvevk1Oy3xqjHC5rSCnGG/TkjNQnzfJFK6D0=
+	t=1721313801; cv=none; b=eo/m6qz9uu781QWe2Syp975y0GhcQE2pDKOzbwbXDBW/6Z5IydRMu4AFYlXwPlsKIomnBpUsVi62cBXk12nR/5ztGGded8o2Z5hWZeme+rwEfqiOtylnReT3W+LXwb6pDbv9zuH+VouUW0PWM3z4WiCWfsXR0LlmxTxL7enkX8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721313794; c=relaxed/simple;
-	bh=fiuEXO+y1CkUzUqy875cO3o952AlVtjQ88C3mZeRhUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eICxVPhJS/UO5M+8p+q7WkY8V/QeH2KztQ/sd5u+bFxnwdBNs9fx0zrYNBpEAAXDsYj7BAP+UjqpGqACialj9Z53OZYdqjWwcce4Y9/tqK8GC8zp8MXe3EtJvlQ8sgq/BsdSu9oPsK+jb1GhoqzVRzC6MI8ui9eOPXuo2+sKDTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CeftKm0I; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721313801; c=relaxed/simple;
+	bh=KEzro45JPQUxyEbETooDeOw9wctjrPSE1URuVYN7hhQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=STsJB4n+4Bvw/1237kJZuWY/TsCrFqVW9EMw6NX+9rB1z17c5uOfQsojndP6QvtenI/UCzNOQRlSlvHv7ZaNjr7XA7f2COOkpA8kejACJo5mTEqPjRa7aB2PJJt5I3bg39Mkz+6k2EHRJz7Ksu8EhFspw4wEKIAt6CNJwxcIa38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UKlKyYdU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hY0dVqsb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=px51OBcg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9R066FqY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CeftKm0I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721313792;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gJrnZFWbEYDfYCgkGw1MmmGbtaUVBD+dZ8bSRNzGKmo=;
-	b=CeftKm0ItfWk0QG2yRWRkLiPH6rmhU2NKY45AGzyqlboJE2SB//3Y9lDA4AdX8ox2hORrd
-	HmkK17uC2cKZvpxkNlN/Rec4aja4NZ565do8l9I4gHtXVD9nZPsC3nZiCyfrrA5yz6u6dq
-	cMU8tb2olfyRTUeEbCFoI3PMzJaYZbY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-41-wwEfdrw0NfmVBBmg15EUHg-1; Thu,
- 18 Jul 2024 10:43:07 -0400
-X-MC-Unique: wwEfdrw0NfmVBBmg15EUHg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UKlKyYdU";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hY0dVqsb";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="px51OBcg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9R066FqY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 553071954223;
-	Thu, 18 Jul 2024 14:42:58 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.39])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B42773000185;
-	Thu, 18 Jul 2024 14:42:53 +0000 (UTC)
-Date: Thu, 18 Jul 2024 22:42:42 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, vgoyal@redhat.com,
-	dyoung@redhat.com, arnd@arndb.de, afd@ti.com,
-	linus.walleij@linaro.org, akpm@linux-foundation.org,
-	eric.devolder@oracle.com, gregkh@linuxfoundation.org,
-	javierm@redhat.com, deller@gmx.de, robh@kernel.org,
-	hbathini@linux.ibm.com, thunder.leizhen@huawei.com,
-	chenjiahao16@huawei.com, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 2/3] crash: Fix x86_32 crash memory reserve dead loop
- bug at high
-Message-ID: <Zpkp4iF7quCOq7k0@MiWiFi-R3L-srv>
-References: <20240718035444.2977105-1-ruanjinjie@huawei.com>
- <20240718035444.2977105-3-ruanjinjie@huawei.com>
- <Zpj4+G5OwTYBQGIA@MiWiFi-R3L-srv>
- <aca0795c-f1a8-20c1-3daf-7f39d2ebf1bc@huawei.com>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D58B61FBF0;
+	Thu, 18 Jul 2024 14:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721313798; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
+	b=UKlKyYdU3JqAOj/r7NR7HEZlmdhEyn4WngzbiknP4LJNhefGNPyn5a+NmrkNcLq2sy8Zhf
+	qn60Q/jOMju8fHosubPsM2p0OyzgdmSVYezXMzVet6F0PXtxAfr4UmzBY4LB3uz3dSfJJa
+	0Y7jXSZSACnkXZpbVDy8C86MuRc11/4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721313798;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
+	b=hY0dVqsbCMV7L9IROgrzgDgI91WomrOsm1lbGnAGJxC2sF/e23ukKF9/mZ67PQEl4Lms9C
+	zvSr08it7vZ3g+AA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=px51OBcg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=9R066FqY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1721313797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
+	b=px51OBcgIDAy0oqYocKXLMfHo55QE5PGwYsn4Kmf+4er29z7hxL4deoa2hdXkODRdN26jF
+	gMnQzgjUFtE/CiLXbSOlttIr77xAnq1M94zCnG6/gKowcXNOlp5MX2shvAbYBsQ026ILIa
+	hg7v1//JUHcCt0ZlEli3Wr7flc1Ep+I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1721313797;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQVxlYZDNnpoZuZqFLdbgZdvvnZ80n+SMjdtam38h0Q=;
+	b=9R066FqY6sGGMzsfSo/SH/4QSLZETDEiUn/xJ+2PQriCs2YIYlcrz8JAOO1MhHU4icyegp
+	0bI8VyP5YmjwZNAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5506D136F7;
+	Thu, 18 Jul 2024 14:43:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YQYKEwUqmWaLHgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 18 Jul 2024 14:43:17 +0000
+Date: Thu, 18 Jul 2024 16:43:50 +0200
+Message-ID: <87o76uvjyx.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<lgirdwood@gmail.com>,
+	<perex@perex.cz>,
+	<pierre-louis.bossart@linux.intel.com>,
+	<13564923607@139.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<liam.r.girdwood@intel.com>,
+	<bard.liao@intel.com>,
+	<yung-chuan.liao@linux.intel.com>,
+	<cameron.berkenpas@gmail.com>,
+	<baojun.xu@ti.com>,
+	<soyer@irl.hu>,
+	<Baojun.Xu@fpt.com>
+Subject: Re: [PATCH v1] ALSA: hda/tas2781: Add new quirk for Lenovo Hera2 Laptop
+In-Reply-To: <20240717115305.723-1-shenghao-ding@ti.com>
+References: <20240717115305.723-1-shenghao-ding@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aca0795c-f1a8-20c1-3daf-7f39d2ebf1bc@huawei.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: D58B61FBF0
+X-Spam-Flag: NO
+X-Spam-Score: 1.99
+X-Spam-Level: *
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [1.99 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,gmail.com,perex.cz,139.com,alsa-project.org,vger.kernel.org,intel.com,ti.com,irl.hu,fpt.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-Rspamd-Action: no action
+X-Spamd-Bar: +
 
-On 07/18/24 at 08:10pm, Jinjie Ruan wrote:
+On Wed, 17 Jul 2024 13:53:04 +0200,
+Shenghao Ding wrote:
 > 
+> Add new vendor_id and subsystem_id in quirk for Lenovo Hera2 Laptop.
 > 
-> On 2024/7/18 19:14, Baoquan He wrote:
-> > On 07/18/24 at 11:54am, Jinjie Ruan wrote:
-> > 
-> > I don't fully catch the subject, what does the 'dead loop bug at high'
-> > mean?
-> 
-> It means alloc at [CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX] repeatedly
-> which corresponds to the crashkernel parameter of the "high".
+> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-That may mislead people to think it's a crashkernel=,high setting and
-the corresponding issue.
+Thanks, applied.
 
-Maybe "crash: Fix x86_32 crashkernel reservation dead loop" is good
-enough.
 
+Takashi
