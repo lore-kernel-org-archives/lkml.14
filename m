@@ -1,326 +1,295 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47364639;
-	Thu, 18 Jul 2024 11:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDA5823C8;
+	Thu, 18 Jul 2024 11:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721300573; cv=none; b=hmlo7tBiSmcU0v36cKLlGuync8ny10y9iagAyJYtngpAGTWmJFmIfdLW3VkQkzDJ+y5nb7T9MUp/kUDlwTev0JudrhzEEAETB0b+ViZA1aJy8tn2ns2pOIU8H8ZxPDsQKJ1JKL8fB7vJ/z4tDkmZJ1gUdhK/gI4Zb+L0PPrTbFc=
+	t=1721300678; cv=none; b=rSwR22zMoBI490i3oSTU9HdzKVr/6TVpR+LYNvqxB8tRn5f1/rqCsJEo49PWBkmBHTNFZbJ+KRAE3wv12/k/PFzMpqll+StsgQ8BcPVh/ae9eeSidT8B2lzTHCy+3+DU5lxxewh80opLn1yufTOei7+U/DtYfx9LcZTUTX5QyHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721300573; c=relaxed/simple;
-	bh=X/HQm62ChmQqbf7vNuPH4/wMzrEn5xIr+iFUFrsKV1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Zt2S/aGQ+QDYfW2oOCA/z+DphOUaZu4R+H88mUMD2nW4U21c3/vcZR0WKaXqX64ePLInzCPYD9O/qhHdY8L66J0ebbf6JKFrFczHwRbOZju3gFrE4K50ynM2edV1UmfPib18kdDWq9KmmJeX5NIW+6eZ5DV2l8Pok+xZR/3wi1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=qQxVXHas; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	s=arc-20240116; t=1721300678; c=relaxed/simple;
+	bh=d469z3VGydQXKn5f4NmC6XLhbPn9lCYH85f3aUqRXkE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U3C4veiNPpWhywiZv50IDEadED4IfNLcFc2+lolDEy3F9FINxVHF8DYAha/fonFtseBKBqF9aPlUBrDfJl329/wefoxZmistHClKIzYmNSlkWRU+/zqQhh3Au6bHgfMoKj5U3f1G9Lc/EgYnB5WLSSsPGGjOFfjWVUy8sC6TQvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=E0HjNKCh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="qQxVXHas"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 80F4412000C;
-	Thu, 18 Jul 2024 14:02:44 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 80F4412000C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1721300564;
-	bh=ZDQSOG3k8ZUK0B9MteuPszxC5L5ry7AyEP36vu1Itk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=qQxVXHasMXN8r6lXaxzAK9/pPEFCfPJsyUPD988Ue1spPsgnoOsWmqwvdC1ftnMOb
-	 dsxjiA4h04AvZ3Ixut7YqRJ6sNrxLZKufHxHAqBYzkHiibPzelpEDt6tep00Y344Dk
-	 JwRqcyheNhncy7xR3EGERiFALa9duR9cWrcDKtFXPoVj2yrjuzIboe7H8zQdM1s/dQ
-	 fNlfAWIy1/6ZfTRXvvkHQew4ELq/jpTXycmZQFT8wULxZwOXy7syS8YlOxbdGo+aiJ
-	 WsapW2y8e3qv5qnuk84AZukVVnXAwnBayXUUAIGwRoETgnmU7feV8PfV++P0kdK+QQ
-	 xtfn0sN5GJBgg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu, 18 Jul 2024 14:02:44 +0300 (MSK)
-Received: from [172.28.192.11] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 18 Jul 2024 14:02:43 +0300
-Message-ID: <f5bc9590-f37e-491e-9978-c1eab8914c30@salutedevices.com>
-Date: Thu, 18 Jul 2024 14:01:28 +0300
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="E0HjNKCh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B16C4AF0B;
+	Thu, 18 Jul 2024 11:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1721300677;
+	bh=d469z3VGydQXKn5f4NmC6XLhbPn9lCYH85f3aUqRXkE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=E0HjNKChhrsbabSVop70ENE4sXSWfBrzSk5CYeR1w8qt1nZ4DD2v3XvEslolD5ogC
+	 jad9QXbWsYvEl1jJG7uXQM705sHCpPJJ2IkQsSBYh0V10nBSbC35LIkkSzPQ0KEgW9
+	 UA0TMF3Sc1yhW4dleXO2VjbR5Jk0TLaiVINl1zhc=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	torvalds@linux-foundation.org,
+	stable@vger.kernel.org
+Cc: lwn@lwn.net,
+	jslaby@suse.cz,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 4.19.318
+Date: Thu, 18 Jul 2024 13:04:27 +0200
+Message-ID: <2024071828-zips-resemble-eea0@gregkh>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] reset: amlogic: convert driver to regmap
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: Philipp Zabel <p.zabel@pengutronix.de>, Stephen Boyd <sboyd@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>, <linux-kernel@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>
-References: <20240710162526.2341399-1-jbrunet@baylibre.com>
- <20240710162526.2341399-2-jbrunet@baylibre.com>
- <b12ac6b2-cb46-4410-9846-86ed4c3aea1f@salutedevices.com>
- <1jv813makr.fsf@starbuckisacylon.baylibre.com>
-Content-Language: en-US
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <1jv813makr.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186588 [Jul 18 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/18 08:29:00 #26061289
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+I'm announcing the release of the 4.19.318 kernel.
 
+All users of the 4.19 kernel series must upgrade.
 
-On 7/18/24 10:19, Jerome Brunet wrote:
-> On Thu 18 Jul 2024 at 05:39, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
-> 
->> On 7/10/24 19:25, Jerome Brunet wrote:
->>> To allow using the same driver for the main reset controller and the
->>> auxiliary ones embedded in the clock controllers, convert the
->>> the Amlogic reset driver to regmap.
->>>
->>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->>> ---
->>>  drivers/reset/reset-meson.c | 80 ++++++++++++++++++++-----------------
->>>  1 file changed, 44 insertions(+), 36 deletions(-)
->>>
->>> diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
->>> index f78be97898bc..8f3d6e9df235 100644
->>> --- a/drivers/reset/reset-meson.c
->>> +++ b/drivers/reset/reset-meson.c
->>> @@ -11,36 +11,44 @@
->>>  #include <linux/of.h>
->>>  #include <linux/module.h>
->>>  #include <linux/platform_device.h>
->>> +#include <linux/regmap.h>
->>>  #include <linux/reset-controller.h>
->>>  #include <linux/slab.h>
->>>  #include <linux/types.h>
->>>  
->>> -#define BITS_PER_REG	32
->>> -
->>>  struct meson_reset_param {
->>>  	int reg_count;
->>>  	int level_offset;
->>>  };
->>>  
->>>  struct meson_reset {
->>> -	void __iomem *reg_base;
->>>  	const struct meson_reset_param *param;
->>>  	struct reset_controller_dev rcdev;
->>> -	spinlock_t lock;
->>> +	struct regmap *map;
->>>  };
->>>  
->>> +static void meson_reset_offset_and_bit(struct meson_reset *data,
->>> +				       unsigned long id,
->>> +				       unsigned int *offset,
->>> +				       unsigned int *bit)
->>> +{
->>> +	unsigned int stride = regmap_get_reg_stride(data->map);
->>> +
->>> +	*offset = (id / (stride * BITS_PER_BYTE)) * stride;
->>> +	*bit = id % (stride * BITS_PER_BYTE);
->>> +}
->>> +
->>>  static int meson_reset_reset(struct reset_controller_dev *rcdev,
->>> -			      unsigned long id)
->>> +			     unsigned long id)
->>>  {
->>>  	struct meson_reset *data =
->>>  		container_of(rcdev, struct meson_reset, rcdev);
->>> -	unsigned int bank = id / BITS_PER_REG;
->>> -	unsigned int offset = id % BITS_PER_REG;
->>> -	void __iomem *reg_addr = data->reg_base + (bank << 2);
->>> +	unsigned int offset, bit;
->>>  
->>> -	writel(BIT(offset), reg_addr);
->>> +	meson_reset_offset_and_bit(data, id, &offset, &bit);
->>>  
->>> -	return 0;
->>> +	return regmap_update_bits(data->map, offset,
->>> +				  BIT(bit), BIT(bit));
->>
->> regmap_update_bits() is not equal to writel(), I suppose regmap_write()
->> should be here.
->>
->> I'm still under testing, but I see unexpected behavior on A1 SoC:
->>
->> [    1.482446] Call trace:
->> [    1.484860]  dump_backtrace+0x94/0xec
->> [    1.488482]  show_stack+0x18/0x24
->> [    1.491754]  dump_stack_lvl+0x78/0x90
->> [    1.495377]  dump_stack+0x18/0x24
->> [    1.498654]  __report_bad_irq+0x38/0xe4
->> [    1.502453]  note_interrupt+0x324/0x374
->> [    1.506244]  handle_irq_event+0x9c/0xac
->> [    1.510039]  handle_fasteoi_irq+0xa4/0x238
->> [    1.514093]  generic_handle_domain_irq+0x2c/0x44
->> [    1.518664]  gic_handle_irq+0x40/0xc4
->> [    1.522287]  call_on_irq_stack+0x24/0x4c
->> [    1.526168]  do_interrupt_handler+0x80/0x84
->> [    1.530308]  el1_interrupt+0x34/0x68
->> [    1.533844]  el1h_64_irq_handler+0x18/0x24
->> [    1.537898]  el1h_64_irq+0x64/0x68
->> [    1.541262]  default_idle_call+0x28/0x3c
->> [    1.545143]  do_idle+0x208/0x260
->> [    1.548334]  cpu_startup_entry+0x38/0x3c
->> [    1.552220]  kernel_init+0x0/0x1dc
->> [    1.555579]  start_kernel+0x5ac/0x6f0
->> [    1.559206]  __primary_switched+0x80/0x88
-> 
-> That stack trace is not helping
-> >>
->>
->> and using of regmap_write() (apparently) fixes it.
-> 
-> Nor does that conclusion.
-> > It is perfectly possible I have made mistake somewhere (I have already
-> fixed one in v2), but sending incomplete report like this, with
-> unargumented conclusion is just noise in the end.
-> 
-> No, there is no situation in which `regmap_write` would solve a problem
-> with `regmap_update_bits`.
-> 
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-What is the default regs' value of this reset controller? The doc that I
-have doesn't clearly specifies it, but it tells that "the reset will
-auto-cover to 0 by HW". However pr_info() say that there is 0xffffffff
-before write (I am talking about A1).
+thanks,
 
-Also we know, that reset is triggered by writing 1 to specific bit. So,
-what will happen if 1 will be written where we did not intend to write it?
+greg k-h
 
-> Either send a full analysis of the problem you found, if you did one, or
-> at least send the full dump, explaining that you don't know what is
-> happening.
-> 
+------------
 
-Full analysis is following:
-- using regmap_update_bits() instead of writel() is incorrect because
-this changes the behavior of the driver
-- regmap_update_bits() should not be used here because default value of
-regs isn't taken into account and (_apparently_, the doc is terse) these
-regs could be updated by hw itself.
+ Makefile                                          |    2 
+ arch/arm/mach-davinci/pm.c                        |    2 
+ arch/arm64/include/asm/compat.h                   |   20 --
+ arch/mips/include/asm/compat.h                    |   22 ---
+ arch/parisc/include/asm/compat.h                  |   18 --
+ arch/powerpc/include/asm/compat.h                 |   18 --
+ arch/powerpc/include/asm/io.h                     |    2 
+ arch/powerpc/xmon/xmon.c                          |    6 
+ arch/s390/include/asm/compat.h                    |   18 --
+ arch/sparc/include/asm/compat.h                   |   19 --
+ arch/x86/include/asm/compat.h                     |   19 --
+ drivers/char/hpet.c                               |   34 ++++
+ drivers/firmware/dmi_scan.c                       |   11 +
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c |    3 
+ drivers/gpu/drm/amd/include/atomfirmware.h        |    2 
+ drivers/gpu/drm/i915/intel_uncore.c               |   20 +-
+ drivers/gpu/drm/nouveau/nouveau_connector.c       |    3 
+ drivers/i2c/busses/i2c-i801.c                     |    2 
+ drivers/i2c/busses/i2c-pnx.c                      |   48 +-----
+ drivers/i2c/busses/i2c-rcar.c                     |   17 +-
+ drivers/infiniband/core/user_mad.c                |   21 ++
+ drivers/input/ff-core.c                           |    7 
+ drivers/media/dvb-frontends/as102_fe_types.h      |    2 
+ drivers/media/dvb-frontends/tda10048.c            |    9 -
+ drivers/media/dvb-frontends/tda18271c2dd.c        |    4 
+ drivers/media/usb/dvb-usb/dib0700_devices.c       |   18 ++
+ drivers/media/usb/dvb-usb/dw2102.c                |  120 ++++++++++------
+ drivers/media/usb/s2255/s2255drv.c                |   20 +-
+ drivers/net/bonding/bond_options.c                |    6 
+ drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c  |    1 
+ drivers/net/dsa/mv88e6xxx/chip.c                  |    4 
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x.h       |    2 
+ drivers/net/ethernet/lantiq_etop.c                |    5 
+ drivers/net/ppp/ppp_generic.c                     |   15 ++
+ drivers/s390/crypto/pkey_api.c                    |    4 
+ drivers/usb/core/config.c                         |   18 ++
+ drivers/usb/core/quirks.c                         |    3 
+ drivers/usb/gadget/configfs.c                     |    3 
+ drivers/usb/serial/option.c                       |   38 +++++
+ fs/jffs2/super.c                                  |    1 
+ fs/nilfs2/alloc.c                                 |   18 +-
+ fs/nilfs2/alloc.h                                 |    4 
+ fs/nilfs2/dat.c                                   |    2 
+ fs/nilfs2/dir.c                                   |   38 +++++
+ fs/nilfs2/ifile.c                                 |    7 
+ fs/nilfs2/nilfs.h                                 |   10 +
+ fs/nilfs2/the_nilfs.c                             |    6 
+ fs/nilfs2/the_nilfs.h                             |    2 
+ fs/orangefs/super.c                               |    3 
+ include/asm-generic/compat.h                      |   24 +++
+ include/linux/compat.h                            |    2 
+ include/linux/fsnotify.h                          |    8 -
+ include/linux/sunrpc/clnt.h                       |    1 
+ kernel/exit.c                                     |    2 
+ mm/page-writeback.c                               |    2 
+ net/bluetooth/hci_event.c                         |    2 
+ net/ceph/mon_client.c                             |   14 +
+ net/ipv4/inet_diag.c                              |    2 
+ net/ipv4/tcp_input.c                              |  158 +++++++++++-----------
+ net/ipv4/tcp_metrics.c                            |    1 
+ net/ipv4/tcp_timer.c                              |   45 +++++-
+ net/sctp/socket.c                                 |    7 
+ net/sunrpc/clnt.c                                 |    5 
+ tools/testing/selftests/net/msg_zerocopy.c        |   14 +
+ 64 files changed, 579 insertions(+), 385 deletions(-)
 
-> I'll also point that I did not send g12 clock along with v1 and that a1
-> support is not upstream or even reviewed. So this 'tests' obviously rely
-> on an integration of v1, rfc and your custom develpment. That is hardly a
-> reference at this point.
-> 
-> This patches address g12 and sm1. If you want to contribute with tests,
-> please test on these platforms. a1 will be addressed in due time.
-> 
+Alan Stern (1):
+      USB: core: Fix duplicate endpoint bug by clearing reserved bits in the descriptor
 
-Where did you find in my words any reference to not upstreamed
-functionality? Support of A1 SoC is here since commit bdb369e1e98a
-("reset: add support for the Meson-A1 SoC Reset Controller").
+Aleksander Jan Bajkowski (2):
+      net: lantiq_etop: add blank line after declaration
+      net: ethernet: lantiq_etop: fix double free in detach
 
-> Testing is good but making complete report (trace and environment
-> details) is equally important, especially for maintainers who might not
-> be following Amlogic development as much as you do.
-> 
->>
->>>  }
->>>  
->>>  static int meson_reset_level(struct reset_controller_dev *rcdev,
->>> @@ -48,25 +56,13 @@ static int meson_reset_level(struct reset_controller_dev *rcdev,
->>>  {
->>>  	struct meson_reset *data =
->>>  		container_of(rcdev, struct meson_reset, rcdev);
->>> -	unsigned int bank = id / BITS_PER_REG;
->>> -	unsigned int offset = id % BITS_PER_REG;
->>> -	void __iomem *reg_addr;
->>> -	unsigned long flags;
->>> -	u32 reg;
->>> +	unsigned int offset, bit;
->>>  
->>> -	reg_addr = data->reg_base + data->param->level_offset + (bank << 2);
->>> +	meson_reset_offset_and_bit(data, id, &offset, &bit);
->>> +	offset += data->param->level_offset;
->>>  
->>> -	spin_lock_irqsave(&data->lock, flags);
->>> -
->>> -	reg = readl(reg_addr);
->>> -	if (assert)
->>> -		writel(reg & ~BIT(offset), reg_addr);
->>> -	else
->>> -		writel(reg | BIT(offset), reg_addr);
->>> -
->>> -	spin_unlock_irqrestore(&data->lock, flags);
->>> -
->>> -	return 0;
->>> +	return regmap_update_bits(data->map, offset,
->>> +				  BIT(bit), assert ? 0 : BIT(bit));
->>>  }
->>>  
->>>  static int meson_reset_assert(struct reset_controller_dev *rcdev,
->>> @@ -113,30 +109,42 @@ static const struct of_device_id meson_reset_dt_ids[] = {
->>>  };
->>>  MODULE_DEVICE_TABLE(of, meson_reset_dt_ids);
->>>  
->>> +static const struct regmap_config regmap_config = {
->>> +	.reg_bits   = 32,
->>> +	.val_bits   = 32,
->>> +	.reg_stride = 4,
->>> +};
->>> +
->>>  static int meson_reset_probe(struct platform_device *pdev)
->>>  {
->>> +	struct device *dev = &pdev->dev;
->>>  	struct meson_reset *data;
->>> +	void __iomem *base;
->>>  
->>> -	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->>> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->>>  	if (!data)
->>>  		return -ENOMEM;
->>>  
->>> -	data->reg_base = devm_platform_ioremap_resource(pdev, 0);
->>> -	if (IS_ERR(data->reg_base))
->>> -		return PTR_ERR(data->reg_base);
->>> +	base = devm_platform_ioremap_resource(pdev, 0);
->>> +	if (IS_ERR(base))
->>> +		return PTR_ERR(base);
->>>  
->>> -	data->param = of_device_get_match_data(&pdev->dev);
->>> +	data->param = of_device_get_match_data(dev);
->>>  	if (!data->param)
->>>  		return -ENODEV;
->>>  
->>> -	spin_lock_init(&data->lock);
->>> +	data->map = devm_regmap_init_mmio(dev, base, &regmap_config);
->>> +	if (IS_ERR(data->map))
->>> +		return dev_err_probe(dev, PTR_ERR(data->map),
->>> +				     "can't init regmap mmio region\n");
->>>  
->>>  	data->rcdev.owner = THIS_MODULE;
->>> -	data->rcdev.nr_resets = data->param->reg_count * BITS_PER_REG;
->>> +	data->rcdev.nr_resets = data->param->reg_count * BITS_PER_BYTE
->>> +		* regmap_config.reg_stride;
->>>  	data->rcdev.ops = &meson_reset_ops;
->>> -	data->rcdev.of_node = pdev->dev.of_node;
->>> +	data->rcdev.of_node = dev->of_node;
->>>  
->>> -	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
->>> +	return devm_reset_controller_register(dev, &data->rcdev);
->>>  }
->>>  
->>>  static struct platform_driver meson_reset_driver = {
-> 
+Alex Deucher (1):
+      drm/amdgpu/atomfirmware: silence UBSAN warning
 
--- 
-Best regards
-Jan Dakinevich
+Alex Hung (1):
+      drm/amd/display: Skip finding free audio for unknown engine_id
+
+Arnd Bergmann (1):
+      asm-generic: Move common compat types to asm-generic/compat.h
+
+Bjørn Mork (1):
+      USB: serial: option: add Fibocom FM350-GL
+
+Chen Ni (1):
+      ARM: davinci: Convert comma to semicolon
+
+Daniele Ceraolo Spurio (1):
+      drm/i915: make find_fw_domain work on intel_uncore
+
+Daniele Palmas (2):
+      USB: serial: option: add Telit generic core-dump composition
+      USB: serial: option: add Telit FN912 rmnet compositions
+
+Dmitry Antipov (1):
+      ppp: reject claimed-as-LCP but actually malformed packets
+
+Eric Dumazet (4):
+      tcp: take care of compressed acks in tcp_add_reno_sack()
+      tcp: refactor tcp_retransmit_timer()
+      tcp: use signed arithmetic in tcp_rtx_probe0_timed_out()
+      tcp: avoid too many retransmit packets
+
+Erick Archer (2):
+      sctp: prefer struct_size over open coded arithmetic
+      Input: ff-core - prefer struct_size over open coded arithmetic
+
+Ghadi Elie Rahme (1):
+      bnx2x: Fix multiple UBSAN array-index-out-of-bounds
+
+Greg Kroah-Hartman (1):
+      Linux 4.19.318
+
+Greg Kurz (1):
+      powerpc/xmon: Check cpu id in commands "c#", "dp#" and "dx#"
+
+He Zhe (1):
+      hpet: Support 32-bit userspace
+
+Heiner Kallweit (1):
+      i2c: i801: Annotate apanel_addr as __ro_after_init
+
+Holger Dengler (1):
+      s390/pkey: Wipe sensitive data on failure
+
+Ilya Dryomov (1):
+      libceph: fix race between delayed_work() and ceph_monc_stop()
+
+Jaganath Kanakkassery (1):
+      Bluetooth: Fix incorrect pointer arithmatic in ext_adv_report_evt
+
+Jakub Kicinski (1):
+      tcp_metrics: validate source addr length
+
+Jan Kara (2):
+      fsnotify: Do not generate events for O_PATH file descriptors
+      Revert "mm/writeback: fix possible divide-by-zero in wb_dirty_limits(), again"
+
+Jean Delvare (1):
+      firmware: dmi: Stop decoding on broken entry
+
+Jimmy Assarsson (1):
+      can: kvaser_usb: Explicitly initialize family in leafimx driver_info struct
+
+Jinliang Zheng (1):
+      mm: optimize the redundant loop of mm_update_owner_next()
+
+Lee Jones (1):
+      usb: gadget: configfs: Prevent OOB read/write in usb_string_copy()
+
+Ma Ke (1):
+      drm/nouveau: fix null pointer dereference in nouveau_connector_get_modes
+
+Mank Wang (1):
+      USB: serial: option: add Netprisma LCUK54 series modules
+
+Mauro Carvalho Chehab (1):
+      media: dw2102: fix a potential buffer overflow
+
+Menglong Dong (1):
+      net: tcp: fix unexcepted socket die when snd_wnd is 0
+
+Michael Bunk (1):
+      media: dw2102: Don't translate i2c read into write
+
+Michael Ellerman (1):
+      powerpc/64: Set _IO_BASE to POISON_POINTER_DELTA not 0 for CONFIG_PCI=n
+
+Michael Guralnik (1):
+      IB/core: Implement a limit on UMAD receive List
+
+Mike Marshall (1):
+      orangefs: fix out-of-bounds fsid access
+
+Neal Cardwell (2):
+      UPSTREAM: tcp: fix DSACK undo in fast recovery to call tcp_try_to_open()
+      tcp: fix incorrect undo caused by DSACK of TLP retransmit
+
+Piotr Wojtaszczyk (1):
+      i2c: pnx: Fix potential deadlock warning from del_timer_sync() call in isr
+
+Ricardo Ribalda (5):
+      media: dvb: as102-fe: Fix as10x_register_addr packing
+      media: dvb-usb: dib0700_devices: Add missing release_firmware()
+      media: dvb-frontends: tda18271c2dd: Remove casting during div
+      media: s2255: Use refcount_t instead of atomic_t for num_channels
+      media: dvb-frontends: tda10048: Fix integer overflow
+
+Ryusuke Konishi (4):
+      nilfs2: fix inode number range checks
+      nilfs2: add missing check for inode numbers on directory entries
+      nilfs2: fix incorrect inode allocation from reserved inodes
+      nilfs2: fix kernel bug on rename operation of broken directory
+
+Sam Sun (1):
+      bonding: Fix out-of-bounds read in bond_option_arp_ip_targets_set()
+
+Shigeru Yoshida (1):
+      inet_diag: Initialize pad field in struct inet_diag_req_v2
+
+Simon Horman (1):
+      net: dsa: mv88e6xxx: Correct check for empty list
+
+Slark Xiao (1):
+      USB: serial: option: add support for Foxconn T99W651
+
+Vanillan Wang (1):
+      USB: serial: option: add Rolling RW350-GL variants
+
+Wang Yong (1):
+      jffs2: Fix potential illegal address access in jffs2_free_inode
+
+WangYuli (1):
+      USB: Add USB_QUIRK_NO_SET_INTF quirk for START BP-850k
+
+Wolfram Sang (1):
+      i2c: rcar: bring hardware to known state when probing
+
+Yousuk Seung (1):
+      tcp: add ece_ack flag to reno sack functions
+
+Yuchung Cheng (1):
+      net: tcp better handling of reordering then loss cases
+
+Zijian Zhang (2):
+      selftests: fix OOM in msg_zerocopy selftest
+      selftests: make order checking verbose in msg_zerocopy selftest
+
+felix (1):
+      SUNRPC: Fix RPC client cleaned up the freed pipefs dentries
+
+zhang kai (1):
+      tcp: tcp_mark_head_lost is only valid for sack-tcp
+
