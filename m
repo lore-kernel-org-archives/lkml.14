@@ -1,104 +1,182 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA9B125C1
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2024 02:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7505E24211;
+	Fri, 19 Jul 2024 02:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721357814; cv=none; b=f3T23ne1QndjuaUXOTUmTPlO+zD3qoHoQi8sYm2984qZgdt/eLbUx951mvUl0BnI544gGJlAszIBUj9iFrTI1QL+kFUBgqIw3rt3Fx2B25ccgU5gqBvspwL385z2CO3hTVA/BJ5LmBTrg2kAxwPgVOaTMdf+AaGlBeFQ/zDG74o=
+	t=1721357981; cv=none; b=ofyU9oCYx/OZg8udg43L0lN/5aS7iREzQfwT+A5e2x2CJEzJ0RrAxapyExNQTh5z5njtYpri6kBGweqH32p9Ml4XodIO6Ea4MdqhyqY6ekd4qcNs2tV19XjyHJGaMhIS3/RlXaORxBvnQWJrPKevc6Xzljpp7ILR4znFEKliYCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721357814; c=relaxed/simple;
-	bh=jg8amgsqBxJEisE5Ex24Edv12WNot2unJdqz7eY+lBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X1ZhuwWl5aBveNXoH2NeZ3OWFD6z1mavnfq988K+Uuybt1WOxMYVDvNSYM7ziHkEtmcChKSzZTFl1c9Vil8a+RGbwtdagAGI4bSwROIO9Mu8mmPaVlVIDzTZNCnvl43t78ogmUNK+jYgzBNsLDfsvTEaoJAE8AU2AX15iFB8Sh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=QZYKBXW/; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="QZYKBXW/"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44931f038f9so7705311cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 19:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1721357811; x=1721962611; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jg8amgsqBxJEisE5Ex24Edv12WNot2unJdqz7eY+lBs=;
-        b=QZYKBXW/u6gEdjhdj2a0GwkHZNQRcQGMB+ic78L6/HMhfvZ5OpqgWPdmEQJr+potd5
-         3hQOVyUp9jNJemPyQg4R/rQynt0Djps8xAALyFxfgKkFF+1R8Tfky7FzVz/HtwFLNOws
-         OxBYWKXLC/qGyx7lTWJNNyag1k02cmXoEBFVNPmOtYphZYQzipxXv9DjeOM/worN3iy8
-         eHWgF5g0he0SgvSX4x+PeJGiMRRKJpTEAkW2MghHUDa5lOMYqBBRiKzUpjM8yT/WE8ht
-         4Beue6fBVs/iAaDFTBcUNMq58Z9dUuEtsy16Ensx/rViqJcEpFvckEmrvDI6b6ENxUjc
-         tQ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721357811; x=1721962611;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jg8amgsqBxJEisE5Ex24Edv12WNot2unJdqz7eY+lBs=;
-        b=j3ooSPFrGgnyittSdBpBLx6nC2t83nbhTMp7fTz4sjWADsjWx7UM25Sa+6Fr1uE5DL
-         v+ZpEdU6GNfJhEyUW+XcQim31q+nBz4pf6qDXKEjdZpj69EMJIam5qgzq35K86fAa/5y
-         RUEb0s50Q7l/b4SEeWkEtYawOp35PvDmBhZpMrkV4bh54QewaJgk03ubOjJI93EBDKjn
-         nU/bgrmwZddmePbdRQoJYKyuPgbKWfznvaVj0fPi1iY80GpcToeYLwrZ1N6+QAWqCKZD
-         vjB1gESezdH5R9YotfgW3xLsgeI5IFkw1zhNzJqZPEsvAj8MxaXz7kGFnYLseAAxYHyd
-         jdmA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0iiGqIhLHKx/HZoWRL1ylMnDum2oR7AtMOepF2RTQ+vV85vw2BBq8IClSDAZFtibTjQxlj9RzM+pfo7CbxACoVxYvrljAPrHDaW0g
-X-Gm-Message-State: AOJu0YyTYUU2La0vzIpfDv7Lg7wJne2IBFYYFRxCWgL2ZRh6HevwmIzo
-	2PFkwwd6QTaEEybG95QKfg2vBm35c47OQeqxsKVz8Vez7KnF7oLhN2ovuC7mVcu7MNbuBBx5hY0
-	dHeNp/gOrYGFQ9cCpWGMk3FlZlhd6pjVg3OGpPg==
-X-Google-Smtp-Source: AGHT+IHDYSY1eEWlCkMlOjWqhFRE+smxx4jkS72e66X+P6QkOxFFEn6nUns7K7tfje4IuetMmXBjcF7nLqyNYpTu8+s=
-X-Received: by 2002:ac8:574e:0:b0:447:f87c:6b9f with SMTP id
- d75a77b69052e-44f96aa07b0mr45218021cf.17.1721357811654; Thu, 18 Jul 2024
- 19:56:51 -0700 (PDT)
+	s=arc-20240116; t=1721357981; c=relaxed/simple;
+	bh=eccdJ3dr+zlv4hcLvNsWN68j0hQoNZJlKgq940lStdY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nebezSChf4Yi3/lZF3OlE2AL/zsqP9Fv1bcSnNj5LWCs+gnAClHFuwtHio7fmxyXpYR/QmGVrxLZQkCpfThW8pJQYFT2MFKbJXA8b9zfKnp1uZAi3DwPczztw2EpHp8tbomqlnZOZRt4ZC0vTds6VwUrs2iw0msYmzGVVXSuJE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WQDmK0RMwz1JD4F;
+	Fri, 19 Jul 2024 10:54:41 +0800 (CST)
+Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 02AAF1800A0;
+	Fri, 19 Jul 2024 10:59:35 +0800 (CST)
+Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
+ (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Fri, 19 Jul
+ 2024 10:59:34 +0800
+From: Chen Ridong <chenridong@huawei.com>
+To: <martin.lau@linux.dev>, <ast@kernel.org>, <daniel@iogearbox.net>,
+	<andrii@kernel.org>, <eddyz87@gmail.com>, <song@kernel.org>,
+	<yonghong.song@linux.dev>, <john.fastabend@gmail.com>, <kpsingh@kernel.org>,
+	<sdf@google.com>, <haoluo@google.com>, <jolsa@kernel.org>, <tj@kernel.org>,
+	<lizefan.x@bytedance.com>, <hannes@cmpxchg.org>, <roman.gushchin@linux.dev>
+CC: <bpf@vger.kernel.org>, <cgroups@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH -v2] cgroup: fix deadlock caused by cgroup_mutex and cpu_hotplug_lock
+Date: Fri, 19 Jul 2024 02:52:32 +0000
+Message-ID: <20240719025232.2143638-1-chenridong@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530170259.852088-1-pasha.tatashin@soleen.com>
- <cq7537bswpnbsmeiw3rh4ffrgqky4iufsaurukpk2flxts6jcu@6ctttkclvf3f>
- <CA+CK2bCuiDAv05Xu6OuKB=gqJ5NM20F_uUyJV8E=XH=r47ik=Q@mail.gmail.com>
- <i66bzhgnbql7bvuteqttpijml3ze3nngxapv32k7paqv25c5th@wd37oaastkvz>
- <usfcwyq76np42s5b2rpzgjrvvtdpwakaum7ayy4zumaa73ke3u@txbukb2464bl>
- <CA+CK2bBm4COW+jZifyjFEyJNcW1cAXWYzCpuO81jL3YziKxfRw@mail.gmail.com> <dz2ryasq3bbshlayah4dja3esvpwu5hzftgaapzbmjf42n7gzk@qs4wfnuuixtu>
-In-Reply-To: <dz2ryasq3bbshlayah4dja3esvpwu5hzftgaapzbmjf42n7gzk@qs4wfnuuixtu>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 18 Jul 2024 22:56:14 -0400
-Message-ID: <CA+CK2bAWRN7-UHc0C1u6UAqT82tQXgO6a4AnHEHWN-qqij1LQQ@mail.gmail.com>
-Subject: Re: [PATCH v3] vmstat: Kernel stack usage histogram
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: akpm@linux-foundation.org, jpoimboe@kernel.org, kent.overstreet@linux.dev, 
-	peterz@infradead.org, nphamcs@gmail.com, cerasuolodomenico@gmail.com, 
-	surenb@google.com, lizhijian@fujitsu.com, willy@infradead.org, vbabka@suse.cz, 
-	ziy@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100013.china.huawei.com (7.221.188.163)
 
-On Thu, Jul 18, 2024 at 7:19=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
-v> wrote:
->
-> Hi Pasha,
->
-> On Wed, Jul 17, 2024 at 12:50:00PM GMT, Pasha Tatashin wrote:
-> > On Wed, Jun 12, 2024 at 2:50=E2=80=AFPM Shakeel Butt <shakeel.butt@linu=
-x.dev> wrote:
-> > >
-> [...]
-> > > >
-> > > > One more question: Is there any concern in making
-> > > > CONFIG_DEBUG_STACK_USAGE not a debug feature i.e. enable in default
-> > > > kernels instead of just debug kernels?
-> >
-> > We enabled it in Google ProdKernel. There is some overhead when
-> > threads are exiting, because we are looking for the first non-zero
-> > byte, but that is minimal. We haven't observed any performance impact
-> > on our fleet.
-> >
->
-> So, you would support making CONFIG_DEBUG_STACK_USAGE enabled by
-> default, right?
+We found a hung_task problem as shown below:
 
-Right, I see nothing wrong with having this enabled by default.
+INFO: task kworker/0:0:8 blocked for more than 327 seconds.
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:kworker/0:0     state:D stack:13920 pid:8     ppid:2       flags:0x00004000
+Workqueue: events cgroup_bpf_release
+Call Trace:
+ <TASK>
+ __schedule+0x5a2/0x2050
+ ? find_held_lock+0x33/0x100
+ ? wq_worker_sleeping+0x9e/0xe0
+ schedule+0x9f/0x180
+ schedule_preempt_disabled+0x25/0x50
+ __mutex_lock+0x512/0x740
+ ? cgroup_bpf_release+0x1e/0x4d0
+ ? cgroup_bpf_release+0xcf/0x4d0
+ ? process_scheduled_works+0x161/0x8a0
+ ? cgroup_bpf_release+0x1e/0x4d0
+ ? mutex_lock_nested+0x2b/0x40
+ ? __pfx_delay_tsc+0x10/0x10
+ mutex_lock_nested+0x2b/0x40
+ cgroup_bpf_release+0xcf/0x4d0
+ ? process_scheduled_works+0x161/0x8a0
+ ? trace_event_raw_event_workqueue_execute_start+0x64/0xd0
+ ? process_scheduled_works+0x161/0x8a0
+ process_scheduled_works+0x23a/0x8a0
+ worker_thread+0x231/0x5b0
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0x14d/0x1c0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x59/0x70
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1b/0x30
+ </TASK>
 
-Pasha
+This issue can be reproduced by the following methods:
+1. A large number of cpuset cgroups are deleted.
+2. Set cpu on and off repeatly.
+3. Set watchdog_thresh repeatly.
+
+The reason for this issue is cgroup_mutex and cpu_hotplug_lock are
+acquired in different tasks, which may lead to deadlock.
+It can lead to a deadlock through the following steps:
+1. A large number of cgroups are deleted, which will put a large
+   number of cgroup_bpf_release works into system_wq. The max_active
+   of system_wq is WQ_DFL_ACTIVE(256). When cgroup_bpf_release can not
+   get cgroup_metux, it may cram system_wq, and it will block work
+   enqueued later.
+2. Setting watchdog_thresh will hold cpu_hotplug_lock.read and put
+   smp_call_on_cpu work into system_wq. However it may be blocked by
+   step 1.
+3. Cpu offline requires cpu_hotplug_lock.write, which is blocked by step 2.
+4. When a cpuset is deleted, cgroup release work is placed on
+   cgroup_destroy_wq, it will hold cgroup_metux and acquire
+   cpu_hotplug_lock.read. Acquiring cpu_hotplug_lock.read is blocked by
+   cpu_hotplug_lock.write as mentioned by step 3. Finally, it forms a
+   loop and leads to a deadlock.
+
+cgroup_destroy_wq(step4)	cpu offline(step3)		WatchDog(step2)			system_wq(step1)
+												......
+								__lockup_detector_reconfigure:
+								P(cpu_hotplug_lock.read)
+								...
+				...
+				percpu_down_write:
+				P(cpu_hotplug_lock.write)
+												...256+ works
+												cgroup_bpf_release:
+												P(cgroup_mutex)
+								smp_call_on_cpu:
+								Wait system_wq
+...
+css_killed_work_fn:
+P(cgroup_mutex)
+...
+cpuset_css_offline:
+P(cpu_hotplug_lock.read)
+
+To fix the problem, place cgroup_bpf_release works on cgroup_destroy_wq,
+which can break the loop and solve the problem. System wqs are for misc
+things which shouldn't create a large number of concurrent work items.
+If something is going to generate >WQ_DFL_ACTIVE(256) concurrent work
+items, it should use its own dedicated workqueue.
+
+Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from cgroup itself")
+Link: https://lore.kernel.org/cgroups/e90c32d2-2a85-4f28-9154-09c7d320cb60@huawei.com/T/#t
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ kernel/bpf/cgroup.c             | 2 +-
+ kernel/cgroup/cgroup-internal.h | 1 +
+ kernel/cgroup/cgroup.c          | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 8ba73042a239..a611a1274788 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -334,7 +334,7 @@ static void cgroup_bpf_release_fn(struct percpu_ref *ref)
+ 	struct cgroup *cgrp = container_of(ref, struct cgroup, bpf.refcnt);
+ 
+ 	INIT_WORK(&cgrp->bpf.release_work, cgroup_bpf_release);
+-	queue_work(system_wq, &cgrp->bpf.release_work);
++	queue_work(cgroup_destroy_wq, &cgrp->bpf.release_work);
+ }
+ 
+ /* Get underlying bpf_prog of bpf_prog_list entry, regardless if it's through
+diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-internal.h
+index 520b90dd97ec..9e57f3e9316e 100644
+--- a/kernel/cgroup/cgroup-internal.h
++++ b/kernel/cgroup/cgroup-internal.h
+@@ -13,6 +13,7 @@
+ extern spinlock_t trace_cgroup_path_lock;
+ extern char trace_cgroup_path[TRACE_CGROUP_PATH_LEN];
+ extern void __init enable_debug_cgroup(void);
++extern struct workqueue_struct *cgroup_destroy_wq;
+ 
+ /*
+  * cgroup_path() takes a spin lock. It is good practice not to take
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index e32b6972c478..3317e03fe2fb 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -124,7 +124,7 @@ DEFINE_PERCPU_RWSEM(cgroup_threadgroup_rwsem);
+  * destruction work items don't end up filling up max_active of system_wq
+  * which may lead to deadlock.
+  */
+-static struct workqueue_struct *cgroup_destroy_wq;
++struct workqueue_struct *cgroup_destroy_wq;
+ 
+ /* generate an array of cgroup subsystem pointers */
+ #define SUBSYS(_x) [_x ## _cgrp_id] = &_x ## _cgrp_subsys,
+-- 
+2.34.1
+
