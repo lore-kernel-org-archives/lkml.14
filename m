@@ -1,40 +1,45 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F3718622
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2024 02:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C12A20;
+	Fri, 19 Jul 2024 02:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721356327; cv=none; b=PsvQeQreymuAeKWjHA0lkzFus2zsTt+DCcroc/Pt6LIiMymaVhd9s7wSB6SOmcrA8mUWRcwsu3GMicbwpN+cb6vWv199nsaRSTVDwAOfbEYscCbjZdvBeFLIHICKYV7QDc9eOPMjaJE05Cw/z/uZ2mcKxwE6qrdbeJ5CK4Aabw0=
+	t=1721356636; cv=none; b=gIwt9ETZWBdukF9U+55UXOSK3MgmVJrM25Aicbt1cTYkYuoZ+EFmYvcyuqHmgTwWWQ8rc/zJyQWO50mq0wj9Om6rrcqyyGObFkxdmre4MmG0QWVhRHCKacjR5XfhvJZjw4HWeMSH2ga9Ph7ZF4ahVe7w+b8PCiyPliv4XmyHsnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721356327; c=relaxed/simple;
-	bh=wwGG3+YyY8mIogBdU+KkOQ0+dRIFSZNY44DPqE3xv6k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jMuv0Db4MHNopc7e3GOgzwK5Z27jaPksj1+wImGKAgtgclT64vydsJplS646KVWto/YGCRLg/XrC1TM4PksUdhp7Kjt+mRSEk2sUShn3ybndmwxhCeJLkO0aLy+E255XxIPUmmCcNunR9sgdQodrBZpYlGPQRjq0cTOgwweijPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VApZSabf; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VApZSabf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=/f5De
-	nBV8OntvTIl0L+VxVkHwc/+e99DtksAYzxlBJg=; b=VApZSabf1jxvPCTJskWVV
-	5ZB+OV7+slVZzwAKOwU//LOmuUeV5zKnJxfc9n84nhZF/skBMYKjnZDCCeJTr/b1
-	V5D+5qDBrwWEi2BzI7AdDztbZnin5JdVHld3Py/D/w1CZYHxSJSldabrpLvhQ6QV
-	MYjjvtCEJiKyBfnvKfO5Jg=
-Received: from localhost.localdomain (unknown [111.48.69.245])
-	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wCXH5qmz5lmZ9ulDQ--.12874S2;
-	Fri, 19 Jul 2024 10:29:58 +0800 (CST)
-From: wangdicheng <wangdich9700@163.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-arm-kernel@lists.infradead.org,
-	wangdicheng <wangdicheng@kylinos.cn>
-Subject: [PATCH] ALSA: usb-audio: Add a quirk for Sonix HD USB Camera
-Date: Fri, 19 Jul 2024 10:29:56 +0800
-Message-Id: <20240719022956.9861-1-wangdich9700@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1721356636; c=relaxed/simple;
+	bh=zah+9lJ5Df3NcJR2v4cILmzq85sf4M3XoOUY63U2+3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l2NkZuSFS+zayhuiqD0ImzgTWG3W+qAv5HGjKMyqKHrrLrR1VEu5O098AWwJ9QD7vnOL/GSpfLuPktzDqTMASXKbOZph7aVOC+BgUlAR7tv3t4QjyyeIHCXRrrpsQH4h5bCFnBI/IOx02ZYFCrNUXTI5z56HrBaZjwnNeIv7X3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WQDMr6RR5z4f3kvn;
+	Fri, 19 Jul 2024 10:36:56 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 34E541A10B7;
+	Fri, 19 Jul 2024 10:37:10 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDXuzlU0Zlmiw8kAg--.57041S4;
+	Fri, 19 Jul 2024 10:37:09 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: bvanassche@acm.org,
+	jack@suse.cz,
+	hch@infradead.org,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	axboe@kernel.dk
+Cc: cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2 0/3] blk-ioprio: remove per-disk structure
+Date: Fri, 19 Jul 2024 10:34:28 +0800
+Message-Id: <20240719023431.3800647-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,47 +47,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXH5qmz5lmZ9ulDQ--.12874S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KrykJr1kAw4kXw4fXFyfXrb_yoW8XF45pr
-	4xua4ktrn8Wr1UXw18ta1UX3WkXws7A3y5JFyagwsxJr15Kay5JF92y3ySgw42yrW5Caya
-	qas0v395KFZ5Gw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jYKZXUUUUU=
-X-CM-SenderInfo: pzdqwv5lfkmliqq6il2tof0z/1tbiRwchT2V4KXHRAQABs6
+X-CM-TRANSID:gCh0CgDXuzlU0Zlmiw8kAg--.57041S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrGrWfuw1DZrW8Kr1rXw1xuFg_yoWxGFX_AF
+	y8JF95Xrs3Aa1UA3WfAF1aqay09r4DWr4jvFyDtrW7Jw17Xrs5tr43JrWUXr15uF43C34x
+	JryUur18Jr42yjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: wangdicheng <wangdicheng@kylinos.cn>
+From: Yu Kuai <yukuai3@huawei.com>
 
-Sonix HD USB Camera does not support reading the sample rate which leads
-to many lines of "cannot get freq at ep 0x84".
-This patch adds the USB ID to quirks.c and avoids those error messages.
+Changes in v2:
+ - add patch 1;
 
-(snip)
-[1.789698] usb 3-3: new high-speed USB device number 2 using xhci_hcd
-[1.984121] usb 3-3: New USB device found, idVendor=0c45, idProduct=6340, bcdDevice= 0.00
-[1.984124] usb 3-3: New USB device strings: Mfr=2, Product=1, SerialNumber=0
-[1.984127] usb 3-3: Product: USB 2.0 Camera
-[1.984128] usb 3-3: Manufacturer: Sonix Technology Co., Ltd.
-[5.440957] usb 3-3: 3:1: cannot get freq at ep 0x84
-[12.130679] usb 3-3: 3:1: cannot get freq at ep 0x84
-[12.175065] usb 3-3: 3:1: cannot get freq at ep 0x84
+The idea is that ioprio doesn't need to access blkg, all it needs is
+blkcg, hence blk_register_policy() is enough, and blk_activate_policy()
+is not needed.
 
-Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
----
- sound/usb/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+Yu Kuai (3):
+  blk-cgroup: check for pd_(alloc|free)_fn in blkcg_activate_policy()
+  blk-ioprio: remove ioprio_blkcg_from_bio()
+  blk-ioprio: remove per-disk structure
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 09712e61c606..c1fd690cbac0 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -2033,6 +2033,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
- 		   QUIRK_FLAG_GENERIC_IMPLICIT_FB),
- 	DEVICE_FLG(0x0499, 0x3108, /* Yamaha YIT-W12TX */
- 		   QUIRK_FLAG_GET_SAMPLE_RATE),
-+	DEVICE_FLG(0x0c45, 0x6340, /* Sonix HD USB Camera */
-+		   QUIRK_FLAG_GET_SAMPLE_RATE),
- 	DEVICE_FLG(0x04d8, 0xfeea, /* Benchmark DAC1 Pre */
- 		   QUIRK_FLAG_GET_SAMPLE_RATE),
- 	DEVICE_FLG(0x04e8, 0xa051, /* Samsung USBC Headset (AKG) */
+ block/blk-cgroup.c | 21 +++++++++--------
+ block/blk-ioprio.c | 57 +---------------------------------------------
+ block/blk-ioprio.h |  9 --------
+ 3 files changed, 13 insertions(+), 74 deletions(-)
+
 -- 
-2.25.1
+2.39.2
 
