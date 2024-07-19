@@ -1,169 +1,154 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1CD2913;
-	Fri, 19 Jul 2024 01:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C811388;
+	Fri, 19 Jul 2024 01:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721352118; cv=none; b=fxqRVObII0l6WXZARNA97Ko+T0tTMDftQqIotBNRawaz1XJATv8P0hZydhFy5SjV8s3uDBMYFLOlCkwhYeZ5961V7MaQ5jKdNK5klKTtejS+rllcrBzInimiY4QbObe5t05mVTjTgwTPn7DykfsQYTaMg/X862rao6gOcIfEytk=
+	t=1721352192; cv=none; b=RDkEHHj+GIlzoSEtu6sZ8p3VaLX8wOB9p3EiMHkIg9OumFLQJTxiL+UOS5H1vYVWLko0KdiM6J82igrh2ViKS+19w7Nq+MOZ9qqoz7/MN5cs1fLc/JCquNyG8xUDpRPPWTvy5F+HAwJAUcOIW4LCgIqtXNsfO72S184ZNNvJcDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721352118; c=relaxed/simple;
-	bh=E6oWbOjNtxqq/FWjAPQTzR0lneD+kp4p2M7q3oaH46g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IdPxYUVBRExEIf8bsXdIZxMDN/7xyMKvpVfGOT3i5efS2keuX6eL3RSMeRoKkUOG3fV1X7BVZGOGX2n/en17vqmwfk4wSFJrtTIyGrKKLIdkLP+ywBlLqE2Qevp92lW4UDPqvvdNB+ljxIOXitdOvGh53kHz+usRraVqmSWVwD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=Sjij+jX/; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+	s=arc-20240116; t=1721352192; c=relaxed/simple;
+	bh=TcVAZ4o5JqH+rw1XtKK3khM+41WGsSy3IOlZhc+8zLY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NvbEi0IQ+cv0M0ZV8N4AedCnq8QVCaOqCVA9wJr8O3b8qDgx79uis8wQ93MjkY4xKhmRNSqEzxO0aqLoi9OxPGRGWLjTT0zHQIlXdiF7g9tBaaohWYR+Y26tfWU8q2BLUWbUhiuO/bmsDB2965kd1BiquH9xsxr4/Jc9UGSmKTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKnmvyUf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="Sjij+jX/"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4WQBj62YyXz9stk;
-	Fri, 19 Jul 2024 03:21:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1721352106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=okbCHMpQFuxS3MErnCyY7unMZHEQPK4nYhZrC+nCYm4=;
-	b=Sjij+jX/KNY9M9EDBvCvgVlvpIxhXJG/h8xQwcZf5fOiN+XQCbvgXaDWNzhZTjiUyNaiTL
-	vNFYvYCZTuxmqOFry/ty55PUajPNTP+J0JqefP3yhgbeGRc+MUpZkQh9ALnQNaidNEiEOJ
-	+aBtkmWYJSo0+7E0BQHvznD3ZXrfGy627Jcom84OLBP4B5zy7HvlXH4ZXJSkHex265dIeY
-	jP5Vm76vYVPXADz9F525OdyanwO2V02HPRq8keVVUBhgNCARxkJLHLSY+EvBcwFXvrpmYM
-	8yDdMVh5tjH2HNgBgC0BupOdY57TsQa4GgKauUogHorcSP9hzdJgxPLKgjYcjA==
-Date: Fri, 19 Jul 2024 11:21:31 +1000
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: kernel test robot <lkp@intel.com>
-Cc: Ian Kent <raven@themaw.net>, Bill O'Donnell <bodonnel@redhat.com>, 
-	Christian Brauner <brauner@kernel.org>, Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, 
-	Eric Sandeen <sandeen@redhat.com>, David Howells <dhowells@redhat.com>, 
-	oe-kbuild-all@lists.linux.dev, autofs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	codalist@coda.cs.cmu.edu
-Subject: Re: [PATCH 2/2] coda: support FSCONFIG_SET_FD for fd mount flag
-Message-ID: <20240719.012054-sad.combo.frozen.vibe-iRGqBcI4zDQb@cyphar.com>
-References: <20240719-fsconfig-fsparam_fd-fixes-v1-2-7ccd315c2ad4@cyphar.com>
- <202407190741.8fA9KJbt-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKnmvyUf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DBDFC4AF0E;
+	Fri, 19 Jul 2024 01:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721352191;
+	bh=TcVAZ4o5JqH+rw1XtKK3khM+41WGsSy3IOlZhc+8zLY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bKnmvyUfjIv97LB/d19T2GocMlByH83H67qBMG5ZIAvtvblyoxlBnWavOcIOu4rTn
+	 e16Z1oTCAgAOYgNX8E4NFIkx6NlnMlo8fcEDqNVcdBNkIdZ6J5BKlKKN16Ov/VyLxN
+	 C1075NNZyqQCNOP1mXplNB9AfS/GJ41cdo+4qWt64bb/83rQhrDNBtH3HBqFuh+wuP
+	 duC5BbJupk5IXvXzdFFHEM0WVQT46ZlZ6mlQQMQ8W51EkIcuDTqUf4rxQ8MdXoet+l
+	 /T+HcBZT4aVHYnCAFwZS8dO15tSLYTIO+xGKwOdXGj061Ya2eawiZ5SbtdSqj2mPIU
+	 QNLxgKewuf+/w==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5a2ffc34431so78226a12.0;
+        Thu, 18 Jul 2024 18:23:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVPqJ5PA+NK+qwUFNH7VVrfty1CM9G0NRqDGf9umFhYeufMFrSwt9zIcHw00EO5yS5hr2SMbHrFcGpo+ODdrgHcw7SUBkrAGd3hXyW9Y6JCjODCM4kuGjNqGObkXeZamBTzhyUfEH6ZxuxjJNsC
+X-Gm-Message-State: AOJu0YyiyMASOf6uH+5FV0sOjIjIDLL8msgcjvr2MtK4erKqCM6mTCs+
+	dfcUrGaoa1eZHHbWP+AKy/XKIPTfMUYFXr84qawmoUksVFp2PKE3OWevCAR0qfhhJLrP2qNGA28
+	4yupFqP9ayy6xMx3iYOIw8KMPzHs=
+X-Google-Smtp-Source: AGHT+IG+qKjO5YiCC/oG0ujwmVvgw6ET6u//7Pu323EbszO1mAZTdlhl0JlKHspoa2FnkNKrGOS40auZtiTMPAODExI=
+X-Received: by 2002:a50:cd55:0:b0:5a2:2b56:e06e with SMTP id
+ 4fb4d7f45d1cf-5a22b56e48cmr2218940a12.36.1721352190063; Thu, 18 Jul 2024
+ 18:23:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="do7lc52poc6dkn2n"
-Content-Disposition: inline
-In-Reply-To: <202407190741.8fA9KJbt-lkp@intel.com>
-X-Rspamd-Queue-Id: 4WQBj62YyXz9stk
-
-
---do7lc52poc6dkn2n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240718124739.3834489-1-ruanjinjie@huawei.com>
+In-Reply-To: <20240718124739.3834489-1-ruanjinjie@huawei.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 19 Jul 2024 09:22:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6e8RTU2avkLY7EqO_xJeRdSHm_VzHvTzmqezHQwMSr3g@mail.gmail.com>
+Message-ID: <CAAhV-H6e8RTU2avkLY7EqO_xJeRdSHm_VzHvTzmqezHQwMSr3g@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: Support RANDOMIZE_KSTACK_OFFSET
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: kernel@xen0n.name, kees@kernel.org, gustavoars@kernel.org, arnd@arndb.de, 
+	maobibo@loongson.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 2024-07-19, kernel test robot <lkp@intel.com> wrote:
-> Hi Aleksa,
->=20
-> kernel test robot noticed the following build errors:
->=20
-> [auto build test ERROR on b80cc4df1124702c600fd43b784e423a30919204]
->=20
-> url:    https://github.com/intel-lab-lkp/linux/commits/Aleksa-Sarai/autof=
-s-fix-missing-fput-for-FSCONFIG_SET_FD/20240718-230056
-> base:   b80cc4df1124702c600fd43b784e423a30919204
-> patch link:    https://lore.kernel.org/r/20240719-fsconfig-fsparam_fd-fix=
-es-v1-2-7ccd315c2ad4%40cyphar.com
-> patch subject: [PATCH 2/2] coda: support FSCONFIG_SET_FD for fd mount flag
-> config: arm-randconfig-003-20240719 (https://download.01.org/0day-ci/arch=
-ive/20240719/202407190741.8fA9KJbt-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 14.1.0
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20240719/202407190741.8fA9KJbt-lkp@intel.com/reproduce)
->=20
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202407190741.8fA9KJbt-lkp=
-@intel.com/
->=20
-> All errors (new ones prefixed by >>):
->=20
->    fs/coda/inode.c: In function 'coda_parse_fd':
-> >> fs/coda/inode.c:129:13: error: 'param' undeclared (first use in this f=
-unction); did you mean 'parameq'?
->      129 |         if (param->type =3D=3D fs_value_is_file) {
->          |             ^~~~~
->          |             parameq
->    fs/coda/inode.c:129:13: note: each undeclared identifier is reported o=
-nly once for each function it appears in
-> >> fs/coda/inode.c:133:29: error: 'result' undeclared (first use in this =
-function); did you mean 'mf_result'?
->      133 |                 file =3D fget(result->uint_32);
->          |                             ^~~~~~
->          |                             mf_result
+Hi, Jinjie,
 
-D'oh. I compile tested it but this fs wasn't enabled in my config...
+Thank you for your patch, but I think it is better to use drdtime()
+instead of get_random_u16()? drdtime() is similar to rdtsc() of x86
+which is defined in arch/loongarch/include/asm/loongarch.h.
 
-My bad.
+Huacai
 
-> vim +129 fs/coda/inode.c
->=20
->    121=09
->    122	static int coda_parse_fd(struct fs_context *fc, int fd)
->    123	{
->    124		struct coda_fs_context *ctx =3D fc->fs_private;
->    125		struct file *file;
->    126		struct inode *inode;
->    127		int idx;
->    128=09
->  > 129		if (param->type =3D=3D fs_value_is_file) {
->    130			file =3D param->file;
->    131			param->file =3D NULL;
->    132		} else {
->  > 133			file =3D fget(result->uint_32);
->    134		}
->    135		if (!file)
->    136			return -EBADF;
->    137=09
->    138		inode =3D file_inode(file);
->    139		if (!S_ISCHR(inode->i_mode) || imajor(inode) !=3D CODA_PSDEV_MAJO=
-R) {
->    140			fput(file);
->    141			return invalf(fc, "code: Not coda psdev");
->    142		}
->    143=09
->    144		idx =3D iminor(inode);
->    145		fput(file);
->    146=09
->    147		if (idx < 0 || idx >=3D MAX_CODADEVS)
->    148			return invalf(fc, "coda: Bad minor number");
->    149		ctx->idx =3D idx;
->    150		return 0;
->    151	}
->    152=09
->=20
-> --=20
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---do7lc52poc6dkn2n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZpm/mwAKCRAol/rSt+lE
-b95FAP4gdjRQXK5CbTmJcPujw06DkpWycW9hxPhlrHgb7FwyxAEA1vD9yI4XGgEl
-48BqfCvUda6dVlyBk4J9L/JBLdF1jwk=
-=5Uys
------END PGP SIGNATURE-----
-
---do7lc52poc6dkn2n--
+On Thu, Jul 18, 2024 at 8:42=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
+>
+> Add support of kernel stack offset randomization while handling syscall,
+> the offset is defaultly limited by KSTACK_OFFSET_MAX().
+>
+> In order to avoid trigger stack canaries (due to __builtin_alloca) and
+> slowing down the entry path, use __no_stack_protector attribute to
+> disable stack protector for do_syscall() at function level.
+>
+> With this patch, the REPORT_STACK test show that:
+>         `loongarch64 bits of stack entropy: 7`
+>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/loongarch/Kconfig          |  1 +
+>  arch/loongarch/kernel/syscall.c | 16 +++++++++++++++-
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index ddc042895d01..fcf6451b4e38 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -106,6 +106,7 @@ config LOONGARCH
+>         select HAVE_ARCH_KFENCE
+>         select HAVE_ARCH_KGDB if PERF_EVENTS
+>         select HAVE_ARCH_MMAP_RND_BITS if MMU
+> +       select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+>         select HAVE_ARCH_SECCOMP
+>         select HAVE_ARCH_SECCOMP_FILTER
+>         select HAVE_ARCH_TRACEHOOK
+> diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/sysc=
+all.c
+> index ec17cd5163b7..a332c6cb76ec 100644
+> --- a/arch/loongarch/kernel/syscall.c
+> +++ b/arch/loongarch/kernel/syscall.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/entry-common.h>
+>  #include <linux/errno.h>
+>  #include <linux/linkage.h>
+> +#include <linux/randomize_kstack.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/unistd.h>
+>
+> @@ -39,7 +40,7 @@ void *sys_call_table[__NR_syscalls] =3D {
+>  typedef long (*sys_call_fn)(unsigned long, unsigned long,
+>         unsigned long, unsigned long, unsigned long, unsigned long);
+>
+> -void noinstr do_syscall(struct pt_regs *regs)
+> +__no_stack_protector void noinstr do_syscall(struct pt_regs *regs)
+>  {
+>         unsigned long nr;
+>         sys_call_fn syscall_fn;
+> @@ -55,11 +56,24 @@ void noinstr do_syscall(struct pt_regs *regs)
+>
+>         nr =3D syscall_enter_from_user_mode(regs, nr);
+>
+> +       add_random_kstack_offset();
+> +
+>         if (nr < NR_syscalls) {
+>                 syscall_fn =3D sys_call_table[nr];
+>                 regs->regs[4] =3D syscall_fn(regs->orig_a0, regs->regs[5]=
+, regs->regs[6],
+>                                            regs->regs[7], regs->regs[8], =
+regs->regs[9]);
+>         }
+>
+> +       /*
+> +        * This value will get limited by KSTACK_OFFSET_MAX(), which is 1=
+0
+> +        * bits. The actual entropy will be further reduced by the compil=
+er
+> +        * when applying stack alignment constraints: 16-byte (i.e. 4-bit=
+)
+> +        * aligned, which will remove the 4 low bits from any entropy cho=
+sen
+> +        * here.
+> +        *
+> +        * The resulting 6 bits of entropy is seen in SP[9:4].
+> +        */
+> +       choose_random_kstack_offset(get_random_u16());
+> +
+>         syscall_exit_to_user_mode(regs);
+>  }
+> --
+> 2.34.1
+>
+>
