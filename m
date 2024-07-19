@@ -1,104 +1,133 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33028148850;
-	Fri, 19 Jul 2024 06:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FAE46426
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2024 06:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721368891; cv=none; b=IGx2A24fvK8iCbl+XCWN4Tk3Tw7VdTQath7164zzetMdS/5sdCKltPgsOE2KUJNDKudwCl3h9zchPRF1UtsqXWcZUxn6CdVZUGS6ZaFzOB+08EVi+r9Vxz5tsYDbrHQcFQtykV+WEwv5mgjiiJm8c0+U5dbJB4kxHEAOlS49l3U=
+	t=1721369119; cv=none; b=KJTQKde0dUx48at80MP+gZalJZaLhFd5VxGbDq01qlnsFTZ3krmXOpBzwtXEbsNI82L2L3nHe9+Ni5FiDp+1KmEzb6PSo9+1yNRNcQQ0AF1LSI5+GbZ7gTHc0oVUv/b6xVU9Jxx6CL2PT7TdqTgJDxbyVu5YC1lhlZ2GM0vZDSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721368891; c=relaxed/simple;
-	bh=pA6k4V9dwaoeIp5xyfNNE1f4Xu/kAiokzrri2F4N/yE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=oI5Bqjz9Mj0gnfnkxs0em52zX3oAUDvEeRc7qGRyGSSWgvt2RNZwhUG++IZYPDCiBJy1lAQK08z8wbEqe7SCbnXeEfp77rH3aBwu36DIz4rc+bsbV2JeVHNmcLUwXqODKkJDw/lxAn771rA5iZ5a+NJVkrSVSIabM1SyE3p49nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E664C1A0264;
-	Fri, 19 Jul 2024 08:01:21 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B41D41A01B8;
-	Fri, 19 Jul 2024 08:01:21 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id BF6571820F77;
-	Fri, 19 Jul 2024 14:01:19 +0800 (+08)
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: tj@kernel.org,
-	dlemoal@kernel.org,
-	cassel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-ide@vger.kernel.org,
-	stable@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	kernel@pengutronix.de,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v4 5/6] ata: ahci_imx: Enlarge RX water mark for i.MX8QM SATA
-Date: Fri, 19 Jul 2024 13:42:15 +0800
-Message-Id: <1721367736-30156-6-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1721367736-30156-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1721367736-30156-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1721369119; c=relaxed/simple;
+	bh=ybK4WiHeRrPgRlhiRBN0yKW8AYVzYoZMH2BWTeOihLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uP2gObhZByTY84LTNiQpx/pQBnY73OwGGl5dUrYZ7XsDFmaxrL7DrFHC4ZQeR/Gaf0wLgNRlQGkl3LgD3RtU7dJ2fcxpruJTkK/5WHZ+9E0r50itZmrssN07VNkJqeRGAHz/CMoRAIbWlVaMOC9cQjfPhfza9ty+UnvpkaJI5KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sUgjl-0005Ez-4x; Fri, 19 Jul 2024 08:05:01 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sUgjk-000cSF-0m; Fri, 19 Jul 2024 08:05:00 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sUgjj-005qk2-2x;
+	Fri, 19 Jul 2024 08:04:59 +0200
+Date: Fri, 19 Jul 2024 08:04:59 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>, Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v2 2/2] wifi: mwifiex: add support for WPA-PSK-SHA256
+Message-ID: <ZpoCC042qMcOQ83N@pengutronix.de>
+References: <20240717-mwifiex-wpa-psk-sha256-v2-0-eb53d5082b62@pengutronix.de>
+ <20240717-mwifiex-wpa-psk-sha256-v2-2-eb53d5082b62@pengutronix.de>
+ <ZpmdVq2CkxRcLxvO@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZpmdVq2CkxRcLxvO@google.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The RXWM(RxWaterMark) sets the minimum number of free location within
-the RX FIFO before the watermark is exceeded which in turn will cause
-the Transport Layer to instruct the Link Layer to transmit HOLDS to
-the transmitting end.
+On Thu, Jul 18, 2024 at 03:55:18PM -0700, Brian Norris wrote:
+> Hi Sascha,
+> 
+> On Wed, Jul 17, 2024 at 10:30:08AM +0200, Sascha Hauer wrote:
+> > This adds support for the WPA-PSK AKM suite with SHA256 as hashing
+> > method (WPA-PSK-SHA256). Tested with a wpa_supplicant provided AP
+> > using key_mgmt=WPA-PSK-SHA256.
+> > 
+> > Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > ---
+> >  drivers/net/wireless/marvell/mwifiex/fw.h      | 1 +
+> >  drivers/net/wireless/marvell/mwifiex/uap_cmd.c | 3 +++
+> >  2 files changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+> > index 3adc447b715f6..1c76754b616ff 100644
+> > --- a/drivers/net/wireless/marvell/mwifiex/fw.h
+> > +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+> > @@ -415,6 +415,7 @@ enum MWIFIEX_802_11_PRIVACY_FILTER {
+> >  #define KEY_MGMT_NONE               0x04
+> >  #define KEY_MGMT_PSK                0x02
+> >  #define KEY_MGMT_EAP                0x01
+> > +#define KEY_MGMT_PSK_SHA256         0x100
+> >  #define CIPHER_TKIP                 0x04
+> >  #define CIPHER_AES_CCMP             0x08
+> >  #define VALID_CIPHER_BITMAP         0x0c
+> > diff --git a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > index 7f822660fd955..c055fdc7114ba 100644
+> > --- a/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > +++ b/drivers/net/wireless/marvell/mwifiex/uap_cmd.c
+> > @@ -60,6 +60,9 @@ int mwifiex_set_secure_params(struct mwifiex_private *priv,
+> >  		case WLAN_AKM_SUITE_PSK:
+> >  			bss_config->key_mgmt = KEY_MGMT_PSK;
+> >  			break;
+> > +		case WLAN_AKM_SUITE_PSK_SHA256:
+> > +			bss_config->key_mgmt = KEY_MGMT_PSK_SHA256;
+> > +			break;
+> 
+> I feel like this relates to previous questions you've had [1], and while
+> I think the answer at the time made sense to me (basically, EAP and PSK
+> are mutually exclusive), it makes less sense to me here that PSK-SHA256
+> is mutually exclusive with PSK. And in particular, IIUC, this means that
+> the ordering in a wpa_supplicant.conf line like
+> 
+>   key_mgmt=WPA-PSK WPA-PSK-SHA256
+> 
+> matters -- only the latter will actually be in use.
+> 
+> Is that intended? Is this really a single-value field, and not a
+> multiple-option bitfield?
 
-Based on the default RXWM value 0x20, RX FIFO overflow might be
-observed on i.MX8QM MEK board, when some Gen3 SATA disks are used.
+It seems that when only the KEY_MGMT_PSK_SHA256 is set, then
+KEY_MGMT_PSK also works. Likewise, when only KEY_MGMT_SAE is set, then
+also KEY_MGMT_PSK_SHA256 and KEY_MGMT_PSK work.
+I gave it a test and also was surprised to see that we only have to set
+the "most advanced" bit which then includes the "less advanced" features
+automatically.
 
-The FIFO overflow will result in CRC error, internal error and protocol
-error, then the SATA link is not stable anymore.
+I could change setting the key_mgmt bits to |= as it feels more natural
+and raises less eyebrows, but in my testing it didn't make a difference.
 
-To fix this issue, enlarge RX water mark setting from 0x20 to 0x29.
+BTW wpa_supplicant parses the key_mgmt options into a bitfield which is
+then evaluated elsewhere, so the order the AKM suites are passed to the
+kernel is always the same, regardless of the order they appear in the
+config.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/ata/ahci_imx.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Sascha
 
-diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c
-index e94c0fdea2260..b6ad0fe5fbbcc 100644
---- a/drivers/ata/ahci_imx.c
-+++ b/drivers/ata/ahci_imx.c
-@@ -45,6 +45,10 @@ enum {
- 	/* Clock Reset Register */
- 	IMX_CLOCK_RESET				= 0x7f3f,
- 	IMX_CLOCK_RESET_RESET			= 1 << 0,
-+	/* IMX8QM SATA specific control registers */
-+	IMX8QM_SATA_AHCI_PTC			= 0xc8,
-+	IMX8QM_SATA_AHCI_PTC_RXWM_MASK		= GENMASK(6, 0),
-+	IMX8QM_SATA_AHCI_PTC_RXWM		= 0x29,
- };
- 
- enum ahci_imx_type {
-@@ -466,6 +470,12 @@ static int imx8_sata_enable(struct ahci_host_priv *hpriv)
- 	phy_power_off(imxpriv->cali_phy0);
- 	phy_exit(imxpriv->cali_phy0);
- 
-+	/* RxWaterMark setting */
-+	val = readl(hpriv->mmio + IMX8QM_SATA_AHCI_PTC);
-+	val &= ~IMX8QM_SATA_AHCI_PTC_RXWM_MASK;
-+	val |= IMX8QM_SATA_AHCI_PTC_RXWM;
-+	writel(val, hpriv->mmio + IMX8QM_SATA_AHCI_PTC);
-+
- 	return 0;
- 
- err_sata_phy_exit:
 -- 
-2.37.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
