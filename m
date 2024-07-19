@@ -1,117 +1,172 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817AA5CB8;
-	Fri, 19 Jul 2024 02:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBFAC147
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2024 02:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721357728; cv=none; b=tPkSDlzduj9+eFMsc12toyzdcX3UZG+FNnyQdgWW9CPTOheYd8XbXRdHp767JJC2M+UQvcfgXAqMzi0qO8Evu+a0nPKeUMdF0YJH1rI8qbgYVXgUUGaxd5FVr79KhlKJf1icJh/eU3ZDG2Cj4CVbCAf6/gWSqkRoI4V4H40qGVM=
+	t=1721357757; cv=none; b=bdxE5C2s9lY1ZRzqKdKQmRe7TM9oB7V8wXnom72gxsiu8MX+9w9LiZBtDMSZI+pKDX7G/QxQQb5+EPyE1WCb367X5YSa4BEJAUTCDojPtfGy9ouegPTH8Dk5Cn1laaawwrMC5zEI1imqxZlmV6DI6MH20cyP/d1rlX51uAxlX4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721357728; c=relaxed/simple;
-	bh=R5N4gQyCN1DwSY49MXvErquqijlhuGr0eQsmbViwe5s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DANHJyA61wFz+TMgHQbrBDiHtv3dfmNt4vO7BHQO/valuUbSBi8iKWdSmB+KicUYp/lFdi2t2ltoH5HlsKeiBPn8VUDJkTdjgX5mStbefj31A1W9v6xP9Fy6q1CW1dbeXN2+hBN2uJlKwgERNTNLTG+mcrpuNECralOf0g1XRYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WQDMv0dS4z4f3jRG;
-	Fri, 19 Jul 2024 10:36:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3AB811A131C;
-	Fri, 19 Jul 2024 10:37:11 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDXuzlU0Zlmiw8kAg--.57041S6;
-	Fri, 19 Jul 2024 10:37:10 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: bvanassche@acm.org,
-	jack@suse.cz,
-	hch@infradead.org,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2 2/3] blk-ioprio: remove ioprio_blkcg_from_bio()
-Date: Fri, 19 Jul 2024 10:34:30 +0800
-Message-Id: <20240719023431.3800647-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240719023431.3800647-1-yukuai1@huaweicloud.com>
-References: <20240719023431.3800647-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1721357757; c=relaxed/simple;
+	bh=376oq4s/RAHN/ui1eV8N1i/hUAVngv9Xukgp7ciOSJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A2uXgc+Ro3e7o0t3+b/1sx8Kh4dYutEImxrfcFbx2vL0Vg7QLOFrH7ZLKMfq5cWrBa6DV1+vWuv20ARf8nFJevzvdRl4FZ3ByU2eBgweuLDa2uuc4jxjmBsdSp9HIP86O1RXVsbaLCW5HOPI/RXBnbydSOFiH8Cd708Xjivb4Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=b1i22ThB; arc=none smtp.client-ip=209.85.217.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="b1i22ThB"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-48fde3a2b17so423807137.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 19:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1721357754; x=1721962554; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xIhpumDPm4fvOwY3jLHPpABCQS7IJTZrwNfks0Zro8o=;
+        b=b1i22ThBGFOVq6eIw7vNJM+Fy723sAHA4rYJtUh75fmGxWqQempsJja3secg6Xwgy5
+         GNeOQNZV4Ckm4AOWrUPBnOWandujfh5USeb/gDS8VwTd7H/zz5iJUKExUJWqRf/r3DnC
+         GXjbpoEY57JxisbOA9gVXYLQdIiKpANsijzUi86WnqLTkPUXGGVZJYlMaARRQitNwXxg
+         q4u45hPkYmBl3CNv0i+wec2qauDpWiq0qcCywqkMqegcDM5ndvhfSXuubGrZKoRmVEVt
+         jfpopKm8n6MmjS48TEa8LFMgEB7dtT5hq8munwswhuoXVF4jLsY9icomT9+z3APrbK+H
+         TzhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721357754; x=1721962554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xIhpumDPm4fvOwY3jLHPpABCQS7IJTZrwNfks0Zro8o=;
+        b=JDhtVaMZ8p530R4ZRhBWq9yKb5BnwKi7ALLiZrDw5E5u5bj5lIMGJs57Eiu81pJN0f
+         Bx6lMvauJu8AuYYjttNwEZz3KRjMW0lAEqH1DlWL26rNellgFBiBsxLs23Js6YZ4udFK
+         NhhIxAn7suMYCMbIKuotd3XbdYiZRzgNWCXCgcb7NyY9IFu2Z9Rdv39lJjicbZgNvlgq
+         tZ++SWYVqV8md7Y7px24kAYpXg8EGXH13rGSTwObJLmqbN7jGUNaVFHoYxEVOrseCqbU
+         tzaFRPEKXQT2pNibfxpa4Ovz3jN2x/NGubPm4snX2l/79re1d8jzO3dDGOX1lZqU8A0I
+         J2Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7r/FFg5Z9D1KoVpQ29fyStMm6Jnzx0kznvXMU1eKl3Qk84Rp95opqXRebV+QGBpCM8yxT3XOZ5xtShgYbnhlC9s2rZvBts2fn8Ogq
+X-Gm-Message-State: AOJu0YwuYj/yzzOksF1H0n/A89LTmseDdrFfK2FLhvPjtT2YLoo8RAEG
+	+1R+1acHTco+bfQ3D+4HIzhhOyK5Xe6Kbvgky0hucv+GmE6zJa5BM55xPaB4McKKnbclahyO+EJ
+	zPLHj72O+WP+La63D28gYlBpMpcTYt5BaII7c1w==
+X-Google-Smtp-Source: AGHT+IF9USjnlYvphL36rdSXytfyHnoWlCthQOZzmJ7NTCLIEur/EE/+i/CoA2/MuhlEZSKE5A/DrhXQKIDnwO6Rq+4=
+X-Received: by 2002:a05:6102:80a4:b0:48f:df86:db3 with SMTP id
+ ada2fe7eead31-491597faba5mr8705048137.3.1721357754635; Thu, 18 Jul 2024
+ 19:55:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXuzlU0Zlmiw8kAg--.57041S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr43tFWxuF45Gw18CFyxAFb_yoW8Gw4fpF
-	43Grs0kFWv9F4Iqr4DXa1xAr9akay7tr15J3s5Ka1Yvr4Uur98K3WrCrs3JFW8AFWUCrZx
-	uF1vqFyUJF4UCwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUQXo7UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20240718202611.1695164-1-pasha.tatashin@soleen.com> <2fbbxcsjs7vtzpb6a5wudbppcr2wgc2xwdw3cgs6ejzx6rioze@z2sct6rbulng>
+In-Reply-To: <2fbbxcsjs7vtzpb6a5wudbppcr2wgc2xwdw3cgs6ejzx6rioze@z2sct6rbulng>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 18 Jul 2024 22:55:17 -0400
+Message-ID: <CA+CK2bB4RELLHExbkL444ArTtUnqiYVYKJ1rLQGarLyenY6WxQ@mail.gmail.com>
+Subject: Re: [PATCH v4] vmstat: Kernel stack usage histogram
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: akpm@linux-foundation.org, jpoimboe@kernel.org, kent.overstreet@linux.dev, 
+	peterz@infradead.org, nphamcs@gmail.com, cerasuolodomenico@gmail.com, 
+	surenb@google.com, lizhijian@fujitsu.com, willy@infradead.org, vbabka@suse.cz, 
+	ziy@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Thu, Jul 18, 2024 at 7:36=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
+v> wrote:
+>
+> On Thu, Jul 18, 2024 at 08:26:11PM GMT, Pasha Tatashin wrote:
+> [...]
+> > diff --git a/include/linux/sched/task_stack.h b/include/linux/sched/tas=
+k_stack.h
+> > index ccd72b978e1f..65e8c9fb7f9b 100644
+> > --- a/include/linux/sched/task_stack.h
+> > +++ b/include/linux/sched/task_stack.h
+> > @@ -95,9 +95,51 @@ static inline int object_is_on_stack(const void *obj=
+)
+> >  extern void thread_stack_cache_init(void);
+> >
+> >  #ifdef CONFIG_DEBUG_STACK_USAGE
+> > +#ifdef CONFIG_VM_EVENT_COUNTERS
+> > +#include <linux/vm_event_item.h>
+> > +
+> > +/* Count the maximum pages reached in kernel stacks */
+> > +static inline void kstack_histogram(unsigned long used_stack)
+>
+> Any specific reason to add this function in header?
 
-Currently, if config is enabled, then ioprio is always enabled by
-default from blkcg_init_disk(), hence there is no point to check if
-the policy is enabled from blkg in ioprio_blkcg_from_bio(). Hence remove
-it and get blkcg directly from bio.
+For performance reasons to keep it inlined into stack_not_used() which
+is also defined as inline function in this header.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-ioprio.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+>
+> > +{
+> > +     if (used_stack <=3D 1024)
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_1K]);
+>
+> Why not count_vm_event(KSTACK_1K)? Avoiding header include recursion?
 
-diff --git a/block/blk-ioprio.c b/block/blk-ioprio.c
-index 4051fada01f1..ae52b418e984 100644
---- a/block/blk-ioprio.c
-+++ b/block/blk-ioprio.c
-@@ -84,16 +84,6 @@ ioprio_blkcg_from_css(struct cgroup_subsys_state *css)
- 	return blkcg_to_ioprio_blkcg(css_to_blkcg(css));
- }
- 
--static struct ioprio_blkcg *ioprio_blkcg_from_bio(struct bio *bio)
--{
--	struct blkg_policy_data *pd = blkg_to_pd(bio->bi_blkg, &ioprio_policy);
--
--	if (!pd)
--		return NULL;
--
--	return blkcg_to_ioprio_blkcg(pd->blkg->blkcg);
--}
--
- static int ioprio_show_prio_policy(struct seq_file *sf, void *v)
- {
- 	struct ioprio_blkcg *blkcg = ioprio_blkcg_from_css(seq_css(sf));
-@@ -186,7 +176,7 @@ static struct blkcg_policy ioprio_policy = {
- 
- void blkcg_set_ioprio(struct bio *bio)
- {
--	struct ioprio_blkcg *blkcg = ioprio_blkcg_from_bio(bio);
-+	struct ioprio_blkcg *blkcg = blkcg_to_ioprio_blkcg(bio->bi_blkg->blkcg);
- 	u16 prio;
- 
- 	if (!blkcg || blkcg->prio_policy == POLICY_NO_CHANGE)
--- 
-2.39.2
+I could not include "linux/vmstat.h" into "linux/sched/task_stack.h"
+because it introduces some dependencies such linux/mm.h and
+linux/fs.h, uapi/linux/stat.h, and when all of those are added it
+still fails to compile on some architectures, so it was just simpler
+to stop resolving the conflicts and use this_cpu_inc() directly.
 
+>
+> > +#if THREAD_SIZE > 1024
+> > +     else if (used_stack <=3D 2048)
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_2K]);
+> > +#endif
+> > +#if THREAD_SIZE > 2048
+> > +     else if (used_stack <=3D 4096)
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_4K]);
+> > +#endif
+> > +#if THREAD_SIZE > 4096
+> > +     else if (used_stack <=3D 8192)
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_8K]);
+> > +#endif
+> > +#if THREAD_SIZE > 8192
+> > +     else if (used_stack <=3D 16384)
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_16K]);
+> > +#endif
+> > +#if THREAD_SIZE > 16384
+> > +     else if (used_stack <=3D 32768)
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_32K]);
+> > +#endif
+> > +#if THREAD_SIZE > 32768
+> > +     else if (used_stack <=3D 65536)
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_64K]);
+> > +#endif
+> > +#if THREAD_SIZE > 65536
+> > +     else
+> > +             this_cpu_inc(vm_event_states.event[KSTACK_REST]);
+> > +#endif
+> > +}
+> > +#else /* !CONFIG_VM_EVENT_COUNTERS */
+> > +static inline void kstack_histogram(unsigned long used_stack) {}
+> > +#endif /* CONFIG_VM_EVENT_COUNTERS */
+> > +
+> >  static inline unsigned long stack_not_used(struct task_struct *p)
+> >  {
+> >       unsigned long *n =3D end_of_stack(p);
+> > +     unsigned long unused_stack;
+> >
+> >       do {    /* Skip over canary */
+> >  # ifdef CONFIG_STACK_GROWSUP
+> > @@ -108,10 +150,13 @@ static inline unsigned long stack_not_used(struct=
+ task_struct *p)
+> >       } while (!*n);
+> >
+> >  # ifdef CONFIG_STACK_GROWSUP
+> > -     return (unsigned long)end_of_stack(p) - (unsigned long)n;
+> > +     unused_stack =3D (unsigned long)end_of_stack(p) - (unsigned long)=
+n;
+> >  # else
+> > -     return (unsigned long)n - (unsigned long)end_of_stack(p);
+> > +     unused_stack =3D (unsigned long)n - (unsigned long)end_of_stack(p=
+);
+> >  # endif
+> > +     kstack_histogram(THREAD_SIZE - unused_stack);
+> > +
+> > +     return unused_stack;
+> >  }
+> >  #endif
+> >  extern void set_task_stack_end_magic(struct task_struct *tsk);
+>
