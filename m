@@ -1,122 +1,99 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6805FDDB1
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2024 03:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AA623B0;
+	Fri, 19 Jul 2024 03:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721358734; cv=none; b=Cza3RD8td8rDT8yiRhDVbzgeP8Z3xINZg0cy5ygThsjo06uJVcmVzRLdkXaC++98mBAM1PdmTcC3f7popk8KKuNZaOqwjLEtvB+NYL2UUN2Xyc3ji9AvD3OrWYvbFRwQ5RYeXR/5+hfsU42r3TQ6KVPcLpiYHlPRMLPj2XzIQ5Q=
+	t=1721358930; cv=none; b=kOH31KRHPSySvIdcvgTjg2j8SFgy+bjqVQIcMnAsT9TQwfY4PEJHcLjUQL+a9fGM/R5QmM756nuDJO4Jnk2KPnt+JBU/B6AF7kfiLikdg/rArjE/MSeH3t7OJWcXgYPyd4UGbYNrfEj1k5+jDnLC+7cHrVQQU/EcvBaLFid1eL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721358734; c=relaxed/simple;
-	bh=OtxVFTr4gXr100XAGy8UzNeghE+SSoRlyYJ3oX/BbxU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L3mh3M+7VQ8ooaZXrv8XZwleYIm+V99oQUMtAfK8ocZLgOEzHMqGu1Borvf+fTjIyvdSFC5+guumLBSZhAHd5yh75McmlfX6NCdmLCz5dewOncCtkAzzxI+7quyH6YrzM2oIhvLuLvrgx/TwXo5ihgCI/8WBbGC0BN+V4l2xrio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CPK4omv9; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CPK4omv9"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a77b60cafecso142786666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 20:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721358731; x=1721963531; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PWrlWFsEEKaXoZhx0GTyR+UbVi2aC5Ulw5/+3CDCuiw=;
-        b=CPK4omv99XtXOJr2jFXeVOi8aJGGy/zNmwWRXkSXtqopr9t17M6mwoYbOZZT1nM+W9
-         we2HuUUqhSN8pK+JgIySDR474RDBlOh8TcDHLZ6XBwydswpbSYFcp0ukHmg1LfjVzZTE
-         dMpzWt7KKgH/fPLxu5zIqaGYYkHebT9v4Mx3xYHv1vfHYVR2akjZQsYeXh9z3zjbkiZc
-         zWdU92yjU/NQv48+lk8v1tdLwv2ZiowseX6IHZR+MiJnHwttV6OgcRp2zTK6YOU0D9Cw
-         HM4z+38zLRNZQU0q2elHwgf6diSM7iGKAlWyyPMuqjRwHC/fYw1UnTAld+P2768tNYj0
-         r7MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721358731; x=1721963531;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PWrlWFsEEKaXoZhx0GTyR+UbVi2aC5Ulw5/+3CDCuiw=;
-        b=amTy/LQ+YOn7nkmcIgpID8zASsxu1MLW48D7PiVvUeMEh6B1JJxfQpJ7FuODLMWoFE
-         n4Yb67fde2NcToIItyxRh2ufqZEzRs7zOsTsxNxJkX5W7olC9Sau3Gelsg/Ri7xBhd1q
-         Am4p+n42wcIywbrF94rQi4PgAu2pju6utLJHOKz00Nuuyk5WjwOd3ffoaHmJThEyvuAU
-         8EDikAVs7xck63AmGmXoFSIhC52NOjuWN2pQbtku3fM2swC7LrVO+onjPowXlG1Nd9SQ
-         4u/wMxG+/ymE43qpw+TUDcCh6XzTOO6VvINtSiaChtd6bQOZCyjKg3cf2RGEIzLQ0hvL
-         LxtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU11StOsUeYF6PVVZC9nY5VQWcDFrQwTYA20jCYZIZ1CN8NGHwMCEMI0vU3jeWHF6NId4fsf2coPmwMmPR8ZAPNCd+ZaR9DNxfvUmch
-X-Gm-Message-State: AOJu0YzD/C3gVmb6GF62dSlPJ/krlvtLJPeFuEpmwWaRpQHxoZfynLtR
-	lz9a35a6xcz7jnRnLaMwmX+iOdnVoOvjUoGx5FWYJ/S22cTOZxgxUM8Pj0V29z92DpgXh8rCR2R
-	1LfD8V9r9dOhexEXv6TUWgVzz5vIbwJO3udj4
-X-Google-Smtp-Source: AGHT+IFkZK7JtKXq3yk+FqsXb0FFcMjlEbMm01qd/yCdC4ALR8VoUvA++xZIWpXXc+YkUidBTWzX0vp3A2obLGcWs5I=
-X-Received: by 2002:a17:906:487:b0:a79:fbf0:8106 with SMTP id
- a640c23a62f3a-a7a01139bc2mr457799066b.6.1721358729904; Thu, 18 Jul 2024
- 20:12:09 -0700 (PDT)
+	s=arc-20240116; t=1721358930; c=relaxed/simple;
+	bh=9r9VaX7WBj33b5Ca1NQAzQZ6oU1wOpuKr2v2zJYbabs=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=DEekYo2AvblGgq5CJNogknS5OcItqjx+WAKmTjJ44Q99eQ9yRayFLZUnKpNhRNnExwZkaUsOL04lcGJw0Wf6fNiWIGrK1cMN6BKOQEuuIwK0BkL4kkliz+mymSmgP0jqWrrXh7MT1pRLiHS0jtlbORM1TDcAFVBxhVaZmIvzcd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WQFCy5R2Pz4f3kw9;
+	Fri, 19 Jul 2024 11:15:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 130071A0F49;
+	Fri, 19 Jul 2024 11:15:24 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgCHazlK2plmtZ4mAg--.58042S3;
+	Fri, 19 Jul 2024 11:15:23 +0800 (CST)
+Subject: Re: [PATCH] block: fix deadlock between sd_remove & sd_release
+To: Bart Van Assche <bvanassche@acm.org>, YangYang <yang.yang@vivo.com>,
+ Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <20240716083801.809763-1-yang.yang@vivo.com>
+ <1859a975-8c53-140c-f5b5-898ad5e7f653@huaweicloud.com>
+ <451c8746-5260-4be6-b78d-54305c94ef73@vivo.com>
+ <a81cdd5b-d6ad-2a4f-0f6d-40e9db6233cd@huaweicloud.com>
+ <51411297-f579-4229-a72c-c5bd5f27df34@vivo.com>
+ <e7c95d49-d279-451c-9bd0-3f4009c7afcd@acm.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <331c036b-322e-0658-ff88-4cce080c5aba@huaweicloud.com>
+Date: Fri, 19 Jul 2024 11:15:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <172070450139.2992819.13210624094367257881.stgit@firesoul>
- <a4e67f81-6946-47c0-907e-5431e7e01eb1@kernel.org> <CAJD7tkYV3iwk-ZJcr_==V4e24yH-1NaCYFUL7wDaQEi8ZXqfqQ@mail.gmail.com>
- <100caebf-c11c-45c9-b864-d8562e2a5ac5@kernel.org> <k3aiufe36mb2re3fyfzam4hqdeshvbqcashxiyb5grn7w2iz2s@2oeaei6klok3>
-In-Reply-To: <k3aiufe36mb2re3fyfzam4hqdeshvbqcashxiyb5grn7w2iz2s@2oeaei6klok3>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 18 Jul 2024 20:11:32 -0700
-Message-ID: <CAJD7tkZbOf7125mcuN-EQdn6MB=dEasHWpoLmY1p-KCjjRxGXQ@mail.gmail.com>
-Subject: Re: [PATCH V7 1/2] cgroup/rstat: Avoid thundering herd problem by
- kswapd across NUMA nodes
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>, tj@kernel.org, cgroups@vger.kernel.org, 
-	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
-	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e7c95d49-d279-451c-9bd0-3f4009c7afcd@acm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCHazlK2plmtZ4mAg--.58042S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7GrWUXry7Gr4xGrykXF1kXwb_yoW3trc_uw
+	1Yqr1DGa48ZF1vqrsIkw18GryUCa1fKF4xu3yvqFs8JFyxXwn8Zw4rGrZ09r1qqa1IvwnI
+	gr4rWFWUKry7ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbSfO7UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Thu, Jul 18, 2024 at 5:41=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.de=
-v> wrote:
->
-> Hi Jesper,
->
-> On Wed, Jul 17, 2024 at 06:36:28PM GMT, Jesper Dangaard Brouer wrote:
-> >
-> [...]
-> >
-> >
-> > Looking at the production numbers for the time the lock is held for lev=
-el 0:
-> >
-> > @locked_time_level[0]:
-> > [4M, 8M)     623 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@               |
-> > [8M, 16M)    860 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-> > [16M, 32M)   295 |@@@@@@@@@@@@@@@@@                                   |
-> > [32M, 64M)   275 |@@@@@@@@@@@@@@@@                                    |
-> >
->
-> Is it possible to get the above histogram for other levels as well? I
-> know this is 12 numa node machine, how many total CPUs are there?
->
-> > The time is in nanosec, so M corresponds to ms (milliseconds).
-> >
-> > With 36 flushes per second (as shown earlier) this is a flush every
-> > 27.7ms.  It is not unreasonable (from above data) that the flush time
-> > also spend 27ms, which means that we spend a full CPU second flushing.
-> > That is spending too much time flushing.
->
-> One idea to further reduce this time is more fine grained flush
-> skipping. At the moment we either skip the whole flush or not. How
-> about we make this decision per-cpu? We already have per-cpu updates
-> data and if it is less than MEMCG_CHARGE_BATCH, skip flush on that cpu.
 
-Good idea.
 
-I think we would need a per-subsystem callback to decide whether we
-want to flush the cgroup or not. This needs to happen in the core
-rstat flushing code (not the memcg flushing code), as we need to make
-sure we do not remove the cgroup from the per-cpu updated tree if we
-don't flush it.
+在 2024/07/18 0:23, Bart Van Assche 写道:
+> On 7/17/24 3:15 AM, YangYang wrote:
+>> These sysfs nodes are in different directories, the scsi node located
+>> at /sys/bus/scsi/devices/0:0:0:0 and the gendisk node located at
+>> /sys/block/sda. Would it be necessary to wait for the completion of
+>> the scsi sysfs nodes' read/write operations before removing the
+>> gendisk sysfs node?
+> 
+> No. sysfs_remove_files() waits for pending read and write operations to
+> complete.
+> 
 
-More generally, I think we should be able to have a "force" flush API
-that skips all optimizations and ensures that a flush occurs. I think
-this will be needed in the cgroup_rstat_exit() path, where stats of a
-cgroup being freed must be propagated to its parent, no matter how
-insignificant they may be, to avoid inconsistencies.
+So I check this and actually gendisk kobject is a child of scsi disk
+kobject, not the other way. sda/device is just a symbol link.
+
+sda/device -> ../../../14:2:0:0.
+
+So, the sysfs api for gendisk itself doesn't issue IO, and as long as
+related driver doesn't create new such api under gendisk, this won't
+be a problem.
+
+Thanks,
+Kuai
+> Bart.
+> 
+> .
+> 
+
