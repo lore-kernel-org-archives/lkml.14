@@ -1,27 +1,27 @@
 Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6C91487C9;
-	Fri, 19 Jul 2024 06:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417F37BAE3;
+	Fri, 19 Jul 2024 06:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721368887; cv=none; b=cif+UXB9U00i95om93AjzpsSC1FhyfCqq4TJ6T2npRfJWVvIcqPd7KpnTVixqj0Zc/p5jruwHiadasko8hhGhueSiFs57cExUSejHHFPHoXElS4i4WDGpceSvgKbHtbsEypgICmNT/OQME8UyqBeDNRnGc3Yzid0On1jbU7t6K4=
+	t=1721368888; cv=none; b=icEW8XaGkBrxzCK/MzgzBEhP/jdLM/Anq3BSGl7DrVZHj2mRMpDuVHueHrBhh89PtCjkysWUpR0UhE93jsMFDSh8Mxp5a4OhYPcET9SU904LmVz1SCZT4bOp4N+SHMC6sXX28VVX/9X4oYOv7XzM6uayU2SMZhrDQORMNSTFLQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721368887; c=relaxed/simple;
-	bh=K6Es3M0LOa/W0gyl83mVOEgzXNqpRKkL4E6g7DtzYh0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=U6lECSZ2iI+35lzqia6aNEmcVhKCnkBAZNVP1tCk8OLCtaSMMftXS/XGchuiKARidNbQPKxgN0eVrl2IDwdtPxeXlZRF5qMM6Gaj7WLnHwZTle6KNcyFGZvQ0J1qnIQpmnpIX/1I6N7ZeblAyIp4eaUx5ZTVw/SE5AxfXoRymJQ=
+	s=arc-20240116; t=1721368888; c=relaxed/simple;
+	bh=B8R0+soTkRLKX7M1hwzeNsFHB8sKJ5BpKxBTvbjHMGU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=trKbY2ykIZK8eJ7RVfDLKCVTAPABshffAYa53yyEMmw/SdtktFaGEtu42vgvd9n7tyDTVDXeHu1/8KxEizsPHPd8Miu7SjJ++eL7AV9M31f959k/Oa8JDjlHr5naO2b0Ke2g5NCwlqEJpGLrrGdif1xxM/i7ES+uuPVWcf6iX2Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7FD002015F1;
-	Fri, 19 Jul 2024 08:01:23 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E73D5202753;
+	Fri, 19 Jul 2024 08:01:18 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 42AE42015E6;
-	Fri, 19 Jul 2024 08:01:23 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B57662015F8;
+	Fri, 19 Jul 2024 08:01:18 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 42DD81820F57;
-	Fri, 19 Jul 2024 14:01:21 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id BD1DA181D0FE;
+	Fri, 19 Jul 2024 14:01:16 +0800 (+08)
 From: Richard Zhu <hongxing.zhu@nxp.com>
 To: tj@kernel.org,
 	dlemoal@kernel.org,
@@ -40,9 +40,9 @@ Cc: linux-ide@vger.kernel.org,
 	imx@lists.linux.dev,
 	kernel@pengutronix.de,
 	Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH v4 6/6] ata: ahci_imx: Correct the email address
-Date: Fri, 19 Jul 2024 13:42:16 +0800
-Message-Id: <1721367736-30156-7-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v4 3/6] ata: ahci_imx: AHB clock rate setting is not required on i.MX8QM AHCI SATA
+Date: Fri, 19 Jul 2024 13:42:13 +0800
+Message-Id: <1721367736-30156-4-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1721367736-30156-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1721367736-30156-1-git-send-email-hongxing.zhu@nxp.com>
@@ -53,25 +53,68 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Correct the email address of driver author.
+i.MX8QM AHCI SATA doesn't need AHB clock rate to set the vendor
+specified TIMER1MS register.
+Do the AHB clock rate setting for i.MX53 and i.MX6Q AHCI SATA only.
 
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- drivers/ata/ahci_imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/ahci_imx.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c
-index b6ad0fe5fbbcc..965466c7a27e5 100644
+index 75258ed42d2ee..4dd98368f8562 100644
 --- a/drivers/ata/ahci_imx.c
 +++ b/drivers/ata/ahci_imx.c
-@@ -1039,6 +1039,6 @@ static struct platform_driver imx_ahci_driver = {
- module_platform_driver(imx_ahci_driver);
+@@ -872,12 +872,6 @@ static int imx_ahci_probe(struct platform_device *pdev)
+ 		return PTR_ERR(imxpriv->sata_ref_clk);
+ 	}
  
- MODULE_DESCRIPTION("Freescale i.MX AHCI SATA platform driver");
--MODULE_AUTHOR("Richard Zhu <Hong-Xing.Zhu@freescale.com>");
-+MODULE_AUTHOR("Richard Zhu <hongxing.zhu@nxp.com>");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:" DRV_NAME);
+-	imxpriv->ahb_clk = devm_clk_get(dev, "ahb");
+-	if (IS_ERR(imxpriv->ahb_clk)) {
+-		dev_err(dev, "can't get ahb clock.\n");
+-		return PTR_ERR(imxpriv->ahb_clk);
+-	}
+-
+ 	if (imxpriv->type == AHCI_IMX6Q || imxpriv->type == AHCI_IMX6QP) {
+ 		u32 reg_value;
+ 
+@@ -937,11 +931,8 @@ static int imx_ahci_probe(struct platform_device *pdev)
+ 		goto disable_clk;
+ 
+ 	/*
+-	 * Configure the HWINIT bits of the HOST_CAP and HOST_PORTS_IMPL,
+-	 * and IP vendor specific register IMX_TIMER1MS.
+-	 * Configure CAP_SSS (support stagered spin up).
+-	 * Implement the port0.
+-	 * Get the ahb clock rate, and configure the TIMER1MS register.
++	 * Configure the HWINIT bits of the HOST_CAP and HOST_PORTS_IMPL.
++	 * Set CAP_SSS (support stagered spin up) and Implement the port0.
+ 	 */
+ 	reg_val = readl(hpriv->mmio + HOST_CAP);
+ 	if (!(reg_val & HOST_CAP_SSS)) {
+@@ -954,8 +945,19 @@ static int imx_ahci_probe(struct platform_device *pdev)
+ 		writel(reg_val, hpriv->mmio + HOST_PORTS_IMPL);
+ 	}
+ 
+-	reg_val = clk_get_rate(imxpriv->ahb_clk) / 1000;
+-	writel(reg_val, hpriv->mmio + IMX_TIMER1MS);
++	if (imxpriv->type != AHCI_IMX8QM) {
++		/*
++		 * Get AHB clock rate and configure the vendor specified
++		 * TIMER1MS register on i.MX53, i.MX6Q and i.MX6QP only.
++		 */
++		imxpriv->ahb_clk = devm_clk_get(dev, "ahb");
++		if (IS_ERR(imxpriv->ahb_clk)) {
++			dev_err(dev, "Failed to get ahb clock\n");
++			goto disable_sata;
++		}
++		reg_val = clk_get_rate(imxpriv->ahb_clk) / 1000;
++		writel(reg_val, hpriv->mmio + IMX_TIMER1MS);
++	}
+ 
+ 	ret = ahci_platform_init_host(pdev, hpriv, &ahci_imx_port_info,
+ 				      &ahci_platform_sht);
 -- 
 2.37.1
 
