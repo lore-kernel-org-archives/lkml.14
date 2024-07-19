@@ -1,111 +1,156 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C654696;
-	Fri, 19 Jul 2024 00:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E43137E;
+	Fri, 19 Jul 2024 00:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721348942; cv=none; b=uR+ECjjEu2Z/U6n+V1HE95UtYgfRjSUH0ye/n8BhBscwgJrNOqGSP1tShxtjeJLyCV3/bf2KOZ7igkOJw4wTdxBb7igfKmWG0FMWZwjmX4D0QD9U2RuiwmnDpSwBUAQ7Ibq1+8VT3vJCjY1biOpCXNksZDKgpG/WS1xWrFeQ5g0=
+	t=1721349272; cv=none; b=uhJuq867EiVv95nBl31HHrHL2LSBFAkPwGL5Jb/8ZZvqAjBP9bK05Zu9KGLbfE4/IyRs1c2Sm0dTVZBqKnpYBsFQUiCVQcvpxpof8eKIfvajLEBSkSQf269+6NWa4/18H3RPkAnMMD2z58EKoKHpakC9ffQA09ic55MFMJkFFfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721348942; c=relaxed/simple;
-	bh=no8GmEKJTU1y8iQRm4w5rWTLU8ovq08KNHL05+n1wvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=PFHvFrCjFaRK7FnjOchenT3vULd2UpFe27paXhqyWAqXy/l5TVLLLHOC6dMBYm6Uu9XaN17yc65B1DUDgTqnBWOJCXOjF8k24ob0OOP7eKhEQ0/sD+87DGjmAtcfrurQIE4cQldr3NB29dDIW76Yd1T1UOeg8v7FxoY2GVQXfi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=C93XvrLB; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721349272; c=relaxed/simple;
+	bh=3SxXE4HFSO0/0SOh4LfwSIvI8WFx8Q7RhPzimFH+FgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nhi1d7PmZWlEjh4lOJQLggz0Nf4JkR4AgLLxEiVv1sM/zhCsTu7Iy/uc1swc15sdPUfUqoNwkBqdxd1JaEnO2ofnGNuiJ2fcU1cizklt7BMg0g0orVgD+ogXXLDmnSFx0nsvkDpJ4m0lo/jlLILz3YvBEIHAVveHDoVl0I0sRQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QPTwrNlv; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="C93XvrLB"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46IMZRd8002464;
-	Fri, 19 Jul 2024 00:28:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	an2/RsoVYlWrrx9EEIeqTcHjZaOLueSvo4PzAM3K8rU=; b=C93XvrLBhqqG5rZl
-	7i+5dpEepE+jGtg/7wX2k7ZSrXHasuhO/9ZfDoBuNHV2/fBP+dYfRabAyDyKFPj8
-	7Hs92soIzkEJpWVozqpQHTFxCMMA5JkNqxi+xJnjvtQoa10iKwh7oAlK7LiBNIqi
-	gucG1wli862SuOGkicP8lkxHE3JwWLUuj7ddIbeD3fB1zpkk+N+i/+KKOEMz4j+d
-	wDJwW3qrNlrhECd8g3S+IuMLDD7Dkg8XjOQ0z2MUCpqS8+SDsxlJIFEtFiwE3GCV
-	wPR9e24qhicqqHxZLpUonLJU314mnc1Xqzd356ozUoSTZqqIdGcCTvK7/WC07Aec
-	Ixg1dQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40dwfppyt4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jul 2024 00:28:37 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46J0Sanb023576
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jul 2024 00:28:36 GMT
-Received: from [10.48.247.102] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Jul
- 2024 17:28:36 -0700
-Message-ID: <b1bec21d-9d60-491e-8808-ebb004b9c2fe@quicinc.com>
-Date: Thu, 18 Jul 2024 17:28:35 -0700
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QPTwrNlv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1721349268;
+	bh=Dof5LE+ZRBL4UrBDLuUMyNVbgDkBX89CmuVHF05QsFQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QPTwrNlvKHK/ZntFyh/Bx8tZud6QwVrlHWR97loMGvyynBVDu9n6RrzW4nvaw4rgx
+	 CX5F0D4Kcb77ihYv4xQgRSzkbuJpwvbH117W0P9ILwQijRb15e5KFKYAFnVekmlJGY
+	 vRgyHpcoLHzlQMgEY4zT0aS3o2VrtCwgC5Cwc+P6L9AT9RWUdaHfH27LddIzezAr5+
+	 P2vgobW408sfK9KuYiexWBMcw7c1Syv0qg6Hj45hNrk8AuGPGD6lQERn9HR3DkYHQn
+	 rqWr4YSsm5nPF1rT05HxLdx9vGKfl2yg0EYb2Fwe+qa1bGGZA5bqjz5hs1x4vBwBsP
+	 9/T/1foH+Sf/Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WQ9fW1dLmz4wbr;
+	Fri, 19 Jul 2024 10:34:27 +1000 (AEST)
+Date: Fri, 19 Jul 2024 10:34:26 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Christian
+ =?UTF-8?B?R8O2dHRzY2hl?= <cgzones@googlemail.com>, Jiri Olsa
+ <jolsa@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the ftrace tree with the
+ vfs-brauner tree
+Message-ID: <20240719103426.6ad00835@canb.auug.org.au>
+In-Reply-To: <20240717132155.6ca2ce47@canb.auug.org.au>
+References: <20240717132155.6ca2ce47@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] crypto: X25519 core functions for ppc64le
-Content-Language: en-US
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-To: Danny Tsen <dtsen@linux.ibm.com>, <linux-crypto@vger.kernel.org>
-CC: <herbert@gondor.apana.org.au>, <leitao@debian.org>, <nayna@linux.ibm.com>,
-        <appro@cryptogams.org>, <linux-kernel@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <mpe@ellerman.id.au>,
-        <ltcgcw@linux.vnet.ibm.com>, <dtsen@us.ibm.com>
-References: <20240516151957.2215-1-dtsen@linux.ibm.com>
- <20240516151957.2215-3-dtsen@linux.ibm.com>
- <e27ccb59-0a3b-4845-bec4-f64830b2492e@quicinc.com>
-In-Reply-To: <e27ccb59-0a3b-4845-bec4-f64830b2492e@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0sUGBt48Ya962kHJRrxfac6FkMbGNNfl
-X-Proofpoint-GUID: 0sUGBt48Ya962kHJRrxfac6FkMbGNNfl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-18_17,2024-07-18_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 clxscore=1015 bulkscore=0 mlxscore=0
- adultscore=0 phishscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407190002
+Content-Type: multipart/signed; boundary="Sig_/ufV7G23Ejp5PAxb+Izpa=OH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 7/18/2024 5:25 PM, Jeff Johnson wrote:
-> On 5/16/24 08:19, Danny Tsen wrote:
->> X25519 core functions to handle scalar multiplication for ppc64le.
->>
->> Signed-off-by: Danny Tsen <dtsen@linux.ibm.com>
->> ---
->>   arch/powerpc/crypto/curve25519-ppc64le-core.c | 299 ++++++++++++++++++
->>   1 file changed, 299 insertions(+)
->>   create mode 100644 arch/powerpc/crypto/curve25519-ppc64le-core.c
-> ...
-> 
->> +MODULE_ALIAS_CRYPTO("curve25519");
->> +MODULE_ALIAS_CRYPTO("curve25519-ppc64le");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("Danny Tsen <dtsen@us.ibm.com>");
-> 
-> Since commit 1fffe7a34c89 ("script: modpost: emit a warning when the
-> description is missing"), a module without a MODULE_DESCRIPTION() will
-> result in a warning with make W=1. I'm in the process of building 
-> ppc64le with CRYPTO_CURVE25519_PPC64=m to validate my suspicion, but I 
-> expect this to generate a warning.
-> 
-> Can you submit a follow-up patch that adds a MODULE_DESCRIPTION()?
-> And since I'm trying to fix all of the existing issues in 6.11, Herbert 
-> can you push this to Linus when it lands?
+--Sig_/ufV7G23Ejp5PAxb+Izpa=OH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-And my build did produce:
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/powerpc/crypto/curve25519-ppc64le.o
+Hi all,
 
+On Wed, 17 Jul 2024 13:21:55 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the ftrace tree got a conflict in:
+>=20
+>   arch/x86/entry/syscalls/syscall_64.tbl
+>=20
+> between commit:
+>=20
+>   e6873349f700 ("fs/xattr: add *at family syscalls")
+>=20
+> from the vfs-brauner tree and commits:
+>=20
+>   190fec72df4a ("uprobe: Wire up uretprobe system call")
+>   63ded110979b ("uprobe: Change uretprobe syscall scope and number")
+>=20
+> from the ftrace tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> I also added this patch due to commit (no in Linus' tree)
+>=20
+>   4fe53bf2ba0a ("syscalls: add generic scripts/syscall.tbl")
+>=20
+> rom: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 17 Jul 2024 13:15:32 +1000
+> Subject: [PATCH] fixup for "uprobe: Wire up uretprobe system call"
+>=20
+> and "uprobe: Change uretprobe syscall scope and number"
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  scripts/syscall.tbl | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
+> index 86b53c7a815b..c792b08e594d 100644
+> --- a/scripts/syscall.tbl
+> +++ b/scripts/syscall.tbl
+> @@ -406,3 +406,4 @@
+>  464	common	getxattrat			sys_getxattrat
+>  465	common	listxattrat			sys_listxattrat
+>  466	common	removexattrat			sys_removexattrat
+> +467	common	uretprobe			sys_uretprobe
+> --=20
+> 2.43.0
+>=20
+> diff --cc arch/x86/entry/syscalls/syscall_64.tbl
+> index 623d954f3afb,dabf1982de6d..000000000000
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@@ -385,10 -384,7 +385,11 @@@
+>   460	common	lsm_set_self_attr	sys_lsm_set_self_attr
+>   461	common	lsm_list_modules	sys_lsm_list_modules
+>   462 	common  mseal			sys_mseal
+>  +463	common	setxattrat		sys_setxattrat
+>  +464	common	getxattrat		sys_getxattrat
+>  +465	common	listxattrat		sys_listxattrat
+>  +466	common	removexattrat		sys_removexattrat
+> + 467	common	uretprobe		sys_uretprobe
+>  =20
+>   #
+>   # Due to a historical design error, certain syscalls are numbered diffe=
+rently
 
+This is now a conflict between the vfs-brauner tree and Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ufV7G23Ejp5PAxb+Izpa=OH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaZtJIACgkQAVBC80lX
+0GxkIgf/RdUWnoZRaNvwI3XkNHJcqtvSYVowNqj/op7wE0R6EXAicIWUPAOMgmpf
+JgEUmEehRq6J+RQmMBLnlRZ2er8/W4Tj8nvtfFYxeOjZJTjmul4wuz10OQRxZl/D
+o1YWKN20w4QaNULO5OFfTPdEV2IfELkdKmm36bvurVViv34FogKLiFke1mi8NCHf
+5sDwlygO4rD/Y/HKIGMUpMT0Lo8AOkA05TJAyvAme7MkpNPYw9M0ZVegx8QFB7ub
+qqVR5MWA+MCncKHUjn119ZMXLUEs5NV46sRiOHGVlpjUx7E/O8CHQqsd9RP33aHT
+VcgPHvKjIZHe7FheGHg6WUn23STGYQ==
+=fz00
+-----END PGP SIGNATURE-----
+
+--Sig_/ufV7G23Ejp5PAxb+Izpa=OH--
