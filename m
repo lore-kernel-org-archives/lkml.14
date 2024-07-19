@@ -1,249 +1,134 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4708F45
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jul 2024 03:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6892F30;
+	Fri, 19 Jul 2024 03:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721358425; cv=none; b=rPypTR09E8Jdscv1YAlIS6kyGiaJ/yoIz+EMWW9izsMmw0F8sFR1v0QuDA9/vaYZ7MpdC4+F0NDutqOOzXqB6RCzFzUaVBDRB/NfBkJMNLz7ACa3q6ydPMgPb6WS3Fjp2oqbobpELwu4vXErLhLU7X9HFy/cEU0cupIWjQQXVC8=
+	t=1721358593; cv=none; b=u5J45H+lQTbMI/cKFS8VNQ4XK+KSHjiUxYxg9dC9FGWrYKzg1rdK8L/bNZsL0+eFTQqrlGQ89dpqWq22rvUTKcD1Tyxs+q3OpmEAiYzi0Tb3wejDJeO6db+OSk2rfjrPzuLsmGaOadn/GKtKedyEimSuA2rzmBJbiJhi8abx8K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721358425; c=relaxed/simple;
-	bh=AhAmQSn7B0uRhduprUPvTtAfr7q/4TKen4sCiJK5ViE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WMX9ipZI8G1G88UakY9F+zPmY8LeSSE02qV0w7NhvU7pDafth6BL2H/UMejEpgR0UkADxkDggzn/JzS8Y2Jb+hUM8nJGNs+L6eauqncxD2XEUCO0eH708mFf9ajtEyfFxqXnL/adJG4t8qJy7mPBevio3JyIC8DxIr6vnkxgvZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-39827d07ca7so1579915ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2024 20:07:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721358422; x=1721963222;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uZlTNEbRhrmECQ1QsqpZVc/aRFrvE/PC/vOF2/I2Vfk=;
-        b=Wxz0ydIEdQLmI/y7bdb+8eyuyqTLwD/Y7Jaj+qIjsk88crc8jbKr33hJZn/mT0Oc/W
-         LUJMqZK2C0jtt1/p8h52jPZ+wCCfUMEbuincKwHPQTAnQdTfQ2NZGNYlleEINTI6We/9
-         91PB/fPHcrtFAAlw0UFyAiiA/Eb4P9ombE/ulzujj1Cep911PuKgIRFEcltw9hf1hgKl
-         n54W/Z/n4Qfq2yKsHDHAX4kxCmtRmPuUM2fy+94j/AaLIX0k/VgFe5RV/gSMcSLJzXpQ
-         8VAAAgynHDz+Gm0dglShFuO95X1WmlrauyWtuAKgtUO52S9PYUjWQZRD0oAIuHqFnFjM
-         yBEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtEc1BLasMYTmct4CntUfh6AVjQwU3gzheFjuQa63K7dWC+QhiGJ14W9MUkJvSrfinIusGhCSYxuHzaiuhMHbjkZv3Q5SAKGwJXGra
-X-Gm-Message-State: AOJu0YzSgN8eABgU3FVph+Fdco/TuOnTZg+zwErxkFJeGNtl4uQE2yBG
-	MCZGn6CggAsCiNmper5GYvuL0F49eg7LaCx4SpXVyVBLCbszzUMGkX24TJDc+VhkviwA3JMx8lt
-	1zgQLttub+Ok2k9TiBPpsTvS3UD52pB9YXRhBQazxHDrJGDiK3B8oXN0=
-X-Google-Smtp-Source: AGHT+IFV3UXUEzI3iRULzsc3SiBzAMDQyhMMY8Rn8twamO9bhECMPXTuIsyn/b/7G3/u1SKaEQ1XGeMK2aHlPZVdnH3mmXeetjzL
+	s=arc-20240116; t=1721358593; c=relaxed/simple;
+	bh=0NipiEREOOjna/QPiVAGaJs9rCAbwvD6mTE4Or+JFkk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FQbjQgFmoUZxKc0XV63kauQGUqJ6cyQdC8oTTzghtk6gTYWDCNoee1QQl2IDxJKY98aj3VW3fLLeso1SJiw4y4IKxNayNBs/ncpfqeYSatiuZxxWkgWauzoosCOtEsa66bNeUwQkg3CELpvFRYP5RRXrzX6nTp46nNEy636HQvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WQF4z5DqZznbfc;
+	Fri, 19 Jul 2024 11:09:07 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6F8E9180106;
+	Fri, 19 Jul 2024 11:09:33 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 19 Jul
+ 2024 11:09:32 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <kees@kernel.org>,
+	<gustavoars@kernel.org>, <arnd@arndb.de>, <maobibo@loongson.cn>,
+	<loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v2] loongarch: Support RANDOMIZE_KSTACK_OFFSET
+Date: Fri, 19 Jul 2024 11:14:27 +0800
+Message-ID: <20240719031427.119274-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1987:b0:376:1fae:4604 with SMTP id
- e9e14a558f8ab-395579e8ccemr6499975ab.4.1721358422675; Thu, 18 Jul 2024
- 20:07:02 -0700 (PDT)
-Date: Thu, 18 Jul 2024 20:07:02 -0700
-In-Reply-To: <20240718232407.69028-1-aha310510@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000050a562061d90fda3@google.com>
-Subject: Re: [syzbot] [net?] KMSAN: uninit-value in hsr_get_node (3)
-From: syzbot <syzbot+a81f2759d022496b40ab@syzkaller.appspotmail.com>
-To: aha310510@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-Hello,
+Add support of kernel stack offset randomization while handling syscall,
+the offset is defaultly limited by KSTACK_OFFSET_MAX().
 
-syzbot tried to test the proposed patch but the build/boot failed:
+In order to avoid trigger stack canaries (due to __builtin_alloca) and
+slowing down the entry path, use __no_stack_protector attribute to
+disable stack protector for do_syscall() at function level.
 
-failed to copy syz-execprog to VM: timedout after 1m0s ["scp" "-P" "22" "-F=
-" "/dev/null" "-o" "UserKnownHostsFile=3D/dev/null" "-o" "IdentitiesOnly=3D=
-yes" "-o" "BatchMode=3Dyes" "-o" "StrictHostKeyChecking=3Dno" "-o" "Connect=
-Timeout=3D10" "-v" "/syzkaller/jobs-2/linux/gopath/src/github.com/google/sy=
-zkaller/bin/linux_amd64/syz-execprog" "root@10.128.1.88:./syz-execprog"]
-Executing: program /usr/bin/ssh host 10.128.1.88, user root, command sftp
-OpenSSH_9.2p1 Debian-2+deb12u2, OpenSSL 3.0.11 19 Sep 2023
-debug1: Reading configuration data /dev/null
-debug1: Connecting to 10.128.1.88 [10.128.1.88] port 22.
-debug1: fd 3 clearing O_NONBLOCK
-debug1: Connection established.
-debug1: identity file /root/.ssh/id_rsa type -1
-debug1: identity file /root/.ssh/id_rsa-cert type -1
-debug1: identity file /root/.ssh/id_ecdsa type -1
-debug1: identity file /root/.ssh/id_ecdsa-cert type -1
-debug1: identity file /root/.ssh/id_ecdsa_sk type -1
-debug1: identity file /root/.ssh/id_ecdsa_sk-cert type -1
-debug1: identity file /root/.ssh/id_ed25519 type -1
-debug1: identity file /root/.ssh/id_ed25519-cert type -1
-debug1: identity file /root/.ssh/id_ed25519_sk type -1
-debug1: identity file /root/.ssh/id_ed25519_sk-cert type -1
-debug1: identity file /root/.ssh/id_xmss type -1
-debug1: identity file /root/.ssh/id_xmss-cert type -1
-debug1: identity file /root/.ssh/id_dsa type -1
-debug1: identity file /root/.ssh/id_dsa-cert type -1
-debug1: Local version string SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u2
-debug1: Remote protocol version 2.0, remote software version OpenSSH_9.1
-debug1: compat_banner: match: OpenSSH_9.1 pat OpenSSH* compat 0x04000000
-debug1: Authenticating to 10.128.1.88:22 as 'root'
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or dire=
-ctory
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or dir=
-ectory
-debug1: SSH2_MSG_KEXINIT sent
-debug1: SSH2_MSG_KEXINIT received
-debug1: kex: algorithm: sntrup761x25519-sha512@openssh.com
-debug1: kex: host key algorithm: ssh-ed25519
-debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <imp=
-licit> compression: none
-debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <imp=
-licit> compression: none
-debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
-debug1: SSH2_MSG_KEX_ECDH_REPLY received
-debug1: Server host key: ssh-ed25519 SHA256:88IuL3orPAmVsyjIy2DvkKzVRHqGoDX=
-xazNYOfOHasg
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or dire=
-ctory
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or dir=
-ectory
-Warning: Permanently added '10.128.1.88' (ED25519) to the list of known hos=
-ts.
-debug1: rekey out after 134217728 blocks
-debug1: SSH2_MSG_NEWKEYS sent
-debug1: expecting SSH2_MSG_NEWKEYS
-debug1: SSH2_MSG_NEWKEYS received
-debug1: rekey in after 134217728 blocks
-debug1: Will attempt key: /root/.ssh/id_rsa=20
-debug1: Will attempt key: /root/.ssh/id_ecdsa=20
-debug1: Will attempt key: /root/.ssh/id_ecdsa_sk=20
-debug1: Will attempt key: /root/.ssh/id_ed25519=20
-debug1: Will attempt key: /root/.ssh/id_ed25519_sk=20
-debug1: Will attempt key: /root/.ssh/id_xmss=20
-debug1: Will attempt key: /root/.ssh/id_dsa=20
-debug1: SSH2_MSG_EXT_INFO received
-debug1: kex_input_ext_info: server-sig-algs=3D<ssh-ed25519,sk-ssh-ed25519@o=
-penssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ec=
-dsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,we=
-bauthn-sk-ecdsa-sha2-nistp256@openssh.com>
-debug1: kex_input_ext_info: publickey-hostbound@openssh.com=3D<0>
-debug1: SSH2_MSG_SERVICE_ACCEPT received
-Authenticated to 10.128.1.88 ([10.128.1.88]:22) using "none".
-debug1: channel 0: new session [client-session] (inactive timeout: 0)
-debug1: Requesting no-more-sessions@openssh.com
-debug1: Entering interactive session.
-debug1: pledge: network
-debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_rep=
-ly 0
-debug1: Sending subsystem: sftp
-debug1: pledge: fork
-scp: debug1: stat remote: No such file or directory
+With this patch, the REPORT_STACK test show that:
+	`loongarch64 bits of stack entropy: 7`
 
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Suggested-by: Huacai Chen <chenhuacai@kernel.org>
+---
+v2:
+- get_random_u16() -> drdtime().
+- Add Suggested-by.
+---
+ arch/loongarch/Kconfig          |  1 +
+ arch/loongarch/kernel/syscall.c | 17 ++++++++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-
-
-syzkaller build log:
-go env (err=3D<nil>)
-GO111MODULE=3D'auto'
-GOARCH=3D'amd64'
-GOBIN=3D''
-GOCACHE=3D'/syzkaller/.cache/go-build'
-GOENV=3D'/syzkaller/.config/go/env'
-GOEXE=3D''
-GOEXPERIMENT=3D''
-GOFLAGS=3D''
-GOHOSTARCH=3D'amd64'
-GOHOSTOS=3D'linux'
-GOINSECURE=3D''
-GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
-GONOPROXY=3D''
-GONOSUMDB=3D''
-GOOS=3D'linux'
-GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
-GOPRIVATE=3D''
-GOPROXY=3D'https://proxy.golang.org,direct'
-GOROOT=3D'/usr/local/go'
-GOSUMDB=3D'sum.golang.org'
-GOTMPDIR=3D''
-GOTOOLCHAIN=3D'auto'
-GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
-GOVCS=3D''
-GOVERSION=3D'go1.21.4'
-GCCGO=3D'gccgo'
-GOAMD64=3D'v1'
-AR=3D'ar'
-CC=3D'gcc'
-CXX=3D'g++'
-CGO_ENABLED=3D'1'
-GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
-mod'
-GOWORK=3D''
-CGO_CFLAGS=3D'-O2 -g'
-CGO_CPPFLAGS=3D''
-CGO_CXXFLAGS=3D'-O2 -g'
-CGO_FFLAGS=3D'-O2 -g'
-CGO_LDFLAGS=3D'-O2 -g'
-PKG_CONFIG=3D'pkg-config'
-GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
- -ffile-prefix-map=3D/tmp/go-build4224677735=3D/tmp/go-build -gno-record-gc=
-c-switches'
-
-git status (err=3D<nil>)
-HEAD detached at 0d592ce46e
-nothing to commit, working tree clean
-
-
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
-s/syz-sysgen
-make .descriptions
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-bin/syz-sysgen
-touch .descriptions
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D0d592ce46ebc504d579c07e5bc3f7f3f2038c4cf -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240415-175759'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer=
- github.com/google/syzkaller/syz-fuzzer
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D0d592ce46ebc504d579c07e5bc3f7f3f2038c4cf -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240415-175759'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
-og github.com/google/syzkaller/tools/syz-execprog
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D0d592ce46ebc504d579c07e5bc3f7f3f2038c4cf -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240415-175759'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress=
- github.com/google/syzkaller/tools/syz-stress
-mkdir -p ./bin/linux_amd64
-gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
-	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
-ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
-t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
-static-pie -fpermissive -w -DGOOS_linux=3D1 -DGOARCH_amd64=3D1 \
-	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"0d592ce46ebc504d579c07e5bc3f7f3f20=
-38c4cf\"
-
-
-
-Tested on:
-
-commit:         720261cf Merge tag 'bcachefs-2024-07-18.2' of https://..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D60fe94c4ee0cdbd=
-a
-dashboard link: https://syzkaller.appspot.com/bug?extid=3Da81f2759d022496b4=
-0ab
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
-n) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D107805fd9800=
-00
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index ddc042895d01..fcf6451b4e38 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -106,6 +106,7 @@ config LOONGARCH
+ 	select HAVE_ARCH_KFENCE
+ 	select HAVE_ARCH_KGDB if PERF_EVENTS
+ 	select HAVE_ARCH_MMAP_RND_BITS if MMU
++	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+ 	select HAVE_ARCH_SECCOMP
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_TRACEHOOK
+diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
+index ec17cd5163b7..9df81197a09b 100644
+--- a/arch/loongarch/kernel/syscall.c
++++ b/arch/loongarch/kernel/syscall.c
+@@ -9,11 +9,13 @@
+ #include <linux/entry-common.h>
+ #include <linux/errno.h>
+ #include <linux/linkage.h>
++#include <linux/randomize_kstack.h>
+ #include <linux/syscalls.h>
+ #include <linux/unistd.h>
+ 
+ #include <asm/asm.h>
+ #include <asm/exception.h>
++#include <asm/loongarch.h>
+ #include <asm/signal.h>
+ #include <asm/switch_to.h>
+ #include <asm-generic/syscalls.h>
+@@ -39,7 +41,7 @@ void *sys_call_table[__NR_syscalls] = {
+ typedef long (*sys_call_fn)(unsigned long, unsigned long,
+ 	unsigned long, unsigned long, unsigned long, unsigned long);
+ 
+-void noinstr do_syscall(struct pt_regs *regs)
++__no_stack_protector void noinstr do_syscall(struct pt_regs *regs)
+ {
+ 	unsigned long nr;
+ 	sys_call_fn syscall_fn;
+@@ -55,11 +57,24 @@ void noinstr do_syscall(struct pt_regs *regs)
+ 
+ 	nr = syscall_enter_from_user_mode(regs, nr);
+ 
++	add_random_kstack_offset();
++
+ 	if (nr < NR_syscalls) {
+ 		syscall_fn = sys_call_table[nr];
+ 		regs->regs[4] = syscall_fn(regs->orig_a0, regs->regs[5], regs->regs[6],
+ 					   regs->regs[7], regs->regs[8], regs->regs[9]);
+ 	}
+ 
++	/*
++	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
++	 * bits. The actual entropy will be further reduced by the compiler
++	 * when applying stack alignment constraints: 16-byte (i.e. 4-bit)
++	 * aligned, which will remove the 4 low bits from any entropy chosen
++	 * here.
++	 *
++	 * The resulting 6 bits of entropy is seen in SP[9:4].
++	 */
++	choose_random_kstack_offset(drdtime());
++
+ 	syscall_exit_to_user_mode(regs);
+ }
+-- 
+2.34.1
 
